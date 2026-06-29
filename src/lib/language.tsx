@@ -33,7 +33,7 @@ const translations: Record<Lang, Record<string, string>> = {
     "nav.exploreTours": "Explore Tours",
     "nav.scroll": "Scroll",
     // Hero
-    "hero.eyebrow": "East & Southern Africa · Est. 2009",
+    "hero.eyebrow": "UNZIP AFRICA SAFARI",
     "hero.title1": "Luxury Safaris Across",
     "hero.title2": "Uganda, Kenya & Tanzania",
     "hero.subtitle": "Entirely private. Impossibly rare. Journeys crafted around a single traveller — you.",
@@ -132,7 +132,7 @@ const translations: Record<Lang, Record<string, string>> = {
     "nav.exploreTours": "Touren entdecken",
     "nav.scroll": "Scrollen",
     // Hero
-    "hero.eyebrow": "Ost- & Südliches Afrika · Gegr. 2009",
+    "hero.eyebrow": "UNZIP AFRICA SAFARI",
     "hero.title1": "Luxus-Safaris durch",
     "hero.title2": "Uganda, Kenia & Tansania",
     "hero.subtitle": "Vollständig privat. Unglaublich selten. Reisen, die um einen einzigen Reisenden gestaltet sind — Sie.",
@@ -231,7 +231,7 @@ const translations: Record<Lang, Record<string, string>> = {
     "nav.exploreTours": "Explorer les circuits",
     "nav.scroll": "Défiler",
     // Hero
-    "hero.eyebrow": "Afrique de l'Est & Australe · Fondée 2009",
+    "hero.eyebrow": "UNZIP AFRICA SAFARI",
     "hero.title1": "Safaris de luxe à travers",
     "hero.title2": "l'Ouganda, le Kenya et la Tanzanie",
     "hero.subtitle": "Entièrement privé. Incroyablement rare. Des voyages conçus autour d'un seul voyageur — vous.",
@@ -330,7 +330,7 @@ const translations: Record<Lang, Record<string, string>> = {
     "nav.exploreTours": "探索行程",
     "nav.scroll": "滚动",
     // Hero
-    "hero.eyebrow": "东非和南部非洲 · 成立于2009年",
+    "hero.eyebrow": "UNZIP AFRICA SAFARI",
     "hero.title1": "穿越",
     "hero.title2": "乌干达、肯尼亚和坦桑尼亚的豪华游猎",
     "hero.subtitle": "完全私密。极其罕见。围绕单一旅行者——您——精心打造的旅程。",

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter, PageId } from "@/lib/router";
 import { useLang } from "@/lib/language";
-import { LanguageSwitcher } from "@/components/luxury/LanguageSwitcher";
+import { LanguageSwitcher, CompactLanguageSwitcher } from "@/components/luxury/LanguageSwitcher";
 import { cn } from "@/lib/utils";
 
 const navItems: { id: PageId; labelKey: string }[] = [
@@ -99,11 +99,17 @@ export function Navigation() {
             ))}
           </nav>
 
-          {/* Right side: language switcher + quote button */}
+          {/* Right side: language switcher + quote button + mobile menu */}
           <div className="flex items-center gap-3 md:gap-4">
-            <div className="hidden md:block">
+            {/* Desktop language switcher (lg and up — where there's room for the full version) */}
+            <div className="hidden lg:block">
               <LanguageSwitcher scrolled={scrolled} />
             </div>
+            {/* Compact language switcher for phone/tablet (below lg) — sits next to hamburger */}
+            <div className="lg:hidden">
+              <CompactLanguageSwitcher scrolled={scrolled} />
+            </div>
+
             <button
               onClick={openQuote}
               className={cn(
@@ -117,7 +123,7 @@ export function Navigation() {
               {t("nav.requestQuote")}
             </button>
 
-            {/* Mobile menu toggle */}
+            {/* Mobile/tablet menu toggle */}
             <button
               onClick={() => setMenuOpen(!menuOpen)}
               className="lg:hidden flex flex-col gap-[5px] w-6 h-5 items-center justify-center"

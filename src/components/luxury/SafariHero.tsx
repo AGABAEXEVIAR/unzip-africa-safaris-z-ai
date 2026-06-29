@@ -1,7 +1,6 @@
 "use client";
 
 import { motion, type Variants } from "motion/react";
-import { Play } from "lucide-react";
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter, PageId } from "@/lib/router";
 import { useLang } from "@/lib/language";
@@ -189,16 +188,20 @@ export default function SafariHero({
         {/* ===== Hero Main Content — each element independently animated ===== */}
         <div className="flex flex-1 items-center justify-center px-6 pt-32 md:pt-40">
           <div className="flex max-w-4xl flex-col items-center text-center 2xl:max-w-6xl">
-            {/* Eyebrow */}
-            <motion.p
+            {/* Eyebrow — bordered glowing label */}
+            <motion.div
               variants={eyebrowVariants}
               initial="hidden"
               animate="visible"
-              className="mb-8 text-[0.65rem] font-medium tracking-[0.4em] uppercase text-gold-soft md:text-xs"
-              style={{ fontFamily: "var(--font-inter), sans-serif" }}
+              className="mb-8"
             >
-              {t("hero.eyebrow")}
-            </motion.p>
+              <span
+                className="hero-eyebrow-label inline-flex items-center px-5 py-2 text-[0.65rem] font-medium tracking-[0.35em] uppercase text-gold-soft md:text-xs"
+                style={{ fontFamily: "var(--font-inter), sans-serif" }}
+              >
+                {t("hero.eyebrow")}
+              </span>
+            </motion.div>
 
             {/* Title: majestic slow rise — static (no flip animation) */}
             <motion.h1
@@ -228,29 +231,20 @@ export default function SafariHero({
               {t("hero.subtitle")}
             </motion.p>
 
-            {/* CTA: scales into place — buttons with NO border radius */}
+            {/* CTA: scales into place — single centered button, NO border radius */}
             <motion.div
               variants={ctaVariants}
               initial="hidden"
               animate="visible"
-              className="mt-10 flex items-center justify-center gap-4"
+              className="mt-10 flex items-center justify-center"
             >
               {/* Primary action button — sharp corners, glass effect */}
               <button
                 onClick={openQuote}
-                className="flex min-h-12 items-center bg-cream/15 backdrop-blur-sm px-8 text-sm font-medium tracking-[0.2em] uppercase text-cream shadow-[inset_2px_2px_0_-0.5px_rgba(255,255,255,0.15),inset_-2px_-2px_0_-0.5px_rgba(255,255,255,0.15)] transition-transform hover:bg-cream/25 active:scale-[0.96] md:text-base"
+                className="flex min-h-12 items-center bg-cream/15 backdrop-blur-sm px-10 text-sm font-medium tracking-[0.2em] uppercase text-cream shadow-[inset_2px_2px_0_-0.5px_rgba(255,255,255,0.15),inset_-2px_-2px_0_-0.5px_rgba(255,255,255,0.15)] transition-transform hover:bg-cream/25 active:scale-[0.96] md:text-base"
                 style={{ fontFamily: "var(--font-inter), sans-serif", borderRadius: 0 }}
               >
                 {t("nav.beginJourney")}
-              </button>
-              {/* Play button — sharp corners */}
-              <button
-                onClick={() => navigate("tours")}
-                aria-label="Explore tours"
-                className="flex h-12 w-12 items-center justify-center bg-gold text-charcoal shadow-lg transition-transform hover:scale-105 hover:bg-gold-soft active:scale-[0.96]"
-                style={{ borderRadius: 0 }}
-              >
-                <Play className="h-5 w-5 fill-current" />
               </button>
             </motion.div>
           </div>

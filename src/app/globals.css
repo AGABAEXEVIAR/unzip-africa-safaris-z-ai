@@ -355,6 +355,61 @@
   color: var(--charcoal);
 }
 
+/* Dark (black) variant — charcoal bg with cream text, fills with gold on hover */
+.btn-luxury-dark {
+  color: var(--cream);
+  border-color: var(--charcoal);
+  background: var(--charcoal);
+}
+.btn-luxury-dark::before {
+  background: var(--gold);
+}
+.btn-luxury-dark:hover {
+  color: var(--charcoal);
+}
+
+/* ============ Hero Eyebrow — Bordered Glowing Label ============ */
+.hero-eyebrow-label {
+  position: relative;
+  border: 1px solid rgba(201, 177, 135, 0.5);
+  background: rgba(28, 26, 23, 0.35);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 0;
+  /* Glowing effect surrounding the border */
+  box-shadow:
+    0 0 10px rgba(201, 177, 135, 0.4),
+    0 0 20px rgba(201, 177, 135, 0.25),
+    0 0 40px rgba(201, 177, 135, 0.15),
+    inset 0 0 10px rgba(201, 177, 135, 0.1);
+  animation: heroEyebrowGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes heroEyebrowGlow {
+  0% {
+    box-shadow:
+      0 0 8px rgba(201, 177, 135, 0.35),
+      0 0 16px rgba(201, 177, 135, 0.2),
+      0 0 32px rgba(201, 177, 135, 0.1),
+      inset 0 0 8px rgba(201, 177, 135, 0.08);
+    border-color: rgba(201, 177, 135, 0.45);
+  }
+  100% {
+    box-shadow:
+      0 0 14px rgba(201, 177, 135, 0.6),
+      0 0 28px rgba(201, 177, 135, 0.35),
+      0 0 56px rgba(201, 177, 135, 0.2),
+      inset 0 0 14px rgba(201, 177, 135, 0.15);
+    border-color: rgba(201, 177, 135, 0.7);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-eyebrow-label {
+    animation: none;
+  }
+}
+
 /* Underline link — animated draw */
 .link-underline {
   position: relative;

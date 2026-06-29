@@ -96,3 +96,72 @@ export function LanguageSwitcher({ scrolled }: { scrolled: boolean }) {
     </div>
   );
 }
+
+/* Compact language switcher for phone/tablet — minimal flag + code, sits next to hamburger */
+export function CompactLanguageSwitcher({ scrolled }: { scrolled: boolean }) {
+  const { lang, setLang } = useLang();
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
+  const current = languageOptions.find((o) => o.id === lang) || languageOptions[0];
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        onClick={() => setOpen(!open)}
+        className={cn(
+          "flex items-center gap-1 px-2 py-1.5 border transition-all duration-500",
+          scrolled
+            ? "border-charcoal/30 text-charcoal"
+            : "border-cream/40 text-cream"
+        )}
+        style={{ borderRadius: 0 }}
+        aria-label="Change language"
+      >
+        <span className="text-sm leading-none">{current.flag}</span>
+        <span className="text-[0.65rem] font-medium tracking-wider leading-none">{current.short}</span>
+      </button>
+
+      {open && (
+        <div
+          className="absolute right-0 top-full mt-2 min-w-[140px] bg-cream border border-border shadow-2xl z-50"
+          style={{ borderRadius: 0, animation: "langDropdownIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) both" }}
+        >
+          {languageOptions.map((option) => (
+            <button
+              key={option.id}
+              onClick={() => {
+                setLang(option.id as Lang);
+                setOpen(false);
+              }}
+              className={cn(
+                "flex items-center gap-2 w-full px-3 py-2.5 text-left text-xs transition-colors duration-300 border-b border-border last:border-b-0",
+                lang === option.id
+                  ? "bg-forest text-cream"
+                  : "text-charcoal hover:bg-bone"
+              )}
+            >
+              <span className="text-sm">{option.flag}</span>
+              <span className="flex-1">{option.label}</span>
+              {lang === option.id && (
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M20 6 9 17l-5-5" />
+                </svg>
+              )}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}

@@ -201,3 +201,27 @@ Stage Summary:
 - Hover effects: card-luxury (lift + shadow), card-zoom (image zoom), enhanced img-luxury, plus 5 new utility classes
 - Scroll animations: 3 new Reveal variants (scale, left, right), scroll progress bar at top
 - ESLint passes with zero warnings/errors
+
+---
+Task ID: hero-button-eyebrow-glow-responsive-language-mobile
+Agent: main
+Task: Remove play button, center CTA, black welcome button, glowing eyebrow label, responsive fixes, mobile language switcher
+
+Work Log:
+- Removed the play button (gold square with Play icon) from the hero CTA group. "Begin Your Journey" is now the only button, centered with justify-center. Increased horizontal padding from px-8 to px-10 for better presence as a standalone button. Removed the unused `Play` import from lucide-react.
+- Created new `btn-luxury-dark` button variant in globals.css: charcoal (#1C1A17) background with cream text when not hovered, fills with gold on hover (liquid fill effect). Applied to the welcome section "Plan Your Safari" button (was btn-luxury-gold). Verified: bg rgb(28,26,23), color rgb(251,248,241).
+- Changed hero eyebrow from "East & Southern Africa · Est. 2009" to "UNZIP AFRICA SAFARI" across all 4 languages (EN/DE/FR/ZH — brand name stays the same). Restructured the eyebrow from a plain <p> to a bordered label with a glowing effect: semi-transparent charcoal background, gold border, backdrop blur, and a 3s infinite alternate `heroEyebrowGlow` animation that pulses the box-shadow (8px→14px gold glow) and border opacity (0.45→0.7). Added prefers-reduced-motion fallback to disable the animation.
+- Created `CompactLanguageSwitcher` component in LanguageSwitcher.tsx — a minimal flag + short code button (no dropdown arrow) designed for mobile/tablet. Opens the same 4-language dropdown. Updated Navigation to show: full LanguageSwitcher on lg+ (hidden lg:block), CompactLanguageSwitcher below lg (lg:hidden) sitting next to the hamburger menu. The compact switcher has sharp corners, adaptive colors (cream over dark hero, charcoal when scrolled).
+- Responsiveness: the layout is now:
+  • Desktop (lg+ / ≥1024px): Full language switcher + RAQ button, no hamburger
+  • Tablet (md-lg / 768-1023px): Compact language switcher + RAQ button + hamburger
+  • Phone (<768px): Compact language switcher + hamburger (no RAQ button, accessible via mobile menu)
+  Verified on iPhone 14 (417px), tablet (800px), and desktop (1440px) viewports.
+
+Stage Summary:
+- Hero: single centered "Begin Your Journey" button (play button removed)
+- Welcome button: black/charcoal when not hovered, gold fill on hover
+- Hero eyebrow: "UNZIP AFRICA SAFARI" in a bordered label with pulsing gold glow animation
+- Language switcher: full version on desktop, compact flag+code version on phone/tablet next to hamburger
+- ESLint passes with zero warnings/errors
+- Verified on desktop (1440px), tablet (800px), and mobile (417px) — all working correctly

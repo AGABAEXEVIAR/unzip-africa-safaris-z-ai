@@ -53,7 +53,7 @@ export function WelcomeSection() {
               </p>
 
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
-                <button onClick={openQuote} className="btn-luxury btn-luxury-gold">
+                <button onClick={openQuote} className="btn-luxury btn-luxury-dark">
                   {t("welcome.cta1")}
                 </button>
                 <button
