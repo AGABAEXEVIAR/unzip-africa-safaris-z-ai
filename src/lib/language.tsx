@@ -39,7 +39,8 @@ const translations: Record<Lang, Record<string, string>> = {
     "hero.subtitle": "Entirely private. Impossibly rare. Journeys crafted around a single traveller — you.",
     // Welcome
     "welcome.eyebrow": "Welcome to Unzip Africa",
-    "welcome.heading": "A luxury safari company specialising in tailor-made wildlife adventures",
+    "welcome.heading1": "We lead and",
+    "welcome.heading2": "Others follow",
     "welcome.para1": "Welcome to Unzip Africa, a luxury safari company specialising in tailor-made wildlife adventures, gorilla trekking experiences, Great Migration safaris, and exclusive journeys across Uganda, Kenya, and Tanzania.",
     "welcome.para2": "We create extraordinary safari experiences for travellers seeking authenticity, luxury, adventure, and meaningful connections with Africa's wildlife and cultures.",
     "welcome.cta1": "Plan Your Safari",
@@ -137,7 +138,8 @@ const translations: Record<Lang, Record<string, string>> = {
     "hero.subtitle": "Vollständig privat. Unglaublich selten. Reisen, die um einen einzigen Reisenden gestaltet sind — Sie.",
     // Welcome
     "welcome.eyebrow": "Willkommen bei Unzip Africa",
-    "welcome.heading": "Ein Luxus-Safari-Unternehmen, spezialisiert auf maßgeschneiderte Wildtierabenteuer",
+    "welcome.heading1": "Wir führen und",
+    "welcome.heading2": "andere folgen",
     "welcome.para1": "Willkommen bei Unzip Africa, einem Luxus-Safari-Unternehmen, das auf maßgeschneiderte Wildtierabenteuer, Gorilla-Trekking-Erlebnisse, Große Migration-Safaris und exklusive Reisen durch Uganda, Kenia und Tansania spezialisiert ist.",
     "welcome.para2": "Wir schaffen außergewöhnliche Safari-Erlebnisse für Reisende, die Authentizität, Luxus, Abenteuer und bedeutungsvolle Verbindungen mit der Tierwelt und den Kulturen Afrikas suchen.",
     "welcome.cta1": "Safari planen",
@@ -235,7 +237,8 @@ const translations: Record<Lang, Record<string, string>> = {
     "hero.subtitle": "Entièrement privé. Incroyablement rare. Des voyages conçus autour d'un seul voyageur — vous.",
     // Welcome
     "welcome.eyebrow": "Bienvenue chez Unzip Africa",
-    "welcome.heading": "Une entreprise de safari de luxe spécialisée dans les aventures sur mesure",
+    "welcome.heading1": "Nous menons et",
+    "welcome.heading2": "les autres suivent",
     "welcome.para1": "Bienvenue chez Unzip Africa, une entreprise de safari de luxe spécialisée dans les aventures sur mesure, les expériences de trekking des gorilles, les safaris de la grande migration et les voyages exclusifs en Ouganda, au Kenya et en Tanzanie.",
     "welcome.para2": "Nous créons des expériences de safari extraordinaires pour les voyageurs en quête d'authenticité, de luxe, d'aventure et de connexions significatives avec la faune et les cultures africaines.",
     "welcome.cta1": "Planifier votre safari",
@@ -333,7 +336,8 @@ const translations: Record<Lang, Record<string, string>> = {
     "hero.subtitle": "完全私密。极其罕见。围绕单一旅行者——您——精心打造的旅程。",
     // Welcome
     "welcome.eyebrow": "欢迎来到 Unzip Africa",
-    "welcome.heading": "一家专注于定制野生动物探险的豪华游猎公司",
+    "welcome.heading1": "我们引领，",
+    "welcome.heading2": "他人追随",
     "welcome.para1": "欢迎来到 Unzip Africa，一家专注于定制野生动物探险、山地大猩猩徒步体验、大角马迁徙游猎以及乌干达、肯尼亚和坦桑尼亚专属旅程的豪华游猎公司。",
     "welcome.para2": "我们为追求真实性、奢华、冒险以及与非洲野生动物和文化建立有意义联系的旅行者创造非凡的游猎体验。",
     "welcome.cta1": "规划您的游猎",

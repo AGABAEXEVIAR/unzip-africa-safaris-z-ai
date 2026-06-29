@@ -28,7 +28,7 @@ const safariStackImages = [
 
 export function SafariScrollStack() {
   return (
-    <section className="bg-canvas py-16 md:py-24 overflow-hidden">
+    <section className="bg-canvas pt-16 md:pt-24 pb-0 overflow-hidden">
       {/* Section heading */}
       <div className="px-6 md:px-10 mb-8 md:mb-16 text-center max-w-3xl mx-auto">
         <h2
