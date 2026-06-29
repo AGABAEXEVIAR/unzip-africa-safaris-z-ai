@@ -60,16 +60,18 @@ export function Navigation() {
           {/* Logo */}
           <button
             onClick={() => handleNav("home")}
-            className="group flex items-center gap-3"
+            className="group flex items-center transition-opacity duration-300 hover:opacity-80"
             aria-label="Unzip Africa Safaris — Home"
           >
-            <span className={cn("font-display text-2xl md:text-[1.7rem] leading-none tracking-tight transition-colors duration-500", textColor)}>
-              Unzip
-            </span>
-            <span className="hidden sm:inline font-label text-gold mt-1">Africa</span>
-            <span className={cn("font-display text-2xl md:text-[1.7rem] italic leading-none tracking-tight transition-colors duration-500", scrolled ? "text-charcoal/60" : "text-cream/70")}>
-              Safaris
-            </span>
+            <img
+              src="/logo.png"
+              alt="Unzip Africa Safaris"
+              className="h-9 md:h-11 w-auto"
+              style={{
+                filter: scrolled ? "none" : "brightness(0) invert(1)",
+                transition: "filter 0.5s ease",
+              }}
+            />
           </button>
 
           {/* Desktop nav */}

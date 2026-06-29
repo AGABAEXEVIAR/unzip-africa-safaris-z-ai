@@ -35,9 +35,12 @@ export function Footer() {
         {/* Middle — Columns */}
         <div className="grid grid-cols-2 md:grid-cols-12 gap-10 py-16">
           <div className="col-span-2 md:col-span-4">
-            <div className="font-display text-2xl mb-4">
-              Unzip <span className="italic text-gold-soft">Africa</span> Safaris
-            </div>
+            <img
+              src="/logo.png"
+              alt="Unzip Africa Safaris"
+              className="h-12 w-auto mb-5"
+              style={{ filter: "brightness(0) invert(1)" }}
+            />
             <p className="text-sm text-cream/60 leading-relaxed max-w-xs">
               Bespoke private safaris across East and Southern Africa. Family-owned, founded in
               Arusha in 2009. Members of ATTA, PACK, and the Long Run.

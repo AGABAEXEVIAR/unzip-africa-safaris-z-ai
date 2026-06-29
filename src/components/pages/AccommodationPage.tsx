@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { Reveal } from "@/components/luxury/Reveal";
+import ScrollReveal from "@/components/luxury/ScrollReveal";
 import { useRouter } from "@/lib/router";
 import { accommodations, Accommodation } from "@/lib/content";
 
@@ -75,14 +76,15 @@ export function AccommodationPage() {
             </Reveal>
           </div>
           <div className="md:col-span-8">
-            <Reveal variant="up">
-              <p className="font-display text-2xl md:text-3xl lg:text-4xl leading-[1.35] text-charcoal tracking-tight">
-                We do not own these lodges. We partner with them — choosing only those that share
-                our obsession with solitude, our refusal to crowd a horizon, and our commitment to
-                the land on which they stand. Each property below is one we have stayed in,
-                <span className="italic text-forest"> slept under, listened to.</span>
-              </p>
-            </Reveal>
+            <ScrollReveal
+              as="p"
+              containerClassName="font-display text-2xl md:text-3xl lg:text-4xl leading-[1.35] text-charcoal tracking-tight block"
+              textClassName="block"
+              baseOpacity={0.15}
+              blurStrength={5}
+            >
+              We do not own these lodges. We partner with them — choosing only those that share our obsession with solitude, our refusal to crowd a horizon, and our commitment to the land on which they stand. Each property below is one we have stayed in, <span className="italic text-forest"> slept under, listened to.</span>
+            </ScrollReveal>
           </div>
         </div>
       </section>
@@ -106,10 +108,16 @@ export function AccommodationPage() {
         <div className="mx-auto max-w-[1300px] relative">
           <Reveal variant="up">
             <p className="font-eyebrow text-gold-soft mb-8">Our Standards</p>
-            <h2 className="font-display text-4xl md:text-6xl lg:text-7xl leading-[1.05] tracking-tight max-w-4xl mb-16">
-              What every property <span className="italic text-gold-soft">must deliver.</span>
-            </h2>
           </Reveal>
+          <ScrollReveal
+            as="h2"
+            containerClassName="font-display text-4xl md:text-6xl lg:text-7xl leading-[1.05] tracking-tight max-w-4xl mb-16 text-cream block"
+            textClassName="block"
+            baseOpacity={0.1}
+            blurStrength={5}
+          >
+            What every property <span className="italic text-gold-soft">must deliver.</span>
+          </ScrollReveal>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 border-t border-cream/15 pt-12">
             {[
@@ -132,11 +140,17 @@ export function AccommodationPage() {
         <div className="mx-auto max-w-[1100px] text-center">
           <Reveal variant="up">
             <p className="font-eyebrow text-gold mb-8">Where Will You Sleep?</p>
-            <h2 className="font-display text-5xl md:text-7xl lg:text-8xl leading-[0.95] text-charcoal tracking-tight">
-              The choice is yours.
-              <br />
-              <span className="italic text-forest">The silence is ours to compose.</span>
-            </h2>
+          </Reveal>
+          <ScrollReveal
+            as="h2"
+            containerClassName="font-display text-5xl md:text-7xl lg:text-8xl leading-[0.95] text-charcoal tracking-tight block mb-12"
+            textClassName="block"
+            baseOpacity={0.1}
+            blurStrength={6}
+          >
+            The choice is yours. <span className="italic text-forest">The silence is ours to compose.</span>
+          </ScrollReveal>
+          <Reveal variant="up" delay={0.2}>
             <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-5">
               <button onClick={openQuote} className="btn-luxury btn-luxury-gold">
                 Request a Quote

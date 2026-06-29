@@ -4,6 +4,7 @@ import { motion, type Variants } from "motion/react";
 import { Play } from "lucide-react";
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter, PageId } from "@/lib/router";
+import { FlipText } from "@/components/luxury/FlipText";
 
 export interface SafariHeroProps {
   logoText?: string;
@@ -40,7 +41,7 @@ export default function SafariHero({
   ),
   primaryActionText = "Begin Your Journey",
   videoSources = [
-    "/videos/affectionate-lions.webm",
+    "/videos/wildebeest-drinking.webm",
     "/videos/elephant-rumbling.webm",
   ],
   posterImage =
@@ -195,7 +196,7 @@ export default function SafariHero({
               East &amp; Southern Africa · Est. 2009
             </motion.p>
 
-            {/* Title: majestic slow rise */}
+            {/* Title: majestic slow rise + FlipText character animation */}
             <motion.h1
               variants={titleVariants}
               initial="hidden"
@@ -208,7 +209,23 @@ export default function SafariHero({
                 letterSpacing: "-0.02em",
               }}
             >
-              {title}
+              <FlipText
+                duration={2.4}
+                delay={0.6}
+                loop={true}
+                className="text-cream"
+              >
+                Luxury Safaris Across
+              </FlipText>
+              <br />
+              <FlipText
+                duration={2.4}
+                delay={1.2}
+                loop={true}
+                className="italic text-gold-soft"
+              >
+                Uganda, Kenya & Tanzania
+              </FlipText>
             </motion.h1>
 
             {/* Subtitle: lighter, quicker */}

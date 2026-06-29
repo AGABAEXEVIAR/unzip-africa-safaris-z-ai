@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Reveal } from "@/components/luxury/Reveal";
+import ScrollReveal from "@/components/luxury/ScrollReveal";
 import { useRouter } from "@/lib/router";
 import { experts } from "@/lib/content";
 
@@ -78,14 +79,15 @@ export function AboutPage() {
           </div>
 
           <div className="md:col-span-8">
-            <Reveal variant="up">
-              <p className="font-display text-2xl md:text-3xl lg:text-4xl leading-[1.35] text-charcoal tracking-tight">
-                In 2006, our founder Amara Okello — then a Kisoro schoolteacher — knelt in the
-                volcanic mud of Bwindi Impenetrable Forest, seven meters from a silverback named
-                Rushegura. She did not move for an hour. When she returned to her village, she
-                <span className="italic text-forest"> could not speak of what she had seen</span>.
-              </p>
-            </Reveal>
+            <ScrollReveal
+              as="p"
+              containerClassName="font-display text-2xl md:text-3xl lg:text-4xl leading-[1.35] text-charcoal tracking-tight block"
+              textClassName="block"
+              baseOpacity={0.15}
+              blurStrength={5}
+            >
+              In 2006, our founder Amara Okello — then a Kisoro schoolteacher — knelt in the volcanic mud of Bwindi Impenetrable Forest, seven meters from a silverback named Rushegura. She did not move for an hour. When she returned to her village, she <span className="italic text-forest"> could not speak of what she had seen</span>.
+            </ScrollReveal>
 
             <Reveal variant="up" delay={0.15}>
               <p className="text-lg text-charcoal/75 leading-relaxed mt-10 max-w-2xl">
@@ -141,10 +143,16 @@ export function AboutPage() {
         <div className="mx-auto max-w-[1600px]">
           <Reveal variant="up">
             <p className="font-eyebrow text-gold mb-6 text-center">Three Commitments</p>
-            <h2 className="font-display text-4xl md:text-6xl text-charcoal tracking-tight text-center mb-20 max-w-4xl mx-auto leading-[1.05]">
-              The principles that <span className="italic text-forest">govern every journey</span>
-            </h2>
           </Reveal>
+          <ScrollReveal
+            as="h2"
+            containerClassName="font-display text-4xl md:text-6xl text-charcoal tracking-tight text-center mb-20 max-w-4xl mx-auto leading-[1.05] block"
+            textClassName="block"
+            baseOpacity={0.1}
+            blurStrength={5}
+          >
+            The principles that <span className="italic text-forest">govern every journey</span>
+          </ScrollReveal>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-16">
             {[
@@ -185,12 +193,16 @@ export function AboutPage() {
             <div className="md:col-span-5">
               <Reveal variant="up">
                 <p className="font-eyebrow text-gold mb-6">Our Experts</p>
-                <h2 className="font-display text-4xl md:text-6xl text-charcoal leading-[1.05] tracking-tight">
-                  Inheritors of
-                  <br />
-                  <span className="italic text-forest">these landscapes</span>
-                </h2>
               </Reveal>
+              <ScrollReveal
+                as="h2"
+                containerClassName="font-display text-4xl md:text-6xl text-charcoal leading-[1.05] tracking-tight block"
+                textClassName="block"
+                baseOpacity={0.1}
+                blurStrength={5}
+              >
+                Inheritors of <span className="italic text-forest">these landscapes</span>
+              </ScrollReveal>
             </div>
             <div className="md:col-span-6 md:col-start-7 flex items-end">
               <Reveal variant="up" delay={0.2}>
@@ -244,10 +256,16 @@ export function AboutPage() {
         <div className="mx-auto max-w-[1400px]">
           <Reveal variant="up">
             <p className="font-eyebrow text-gold mb-6">Milestones</p>
-            <h2 className="font-display text-4xl md:text-6xl text-charcoal tracking-tight mb-20 max-w-3xl leading-[1.05]">
-              Fifteen years of <span className="italic text-forest">measured growth</span>
-            </h2>
           </Reveal>
+          <ScrollReveal
+            as="h2"
+            containerClassName="font-display text-4xl md:text-6xl text-charcoal tracking-tight mb-20 max-w-3xl leading-[1.05] block"
+            textClassName="block"
+            baseOpacity={0.1}
+            blurStrength={5}
+          >
+            Fifteen years of <span className="italic text-forest">measured growth</span>
+          </ScrollReveal>
 
           <div className="relative">
             {/* Vertical line */}
@@ -310,9 +328,17 @@ export function AboutPage() {
         <div className="mx-auto max-w-[1200px] text-center">
           <Reveal variant="up">
             <p className="font-eyebrow text-gold mb-8">Meet the Team</p>
-            <h2 className="font-display text-5xl md:text-7xl lg:text-8xl leading-[0.95] text-charcoal tracking-tight">
-              Come walk with us.
-            </h2>
+          </Reveal>
+          <ScrollReveal
+            as="h2"
+            containerClassName="font-display text-5xl md:text-7xl lg:text-8xl leading-[0.95] text-charcoal tracking-tight block mb-10"
+            textClassName="block"
+            baseOpacity={0.1}
+            blurStrength={6}
+          >
+            Come walk with us.
+          </ScrollReveal>
+          <Reveal variant="up" delay={0.2}>
             <p className="text-lg text-charcoal/70 max-w-xl mx-auto mt-10 leading-relaxed">
               Every journey begins with a conversation — about you, your dreams, and the silence you
               are seeking.

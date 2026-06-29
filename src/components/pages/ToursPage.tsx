@@ -3,6 +3,7 @@
 import { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { Reveal } from "@/components/luxury/Reveal";
+import ScrollReveal from "@/components/luxury/ScrollReveal";
 import { useRouter } from "@/lib/router";
 import { tourPackages, TourPackage } from "@/lib/content";
 
@@ -163,11 +164,17 @@ export function ToursPage() {
         <div className="mx-auto max-w-[1100px] text-center">
           <Reveal variant="up">
             <p className="font-eyebrow text-gold mb-8">Inspired?</p>
-            <h2 className="font-display text-5xl md:text-7xl lg:text-8xl leading-[0.95] text-charcoal tracking-tight">
-              Let us compose
-              <br />
-              <span className="italic text-forest">your journey.</span>
-            </h2>
+          </Reveal>
+          <ScrollReveal
+            as="h2"
+            containerClassName="font-display text-5xl md:text-7xl lg:text-8xl leading-[0.95] text-charcoal tracking-tight block mb-10"
+            textClassName="block"
+            baseOpacity={0.1}
+            blurStrength={6}
+          >
+            Let us compose <span className="italic text-forest">your journey.</span>
+          </ScrollReveal>
+          <Reveal variant="up" delay={0.2}>
             <p className="text-lg text-charcoal/70 max-w-xl mx-auto mt-10 leading-relaxed">
               Tell us which journey speaks to you — or describe one we have not yet imagined.
             </p>
@@ -263,9 +270,17 @@ function TourDetail({ tour, onRequestQuote }: { tour: TourPackage; onRequestQuot
         <div className="mx-auto max-w-[1600px]">
           <Reveal variant="up">
             <p className="font-eyebrow text-gold mb-4 text-center">The Itinerary</p>
-            <h2 className="font-display text-4xl md:text-6xl text-charcoal tracking-tight text-center mb-4 leading-[1.05]">
-              Day by day, <span className="italic text-forest">composed in advance.</span>
-            </h2>
+          </Reveal>
+          <ScrollReveal
+            as="h2"
+            containerClassName="font-display text-4xl md:text-6xl text-charcoal tracking-tight text-center mb-4 leading-[1.05] block"
+            textClassName="block"
+            baseOpacity={0.1}
+            blurStrength={5}
+          >
+            Day by day, <span className="italic text-forest">composed in advance.</span>
+          </ScrollReveal>
+          <Reveal variant="up" delay={0.2}>
             <p className="text-charcoal/60 text-center max-w-md mx-auto mb-20">
               Scroll through the journey. Each day reveals itself as you move.
             </p>

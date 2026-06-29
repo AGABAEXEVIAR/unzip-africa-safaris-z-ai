@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Reveal } from "@/components/luxury/Reveal";
+import ScrollReveal from "@/components/luxury/ScrollReveal";
 import { useRouter } from "@/lib/router";
 import { toast } from "sonner";
 
@@ -108,12 +109,16 @@ export function ContactPage() {
           <div className="md:col-span-4">
             <Reveal variant="up">
               <p className="font-eyebrow text-gold mb-6">Direct Lines</p>
-              <h2 className="font-display text-4xl md:text-5xl text-charcoal leading-[1.05] tracking-tight mb-10">
-                Reach us,
-                <br />
-                <span className="italic text-forest">anywhere.</span>
-              </h2>
             </Reveal>
+            <ScrollReveal
+              as="h2"
+              containerClassName="font-display text-4xl md:text-5xl text-charcoal leading-[1.05] tracking-tight mb-10 block"
+              textClassName="block"
+              baseOpacity={0.1}
+              blurStrength={5}
+            >
+              Reach us, <span className="italic text-forest">anywhere.</span>
+            </ScrollReveal>
 
             <Reveal variant="up" delay={0.1}>
               <div className="space-y-8">
@@ -245,10 +250,16 @@ export function ContactPage() {
         <div className="mx-auto max-w-[1600px]">
           <Reveal variant="up">
             <p className="font-eyebrow text-gold mb-6 text-center">Our Offices</p>
-            <h2 className="font-display text-4xl md:text-6xl text-charcoal tracking-tight text-center mb-16 leading-[1.05]">
-              Boots on the ground, <span className="italic text-forest">in four nations.</span>
-            </h2>
           </Reveal>
+          <ScrollReveal
+            as="h2"
+            containerClassName="font-display text-4xl md:text-6xl text-charcoal tracking-tight text-center mb-16 leading-[1.05] block"
+            textClassName="block"
+            baseOpacity={0.1}
+            blurStrength={5}
+          >
+            Boots on the ground, <span className="italic text-forest">in four nations.</span>
+          </ScrollReveal>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
@@ -275,11 +286,17 @@ export function ContactPage() {
         <div className="mx-auto max-w-[1100px] text-center">
           <Reveal variant="up">
             <p className="font-eyebrow text-gold-soft mb-8">Prefer to Talk?</p>
-            <h2 className="font-display text-5xl md:text-7xl leading-[0.95] tracking-tight">
-              Call us directly.
-              <br />
-              <span className="italic text-gold-soft">A human answers.</span>
-            </h2>
+          </Reveal>
+          <ScrollReveal
+            as="h2"
+            containerClassName="font-display text-5xl md:text-7xl leading-[0.95] tracking-tight text-cream block mb-10"
+            textClassName="block"
+            baseOpacity={0.1}
+            blurStrength={6}
+          >
+            Call us directly. <span className="italic text-gold-soft">A human answers.</span>
+          </ScrollReveal>
+          <Reveal variant="up" delay={0.2}>
             <p className="text-lg text-cream/70 max-w-xl mx-auto mt-10 leading-relaxed">
               No menus, no queues, no hold music. One of our specialists picks up before the third
               ring.

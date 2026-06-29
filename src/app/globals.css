@@ -490,10 +490,36 @@
   .cursor-dot, .cursor-ring, .cursor-label { display: none !important; }
 }
 
+/* ============ FlipText Animation ============ */
+.flip-char {
+  animation: flipCharY var(--flip-duration, 2.2s) cubic-bezier(0.4, 0, 0.2, 1) var(--flip-delay, 0s) var(--flip-iteration, infinite);
+  transform-origin: 50% 50%;
+  backface-visibility: visible;
+}
+
+@keyframes flipCharY {
+  0% {
+    transform: rotateY(0deg) translateY(0);
+  }
+  25% {
+    transform: rotateY(90deg) translateY(-6%);
+  }
+  50% {
+    transform: rotateY(180deg) translateY(0);
+  }
+  75% {
+    transform: rotateY(270deg) translateY(6%);
+  }
+  100% {
+    transform: rotateY(360deg) translateY(0);
+  }
+}
+
 /* ============ Reduced motion ============ */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
+  .flip-char { animation: none !important; }
 }

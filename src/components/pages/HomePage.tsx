@@ -3,9 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Reveal } from "@/components/luxury/Reveal";
+import ScrollReveal from "@/components/luxury/ScrollReveal";
 import SafariHero from "@/components/luxury/SafariHero";
+import { LuxuryTestimonials } from "@/components/luxury/LuxuryTestimonials";
 import { useRouter } from "@/lib/router";
-import { destinations, experts, testimonials } from "@/lib/content";
+import { destinations, experts } from "@/lib/content";
 
 export function HomePage() {
   const { navigate, openQuote } = useRouter();
@@ -26,15 +28,16 @@ export function HomePage() {
           </div>
 
           <div className="md:col-span-9">
-            <Reveal variant="up">
-              <p className="font-display text-3xl md:text-5xl lg:text-[3.6rem] leading-[1.15] text-charcoal tracking-tight">
-                We do not sell safaris.
-                <br />
-                We compose <span className="italic text-forest">silent, indelible hours</span> in the
-                company of wild things — guided by trackers whose grandfathers walked these lands,
-                and finished in lodges where the night sky is the only ceiling.
-              </p>
-            </Reveal>
+            <ScrollReveal
+              as="p"
+              containerClassName="font-display text-3xl md:text-5xl lg:text-[3.6rem] leading-[1.15] text-charcoal tracking-tight block"
+              textClassName="block"
+              enableBlur={true}
+              baseOpacity={0.15}
+              blurStrength={6}
+            >
+              We do not sell safaris. We compose <span className="italic text-forest">silent, indelible hours</span> in the company of wild things — guided by trackers whose grandfathers walked these lands, and finished in lodges where the night sky is the only ceiling.
+            </ScrollReveal>
 
             <div className="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-8 md:gap-12">
               {[
@@ -65,18 +68,24 @@ export function HomePage() {
       <ExpertCarousel />
 
       {/* ====================== TESTIMONIALS ====================== */}
-      <Testimonials />
+      <LuxuryTestimonials />
 
       {/* ====================== FINAL CTA ====================== */}
       <section className="py-32 md:py-48 px-6 md:px-10 bg-bone/50">
         <div className="mx-auto max-w-[1200px] text-center">
           <Reveal variant="up">
             <p className="font-eyebrow text-gold mb-8">A Private Invitation</p>
-            <h2 className="font-display text-5xl md:text-7xl lg:text-8xl leading-[0.95] text-charcoal tracking-tight">
-              The wild is waiting.
-              <br />
-              <span className="italic text-forest">Are you?</span>
-            </h2>
+          </Reveal>
+          <ScrollReveal
+            as="h2"
+            containerClassName="font-display text-5xl md:text-7xl lg:text-8xl leading-[0.95] text-charcoal tracking-tight block mb-10"
+            textClassName="block"
+            baseOpacity={0.1}
+            blurStrength={6}
+          >
+            The wild is waiting. <span className="italic text-forest">Are you?</span>
+          </ScrollReveal>
+          <Reveal variant="up" delay={0.2}>
             <p className="text-lg text-charcoal/70 max-w-xl mx-auto mt-10 leading-relaxed">
               Every journey begins with a single conversation. Tell us where your imagination wanders
               — we will compose the rest.
@@ -140,9 +149,15 @@ function HorizontalDestinations() {
         <div className="mx-auto max-w-[1600px] flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
             <p className="font-eyebrow text-gold mb-4">Our Destinations</p>
-            <h2 className="font-display text-4xl md:text-6xl text-charcoal tracking-tight leading-[1.05]">
+            <ScrollReveal
+              as="h2"
+              containerClassName="font-display text-4xl md:text-6xl text-charcoal tracking-tight leading-[1.05] block"
+              textClassName="block"
+              baseOpacity={0.1}
+              blurStrength={5}
+            >
               Six Wildernesses, <span className="italic text-forest">One Continent</span>
-            </h2>
+            </ScrollReveal>
           </div>
           <p className="font-label text-charcoal/50 hidden md:block">
             ↓ Scroll to pan the filmstrip
@@ -241,12 +256,16 @@ function ExpertCarousel() {
           <div className="md:col-span-5">
             <Reveal variant="up">
               <p className="font-eyebrow text-gold mb-6">Destination Experts</p>
-              <h2 className="font-display text-4xl md:text-6xl text-charcoal leading-[1.05] tracking-tight">
-                The people who will
-                <br />
-                <span className="italic text-forest">compose your hours</span>
-              </h2>
             </Reveal>
+            <ScrollReveal
+              as="h2"
+              containerClassName="font-display text-4xl md:text-6xl text-charcoal leading-[1.05] tracking-tight block"
+              textClassName="block"
+              baseOpacity={0.1}
+              blurStrength={5}
+            >
+              The people who will compose your <span className="italic text-forest">hours</span>
+            </ScrollReveal>
           </div>
           <div className="md:col-span-6 md:col-start-7 flex items-end">
             <Reveal variant="up" delay={0.2}>
@@ -309,77 +328,6 @@ function ExpertCarousel() {
   );
 }
 
-/* ===================== Testimonials ===================== */
-function Testimonials() {
-  const [active, setActive] = useState(0);
-
-  useEffect(() => {
-    const t = setInterval(() => {
-      setActive((p) => (p + 1) % testimonials.length);
-    }, 8000);
-    return () => clearInterval(t);
-  }, []);
-
-  return (
-    <section className="py-32 md:py-48 px-6 md:px-10 bg-forest text-cream relative overflow-hidden">
-      {/* Subtle pattern */}
-      <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 20% 50%, rgba(201,177,135,0.5) 1px, transparent 1px)",
-            backgroundSize: "60px 60px",
-          }}
-        />
-      </div>
-
-      <div className="mx-auto max-w-[1300px] relative">
-        <div className="text-center mb-16">
-          <p className="font-eyebrow text-gold-soft mb-6">Voices from the Field</p>
-        </div>
-
-        <div className="min-h-[280px] md:min-h-[240px] relative">
-          {testimonials.map((t, idx) => (
-            <motion.div
-              key={idx}
-              initial={false}
-              animate={{
-                opacity: idx === active ? 1 : 0,
-                y: idx === active ? 0 : 20,
-              }}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-              className={`${idx === active ? "relative" : "absolute inset-0"} text-center`}
-            >
-              <p className="font-display text-2xl md:text-4xl lg:text-5xl leading-[1.3] text-cream tracking-tight max-w-5xl mx-auto">
-                "{t.quote}"
-              </p>
-              <div className="mt-10">
-                <p className="font-label text-gold-soft">{t.author}</p>
-                <p className="text-sm text-cream/50 mt-1">{t.title}</p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Dots */}
-        <div className="flex justify-center gap-3 mt-12">
-          {testimonials.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => setActive(idx)}
-              aria-label={`Testimonial ${idx + 1}`}
-              className={`h-1 transition-all duration-500 ${
-                idx === active ? "w-12 bg-gold" : "w-6 bg-cream/30"
-              }`}
-            />
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
 /* ===================== Parallax Quote Band ===================== */
 function ParallaxQuote() {
   const ref = useRef<HTMLDivElement>(null);
@@ -404,13 +352,17 @@ function ParallaxQuote() {
         <div className="text-center max-w-4xl">
           <Reveal variant="fade">
             <p className="font-eyebrow text-gold-soft mb-8">The Experience</p>
-            <p className="font-display text-cream text-3xl md:text-5xl lg:text-6xl leading-[1.1] tracking-tight">
-              "The silence of the African bush at dawn
-              <br />
-              is not the absence of sound.
-              <br />
-              <span className="italic text-gold-soft">It is the presence of everything else."</span>
-            </p>
+          </Reveal>
+          <ScrollReveal
+            as="p"
+            containerClassName="font-display text-cream text-3xl md:text-5xl lg:text-6xl leading-[1.1] tracking-tight block"
+            textClassName="block"
+            baseOpacity={0.1}
+            blurStrength={5}
+          >
+            "The silence of the African bush at dawn is not the absence of sound. <span className="italic text-gold-soft">It is the presence of everything else."</span>
+          </ScrollReveal>
+          <Reveal variant="fade" delay={0.3}>
             <p className="font-label text-cream/50 mt-10">— Amara Okello, Founder</p>
           </Reveal>
         </div>
