@@ -20,7 +20,7 @@ const safariStackImages = [
     tagline: "Land of Kilimanjaro, Serengeti and Zanzibar",
   },
   {
-    src: "https://images.unsplash.com/photo-1500289466305-babaa6e8b1b3?auto=format&fit=crop&w=1600&q=85",
+    src: "https://sfile.chatglm.cn/images-ppt/97c40e4746f3.jpg",
     country: "Namibia",
     tagline: "Endless Horizon",
   },

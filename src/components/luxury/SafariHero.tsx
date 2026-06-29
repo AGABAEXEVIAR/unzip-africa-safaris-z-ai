@@ -44,7 +44,7 @@ export default function SafariHero({
     "/videos/elephant-rumbling.webm",
   ],
   posterImage =
-    "https://images.unsplash.com/photo-1547621869-cd5e2ef82e1d?auto=format&fit=crop&w=2400&q=85",
+    "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
 }: SafariHeroProps) {
   const { navigate, openQuote } = useRouter();
   const videoRef = useRef<HTMLVideoElement>(null);

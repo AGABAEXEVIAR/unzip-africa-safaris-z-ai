@@ -26,7 +26,7 @@ export function AboutPage() {
       >
         <motion.div style={{ y: heroY, scale: heroScale }} className="absolute inset-0 will-change-transform">
           <img
-            src="https://images.unsplash.com/photo-1547621869-cd5e2ef82e1d?auto=format&fit=crop&w=2400&q=85"
+            src="https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg"
             alt="African savanna at dusk"
             className="w-full h-full object-cover"
           />
@@ -115,7 +115,7 @@ export function AboutPage() {
       <section className="relative h-[70vh] min-h-[500px] overflow-hidden grain">
         <div className="absolute inset-0">
           <img
-            src="https://images.unsplash.com/photo-1500916434205-0c964904b3e1?auto=format&fit=crop&w=2400&q=85"
+            src="https://sfile.chatglm.cn/images-ppt/4423f54c77e6.jpg"
             alt="Savanna landscape"
             className="w-full h-full object-cover"
           />

@@ -145,3 +145,23 @@ Stage Summary:
 - Footer: "Website developed by Agaba Exeviar" link to agabaexeviar.com
 - Request a Quote: navigates to dedicated form page with 3-step form
 - ESLint passes with zero warnings/errors
+
+---
+Task ID: fix-broken-images-welcome-section
+Agent: main
+Task: Fix broken Namibia/Sossusvlei/Virunga images, add Welcome section after hero
+
+Work Log:
+- Audited all Unsplash image URLs across the site — found 7 broken photo IDs (404): photo-1547621869-cd5e2ef82e1d (Serengeti/savanna), photo-1568125757388-9adeb77c8e5f (gorilla), photo-1500916434205-0c964904b3e1 (elephants), photo-1517118818301-e82f3a1c3a4f (volcanoes), photo-1517213849290-bbbfffdc6da4 (chimp), photo-1601913768173-9d2de8d4d9d3 (golden monkey), photo-1500289466305-babaa6e8b1b3 (Namibia dunes)
+- Used z-ai image-search to find working replacements on sfile.chatglm.cn (verified all 25 replacements return HTTP 200)
+- Wrote and ran /scripts/replace-broken-images.sh — a perl-based find-and-replace script that updated all source files (content.ts, SafariHero.tsx, SafariScrollStack.tsx, AboutPage.tsx, QuotePage.tsx, QuoteModal.tsx)
+- Gave Sossusvlei and Virunga distinct portrait images (4dd444015d49.jpg and 55f6eb85ac39.jpg) different from their main images for visual variety
+- Updated SafariScrollStack Namibia card to use 97c40e4746f3.jpg (distinct from the Sossusvlei destination image)
+- Created /src/components/luxury/WelcomeSection.tsx — two-column layout: safari image on the LEFT (aspect 4/5, 06dd6b0e65bb.jpg), text on the RIGHT with eyebrow "Welcome to Unzip Africa", ScrollReveal heading "A luxury safari company specialising in tailor-made wildlife adventures", two paragraphs (the provided welcome text), Plan Your Safari + Discover Our Story CTAs, and a 3-stat row (3 Countries, 15+ Years, 1,200+ Journeys)
+- Added WelcomeSection to HomePage immediately after SafariHero, before the Narrative Intro section
+
+Stage Summary:
+- All 7 broken Unsplash image IDs replaced with working sfile.chatglm.cn URLs across 6 files
+- Verified via Agent Browser: all 13 tour card images load, all 6 destination filmstrip images load (including Sossusvlei at 2560px and Virunga at 3072px), all 4 scroll stack country images load (including Namibia at 1600px)
+- Welcome section verified: eyebrow present, heading present, both paragraphs present, image loaded (1920px), positioned before Philosophy section
+- ESLint passes with zero warnings/errors

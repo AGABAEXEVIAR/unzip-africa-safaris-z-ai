@@ -96,7 +96,7 @@ export function QuoteModal() {
             {/* Left — image / brand panel */}
             <div className="hidden md:block md:col-span-5 relative bg-forest-deep overflow-hidden">
               <img
-                src="https://images.unsplash.com/photo-1547621869-cd5e2ef82e1d?auto=format&fit=crop&w=1200&q=85"
+                src="https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg"
                 alt="African savanna at sunset"
                 className="absolute inset-0 w-full h-full object-cover opacity-50"
               />

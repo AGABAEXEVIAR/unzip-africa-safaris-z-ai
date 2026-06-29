@@ -121,9 +121,9 @@ export const destinations: Destination[] = [
     description:
       "Iron-red dunes rising a thousand feet from a clay pan white as bone — the oldest desert on earth, sculpted by wind for eighty million years. At dawn we climb Big Daddy in silence, then descend into Dead Vlei, where 900-year-old camel thorn trees stand petrified against orange sand.",
     image:
-      "https://images.unsplash.com/photo-1500289466305-babaa6e8b1b3?auto=format&fit=crop&w=1600&q=80",
+      "https://sfile.chatglm.cn/images-ppt/84ed8813798e.jpg",
     imagePortrait:
-      "https://images.unsplash.com/photo-1500289466305-babaa6e8b1b3?auto=format&fit=crop&w=900&q=80",
+      "https://sfile.chatglm.cn/images-ppt/4dd444015d49.jpg",
     days: "8 Days",
     price: "From $46,900",
   },
@@ -135,9 +135,9 @@ export const destinations: Destination[] = [
     description:
       "Five volcanic peaks shrouded in bamboo and Hagenia forest, where Dian Fossey lived and died among the gorillas. The trek is steep, the air thin, the reward transcendental — you sit among a family of twenty, infants tumbling around you, the silverback watching with unhurried eyes.",
     image:
-      "https://images.unsplash.com/photo-1568125757388-9adeb77c8e5f?auto=format&fit=crop&w=1600&q=80",
+      "https://sfile.chatglm.cn/images-ppt/f2522b36c1bf.jpg",
     imagePortrait:
-      "https://images.unsplash.com/photo-1568125757388-9adeb77c8e5f?auto=format&fit=crop&w=900&q=80",
+      "https://sfile.chatglm.cn/images-ppt/55f6eb85ac39.jpg",
     days: "5 Days",
     price: "From $38,500",
   },
@@ -226,7 +226,7 @@ export const tourPackages: TourPackage[] = [
         description:
           "A Cessna Caravan lifts you into the southern plains. Your tented camp — moved twice weekly to track the herd — sits alone on a rise, with no other lights visible at night. Days are spent following the migration in a private Land Cruiser, returning to hot bucket showers and sundowners on the hood.",
         image:
-          "https://images.unsplash.com/photo-1547621869-cd5e2ef82e1d?auto=format&fit=crop&w=1200&q=80",
+          "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
       },
       {
         day: "Day 05–07",
@@ -294,7 +294,7 @@ export const tourPackages: TourPackage[] = [
         description:
           "You land in Kigali where Amara meets you. A short city orientation includes the genocide memorial — a sobering, essential prelude. The night is spent at The Retreat, a sanctuary of butter-cream walls and frangipani trees.",
         image:
-          "https://images.unsplash.com/photo-1568125757388-9adeb77c8e5f?auto=format&fit=crop&w=1200&q=80",
+          "https://sfile.chatglm.cn/images-ppt/f2522b36c1bf.jpg",
       },
       {
         day: "Day 02–03",
@@ -302,7 +302,7 @@ export const tourPackages: TourPackage[] = [
         description:
           "A two-hour drive north delivers you to Singita Kwitonda Lodge, set on a tea plantation at the park's edge. Day 03 begins at 6 AM with the gorilla briefing. The trek through bamboo and Hagenia lasts ninety minutes — then you spend an hour with a family of seventeen, the silverback five meters away.",
         image:
-          "https://images.unsplash.com/photo-1517118818301-e82f3a1c3a4f?auto=format&fit=crop&w=1200&q=80",
+          "https://sfile.chatglm.cn/images-ppt/8c0c59305dbc.jpg",
       },
       {
         day: "Day 04",
@@ -310,7 +310,7 @@ export const tourPackages: TourPackage[] = [
         description:
           "A morning trek for golden monkeys — electric-orange acrobats that live only here — then a private charter across the border to Kisoro, where Amara's family still farms the volcanic slopes below Mount Muhabura.",
         image:
-          "https://images.unsplash.com/photo-1601913768173-9d2de8d4d9d3?auto=format&fit=crop&w=1200&q=80",
+          "https://sfile.chatglm.cn/images-ppt/25ee49aa2374.jpg",
       },
       {
         day: "Day 05–06",
@@ -326,7 +326,7 @@ export const tourPackages: TourPackage[] = [
         description:
           "A charter flight to Kibale, where you spend a full day with a chimp habituation team — not the standard one-hour viewing, but from dawn to dusk, following the troop as they wake, hunt, mate, and nest. This is the rarest primate experience in Africa.",
         image:
-          "https://images.unsplash.com/photo-1517213849290-bbbfffdc6da4?auto=format&fit=crop&w=1200&q=80",
+          "https://sfile.chatglm.cn/images-ppt/ac9862af7e88.jpg",
       },
       {
         day: "Day 09",
@@ -334,7 +334,7 @@ export const tourPackages: TourPackage[] = [
         description:
           "A morning flight to Entebbe, with a day room at the Protea Hotel by Lake Victoria. A sunset boat cruise to search for shoebill storks precedes your evening international departure.",
         image:
-          "https://images.unsplash.com/photo-1547621869-cd5e2ef82e1d?auto=format&fit=crop&w=1200&q=80",
+          "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
       },
     ],
   },
@@ -377,7 +377,7 @@ export const tourPackages: TourPackage[] = [
         description:
           "Four nights at Mombo, the 'place of plenty' on Chief's Island. Days alternate between game drives, mokoro (dugout canoe) glides through papyrus, and helicopter flights over the floodplains. The big five are all here — including the only rhino population in the delta.",
         image:
-          "https://images.unsplash.com/photo-1547621869-cd5e2ef82e1d?auto=format&fit=crop&w=1200&q=80",
+          "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
       },
       {
         day: "Day 06–07",
@@ -385,7 +385,7 @@ export const tourPackages: TourPackage[] = [
         description:
           "A charter south to the Central Kalahari, where you walk with San Bushmen — the original inhabitants of southern Africa — learning the tracking skills that built our species. Evenings are spent around a fire listening to their language, with its 104 distinct click sounds.",
         image:
-          "https://images.unsplash.com/photo-1500289466305-babaa6e8b1b3?auto=format&fit=crop&w=1200&q=80",
+          "https://sfile.chatglm.cn/images-ppt/84ed8813798e.jpg",
       },
       {
         day: "Day 08–10",
@@ -393,7 +393,7 @@ export const tourPackages: TourPackage[] = [
         description:
           "Kofi takes over in Namibia. Three nights at Shipwreck Lodge on the Skeleton Coast — a place of fog, seal colonies, and rusted whaling ships run aground in 1909. A drive along the beach reveals desert-adapted elephants walking in the surf.",
         image:
-          "https://images.unsplash.com/photo-1500916434205-0c964904b3e1?auto=format&fit=crop&w=1200&q=80",
+          "https://sfile.chatglm.cn/images-ppt/4423f54c77e6.jpg",
       },
       {
         day: "Day 11–12",
@@ -401,7 +401,7 @@ export const tourPackages: TourPackage[] = [
         description:
           "Two days tracking the free-ranging desert black rhino on foot with Save the Rhino Trust — perhaps the rarest wildlife encounter on earth. The landscape is volcanic, lunar, and silent in a way that recalibrates your nervous system.",
         image:
-          "https://images.unsplash.com/photo-1500916434205-0c964904b3e1?auto=format&fit=crop&w=1200&q=80",
+          "https://sfile.chatglm.cn/images-ppt/4423f54c77e6.jpg",
       },
       {
         day: "Day 13",
@@ -409,7 +409,7 @@ export const tourPackages: TourPackage[] = [
         description:
           "A pre-dawn drive to the dunes. You climb Big Daddy — at 380 meters, one of the tallest on earth — in the cool dark, reaching the summit as the sun ignites the sand from coral to crimson. Below, Dead Vlei's petrified camel thorns stand like calligraphy.",
         image:
-          "https://images.unsplash.com/photo-1500289466305-babaa6e8b1b3?auto=format&fit=crop&w=1200&q=80",
+          "https://sfile.chatglm.cn/images-ppt/84ed8813798e.jpg",
       },
       {
         day: "Day 14",
@@ -437,7 +437,7 @@ export const tourPackages: TourPackage[] = [
       "Visit the Dian Fossey Fund research station",
     ],
     image:
-      "https://images.unsplash.com/photo-1568125757388-9adeb77c8e5f?auto=format&fit=crop&w=1600&q=80",
+      "https://sfile.chatglm.cn/images-ppt/f2522b36c1bf.jpg",
     destination: "Rwanda",
     activities: ["Gorilla Trekking", "Walking Safaris", "Cultural Tours"],
     tripType: "Family Safaris",
@@ -450,19 +450,19 @@ export const tourPackages: TourPackage[] = [
         day: "Day 01",
         title: "Arrival · Kigali",
         description: "Arrive Kigali, city tour including the genocide memorial, overnight at The Retreat.",
-        image: "https://images.unsplash.com/photo-1568125757388-9adeb77c8e5f?auto=format&fit=crop&w=1200&q=80",
+        image: "https://sfile.chatglm.cn/images-ppt/f2522b36c1bf.jpg",
       },
       {
         day: "Day 02–04",
         title: "Volcanoes National Park · Bisate Lodge",
         description: "Three nights at Bisate Lodge with two gorilla treks and a golden monkey trek.",
-        image: "https://images.unsplash.com/photo-1517118818301-e82f3a1c3a4f?auto=format&fit=crop&w=1200&q=80",
+        image: "https://sfile.chatglm.cn/images-ppt/8c0c59305dbc.jpg",
       },
       {
         day: "Day 05",
         title: "Departure",
         description: "Return to Kigali for international departure.",
-        image: "https://images.unsplash.com/photo-1547621869-cd5e2ef82e1d?auto=format&fit=crop&w=1200&q=80",
+        image: "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
       },
     ],
   },
@@ -507,7 +507,7 @@ export const tourPackages: TourPackage[] = [
         day: "Day 07",
         title: "Departure",
         description: "Flight to Nairobi for international departure.",
-        image: "https://images.unsplash.com/photo-1547621869-cd5e2ef82e1d?auto=format&fit=crop&w=1200&q=80",
+        image: "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
       },
     ],
   },
@@ -527,7 +527,7 @@ export const tourPackages: TourPackage[] = [
       "Stargazing at &Beyond Sossusvlei observatory",
     ],
     image:
-      "https://images.unsplash.com/photo-1500289466305-babaa6e8b1b3?auto=format&fit=crop&w=1600&q=80",
+      "https://sfile.chatglm.cn/images-ppt/84ed8813798e.jpg",
     destination: "Namibia",
     activities: ["Photography", "Stargazing", "Walking Safaris", "Cultural Tours"],
     tripType: "Luxury Safaris",
@@ -546,13 +546,13 @@ export const tourPackages: TourPackage[] = [
         day: "Day 02–05",
         title: "Sossusvlei Desert Lodge",
         description: "Four nights exploring the dunes, Dead Vlei, and the night sky.",
-        image: "https://images.unsplash.com/photo-1500289466305-babaa6e8b1b3?auto=format&fit=crop&w=1200&q=80",
+        image: "https://sfile.chatglm.cn/images-ppt/84ed8813798e.jpg",
       },
       {
         day: "Day 06–07",
         title: "Skeleton Coast",
         description: "Two nights at Shipwreck Lodge on the Skeleton Coast.",
-        image: "https://images.unsplash.com/photo-1500916434205-0c964904b3e1?auto=format&fit=crop&w=1200&q=80",
+        image: "https://sfile.chatglm.cn/images-ppt/4423f54c77e6.jpg",
       },
       {
         day: "Day 08",
@@ -578,7 +578,7 @@ export const tourPackages: TourPackage[] = [
       "Visit to a Maasai village school",
     ],
     image:
-      "https://images.unsplash.com/photo-1547621869-cd5e2ef82e1d?auto=format&fit=crop&w=1600&q=80",
+      "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
     destination: "Tanzania",
     activities: ["Game Drives", "Cultural Tours", "Walking Safaris"],
     tripType: "Family Safaris",
@@ -591,7 +591,7 @@ export const tourPackages: TourPackage[] = [
         day: "Day 01–02",
         title: "Arusha & Tarangire",
         description: "Arrival and two nights at Tarangire with family-friendly game drives.",
-        image: "https://images.unsplash.com/photo-1547621869-cd5e2ef82e1d?auto=format&fit=crop&w=1200&q=80",
+        image: "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
       },
       {
         day: "Day 03–05",
@@ -630,7 +630,7 @@ export const tourPackages: TourPackage[] = [
       "Boat cruise on the Kazinga Channel",
     ],
     image:
-      "https://images.unsplash.com/photo-1517213849290-bbbfffdc6da4?auto=format&fit=crop&w=1600&q=80",
+      "https://sfile.chatglm.cn/images-ppt/ac9862af7e88.jpg",
     destination: "Uganda",
     activities: ["Chimp Trekking", "Walking Safaris", "Birding Tours", "Cultural Tours"],
     tripType: "Budget Safaris",
@@ -643,25 +643,25 @@ export const tourPackages: TourPackage[] = [
         day: "Day 01",
         title: "Arrival · Entebbe",
         description: "Arrive Entebbe, overnight at Protea Hotel by Lake Victoria.",
-        image: "https://images.unsplash.com/photo-1547621869-cd5e2ef82e1d?auto=format&fit=crop&w=1200&q=80",
+        image: "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
       },
       {
         day: "Day 02",
         title: "Ngamba Island",
         description: "Boat to Ngamba Island chimpanzee sanctuary.",
-        image: "https://images.unsplash.com/photo-1517213849290-bbbfffdc6da4?auto=format&fit=crop&w=1200&q=80",
+        image: "https://sfile.chatglm.cn/images-ppt/ac9862af7e88.jpg",
       },
       {
         day: "Day 03–05",
         title: "Kibale Forest",
         description: "Three nights with a full-day chimp habituation experience.",
-        image: "https://images.unsplash.com/photo-1517213849290-bbbfffdc6da4?auto=format&fit=crop&w=1200&q=80",
+        image: "https://sfile.chatglm.cn/images-ppt/ac9862af7e88.jpg",
       },
       {
         day: "Day 06",
         title: "Departure",
         description: "Flight to Entebbe for departure.",
-        image: "https://images.unsplash.com/photo-1547621869-cd5e2ef82e1d?auto=format&fit=crop&w=1200&q=80",
+        image: "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
       },
     ],
   },
@@ -700,7 +700,7 @@ export const tourPackages: TourPackage[] = [
         day: "Day 02–03",
         title: "Okavango Delta Camp",
         description: "Two nights at a delta camp with mokoro and game drives.",
-        image: "https://images.unsplash.com/photo-1547621869-cd5e2ef82e1d?auto=format&fit=crop&w=1200&q=80",
+        image: "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
       },
       {
         day: "Day 04–05",
@@ -718,7 +718,7 @@ export const tourPackages: TourPackage[] = [
         day: "Day 07",
         title: "Departure",
         description: "Flight to Maun for international departure.",
-        image: "https://images.unsplash.com/photo-1547621869-cd5e2ef82e1d?auto=format&fit=crop&w=1200&q=80",
+        image: "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
       },
     ],
   },
@@ -757,7 +757,7 @@ export const tourPackages: TourPackage[] = [
         day: "Day 02–04",
         title: "Volcanoes NP",
         description: "Three nights with a gorilla trek and golden monkey trek.",
-        image: "https://images.unsplash.com/photo-1568125757388-9adeb77c8e5f?auto=format&fit=crop&w=1200&q=80",
+        image: "https://sfile.chatglm.cn/images-ppt/f2522b36c1bf.jpg",
       },
       {
         day: "Day 05–06",
@@ -769,7 +769,7 @@ export const tourPackages: TourPackage[] = [
         day: "Day 07",
         title: "Nyungwe Forest",
         description: "Canopy walk in Nyungwe Forest.",
-        image: "https://images.unsplash.com/photo-1517213849290-bbbfffdc6da4?auto=format&fit=crop&w=1200&q=80",
+        image: "https://sfile.chatglm.cn/images-ppt/ac9862af7e88.jpg",
       },
       {
         day: "Day 08",
@@ -853,7 +853,7 @@ export const tourPackages: TourPackage[] = [
         day: "Day 01",
         title: "Arrival · Entebbe",
         description: "Arrive Entebbe, overnight at Protea Hotel.",
-        image: "https://images.unsplash.com/photo-1547621869-cd5e2ef82e1d?auto=format&fit=crop&w=1200&q=80",
+        image: "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
       },
       {
         day: "Day 02–04",
@@ -865,7 +865,7 @@ export const tourPackages: TourPackage[] = [
         day: "Day 05",
         title: "Budongo Forest",
         description: "Chimp trek in Budongo Forest.",
-        image: "https://images.unsplash.com/photo-1517213849290-bbbfffdc6da4?auto=format&fit=crop&w=1200&q=80",
+        image: "https://sfile.chatglm.cn/images-ppt/ac9862af7e88.jpg",
       },
       {
         day: "Day 06–08",
@@ -877,7 +877,7 @@ export const tourPackages: TourPackage[] = [
         day: "Day 09",
         title: "Departure",
         description: "Flight to Entebbe for departure.",
-        image: "https://images.unsplash.com/photo-1547621869-cd5e2ef82e1d?auto=format&fit=crop&w=1200&q=80",
+        image: "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
       },
     ],
   },
@@ -1010,7 +1010,7 @@ export const accommodations: Accommodation[] = [
     description:
       "A seasonal camp of just three reed-and-thatch chalets on the Mwamba River — the most intimate walking safari camp in Africa. No electricity, no Wi-Fi, no other humans within ten miles.",
     image:
-      "https://images.unsplash.com/photo-1547621869-cd5e2ef82e1d?auto=format&fit=crop&w=1200&q=80",
+      "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
     features: ["Reed-and-thatch chalet", "Walking safari focus", "Open-air star bath", "Last-broadcast radio at 7 PM"],
     pricePerNight: "From $2,800",
   },

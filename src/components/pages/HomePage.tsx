@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { Reveal } from "@/components/luxury/Reveal";
 import ScrollReveal from "@/components/luxury/ScrollReveal";
 import SafariHero from "@/components/luxury/SafariHero";
+import { WelcomeSection } from "@/components/luxury/WelcomeSection";
 import { SafariScrollStack } from "@/components/luxury/SafariScrollStack";
 import { LuxuryTestimonials } from "@/components/luxury/LuxuryTestimonials";
 import { FAQSection, WhyChooseUsSection } from "@/components/luxury/FAQAndWhyChooseUs";
@@ -18,6 +19,9 @@ export function HomePage() {
     <div className="page-enter">
       {/* ====================== HERO — Cinematic Safari Video ====================== */}
       <SafariHero />
+
+      {/* ====================== WELCOME SECTION ====================== */}
+      <WelcomeSection />
 
       {/* ====================== NARRATIVE INTRO ====================== */}
       <section className="py-32 md:py-48 px-6 md:px-10">

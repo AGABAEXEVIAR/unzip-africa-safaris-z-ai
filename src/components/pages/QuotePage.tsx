@@ -71,7 +71,7 @@ export function QuotePage() {
       <section ref={heroRef} className="relative h-[65vh] min-h-[500px] overflow-hidden bg-charcoal grain">
         <motion.div style={{ y: heroY, scale: heroScale }} className="absolute inset-0 will-change-transform">
           <img
-            src="https://images.unsplash.com/photo-1547621869-cd5e2ef82e1d?auto=format&fit=crop&w=2400&q=85"
+            src="https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg"
             alt="African savanna at golden hour"
             className="w-full h-full object-cover"
           />
