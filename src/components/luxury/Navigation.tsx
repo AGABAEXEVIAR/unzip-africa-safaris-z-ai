@@ -18,11 +18,14 @@ export function Navigation() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    // On home page, hide nav until user scrolls past the cinematic hero (~80vh)
+    // On other pages, show after a small scroll
+    const threshold = page === "home" ? window.innerHeight * 0.75 : 40;
+    const onScroll = () => setScrolled(window.scrollY > threshold);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [page]);
 
   // Lock scroll when mobile menu is open
   useEffect(() => {
@@ -38,14 +41,20 @@ export function Navigation() {
     setMenuOpen(false);
   };
 
+  // On home page, the nav is invisible until scrolled (SafariHero has its own pill nav)
+  // On other pages, always show but with the scrolled style applied based on scroll position
+  const isHidden = page === "home" && !scrolled;
+
   return (
     <>
       <header
         className={cn(
           "fixed top-0 left-0 right-0 z-50 transition-all duration-700",
-          scrolled
-            ? "bg-canvas/90 backdrop-blur-md py-4 border-b border-border/40"
-            : "bg-transparent py-7"
+          isHidden
+            ? "opacity-0 -translate-y-full pointer-events-none"
+            : scrolled
+              ? "bg-canvas/90 backdrop-blur-md py-4 border-b border-border/40 opacity-100 translate-y-0"
+              : "bg-transparent py-7 opacity-100 translate-y-0"
         )}
       >
         <div className="mx-auto max-w-[1600px] px-6 md:px-10 flex items-center justify-between">
