@@ -163,19 +163,19 @@ export function Navigation() {
         )}
       >
         <div className="h-full flex flex-col justify-center px-8">
-          <nav className="flex flex-col gap-2">
+          <nav className="flex flex-col gap-1">
             {navItems.map((item, idx) => (
               <button
                 key={item.id}
                 onClick={() => handleNav(item.id)}
                 className={cn(
-                  "font-display text-5xl sm:text-6xl text-left py-3 transition-all duration-700",
+                  "font-display text-3xl sm:text-4xl text-left py-2 transition-all duration-700",
                   page === item.id ? "text-charcoal" : "text-charcoal/40",
                   menuOpen ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
                 )}
                 style={{ transitionDelay: menuOpen ? `${100 + idx * 80}ms` : "0ms" }}
               >
-                <span className="font-label text-gold text-xs align-top mr-3 -translate-y-2 inline-block">
+                <span className="font-label text-gold text-[0.65rem] align-top mr-3 -translate-y-1 inline-block">
                   0{idx + 1}
                 </span>
                 {t(item.labelKey)}
@@ -185,7 +185,7 @@ export function Navigation() {
 
           <div
             className={cn(
-              "mt-16 pt-8 border-t border-border transition-all duration-700",
+              "mt-10 pt-6 border-t border-border transition-all duration-700",
               menuOpen ? "opacity-100" : "opacity-0"
             )}
             style={{ transitionDelay: menuOpen ? "500ms" : "0ms" }}
@@ -195,13 +195,17 @@ export function Navigation() {
                 openQuote();
                 setMenuOpen(false);
               }}
-              className="btn-luxury btn-luxury-gold w-full"
+              className="w-full inline-flex items-center justify-center gap-3 px-6 py-3.5 text-xs font-medium tracking-[0.25em] uppercase transition-all duration-500 hover:opacity-85 active:scale-[0.97]"
+              style={{
+                borderRadius: 0,
+                border: "1px solid var(--gold)",
+                background: "var(--gold)",
+                color: "var(--charcoal)",
+                fontFamily: "var(--font-inter), sans-serif",
+              }}
             >
-              Request a Quote
+              {t("nav.requestQuote")}
             </button>
-            <p className="font-label text-charcoal/50 mt-8 text-center">
-              Arusha · Maun · Kigali · Windhoek
-            </p>
           </div>
         </div>
       </div>

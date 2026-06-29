@@ -225,3 +225,21 @@ Stage Summary:
 - Language switcher: full version on desktop, compact flag+code version on phone/tablet next to hamburger
 - ESLint passes with zero warnings/errors
 - Verified on desktop (1440px), tablet (800px), and mobile (417px) — all working correctly
+
+---
+Task ID: hero-eyebrow-vigorous-mobile-menu-fixes
+Agent: main
+Task: Change hero eyebrow from glow to vigorous wavy pulse rings, fix mobile menu (RAQ color, remove cities, reduce nav font sizes)
+
+Work Log:
+- Hero eyebrow: replaced the glowing box-shadow animation (heroEyebrowGlow) with the same vigorous wavy pulse rings effect used by the WhatsApp chatbot. Removed the box-shadow and glow animation from .hero-eyebrow-label. Added three .hero-eyebrow-ring elements inside the label span, each with a gold border that scales from 1 to 1.8 and fades out (heroEyebrowWaveRing keyframes, 2.4s ease-out infinite, staggered 0.8s apart). The label retains its semi-transparent charcoal background, backdrop blur, and gold border — but now has concentric pulse rings expanding outward instead of a static glow.
+- Mobile menu RAQ button: changed from btn-luxury btn-luxury-gold (gold border, cream text, forest green fill on hover) to a solid dull gold button: background var(--gold) #A88B5C, text color var(--charcoal) #1C1A17, border var(--gold), border-radius 0, with opacity hover effect. Verified: background rgb(168,139,92), color rgb(28,26,23).
+- Mobile menu cities text: removed the "Arusha · Maun · Kigali · Windhoek" paragraph that was below the RAQ button. Verified: citiesTextPresent false.
+- Mobile menu nav link font sizes: reduced from text-5xl sm:text-6xl (48px/60px) to text-3xl sm:text-4xl (30px/36px). Also reduced the number prefix from text-xs to text-[0.65rem], reduced gap from gap-2 to gap-1, reduced py from py-3 to py-2, reduced top margin from mt-16 pt-8 to mt-10 pt-6. Verified: nav link fontSize 30px (was 48px).
+- Also updated the RAQ button text to use t("nav.requestQuote") for proper translation support.
+
+Stage Summary:
+- Hero eyebrow: "UNZIP AFRICA SAFARI" in a bordered label with 3 concentric gold pulse rings expanding outward (vigorous wavy effect matching WhatsApp chatbot), no glow
+- Mobile menu RAQ button: solid dull gold (#A88B5C) with charcoal text, sharp corners
+- Mobile menu: cities text removed, nav links reduced from 48px to 30px
+- ESLint passes with zero warnings/errors

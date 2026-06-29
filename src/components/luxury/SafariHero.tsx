@@ -188,7 +188,7 @@ export default function SafariHero({
         {/* ===== Hero Main Content — each element independently animated ===== */}
         <div className="flex flex-1 items-center justify-center px-6 pt-32 md:pt-40">
           <div className="flex max-w-4xl flex-col items-center text-center 2xl:max-w-6xl">
-            {/* Eyebrow — bordered glowing label */}
+            {/* Eyebrow — bordered label with vigorous wavy pulse rings */}
             <motion.div
               variants={eyebrowVariants}
               initial="hidden"
@@ -199,6 +199,10 @@ export default function SafariHero({
                 className="hero-eyebrow-label inline-flex items-center px-5 py-2 text-[0.65rem] font-medium tracking-[0.35em] uppercase text-gold-soft md:text-xs"
                 style={{ fontFamily: "var(--font-inter), sans-serif" }}
               >
+                {/* Three concentric pulse rings — vigorous wavy effect */}
+                <span className="hero-eyebrow-ring" />
+                <span className="hero-eyebrow-ring hero-eyebrow-ring-2" />
+                <span className="hero-eyebrow-ring hero-eyebrow-ring-3" />
                 {t("hero.eyebrow")}
               </span>
             </motion.div>
