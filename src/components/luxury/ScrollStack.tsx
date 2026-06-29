@@ -165,12 +165,13 @@ const ScrollStack = ({
       };
 
       const lastTransform = lastTransformsRef.current.get(i);
+      // Lower threshold + always update if pinned so the transition can interpolate smoothly
       const hasChanged =
         !lastTransform ||
-        Math.abs(lastTransform.translateY - newTransform.translateY) > 0.1 ||
-        Math.abs(lastTransform.scale - newTransform.scale) > 0.001 ||
-        Math.abs(lastTransform.rotation - newTransform.rotation) > 0.1 ||
-        Math.abs(lastTransform.blur - newTransform.blur) > 0.1;
+        Math.abs(lastTransform.translateY - newTransform.translateY) > 0.01 ||
+        Math.abs(lastTransform.scale - newTransform.scale) > 0.0001 ||
+        Math.abs(lastTransform.rotation - newTransform.rotation) > 0.01 ||
+        Math.abs(lastTransform.blur - newTransform.blur) > 0.01;
 
       if (hasChanged && card) {
         const transform = `translate3d(0, ${newTransform.translateY}px, 0) scale(${newTransform.scale}) rotate(${newTransform.rotation}deg)`;
@@ -211,7 +212,12 @@ const ScrollStack = ({
   ]);
 
   const handleScroll = useCallback(() => {
-    updateCardTransforms();
+    // Throttle to one update per animation frame to prevent shakiness
+    if (animationFrameRef.current) return;
+    animationFrameRef.current = requestAnimationFrame(() => {
+      animationFrameRef.current = 0;
+      updateCardTransforms();
+    });
   }, [updateCardTransforms]);
 
   // Listen to window scroll (the site already uses Lenis at top level which drives window scroll)
@@ -232,10 +238,12 @@ const ScrollStack = ({
       card.style.webkitTransform = "translateZ(0)";
       card.style.perspective = "1000px";
       card.style.webkitPerspective = "1000px";
+      // Smooth interpolation on transform/filter changes to eliminate shakiness
+      card.style.transition = "transform 0.15s linear, filter 0.15s linear";
     });
 
     // Use window scroll listener (Lenis at top level updates window.scrollY)
-    const scrollListener = () => updateCardTransforms();
+    const scrollListener = () => handleScroll();
     window.addEventListener("scroll", scrollListener, { passive: true });
     window.addEventListener("resize", scrollListener, { passive: true });
 
@@ -266,6 +274,7 @@ const ScrollStack = ({
     useWindowScroll,
     onStackComplete,
     updateCardTransforms,
+    handleScroll,
   ]);
 
   const containerStyles = useWindowScroll

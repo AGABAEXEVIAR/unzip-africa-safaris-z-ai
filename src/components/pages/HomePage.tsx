@@ -159,8 +159,8 @@ function HorizontalDestinations() {
     <>
       {/* Section heading — in normal flow, ABOVE the filmstrip section, NOT overlapping */}
       <div className="px-6 md:px-10 pt-32 md:pt-40 pb-16 md:pb-24">
-        <div className="mx-auto max-w-[1600px] flex flex-col md:flex-row md:items-end justify-between gap-4">
-          <div>
+        <div className="mx-auto max-w-[1600px] flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div className="max-w-3xl">
             <p className="font-eyebrow text-gold mb-4">Our Destinations</p>
             <ScrollReveal
               as="h2"
@@ -169,10 +169,15 @@ function HorizontalDestinations() {
               baseOpacity={0.1}
               blurStrength={5}
             >
-              Six Wildernesses, <span className="italic text-forest">One Continent</span>
+              Our top <span className="italic text-forest">safari parks</span>
             </ScrollReveal>
+            <p className="text-base md:text-lg text-charcoal/70 leading-relaxed mt-6 max-w-2xl">
+              Africa is home to the world&rsquo;s most iconic safari destinations, offering
+              unmatched wildlife encounters, breathtaking landscapes, and unforgettable cultural
+              experiences.
+            </p>
           </div>
-          <p className="font-label text-charcoal/50 hidden md:block">
+          <p className="font-label text-charcoal/50 hidden md:block flex-shrink-0">
             ↓ Scroll to pan the filmstrip
           </p>
         </div>

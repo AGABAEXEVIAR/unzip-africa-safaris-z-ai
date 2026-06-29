@@ -98,9 +98,20 @@ export function Footer() {
           <p className="text-xs text-cream/40 tracking-wide">
             © {new Date().getFullYear()} Unzip Africa Safaris Ltd. All rights reserved.
           </p>
-          <div className="flex gap-6 text-xs text-cream/40">
+          <div className="flex flex-wrap gap-6 text-xs text-cream/40 items-center">
             <span>Privacy</span>
             <span>Terms</span>
+            <span>
+              Website developed by{" "}
+              <a
+                href="https://www.agabaexeviar.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gold-soft hover:text-gold transition-colors underline"
+              >
+                Agaba Exeviar
+              </a>
+            </span>
           </div>
         </div>
       </div>

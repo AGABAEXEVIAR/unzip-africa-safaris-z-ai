@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, useCallback, useEffect, ReactNode } from "react";
 
-export type PageId = "home" | "about" | "tours" | "accommodation" | "contact";
+export type PageId = "home" | "about" | "tours" | "accommodation" | "contact" | "quote";
 
 type RouterContextValue = {
   page: PageId;
@@ -35,10 +35,18 @@ export function RouterProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const openQuote = useCallback(() => setQuoteOpen(true), []);
+  // openQuote now navigates to the dedicated quote form page
+  const openQuote = useCallback(() => {
+    setPage("quote");
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "auto" });
+      const lenis = (window as unknown as { __lenis?: { scrollTo: (target: number, opts?: unknown) => void } }).__lenis;
+      lenis?.scrollTo(0, { immediate: true });
+    }
+  }, []);
   const closeQuote = useCallback(() => setQuoteOpen(false), []);
 
-  // Lock body scroll when quote modal is open
+  // Lock body scroll when quote modal is open (kept for backward compatibility)
   useEffect(() => {
     if (quoteOpen) {
       document.body.style.overflow = "hidden";

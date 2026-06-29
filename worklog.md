@@ -124,3 +124,24 @@ Stage Summary:
 - Milestones alternate left/right on desktop/tablet, all-left on mobile
 - Footer: 4 columns on same row, UNZIP AFRICA wordmark above copyright row
 - ESLint passes with zero warnings/errors
+
+---
+Task ID: scrollstack-content-smoothness-whatsapp-circular-footer-link-quote-page
+Agent: main
+Task: Update ScrollStack content + smoothness, change destinations heading, circular WhatsApp, footer credit link, quote form page
+
+Work Log:
+- SafariScrollStack: replaced 5 generic safari cards with 4 country cards — Uganda ("The Pearl of Africa"), Kenya ("Visit Magical Kenya"), Tanzania ("Land of Kilimanjaro, Serengeti and Zanzibar"), Namibia ("Endless Horizon"). Added main heading "Explore our most popular destinations" + subtitle paragraph "Our expert travel designers are on hand to create the perfect trip for you..."
+- ScrollStack smoothness: wrapped scroll handler in requestAnimationFrame throttling (prevents multiple updates per frame), added CSS transition "transform 0.15s linear, filter 0.15s linear" to each card, lowered hasChanged threshold from 0.1 to 0.01 for more frequent smooth updates
+- Destinations section: changed heading from "Six Wildernesses, One Continent" to "Our top safari parks", added subtitle "Africa is home to the world's most iconic safari destinations, offering unmatched wildlife encounters, breathtaking landscapes, and unforgettable cultural experiences."
+- WhatsApp chatbot: changed main button + pulse rings + notification dot borderRadius from 0 to "100%" (circular)
+- Footer: added "Website developed by Agaba Exeviar" linking to https://www.agabaexeviar.com (target=_blank, gold-soft color with underline)
+- Request a Quote: added "quote" page to router (PageId type), changed openQuote() to navigate to the quote page instead of opening modal. Created QuotePage component with 3-step form (destinations+duration, interests+budget, contact details), full form submission with toast notification, phone CTA at bottom
+
+Stage Summary:
+- ScrollStack: 4 country cards with taglines, main heading + subtitle, smooth scrolling (rAF + CSS transitions)
+- Destinations section: new heading "Our top safari parks" + subtitle
+- WhatsApp button: circular (borderRadius 100%)
+- Footer: "Website developed by Agaba Exeviar" link to agabaexeviar.com
+- Request a Quote: navigates to dedicated form page with 3-step form
+- ESLint passes with zero warnings/errors

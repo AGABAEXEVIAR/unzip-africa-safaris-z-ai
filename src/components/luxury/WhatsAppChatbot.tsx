@@ -72,17 +72,17 @@ export function WhatsAppChatbot() {
         </div>
       )}
 
-      {/* Main floating button — wavy vigorous effect */}
+      {/* Main floating button — circular, wavy vigorous effect */}
       <button
         onClick={() => setExpanded(!expanded)}
         aria-label="Open WhatsApp chat"
         className="relative w-14 h-14 bg-forest hover:bg-forest-deep flex items-center justify-center shadow-2xl transition-transform duration-300 hover:scale-110 active:scale-95 border border-gold/40"
-        style={{ borderRadius: 0 }}
+        style={{ borderRadius: "100%" }}
       >
-        {/* Wavy vigorous pulse rings */}
-        <span className="absolute inset-0 bg-forest opacity-60 whatsapp-wave-ring" style={{ borderRadius: 0 }} />
-        <span className="absolute inset-0 bg-gold opacity-40 whatsapp-wave-ring-2" style={{ borderRadius: 0 }} />
-        <span className="absolute inset-0 bg-gold opacity-20 whatsapp-wave-ring-3" style={{ borderRadius: 0 }} />
+        {/* Wavy vigorous pulse rings — circular */}
+        <span className="absolute inset-0 bg-forest opacity-60 whatsapp-wave-ring" style={{ borderRadius: "100%" }} />
+        <span className="absolute inset-0 bg-gold opacity-40 whatsapp-wave-ring-2" style={{ borderRadius: "100%" }} />
+        <span className="absolute inset-0 bg-gold opacity-20 whatsapp-wave-ring-3" style={{ borderRadius: "100%" }} />
 
         {/* Vigorous shake/wave on the icon itself */}
         <span className="relative whatsapp-icon-wiggle">
@@ -97,7 +97,7 @@ export function WhatsAppChatbot() {
 
         {/* Notification dot */}
         {!expanded && (
-          <span className="absolute -top-1 -right-1 w-4 h-4 bg-gold border-2 border-cream flex items-center justify-center">
+          <span className="absolute -top-1 -right-1 w-4 h-4 bg-gold border-2 border-cream flex items-center justify-center" style={{ borderRadius: "100%" }}>
             <span className="w-1.5 h-1.5 bg-cream rounded-full" />
           </span>
         )}
