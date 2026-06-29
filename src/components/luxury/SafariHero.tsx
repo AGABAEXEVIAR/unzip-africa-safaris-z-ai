@@ -41,7 +41,7 @@ export default function SafariHero({
   ),
   primaryActionText = "Begin Your Journey",
   videoSources = [
-    "/videos/wildebeest-drinking.webm",
+    "/videos/pexels-safari.mp4",
     "/videos/elephant-rumbling.webm",
   ],
   posterImage =
@@ -165,7 +165,10 @@ export default function SafariHero({
           poster={posterImage}
           style={{ opacity: videoLoaded ? 1 : 0 }}
         >
-          <source src={videoSources[activeVideoIdx]} type="video/webm" />
+          <source
+            src={videoSources[activeVideoIdx]}
+            type={videoSources[activeVideoIdx].endsWith(".webm") ? "video/webm" : "video/mp4"}
+          />
         </video>
 
         {/* Cinematic gradient overlays for legibility */}

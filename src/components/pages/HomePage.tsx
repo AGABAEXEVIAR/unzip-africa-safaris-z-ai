@@ -89,37 +89,61 @@ export function HomePage() {
       {/* ====================== FAQ ====================== */}
       <FAQSection />
 
-      {/* ====================== FINAL CTA ====================== */}
-      <section className="py-32 md:py-48 px-6 md:px-10 bg-bone/50">
-        <div className="mx-auto max-w-[1200px] text-center">
-          <Reveal variant="up">
-            <p className="font-eyebrow text-gold mb-8">{t("cta.eyebrow")}</p>
-          </Reveal>
-          <ScrollReveal
-            as="h2"
-            containerClassName="font-display text-5xl md:text-7xl lg:text-8xl leading-[0.95] text-charcoal tracking-tight block mb-10"
-            textClassName="block"
-            baseOpacity={0.1}
-            blurStrength={6}
-          >
-            {t("cta.heading1")} <span className="italic text-forest">{t("cta.heading2")}</span>
-          </ScrollReveal>
-          <Reveal variant="up" delay={0.2}>
-            <p className="text-lg text-charcoal/70 max-w-xl mx-auto mt-10 leading-relaxed">
-              {t("cta.subtitle")}
-            </p>
-            <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-5">
-              <button onClick={openQuote} className="btn-luxury btn-luxury-gold">
-                {t("cta.requestQuote")}
-              </button>
-              <button
-                onClick={() => navigate("contact")}
-                className="link-underline text-charcoal/70"
+      {/* ====================== FINAL CTA — Two Column (Text + YouTube Video) ====================== */}
+      <section className="py-24 md:py-40 px-6 md:px-10 bg-bone/50">
+        <div className="mx-auto max-w-[1400px]">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16 items-center">
+            {/* Left — Text content */}
+            <div>
+              <Reveal variant="up">
+                <p className="font-eyebrow text-gold mb-6">{t("cta.eyebrow")}</p>
+              </Reveal>
+              <ScrollReveal
+                as="h2"
+                containerClassName="font-display text-4xl md:text-6xl lg:text-7xl leading-[0.95] text-charcoal tracking-tight block mb-8"
+                textClassName="block"
+                baseOpacity={0.1}
+                blurStrength={6}
               >
-                {t("cta.speakSpecialist")}
-              </button>
+                {t("cta.heading1")} <span className="italic text-forest">{t("cta.heading2")}</span>
+              </ScrollReveal>
+              <Reveal variant="up" delay={0.2}>
+                <p className="text-base md:text-lg text-charcoal/70 max-w-xl leading-relaxed mb-10">
+                  {t("cta.subtitle")}
+                </p>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
+                  <button onClick={openQuote} className="btn-luxury btn-luxury-gold">
+                    {t("cta.requestQuote")}
+                  </button>
+                  <button
+                    onClick={() => navigate("contact")}
+                    className="link-underline text-charcoal/70"
+                  >
+                    {t("cta.speakSpecialist")}
+                  </button>
+                </div>
+              </Reveal>
             </div>
-          </Reveal>
+
+            {/* Right — YouTube Video */}
+            <Reveal variant="right" delay={0.2}>
+              <div className="relative w-full overflow-hidden bg-charcoal shadow-2xl card-luxury" style={{ borderRadius: 0 }}>
+                <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
+                  <iframe
+                    className="absolute inset-0 w-full h-full"
+                    src="https://www.youtube.com/embed/SJrIPSPuASU?si=dxm70rdjVhjIhjVT"
+                    title="YouTube video player"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerPolicy="strict-origin-when-cross-origin"
+                    allowFullScreen
+                  />
+                </div>
+                {/* Decorative frame border */}
+                <div className="absolute inset-3 md:inset-4 border border-cream/15 pointer-events-none" />
+              </div>
+            </Reveal>
+          </div>
         </div>
       </section>
     </div>
