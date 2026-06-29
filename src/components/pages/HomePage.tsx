@@ -6,6 +6,7 @@ import { Reveal } from "@/components/luxury/Reveal";
 import ScrollReveal from "@/components/luxury/ScrollReveal";
 import SafariHero from "@/components/luxury/SafariHero";
 import { LuxuryTestimonials } from "@/components/luxury/LuxuryTestimonials";
+import { FAQSection, WhyChooseUsSection } from "@/components/luxury/FAQAndWhyChooseUs";
 import { useRouter } from "@/lib/router";
 import { destinations, experts } from "@/lib/content";
 
@@ -22,8 +23,10 @@ export function HomePage() {
         <div className="mx-auto max-w-[1400px] grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-20">
           <div className="md:col-span-3">
             <Reveal variant="up">
-              <p className="font-eyebrow text-gold mb-4">Our Philosophy</p>
-              <p className="font-label text-charcoal/60">No two journeys are alike</p>
+              <h2 className="font-display text-3xl md:text-4xl text-charcoal tracking-tight mb-3 leading-[1.05]">
+                Our Philosophy
+              </h2>
+              <p className="font-label text-charcoal/55 italic">&ldquo;No two journeys are alike&rdquo;</p>
             </Reveal>
           </div>
 
@@ -69,6 +72,12 @@ export function HomePage() {
 
       {/* ====================== TESTIMONIALS ====================== */}
       <LuxuryTestimonials />
+
+      {/* ====================== WHY CHOOSE US ====================== */}
+      <WhyChooseUsSection />
+
+      {/* ====================== FAQ ====================== */}
+      <FAQSection />
 
       {/* ====================== FINAL CTA ====================== */}
       <section className="py-32 md:py-48 px-6 md:px-10 bg-bone/50">

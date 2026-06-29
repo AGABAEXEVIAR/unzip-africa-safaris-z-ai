@@ -8,6 +8,8 @@ import { CustomCursor } from "@/components/luxury/CustomCursor";
 import { Navigation } from "@/components/luxury/Navigation";
 import { Footer } from "@/components/luxury/Footer";
 import { QuoteModal } from "@/components/luxury/QuoteModal";
+import { WhatsAppChatbot } from "@/components/luxury/WhatsAppChatbot";
+import { CookieConsent } from "@/components/luxury/CookieConsent";
 import { HomePage } from "@/components/pages/HomePage";
 import { AboutPage } from "@/components/pages/AboutPage";
 import { ToursPage } from "@/components/pages/ToursPage";
@@ -50,6 +52,8 @@ function PageContent() {
       </main>
       <Footer />
       <QuoteModal />
+      <WhatsAppChatbot />
+      <CookieConsent />
     </div>
   );
 }

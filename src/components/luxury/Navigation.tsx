@@ -101,9 +101,12 @@ export function Navigation() {
             <button
               onClick={openQuote}
               className={cn(
-                "hidden md:inline-flex font-label transition-colors duration-500",
-                scrolled ? "text-charcoal/80 hover:text-charcoal" : "text-cream/80 hover:text-cream"
+                "hidden md:inline-flex font-label px-6 py-2.5 border transition-all duration-500",
+                scrolled
+                  ? "border-charcoal text-charcoal hover:bg-charcoal hover:text-cream"
+                  : "border-cream/70 text-cream hover:bg-cream hover:text-charcoal"
               )}
+              style={{ borderRadius: 0 }}
             >
               Request a Quote
             </button>

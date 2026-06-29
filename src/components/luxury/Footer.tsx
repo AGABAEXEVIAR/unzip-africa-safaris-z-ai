@@ -7,8 +7,8 @@ export function Footer() {
 
   return (
     <footer className="mt-auto bg-forest-deep text-cream pt-24 pb-10 px-6 md:px-10 relative overflow-hidden">
-      {/* Giant wordmark */}
-      <div className="absolute -bottom-6 md:-bottom-12 left-0 right-0 pointer-events-none select-none">
+      {/* Giant wordmark — pushed up so it doesn't overlap the bottom bar */}
+      <div className="absolute -bottom-32 md:-bottom-40 left-0 right-0 pointer-events-none select-none">
         <div className="font-display text-[18vw] md:text-[14vw] leading-none text-cream/[0.04] text-center tracking-tighter">
           UNZIP AFRICA
         </div>
@@ -32,7 +32,7 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Middle — Columns */}
+        {/* Middle — Columns (all 4 follow the same layout pattern) */}
         <div className="grid grid-cols-2 md:grid-cols-12 gap-10 py-16">
           <div className="col-span-2 md:col-span-4">
             <img
@@ -88,9 +88,7 @@ export function Footer() {
                 </a>
               </li>
               <li>+255 784 920 113</li>
-              <li className="pt-2 text-cream/50">
-                Mon–Fri · 6 AM – 9 PM EAT
-              </li>
+              <li className="text-cream/50">Mon–Fri · 6 AM – 9 PM EAT</li>
             </ul>
           </div>
         </div>
@@ -103,7 +101,6 @@ export function Footer() {
           <div className="flex gap-6 text-xs text-cream/40">
             <span>Privacy</span>
             <span>Terms</span>
-            <span>Conservation Pledge</span>
           </div>
         </div>
       </div>

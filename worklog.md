@@ -63,3 +63,40 @@ Stage Summary:
 - Logo image verified in nav (300x150 natural, brightness(0) invert(1) filter for white over dark hero)
 - Favicon verified: /logo.png
 - ESLint passes with zero warnings/errors
+
+---
+Task ID: tours-redesign-faq-whatsapp-cookie-etc
+Agent: main
+Task: Multiple home/tours/footer changes including Tours page redesign with filters, FAQ, Why Choose Us, WhatsApp chatbot, GDPR cookie consent, testimonials infinite scroll, footer fixes
+
+Work Log:
+- Removed FlipText animation from hero title (reverted to static text)
+- Converted testimonials from embla carousel to CSS-based vertical infinite marquee scroll (60s linear infinite, pause on hover, 8 testimonials doubled for seamless loop)
+- Philosophy section: changed "Our Philosophy" from small eyebrow to large h2 (text-3xl/4xl), added curly quotes around "No two journeys are alike", made it smaller than the heading
+- Request a Quote button in nav: added 1px solid border with no border radius, adaptive colors (cream border over dark hero, charcoal border when scrolled)
+- Created WhatsAppChatbot component: sticky bottom-right, #25D366 green button with three concentric wavy pulse rings (staggered 0.8s apart), vigorous icon wiggle animation (rotates -12° to +12° every 3s, continuous on hover), expandable chat preview bubble with "Start Chat" CTA linking to https://wa.me/256706761092
+- Created CookieConsent component: GDPR banner with Accept/Deny buttons, stores choice in localStorage, slides up from bottom, uses queueMicrotask pattern to avoid setState-in-effect lint rule
+- Added WhatsAppChatbot + CookieConsent to main page.tsx
+- Created FAQSection: 8 safari-specific FAQs with accordion (expand/collapse, gold + icon rotates to ×)
+- Created WhyChooseUsSection: 6 reasons with numbered display (01-06), custom SVG icons, hover effects
+- Added both sections to HomePage between Testimonials and Final CTA
+- Footer fixes: made Inquiries section layout parallel to Navigate/Offices (removed extra pt-2 spacing), pushed UNZIP AFRICA wordmark down (-bottom-32 instead of -bottom-6) so it doesn't overlap the copyright row, removed "Conservation Pledge" link
+- Expanded tourPackages data from 3 to 13 tours with new filterable fields (destination, activities, tripType, accommodationLevel, nationalPark, durationDays, priceFrom, minAge, featured, priceOriginal for discounts)
+- Completely rewrote ToursPage with filter sidebar design per reference screenshot:
+  • Left sidebar: "Filter By" with 7 expandable sections (Destination checkboxes, Price range slider, Duration range slider, Activities checkboxes, Trip Types, Accommodation Level, National Parks)
+  • Right: tour cards grid (3 columns on desktop, responsive) with image, Featured/Discount badges, title, metadata (duration/age/location), activity tags, price with strikethrough for discounts, Details + Book Now buttons
+  • Sort dropdown (Recommended/Price Low-High/High-Low/Duration)
+  • Result count
+  • Mobile filter toggle with slide-in panel
+  • Tour detail modal with full highlights, activities, pricing, Book This Journey CTA
+  • "What's Included" band + final CTA preserved
+
+Stage Summary:
+- All 12 requested changes implemented and verified via Agent Browser
+- Hero title static (0 flip-chars), philosophy heading 36px vs 11px subtitle with quotes, RAQ button bordered with 0px radius
+- WhatsApp button links to wa.me/256706761092 with prefilled message, cookie consent stores choice in localStorage
+- Tours page: 13 tours, 7 filter sections, 3-column card grid, sort dropdown, detail modal — filtering verified (Uganda filter shows 3 tours)
+- Testimonials: CSS marquee with testimonialsScroll animation, 60s infinite, 16 items
+- FAQ: 8 questions with accordion, Why Choose Us: 6 numbered reasons
+- Footer: Conservation Pledge removed, Inquiries parallel to Offices, UNZIP AFRICA wordmark pushed below footer bottom
+- ESLint passes with zero warnings/errors
