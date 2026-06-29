@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Reveal } from "@/components/luxury/Reveal";
 import ScrollReveal from "@/components/luxury/ScrollReveal";
@@ -298,26 +298,13 @@ export function AboutPage() {
                   title: "The Long Run Membership",
                   body: "We are admitted as the 38th member of The Long Run — the global association of conservation-focused luxury travel companies founded by Zeitz Foundation.",
                 },
-              ].map((m, idx) => (
-                <Reveal key={m.year} variant="up">
-                  <div className={`relative grid md:grid-cols-2 gap-8 md:gap-16 items-start ${idx % 2 === 1 ? "md:[direction:rtl]" : ""}`}>
-                    {/* Dot */}
-                    <div className="absolute left-4 md:left-1/2 top-2 w-3 h-3 rounded-full bg-gold -translate-x-1/2 ring-4 ring-canvas z-10" />
-
-                    <div className={`pl-12 md:pl-0 [direction:ltr] ${idx % 2 === 0 ? "md:text-right md:pr-16" : "md:col-start-2 md:pl-16"}`}>
-                      <p className="font-display text-5xl md:text-7xl text-gold/50 italic mb-3 tracking-tight">
-                        {m.year}
-                      </p>
-                      <h3 className="font-display text-2xl md:text-3xl text-charcoal mb-3 tracking-tight">
-                        {m.title}
-                      </h3>
-                      <p className="text-charcoal/70 leading-relaxed max-w-md md:inline-block">
-                        {m.body}
-                      </p>
-                    </div>
-                  </div>
-                </Reveal>
-              ))}
+              ].map((m, idx) => {
+                // On desktop/tablet (md+): even indices (0, 2, 4) animate from LEFT, odd indices (1, 3) animate from RIGHT
+                // On mobile: all animate from the left (current behavior preserved)
+                return (
+                  <MilestoneItem key={m.year} idx={idx} year={m.year} title={m.title} body={m.body} />
+                );
+              })}
             </div>
           </div>
         </div>
@@ -358,5 +345,70 @@ export function AboutPage() {
         </div>
       </section>
     </div>
+  );
+}
+
+/* ===================== Milestone Item with responsive slide-in direction ===================== */
+function useIsDesktop() {
+  const [isDesktop, setIsDesktop] = useState(false);
+  useEffect(() => {
+    const check = () => setIsDesktop(window.innerWidth >= 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+  return isDesktop;
+}
+
+function MilestoneItem({
+  idx,
+  year,
+  title,
+  body,
+}: {
+  idx: number;
+  year: string;
+  title: string;
+  body: string;
+}) {
+  const isDesktop = useIsDesktop();
+  // On desktop/tablet: even indices (0, 2, 4) animate from LEFT, odd indices (1, 3) from RIGHT
+  // On mobile: all animate from the left
+  const isLeft = !isDesktop || idx % 2 === 0;
+  const xOffset = isLeft ? -60 : 60;
+  // On desktop: even indices go in the LEFT column (text-right), odd indices go in the RIGHT column (text-left)
+  const isRightColumn = idx % 2 === 1;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: xOffset, y: 20 }}
+      whileInView={{ opacity: 1, x: 0, y: 0 }}
+      viewport={{ once: true, amount: 0.3 }}
+      transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+    >
+      <div className="relative grid md:grid-cols-2 gap-8 md:gap-16 items-start">
+        {/* Dot — centered on the vertical line */}
+        <div className="absolute left-4 md:left-1/2 top-2 w-3 h-3 rounded-full bg-gold -translate-x-1/2 ring-4 ring-canvas z-10" />
+
+        {/* Content: left column for even indices, right column for odd indices */}
+        <div
+          className={`pl-12 md:pl-0 ${
+            isRightColumn
+              ? "md:col-start-2 md:pl-16"
+              : "md:col-start-1 md:text-right md:pr-16"
+          }`}
+        >
+          <p className="font-display text-5xl md:text-7xl text-gold/50 italic mb-3 tracking-tight">
+            {year}
+          </p>
+          <h3 className="font-display text-2xl md:text-3xl text-charcoal mb-3 tracking-tight">
+            {title}
+          </h3>
+          <p className="text-charcoal/70 leading-relaxed max-w-md md:inline-block">
+            {body}
+          </p>
+        </div>
+      </div>
+    </motion.div>
   );
 }

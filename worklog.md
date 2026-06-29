@@ -100,3 +100,27 @@ Stage Summary:
 - FAQ: 8 questions with accordion, Why Choose Us: 6 numbered reasons
 - Footer: Conservation Pledge removed, Inquiries parallel to Offices, UNZIP AFRICA wordmark pushed below footer bottom
 - ESLint passes with zero warnings/errors
+
+---
+Task ID: whatsapp-colors-scrollstack-testimonials-speed-milestones-footer
+Agent: main
+Task: Change WhatsApp colors to website palette, add ScrollStack section, increase testimonials speed, move Why Choose Us, alternate milestones, fix footer wordmark + inquiries layout
+
+Work Log:
+- WhatsApp chatbot: replaced all #25D366 (bright green) with website palette — button bg is now forest (#2C3A2E), icon is gold-soft (#C9B187), pulse rings are forest + gold, added gold/40 border. Verified via getComputedStyle: btnBg rgb(44,58,46), iconColor rgb(201,177,135), rings forest+gold+gold
+- Created /src/components/luxury/ScrollStack.tsx — adapted the provided component for Next.js + TypeScript, uses window scroll (compatible with the site's top-level Lenis), removed the internal Lenis instance to avoid conflict, listens to window scroll + resize events
+- Created /src/components/luxury/SafariScrollStack.tsx — wrapper section with 5 safari image cards (Maasai Mara, Bwindi, Serengeti, Okavango, Sossusvlei), each card is purely an image with gradient overlay + minimal caption (number + title + location), no h1/paragraphs on the cards
+- Added SafariScrollStack to HomePage immediately after the Philosophy section, before HorizontalDestinations
+- Moved WhyChooseUsSection to after HorizontalDestinations (was after Testimonials) — new order: Philosophy → ScrollStack → Destinations → Why Choose Us → ParallaxQuote → ExpertCarousel → Testimonials → FAQ → CTA
+- Increased testimonials vertical scroll speed: changed animation duration from 60s to 30s (twice as fast) in globals.css
+- Milestones timeline: created MilestoneItem component with useIsDesktop hook. On desktop/tablet (≥768px): even indices (2009, 2017, 2024) animate from LEFT and sit in left column (text-right), odd indices (2013, 2021) animate from RIGHT and sit in right column (col-start-2). On mobile: all animate from the left and stay in the single left column. Fixed the RTL direction hack that was breaking column placement — now uses explicit md:col-start-1 / md:col-start-2. Verified: 2009 LEFT, 2013 RIGHT, 2017 LEFT, 2021 RIGHT, 2024 LEFT on desktop; all LEFT/CENTER on mobile
+- Footer: rewrote to use md:grid-cols-4 (4 equal columns: Logo | Navigate | Offices | Inquiries all on the same row, was using md:grid-cols-12 with col-span 4+2+3+3 that overflowed). Moved UNZIP AFRICA wordmark from absolute position (-bottom-32) into normal document flow as a block element BETWEEN the columns and the bottom copyright row. Verified: 4 grid children, all columns in same grid, wordmark at y=16755 is above copyright at y=17035
+
+Stage Summary:
+- WhatsApp button now uses forest green + gold (matches website palette, no more bright green)
+- ScrollStack with 5 safari images added after Philosophy section — cards scale/stack/blur on scroll
+- Testimonials scroll 2x faster (30s instead of 60s)
+- Why Choose Us moved to after Destinations section
+- Milestones alternate left/right on desktop/tablet, all-left on mobile
+- Footer: 4 columns on same row, UNZIP AFRICA wordmark above copyright row
+- ESLint passes with zero warnings/errors

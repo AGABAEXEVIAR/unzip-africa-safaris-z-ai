@@ -38,8 +38,8 @@ export function WhatsAppChatbot() {
           style={{ borderRadius: 0, animation: "whatsappBubbleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both" }}
         >
           <div className="flex items-start gap-3">
-            <div className="w-10 h-10 flex-shrink-0 bg-[#25D366] flex items-center justify-center">
-              <WhatsAppIcon className="w-6 h-6 text-white" />
+            <div className="w-10 h-10 flex-shrink-0 bg-forest flex items-center justify-center">
+              <WhatsAppIcon className="w-6 h-6 text-cream" />
             </div>
             <div className="flex-1 min-w-0">
               <p className="font-display text-charcoal text-base leading-tight">Chat with us</p>
@@ -62,10 +62,10 @@ export function WhatsAppChatbot() {
             href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-3 flex items-center justify-center gap-2 w-full bg-[#25D366] hover:bg-[#1ebe5d] text-white py-2.5 px-4 text-xs font-medium tracking-[0.15em] uppercase transition-colors"
+            className="mt-3 flex items-center justify-center gap-2 w-full bg-forest hover:bg-forest-deep text-cream py-2.5 px-4 text-xs font-medium tracking-[0.15em] uppercase transition-colors shadow-[inset_0_2px_0_rgba(255,255,255,0.15),inset_0_-2px_0_rgba(0,0,0,0.25)]"
             style={{ borderRadius: 0 }}
           >
-            <WhatsAppIcon className="w-4 h-4" />
+            <WhatsAppIcon className="w-4 h-4 text-gold-soft" />
             Start Chat
           </a>
           <p className="text-[0.65rem] text-charcoal/50 mt-2 text-center">{WHATSAPP_DISPLAY}</p>
@@ -76,22 +76,22 @@ export function WhatsAppChatbot() {
       <button
         onClick={() => setExpanded(!expanded)}
         aria-label="Open WhatsApp chat"
-        className="relative w-14 h-14 bg-[#25D366] hover:bg-[#1ebe5d] flex items-center justify-center shadow-2xl transition-transform duration-300 hover:scale-110 active:scale-95"
+        className="relative w-14 h-14 bg-forest hover:bg-forest-deep flex items-center justify-center shadow-2xl transition-transform duration-300 hover:scale-110 active:scale-95 border border-gold/40"
         style={{ borderRadius: 0 }}
       >
         {/* Wavy vigorous pulse rings */}
-        <span className="absolute inset-0 bg-[#25D366] opacity-60 whatsapp-wave-ring" style={{ borderRadius: 0 }} />
-        <span className="absolute inset-0 bg-[#25D366] opacity-40 whatsapp-wave-ring-2" style={{ borderRadius: 0 }} />
-        <span className="absolute inset-0 bg-[#25D366] opacity-20 whatsapp-wave-ring-3" style={{ borderRadius: 0 }} />
+        <span className="absolute inset-0 bg-forest opacity-60 whatsapp-wave-ring" style={{ borderRadius: 0 }} />
+        <span className="absolute inset-0 bg-gold opacity-40 whatsapp-wave-ring-2" style={{ borderRadius: 0 }} />
+        <span className="absolute inset-0 bg-gold opacity-20 whatsapp-wave-ring-3" style={{ borderRadius: 0 }} />
 
         {/* Vigorous shake/wave on the icon itself */}
         <span className="relative whatsapp-icon-wiggle">
           {expanded ? (
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-gold-soft">
               <path d="M18 6 6 18M6 6l12 12" />
             </svg>
           ) : (
-            <WhatsAppIcon className="w-7 h-7 text-white" />
+            <WhatsAppIcon className="w-7 h-7 text-gold-soft" />
           )}
         </span>
 

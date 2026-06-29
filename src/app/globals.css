@@ -519,7 +519,7 @@
 .testimonials-marquee {
   display: flex;
   flex-direction: column;
-  animation: testimonialsScroll 60s linear infinite;
+  animation: testimonialsScroll 30s linear infinite;
   will-change: transform;
 }
 

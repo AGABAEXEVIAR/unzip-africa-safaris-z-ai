@@ -7,13 +7,6 @@ export function Footer() {
 
   return (
     <footer className="mt-auto bg-forest-deep text-cream pt-24 pb-10 px-6 md:px-10 relative overflow-hidden">
-      {/* Giant wordmark — pushed up so it doesn't overlap the bottom bar */}
-      <div className="absolute -bottom-32 md:-bottom-40 left-0 right-0 pointer-events-none select-none">
-        <div className="font-display text-[18vw] md:text-[14vw] leading-none text-cream/[0.04] text-center tracking-tighter">
-          UNZIP AFRICA
-        </div>
-      </div>
-
       <div className="mx-auto max-w-[1600px] relative z-10">
         {/* Top — CTA band */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 pb-20 border-b border-cream/10">
@@ -32,9 +25,9 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Middle — Columns (all 4 follow the same layout pattern) */}
-        <div className="grid grid-cols-2 md:grid-cols-12 gap-10 py-16">
-          <div className="col-span-2 md:col-span-4">
+        {/* Middle — 4 columns all on the same row (Logo | Navigate | Offices | Inquiries) */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 py-16">
+          <div>
             <img
               src="/logo.png"
               alt="Unzip Africa Safaris"
@@ -47,7 +40,7 @@ export function Footer() {
             </p>
           </div>
 
-          <div className="md:col-span-2 md:col-start-6">
+          <div>
             <p className="font-eyebrow text-cream/40 mb-5">Navigate</p>
             <ul className="space-y-3">
               {([
@@ -69,7 +62,7 @@ export function Footer() {
             </ul>
           </div>
 
-          <div className="md:col-span-3">
+          <div>
             <p className="font-eyebrow text-cream/40 mb-5">Offices</p>
             <ul className="space-y-3 text-sm text-cream/70">
               <li>Arusha, Tanzania</li>
@@ -79,7 +72,7 @@ export function Footer() {
             </ul>
           </div>
 
-          <div className="md:col-span-3">
+          <div>
             <p className="font-eyebrow text-cream/40 mb-5">Inquiries</p>
             <ul className="space-y-3 text-sm text-cream/70">
               <li>
@@ -93,8 +86,15 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Bottom */}
-        <div className="pt-10 border-t border-cream/10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        {/* Giant wordmark — sits ABOVE the bottom copyright row */}
+        <div className="pointer-events-none select-none py-8 overflow-hidden">
+          <div className="font-display text-[18vw] md:text-[14vw] leading-none text-cream/[0.04] text-center tracking-tighter">
+            UNZIP AFRICA
+          </div>
+        </div>
+
+        {/* Bottom — copyright + links */}
+        <div className="pt-6 border-t border-cream/10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <p className="text-xs text-cream/40 tracking-wide">
             © {new Date().getFullYear()} Unzip Africa Safaris Ltd. All rights reserved.
           </p>

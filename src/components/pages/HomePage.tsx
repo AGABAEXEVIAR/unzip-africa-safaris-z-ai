@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { Reveal } from "@/components/luxury/Reveal";
 import ScrollReveal from "@/components/luxury/ScrollReveal";
 import SafariHero from "@/components/luxury/SafariHero";
+import { SafariScrollStack } from "@/components/luxury/SafariScrollStack";
 import { LuxuryTestimonials } from "@/components/luxury/LuxuryTestimonials";
 import { FAQSection, WhyChooseUsSection } from "@/components/luxury/FAQAndWhyChooseUs";
 import { useRouter } from "@/lib/router";
@@ -61,8 +62,14 @@ export function HomePage() {
         </div>
       </section>
 
+      {/* ====================== SCROLL STACK — SAFARI IMAGES ====================== */}
+      <SafariScrollStack />
+
       {/* ====================== HORIZONTAL FILMSTRIP — DESTINATIONS ====================== */}
       <HorizontalDestinations />
+
+      {/* ====================== WHY CHOOSE US ====================== */}
+      <WhyChooseUsSection />
 
       {/* ====================== THE EXPERIENCE — PARALLAX BAND ====================== */}
       <ParallaxQuote />
@@ -72,9 +79,6 @@ export function HomePage() {
 
       {/* ====================== TESTIMONIALS ====================== */}
       <LuxuryTestimonials />
-
-      {/* ====================== WHY CHOOSE US ====================== */}
-      <WhyChooseUsSection />
 
       {/* ====================== FAQ ====================== */}
       <FAQSection />
