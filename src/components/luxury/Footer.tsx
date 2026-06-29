@@ -76,14 +76,25 @@ export function Footer() {
 
           <div>
             <p className="font-eyebrow text-cream/40 mb-5">{t("footer.inquiries")}</p>
-            <ul className="space-y-3 text-sm text-cream/70">
+            <ul className="space-y-2 text-sm text-cream/70">
+              <li className="text-cream/50 text-xs uppercase tracking-wider mb-1">Numbers</li>
+              <li>Germany: +49 179 9372309</li>
+              <li>Uganda: +256 706 761092</li>
+              <li className="text-cream/50 text-xs uppercase tracking-wider mt-3 mb-1">Email</li>
               <li>
-                <a href="mailto:private@unzipafrica.com" className="hover:text-gold-soft transition-colors">
-                  private@unzipafrica.com
+                <a href="mailto:info@unzipafrica.com" className="hover:text-gold-soft transition-colors">
+                  info@unzipafrica.com
                 </a>
               </li>
-              <li>+255 784 920 113</li>
-              <li className="text-cream/50">Mon–Fri · 6 AM – 9 PM EAT</li>
+              <li>
+                <a href="mailto:booking@unzipafrica.com" className="hover:text-gold-soft transition-colors">
+                  booking@unzipafrica.com
+                </a>
+              </li>
+              <li className="text-cream/50 text-xs uppercase tracking-wider mt-3 mb-1">Business Hours</li>
+              <li>Mon–Fri: 8:30am – 5pm</li>
+              <li>Sat: 10am – 3pm</li>
+              <li className="text-cream/50">Sun: Closed</li>
             </ul>
           </div>
         </div>

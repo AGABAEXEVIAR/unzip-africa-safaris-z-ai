@@ -517,25 +517,47 @@
 /* ============ Image Treatment ============ */
 .img-luxury {
   filter: contrast(1.05) saturate(0.95);
-  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1),
-              filter 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .img-luxury:hover {
-  transform: scale(1.06);
-  filter: contrast(1.1) saturate(1.05) brightness(1.03);
+  transform: scale(1.1);
+  filter: contrast(1.12) saturate(1.1) brightness(1.05);
+}
+
+/* Group hover zoom — for images inside cards (zoom when card is hovered) */
+.group:hover .img-luxury {
+  transform: scale(1.1);
+  filter: contrast(1.12) saturate(1.1) brightness(1.05);
 }
 
 /* ============ Rich Card Hover Effects ============ */
 .card-luxury {
-  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .card-luxury:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 60px -10px rgba(28, 26, 23, 0.25);
+  transform: translateY(-10px);
+  box-shadow: 0 25px 70px -10px rgba(28, 26, 23, 0.3);
+}
+
+/* Rich card hover — for Why Choose Us and similar content cards */
+.card-hover-rich {
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid transparent;
+}
+
+.card-hover-rich:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 50px -8px rgba(28, 26, 23, 0.2);
+  border-color: rgba(168, 139, 92, 0.3);
+  background-color: rgba(250, 246, 238, 0.5);
 }
 
 /* Card with image zoom on hover */

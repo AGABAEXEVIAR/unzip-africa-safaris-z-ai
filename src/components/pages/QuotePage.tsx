@@ -305,7 +305,14 @@ export function QuotePage() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="btn-luxury btn-luxury-gold"
+                  className="inline-flex items-center justify-center gap-3 px-6 py-3.5 text-xs font-medium tracking-[0.25em] uppercase transition-all duration-500 hover:opacity-85 active:scale-[0.97]"
+                  style={{
+                    borderRadius: 0,
+                    border: "1px solid var(--gold)",
+                    background: "var(--gold)",
+                    color: "var(--charcoal)",
+                    fontFamily: "var(--font-inter), sans-serif",
+                  }}
                 >
                   {submitting ? "Sending..." : "Submit Request"}
                 </button>

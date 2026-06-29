@@ -10,7 +10,7 @@ export function WelcomeSection() {
   const { t } = useLang();
 
   return (
-    <section className="py-24 md:py-40 px-6 md:px-10 bg-canvas">
+    <section className="py-16 md:py-24 px-6 md:px-10 bg-canvas">
       <div className="mx-auto max-w-[1400px]">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 md:gap-16 items-center">
           {/* Left — Image (on desktop, image on the left; on mobile, image on top) */}
@@ -65,20 +65,35 @@ export function WelcomeSection() {
               </div>
             </Reveal>
 
-            {/* Stats row */}
+            {/* Avatar group — social proof */}
             <Reveal variant="up" delay={0.4}>
-              <div className="grid grid-cols-3 gap-6 md:gap-10 mt-14 pt-10 border-t border-border">
-                <div>
-                  <p className="font-display text-3xl md:text-4xl text-forest">3</p>
-                  <p className="font-label text-charcoal/60 mt-2">{t("welcome.stat1")}</p>
-                </div>
-                <div>
-                  <p className="font-display text-3xl md:text-4xl text-forest">15+</p>
-                  <p className="font-label text-charcoal/60 mt-2">{t("welcome.stat2")}</p>
-                </div>
-                <div>
-                  <p className="font-display text-3xl md:text-4xl text-forest">1,200+</p>
-                  <p className="font-label text-charcoal/60 mt-2">{t("welcome.stat3")}</p>
+              <div className="mt-12 pt-10 border-t border-border">
+                <div className="flex items-center gap-3">
+                  {/* Circular avatars — overlapping */}
+                  <div className="flex -space-x-2">
+                    {[
+                      { src: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=100&q=80", name: "Mark" },
+                      { src: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80", name: "Olivia" },
+                      { src: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80", name: "Josh" },
+                      { src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=100&q=80", name: "Emma" },
+                    ].map((avatar) => (
+                      <div
+                        key={avatar.name}
+                        className="w-9 h-9 md:w-10 md:h-10 rounded-full overflow-hidden bg-bone ring-2 ring-canvas flex-shrink-0"
+                        style={{ borderRadius: "50%" }}
+                      >
+                        <img
+                          src={avatar.src}
+                          alt={avatar.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                  {/* Text — standalone, no pill/oval */}
+                  <p className="text-charcoal/60 text-xs md:text-sm">
+                    Trusted by <strong className="text-charcoal font-medium">1,200+</strong> discerning travellers.
+                  </p>
                 </div>
               </div>
             </Reveal>

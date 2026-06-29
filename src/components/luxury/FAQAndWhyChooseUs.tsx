@@ -82,7 +82,7 @@ export function FAQSection() {
   const [openIdx, setOpenIdx] = useState<number | null>(0);
 
   return (
-    <section className="py-32 md:py-48 px-6 md:px-10 bg-alabaster">
+    <section className="py-16 md:py-24 px-6 md:px-10 bg-alabaster">
       <div className="mx-auto max-w-[1300px]">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16">
           {/* Left — heading */}
@@ -158,10 +158,10 @@ export function FAQSection() {
 
 export function WhyChooseUsSection() {
   return (
-    <section className="py-32 md:py-48 px-6 md:px-10 bg-canvas">
+    <section className="py-16 md:py-24 px-6 md:px-10 bg-canvas">
       <div className="mx-auto max-w-[1600px]">
         {/* Heading */}
-        <div className="text-center mb-20 md:mb-24">
+        <div className="text-center mb-12 md:mb-16">
           <Reveal variant="up">
             <p className="font-eyebrow text-gold mb-6">The Unzip Africa Difference</p>
           </Reveal>
@@ -180,7 +180,7 @@ export function WhyChooseUsSection() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16 md:gap-y-20">
           {whyChooseUs.map((item, idx) => (
             <Reveal key={item.num} variant="up" delay={(idx % 3) * 0.1}>
-              <div className="group h-full">
+              <div className="group h-full card-hover-rich p-6 md:p-8">
                 <div className="flex items-start gap-5 mb-5">
                   <span className="font-display text-5xl md:text-6xl text-gold/40 italic leading-none group-hover:text-gold transition-colors duration-700">
                     {item.num}

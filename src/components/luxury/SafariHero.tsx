@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, type Variants } from "motion/react";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useRouter, PageId } from "@/lib/router";
 import { useLang } from "@/lib/language";
 
@@ -49,53 +49,31 @@ export default function SafariHero({
   const { navigate, openQuote } = useRouter();
   const { t } = useLang();
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [videoLoaded, setVideoLoaded] = useState(false);
-  const [activeVideoIdx, setActiveVideoIdx] = useState(0);
 
-  // Try to load the active video; on failure, fall back to next source
+  // Ensure the video plays smoothly — handle autoplay edge cases
   useEffect(() => {
     const v = videoRef.current;
     if (!v) return;
 
-    let cancelled = false;
-    let timeoutId: ReturnType<typeof setTimeout>;
-
-    const handleLoadedData = () => {
-      if (!cancelled) setVideoLoaded(true);
-    };
-    const handleError = () => {
-      if (cancelled) return;
-      // Try next source if available
-      if (activeVideoIdx < videoSources.length - 1) {
-        setActiveVideoIdx((i) => i + 1);
-      } else {
-        // All sources failed — keep poster image as fallback
-        setVideoLoaded(false);
+    // Force play if browser blocks autoplay
+    const tryPlay = () => {
+      if (v.paused) {
+        v.play().catch(() => {});
       }
     };
 
-    v.addEventListener("loadeddata", handleLoadedData);
-    v.addEventListener("canplay", handleLoadedData);
-    v.addEventListener("error", handleError);
+    // Try to play immediately
+    tryPlay();
 
-    // If the video hasn't started loading data within 8 seconds, try the next source
-    timeoutId = setTimeout(() => {
-      if (!cancelled && v.readyState < 2 && activeVideoIdx < videoSources.length - 1) {
-        setActiveVideoIdx((i) => i + 1);
-      }
-    }, 8000);
-
-    // Force reload when source changes
-    v.load();
+    // Also try on any pause event (some browsers pause when tab loses focus)
+    v.addEventListener("pause", tryPlay);
+    v.addEventListener("canplay", tryPlay);
 
     return () => {
-      cancelled = true;
-      clearTimeout(timeoutId);
-      v.removeEventListener("loadeddata", handleLoadedData);
-      v.removeEventListener("canplay", handleLoadedData);
-      v.removeEventListener("error", handleError);
+      v.removeEventListener("pause", tryPlay);
+      v.removeEventListener("canplay", tryPlay);
     };
-  }, [activeVideoIdx, videoSources.length]);
+  }, []);
 
   // Title: rises up with a heavier mass — slow, majestic settling
   const titleVariants: Variants = {
@@ -143,31 +121,19 @@ export default function SafariHero({
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-charcoal font-sans antialiased selection:bg-gold/30">
-      {/* ===== Background: Safari video with poster fallback ===== */}
+      {/* ===== Background: Safari video — plays immediately, no poster ===== */}
       <div className="pointer-events-none absolute inset-0 z-0 select-none">
-        {/* Poster image (always present, visible until video loads) */}
-        <img
-          className="absolute inset-0 h-full w-full object-cover transition-opacity duration-1000"
-          src={posterImage}
-          alt="African savanna at golden hour"
-          style={{ opacity: videoLoaded ? 0 : 1 }}
-        />
-        {/* Video element */}
         <video
           ref={videoRef}
-          className="absolute inset-0 h-full w-full object-cover transition-opacity duration-1000"
+          className="absolute inset-0 h-full w-full object-cover"
           autoPlay
           muted
           loop
           playsInline
           preload="auto"
-          poster={posterImage}
-          style={{ opacity: videoLoaded ? 1 : 0 }}
+          disablePictureInPicture
         >
-          <source
-            src={videoSources[activeVideoIdx]}
-            type={videoSources[activeVideoIdx].endsWith(".webm") ? "video/webm" : "video/mp4"}
-          />
+          <source src="/videos/pexels-safari.mp4" type="video/mp4" />
         </video>
 
         {/* Cinematic gradient overlays for legibility */}

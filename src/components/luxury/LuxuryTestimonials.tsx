@@ -74,7 +74,7 @@ export function LuxuryTestimonials() {
   const doubled = [...testimonials, ...testimonials];
 
   return (
-    <section className="bg-forest-deep text-cream py-24 md:py-40 px-6 md:px-10 relative overflow-hidden">
+    <section className="bg-forest-deep text-cream py-16 md:py-24 px-6 md:px-10 relative overflow-hidden">
       {/* Subtle pattern overlay */}
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
         <div

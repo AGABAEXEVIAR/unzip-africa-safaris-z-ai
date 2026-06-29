@@ -121,18 +121,36 @@ export function ContactPage() {
             </ScrollReveal>
 
             <Reveal variant="up" delay={0.1}>
-              <div className="space-y-8">
-                {[
-                  { label: "Private Inquiries", value: "private@unzipafrica.com", sub: "Replied within 24 hours" },
-                  { label: "Call a Specialist", value: "+255 784 920 113", sub: "Mon–Fri · 6 AM – 9 PM EAT" },
-                  { label: "WhatsApp", value: "+255 784 920 114", sub: "For existing guests only" },
-                ].map((item) => (
-                  <div key={item.label} className="border-t border-border pt-5">
-                    <p className="font-eyebrow text-charcoal/40 mb-2">{item.label}</p>
-                    <p className="font-display text-2xl text-charcoal mb-1">{item.value}</p>
-                    <p className="text-sm text-charcoal/55">{item.sub}</p>
+              <div className="space-y-6">
+                {/* Numbers */}
+                <div className="border-t border-border pt-5">
+                  <p className="font-eyebrow text-charcoal/40 mb-3">Numbers</p>
+                  <div className="space-y-2">
+                    <p className="font-display text-xl text-charcoal">Germany <span className="text-charcoal/70">+49 179 9372309</span></p>
+                    <p className="font-display text-xl text-charcoal">Uganda <span className="text-charcoal/70">+256 706 761092</span></p>
                   </div>
-                ))}
+                </div>
+                {/* Email */}
+                <div className="border-t border-border pt-5">
+                  <p className="font-eyebrow text-charcoal/40 mb-3">Email</p>
+                  <div className="space-y-2">
+                    <p className="text-lg text-charcoal">
+                      <a href="mailto:info@unzipafrica.com" className="hover:text-gold transition-colors">info@unzipafrica.com</a>
+                    </p>
+                    <p className="text-lg text-charcoal">
+                      <a href="mailto:booking@unzipafrica.com" className="hover:text-gold transition-colors">booking@unzipafrica.com</a>
+                    </p>
+                  </div>
+                </div>
+                {/* Business Hours */}
+                <div className="border-t border-border pt-5">
+                  <p className="font-eyebrow text-charcoal/40 mb-3">Business Hours</p>
+                  <div className="space-y-1 text-sm text-charcoal/70">
+                    <p>Monday — Friday <span className="text-charcoal">8:30am – 5pm</span></p>
+                    <p>Saturday <span className="text-charcoal">10am – 3pm</span></p>
+                    <p>Sunday <span className="text-charcoal">Closed</span></p>
+                  </div>
+                </div>
               </div>
             </Reveal>
           </div>
@@ -140,104 +158,70 @@ export function ContactPage() {
           {/* Right — Form */}
           <div className="md:col-span-8">
             <Reveal variant="up">
-              <form onSubmit={handleSubmit} className="space-y-10">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                  <LuxuryInput
-                    label="Full Name"
+              <form onSubmit={handleSubmit} className="space-y-8">
+                {/* Full Names */}
+                <div>
+                  <label className="font-eyebrow text-charcoal/40 block mb-2">Full Names *</label>
+                  <input
+                    type="text"
                     value={form.name}
-                    onChange={(v) => setForm({ ...form, name: v })}
+                    onChange={(e) => setForm({ ...form, name: e.target.value })}
                     required
+                    className="w-full bg-transparent border-b border-border py-2 text-charcoal focus:outline-none focus:border-forest transition-colors"
                   />
-                  <LuxuryInput
-                    label="Email Address"
+                </div>
+
+                {/* Email */}
+                <div>
+                  <label className="font-eyebrow text-charcoal/40 block mb-2">Email *</label>
+                  <input
                     type="email"
                     value={form.email}
-                    onChange={(v) => setForm({ ...form, email: v })}
+                    onChange={(e) => setForm({ ...form, email: e.target.value })}
                     required
+                    className="w-full bg-transparent border-b border-border py-2 text-charcoal focus:outline-none focus:border-forest transition-colors"
                   />
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                  <LuxuryInput
-                    label="Number of Travelers"
-                    value={form.travelers}
-                    onChange={(v) => setForm({ ...form, travelers: v })}
-                  />
-                  <LuxuryInput
-                    label="Approximate Dates"
-                    value={form.dates}
-                    onChange={(v) => setForm({ ...form, dates: v })}
-                    placeholder="e.g., September 2025"
+                {/* Phone Number */}
+                <div>
+                  <label className="font-eyebrow text-charcoal/40 block mb-2">Phone Number</label>
+                  <input
+                    type="tel"
+                    value={form.phone}
+                    onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                    placeholder="e.g., +256 706 761092"
+                    className="w-full bg-transparent border-b border-border py-2 text-charcoal placeholder:text-charcoal/30 focus:outline-none focus:border-forest transition-colors"
                   />
                 </div>
 
-                {/* Destinations */}
+                {/* Description */}
                 <div>
-                  <p className="font-eyebrow text-charcoal/40 mb-4">Destinations of Interest</p>
-                  <div className="flex flex-wrap gap-2">
-                    {["Serengeti", "Bwindi", "Okavango", "Maasai Mara", "Sossusvlei", "Virunga"].map((d) => (
-                      <button
-                        key={d}
-                        type="button"
-                        onClick={() => toggleDestination(d)}
-                        className={`px-4 py-2 border text-sm transition-all duration-300 ${
-                          form.destinations.includes(d)
-                            ? "border-forest bg-forest text-cream"
-                            : "border-border text-charcoal/70 hover:border-charcoal"
-                        }`}
-                      >
-                        {d}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Budget */}
-                <div>
-                  <p className="font-eyebrow text-charcoal/40 mb-4">Investment Range (per person)</p>
-                  <div className="flex flex-wrap gap-2">
-                    {["$25,000 – $50,000", "$50,000 – $100,000", "$100,000 +", "Prefer to discuss"].map((b) => (
-                      <button
-                        key={b}
-                        type="button"
-                        onClick={() => setForm({ ...form, budget: b })}
-                        className={`px-4 py-2 border text-sm transition-all duration-300 ${
-                          form.budget === b
-                            ? "border-gold bg-gold text-charcoal"
-                            : "border-border text-charcoal/70 hover:border-charcoal"
-                        }`}
-                      >
-                        {b}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Message */}
-                <div>
-                  <label className="font-eyebrow text-charcoal/40 block mb-3">
-                    Your Vision
-                  </label>
+                  <label className="font-eyebrow text-charcoal/40 block mb-2">Description</label>
                   <textarea
                     value={form.message}
                     onChange={(e) => setForm({ ...form, message: e.target.value })}
                     rows={5}
-                    placeholder="Tell us what draws you to Africa — a memory, a dream, a question..."
-                    className="w-full bg-transparent border-b border-border py-3 text-charcoal placeholder:text-charcoal/30 focus:outline-none focus:border-forest transition-colors duration-500 resize-none"
+                    placeholder="Tell us about your dream safari..."
+                    className="w-full bg-transparent border-b border-border py-2 text-charcoal placeholder:text-charcoal/30 focus:outline-none focus:border-forest transition-colors duration-500 resize-none"
                   />
                 </div>
 
-                <div className="pt-4 flex flex-col sm:flex-row items-start sm:items-center gap-6">
+                <div className="pt-4">
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="btn-luxury btn-luxury-gold"
+                    className="w-full inline-flex items-center justify-center gap-3 px-6 py-3.5 text-xs font-medium tracking-[0.25em] uppercase transition-all duration-500 hover:opacity-85 active:scale-[0.97]"
+                    style={{
+                      borderRadius: 0,
+                      border: "1px solid var(--gold)",
+                      background: "var(--gold)",
+                      color: "var(--charcoal)",
+                      fontFamily: "var(--font-inter), sans-serif",
+                    }}
                   >
                     {submitting ? "Sending..." : "Send Inquiry"}
                   </button>
-                  <p className="text-sm text-charcoal/55 leading-relaxed max-w-xs">
-                    By sending, you agree to our privacy policy. We never share your details.
-                  </p>
                 </div>
               </form>
             </Reveal>
@@ -264,8 +248,8 @@ export function ContactPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               { city: "Arusha", country: "Tanzania", role: "Headquarters", address: "196 Njiro Road, Arusha" },
-              { city: "Maun", country: "Botswana", role: "Delta Operations", address: "Plot 4733, Maun" },
-              { city: "Kigali", country: "Rwanda", role: "Primate Journeys", address: "KN 4 Avenue, Kigali" },
+              { city: "Kampala", country: "Uganda", role: "Uganda Operations", address: "Kampala Road, Kampala" },
+              { city: "Nairobi", country: "Kenya", role: "Kenya Operations", address: "Westlands, Nairobi" },
               { city: "Windhoek", country: "Namibia", role: "Desert & Coast", address: "8 Avocadia Street, Windhoek" },
             ].map((office, idx) => (
               <Reveal key={office.city} variant="up" delay={idx * 0.1}>
@@ -278,6 +262,37 @@ export function ContactPage() {
               </Reveal>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ====================== GOOGLE MAP ====================== */}
+      <section className="py-16 md:py-24 px-6 md:px-10">
+        <div className="mx-auto max-w-[1400px]">
+          <Reveal variant="up">
+            <p className="font-eyebrow text-gold mb-4 text-center">Find Us</p>
+          </Reveal>
+          <ScrollReveal
+            as="h2"
+            containerClassName="font-display text-3xl md:text-5xl text-charcoal tracking-tight text-center mb-10 leading-[1.05] block"
+            textClassName="block"
+            baseOpacity={0.1}
+            blurStrength={5}
+          >
+            Our <span className="italic text-forest">Kampala Office</span>
+          </ScrollReveal>
+          <Reveal variant="up" delay={0.2}>
+            <div className="relative w-full overflow-hidden border border-border shadow-lg" style={{ paddingBottom: "40%", minHeight: "300px" }}>
+              <iframe
+                className="absolute inset-0 w-full h-full"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31909.396!2d32.5589!3d0.3476!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x177dbb6f3d2bf747%3A0x6d2f3c3f3f3f3f3f!2sKampala%2C%20Uganda!5e0!3m2!1sen!2sug!4v1700000000000"
+                title="Unzip Africa Safaris — Kampala, Uganda Office Location"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+          </Reveal>
         </div>
       </section>
 
@@ -301,12 +316,18 @@ export function ContactPage() {
               No menus, no queues, no hold music. One of our specialists picks up before the third
               ring.
             </p>
-            <div className="mt-12">
+            <div className="mt-12 space-y-2">
               <a
-                href="tel:+255784920113"
-                className="font-display text-4xl md:text-6xl text-cream hover:text-gold-soft transition-colors duration-500 tracking-tight inline-block"
+                href="tel:+491799372309"
+                className="font-display text-3xl md:text-5xl text-cream hover:text-gold-soft transition-colors duration-500 tracking-tight block"
               >
-                +255 784 920 113
+                Germany: +49 179 9372309
+              </a>
+              <a
+                href="tel:+256706761092"
+                className="font-display text-3xl md:text-5xl text-cream hover:text-gold-soft transition-colors duration-500 tracking-tight block"
+              >
+                Uganda: +256 706 761092
               </a>
             </div>
             <button

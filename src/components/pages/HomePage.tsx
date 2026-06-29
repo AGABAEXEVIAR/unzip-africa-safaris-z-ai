@@ -26,7 +26,7 @@ export function HomePage() {
       <WelcomeSection />
 
       {/* ====================== NARRATIVE INTRO ====================== */}
-      <section className="py-32 md:py-48 px-6 md:px-10">
+      <section className="py-16 md:py-24 px-6 md:px-10">
         <div className="mx-auto max-w-[1400px] grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-20">
           <div className="md:col-span-3">
             <Reveal variant="up">
@@ -90,7 +90,7 @@ export function HomePage() {
       <FAQSection />
 
       {/* ====================== FINAL CTA — Two Column (Text + YouTube Video) ====================== */}
-      <section className="py-24 md:py-40 px-6 md:px-10 bg-bone/50">
+      <section className="py-16 md:py-24 px-6 md:px-10 bg-bone/50">
         <div className="mx-auto max-w-[1400px]">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16 items-center">
             {/* Left — Text content */}
@@ -165,7 +165,6 @@ function HorizontalDestinations() {
       setViewportH(window.innerHeight);
     };
     measure();
-    // Re-measure after images potentially affect layout
     const t = setTimeout(measure, 600);
     window.addEventListener("resize", measure);
     return () => {
@@ -176,8 +175,6 @@ function HorizontalDestinations() {
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
-    // Start panning when the top of the section reaches the top of viewport (heading scrolls past)
-    // End panning when the bottom of the section reaches the bottom of viewport
     offset: ["start start", "end end"],
   });
 
@@ -187,21 +184,21 @@ function HorizontalDestinations() {
 
   return (
     <>
-      {/* Section heading — in normal flow, ABOVE the filmstrip section, NOT overlapping */}
-      <div className="px-6 md:px-10 pt-8 md:pt-12 pb-10 md:pb-14">
-        <div className="mx-auto max-w-[1600px] flex flex-col md:flex-row md:items-end justify-between gap-6">
+      {/* Section heading */}
+      <div className="px-6 md:px-10 pt-8 md:pt-12 pb-6 md:pb-10">
+        <div className="mx-auto max-w-[1600px] flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div className="max-w-3xl">
-            <p className="font-eyebrow text-gold mb-4">{t("destinations.eyebrow")}</p>
+            <p className="font-eyebrow text-gold mb-3 md:mb-4">{t("destinations.eyebrow")}</p>
             <ScrollReveal
               as="h2"
-              containerClassName="font-display text-4xl md:text-6xl text-charcoal tracking-tight leading-[1.05] block"
+              containerClassName="font-display text-3xl md:text-6xl text-charcoal tracking-tight leading-[1.05] block"
               textClassName="block"
               baseOpacity={0.1}
               blurStrength={5}
             >
               {t("destinations.heading1")} <span className="italic text-forest">{t("destinations.heading2")}</span>
             </ScrollReveal>
-            <p className="text-base md:text-lg text-charcoal/70 leading-relaxed mt-6 max-w-2xl">
+            <p className="text-sm md:text-lg text-charcoal/70 leading-relaxed mt-4 md:mt-6 max-w-2xl">
               {t("destinations.subtitle")}
             </p>
           </div>
@@ -211,7 +208,7 @@ function HorizontalDestinations() {
         </div>
       </div>
 
-      {/* Sticky filmstrip section — pans horizontally as user scrolls */}
+      {/* Sticky filmstrip section — pans horizontally as user scrolls (all devices) */}
       <section
         ref={sectionRef}
         className="relative"
@@ -296,9 +293,9 @@ function ExpertCarousel() {
   const [active, setActive] = useState(0);
 
   return (
-    <section className="py-32 md:py-48 px-6 md:px-10 bg-alabaster">
+    <section className="py-16 md:py-24 px-6 md:px-10 bg-alabaster">
       <div className="mx-auto max-w-[1600px]">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-12">
           <div className="md:col-span-5">
             <Reveal variant="up">
               <p className="font-eyebrow text-gold mb-6">Destination Experts</p>
@@ -347,11 +344,14 @@ function ExpertCarousel() {
                     </span>
                   </div>
                 </div>
-                <p className="font-eyebrow text-gold mb-2 transition-colors">{expert.role}</p>
-                <h3 className="font-display text-2xl md:text-3xl text-charcoal tracking-tight mb-2 group-hover:text-forest transition-colors duration-500">
-                  {expert.name}
-                </h3>
-                <p className="font-label text-charcoal/60">{expert.specialty}</p>
+                {/* Text section with padding transition on hover */}
+                <div className="p-0 group-hover:p-4 transition-all duration-500">
+                  <p className="font-eyebrow text-gold mb-2 transition-colors">{expert.role}</p>
+                  <h3 className="font-display text-2xl md:text-3xl text-charcoal tracking-tight mb-2 group-hover:text-forest transition-colors duration-500">
+                    {expert.name}
+                  </h3>
+                  <p className="font-label text-charcoal/60">{expert.specialty}</p>
+                </div>
               </article>
             </Reveal>
           ))}

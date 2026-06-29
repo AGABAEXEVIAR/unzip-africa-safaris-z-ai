@@ -113,7 +113,7 @@ export function Navigation() {
             <button
               onClick={openQuote}
               className={cn(
-                "hidden md:inline-flex font-label px-6 py-2.5 border transition-all duration-500",
+                "hidden lg:inline-flex font-label px-6 py-2.5 border transition-all duration-500",
                 scrolled
                   ? "border-charcoal text-charcoal hover:bg-charcoal hover:text-cream"
                   : "border-cream/70 text-cream hover:bg-cream hover:text-charcoal"
@@ -132,21 +132,21 @@ export function Navigation() {
               <span
                 className={cn(
                   "block h-px w-6 transition-all duration-500",
-                  hamburgerBg,
+                  menuOpen ? "bg-charcoal" : hamburgerBg,
                   menuOpen && "rotate-45 translate-y-[6px]"
                 )}
               />
               <span
                 className={cn(
                   "block h-px w-6 transition-all duration-300",
-                  hamburgerBg,
+                  menuOpen ? "bg-charcoal" : hamburgerBg,
                   menuOpen && "opacity-0"
                 )}
               />
               <span
                 className={cn(
                   "block h-px w-6 transition-all duration-500",
-                  hamburgerBg,
+                  menuOpen ? "bg-charcoal" : hamburgerBg,
                   menuOpen && "-rotate-45 -translate-y-[6px]"
                 )}
               />
