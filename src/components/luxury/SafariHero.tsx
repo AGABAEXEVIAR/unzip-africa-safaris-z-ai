@@ -4,6 +4,7 @@ import { motion, type Variants } from "motion/react";
 import { Play } from "lucide-react";
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter, PageId } from "@/lib/router";
+import { useLang } from "@/lib/language";
 
 export interface SafariHeroProps {
   logoText?: string;
@@ -47,6 +48,7 @@ export default function SafariHero({
     "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
 }: SafariHeroProps) {
   const { navigate, openQuote } = useRouter();
+  const { t } = useLang();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [activeVideoIdx, setActiveVideoIdx] = useState(0);
@@ -192,7 +194,7 @@ export default function SafariHero({
               className="mb-8 text-[0.65rem] font-medium tracking-[0.4em] uppercase text-gold-soft md:text-xs"
               style={{ fontFamily: "var(--font-inter), sans-serif" }}
             >
-              East &amp; Southern Africa · Est. 2009
+              {t("hero.eyebrow")}
             </motion.p>
 
             {/* Title: majestic slow rise — static (no flip animation) */}
@@ -208,7 +210,8 @@ export default function SafariHero({
                 letterSpacing: "-0.02em",
               }}
             >
-              {title}
+              {t("hero.title1")} <br />
+              <span className="italic text-gold-soft">{t("hero.title2")}</span>
             </motion.h1>
 
             {/* Subtitle: lighter, quicker */}
@@ -219,7 +222,7 @@ export default function SafariHero({
               className="mt-8 max-w-2xl text-base leading-relaxed font-normal text-cream/85 md:text-lg"
               style={{ textWrap: "pretty", fontFamily: "var(--font-inter), sans-serif" }}
             >
-              {subtitle}
+              {t("hero.subtitle")}
             </motion.p>
 
             {/* CTA: scales into place — buttons with NO border radius */}
@@ -235,7 +238,7 @@ export default function SafariHero({
                 className="flex min-h-12 items-center bg-cream/15 backdrop-blur-sm px-8 text-sm font-medium tracking-[0.2em] uppercase text-cream shadow-[inset_2px_2px_0_-0.5px_rgba(255,255,255,0.15),inset_-2px_-2px_0_-0.5px_rgba(255,255,255,0.15)] transition-transform hover:bg-cream/25 active:scale-[0.96] md:text-base"
                 style={{ fontFamily: "var(--font-inter), sans-serif", borderRadius: 0 }}
               >
-                {primaryActionText}
+                {t("nav.beginJourney")}
               </button>
               {/* Play button — sharp corners */}
               <button

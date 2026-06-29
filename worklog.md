@@ -165,3 +165,39 @@ Stage Summary:
 - Verified via Agent Browser: all 13 tour card images load, all 6 destination filmstrip images load (including Sossusvlei at 2560px and Virunga at 3072px), all 4 scroll stack country images load (including Namibia at 1600px)
 - Welcome section verified: eyebrow present, heading present, both paragraphs present, image loaded (1920px), positioned before Philosophy section
 - ESLint passes with zero warnings/errors
+
+---
+Task ID: language-translator-hover-effects-scroll-animations
+Agent: main
+Task: Multi-language translator (EN/DE/FR/ZH), reduce destinations spacing, rich hover effects, scroll animations
+
+Work Log:
+- Created /src/lib/language.tsx — LanguageProvider context with comprehensive translation dictionaries for English (default), German, French, and Mandarin Chinese. Covers ~100 UI strings across nav, hero, welcome, philosophy, destinations, scroll stack, why choose us, testimonials, FAQ, CTA, footer, and common terms. Persists language choice to localStorage, updates html lang attribute.
+- Created /src/components/luxury/LanguageSwitcher.tsx — dropdown button with flag + short code (🇬🇧 EN), opens a cream-colored dropdown with all 4 language options. Adaptively colored (cream text over dark hero, charcoal text when scrolled). Sharp corners (border-radius 0) to match site aesthetic. Closes on outside click.
+- Added LanguageSwitcher to Navigation, positioned left of the Request a Quote button. Both share the same adaptive border styling.
+- Wired LanguageProvider into the app in page.tsx (wrapping SmoothScroll + PageContent).
+- Applied translations across all key UI text:
+  • Navigation: nav items + Request a Quote button
+  • SafariHero: eyebrow, title (2 lines), subtitle, CTA button
+  • WelcomeSection: eyebrow, heading, 2 paragraphs, 2 CTAs, 3 stat labels
+  • HomePage: Philosophy heading + quote, Destinations eyebrow + heading + subtitle + scroll hint, Final CTA eyebrow + heading + subtitle + 2 buttons
+  • Footer: begin conversation, CTA heading, navigate/offices/inquiries labels, nav items, rights, privacy, terms, developed by
+- Reduced destinations section padding from pt-32 md:pt-40 pb-16 md:pb-24 to pt-8 md:pt-12 pb-10 md:pb-14 — significantly tighter spacing between the ScrollStack section and the Destinations filmstrip
+- Enhanced hover effects in globals.css:
+  • .img-luxury: increased scale from 1.04 to 1.06, added brightness(1.03) on hover
+  • .card-luxury: new class — translateY(-8px) + box-shadow on hover (applied to tour cards, expert cards)
+  • .card-zoom: new class — image zooms to 1.08 with brightness/saturation boost on card hover (applied to tour card images, expert card images)
+  • .hover-reveal: slides content up from bottom on hover
+  • .hover-border-gold: draws a gold border on hover
+  • .img-overlay-hover: gradient overlay fades in on hover
+  • .hover-scale: scale(1.03) + shadow on hover
+- Enhanced Reveal component with 3 new variants: "scale" (starts at 0.92 scale), "left" (slides from -50px), "right" (slides from +50px). Added corresponding CSS in globals.css.
+- Applied new reveal variants to WelcomeSection: image uses variant="left", text uses variant="right" for a nice split-slide-in effect.
+- Created /src/components/luxury/ScrollProgress.tsx — a 2px gold progress bar at the top of the viewport that scales with scroll position (using framer-motion useScroll + useSpring for smooth tracking). Added to main page.tsx.
+
+Stage Summary:
+- Language switcher works: verified EN (default), DE (Startseite/Über uns/Angebot anfordern), FR (Accueil/À propos/Demander un devis), ZH (首页/关于我们/请求报价) — all translations applied instantly across nav, hero, welcome, footer
+- Destinations section padding reduced from 128px/96px to 48px/56px — much tighter spacing
+- Hover effects: card-luxury (lift + shadow), card-zoom (image zoom), enhanced img-luxury, plus 5 new utility classes
+- Scroll animations: 3 new Reveal variants (scale, left, right), scroll progress bar at top
+- ESLint passes with zero warnings/errors

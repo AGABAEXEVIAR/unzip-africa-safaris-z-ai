@@ -564,9 +564,9 @@ function TourCard({
   onBookNow: () => void;
 }) {
   return (
-    <article className="bg-alabaster border border-border/60 overflow-hidden flex flex-col group hover:shadow-xl transition-shadow duration-500" style={{ borderRadius: 0 }}>
+    <article className="bg-alabaster border border-border/60 overflow-hidden flex flex-col group card-luxury" style={{ borderRadius: 0 }}>
       {/* Image */}
-      <div className="relative aspect-[4/3] overflow-hidden bg-bone cursor-pointer" onClick={onViewDetails}>
+      <div className="relative aspect-[4/3] overflow-hidden bg-bone cursor-pointer card-zoom" onClick={onViewDetails}>
         <img
           src={tour.image}
           alt={tour.name}

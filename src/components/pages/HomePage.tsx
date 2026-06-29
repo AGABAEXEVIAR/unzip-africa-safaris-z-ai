@@ -10,10 +10,12 @@ import { SafariScrollStack } from "@/components/luxury/SafariScrollStack";
 import { LuxuryTestimonials } from "@/components/luxury/LuxuryTestimonials";
 import { FAQSection, WhyChooseUsSection } from "@/components/luxury/FAQAndWhyChooseUs";
 import { useRouter } from "@/lib/router";
+import { useLang } from "@/lib/language";
 import { destinations, experts } from "@/lib/content";
 
 export function HomePage() {
   const { navigate, openQuote } = useRouter();
+  const { t } = useLang();
 
   return (
     <div className="page-enter">
@@ -29,9 +31,9 @@ export function HomePage() {
           <div className="md:col-span-3">
             <Reveal variant="up">
               <h2 className="font-display text-3xl md:text-4xl text-charcoal tracking-tight mb-3 leading-[1.05]">
-                Our Philosophy
+                {t("philosophy.heading")}
               </h2>
-              <p className="font-label text-charcoal/55 italic">&ldquo;No two journeys are alike&rdquo;</p>
+              <p className="font-label text-charcoal/55 italic">&ldquo;{t("philosophy.quote")}&rdquo;</p>
             </Reveal>
           </div>
 
@@ -91,7 +93,7 @@ export function HomePage() {
       <section className="py-32 md:py-48 px-6 md:px-10 bg-bone/50">
         <div className="mx-auto max-w-[1200px] text-center">
           <Reveal variant="up">
-            <p className="font-eyebrow text-gold mb-8">A Private Invitation</p>
+            <p className="font-eyebrow text-gold mb-8">{t("cta.eyebrow")}</p>
           </Reveal>
           <ScrollReveal
             as="h2"
@@ -100,22 +102,21 @@ export function HomePage() {
             baseOpacity={0.1}
             blurStrength={6}
           >
-            The wild is waiting. <span className="italic text-forest">Are you?</span>
+            {t("cta.heading1")} <span className="italic text-forest">{t("cta.heading2")}</span>
           </ScrollReveal>
           <Reveal variant="up" delay={0.2}>
             <p className="text-lg text-charcoal/70 max-w-xl mx-auto mt-10 leading-relaxed">
-              Every journey begins with a single conversation. Tell us where your imagination wanders
-              — we will compose the rest.
+              {t("cta.subtitle")}
             </p>
             <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-5">
               <button onClick={openQuote} className="btn-luxury btn-luxury-gold">
-                Request a Quote
+                {t("cta.requestQuote")}
               </button>
               <button
                 onClick={() => navigate("contact")}
                 className="link-underline text-charcoal/70"
               >
-                Speak to a Specialist
+                {t("cta.speakSpecialist")}
               </button>
             </div>
           </Reveal>
@@ -158,14 +159,15 @@ function HorizontalDestinations() {
 
   const x = useTransform(scrollYProgress, [0, 1], [0, -trackWidth]);
   const { navigate } = useRouter();
+  const { t } = useLang();
 
   return (
     <>
       {/* Section heading — in normal flow, ABOVE the filmstrip section, NOT overlapping */}
-      <div className="px-6 md:px-10 pt-32 md:pt-40 pb-16 md:pb-24">
+      <div className="px-6 md:px-10 pt-8 md:pt-12 pb-10 md:pb-14">
         <div className="mx-auto max-w-[1600px] flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="max-w-3xl">
-            <p className="font-eyebrow text-gold mb-4">Our Destinations</p>
+            <p className="font-eyebrow text-gold mb-4">{t("destinations.eyebrow")}</p>
             <ScrollReveal
               as="h2"
               containerClassName="font-display text-4xl md:text-6xl text-charcoal tracking-tight leading-[1.05] block"
@@ -173,16 +175,14 @@ function HorizontalDestinations() {
               baseOpacity={0.1}
               blurStrength={5}
             >
-              Our top <span className="italic text-forest">safari parks</span>
+              {t("destinations.heading1")} <span className="italic text-forest">{t("destinations.heading2")}</span>
             </ScrollReveal>
             <p className="text-base md:text-lg text-charcoal/70 leading-relaxed mt-6 max-w-2xl">
-              Africa is home to the world&rsquo;s most iconic safari destinations, offering
-              unmatched wildlife encounters, breathtaking landscapes, and unforgettable cultural
-              experiences.
+              {t("destinations.subtitle")}
             </p>
           </div>
           <p className="font-label text-charcoal/50 hidden md:block flex-shrink-0">
-            ↓ Scroll to pan the filmstrip
+            {t("destinations.scrollHint")}
           </p>
         </div>
       </div>
@@ -307,10 +307,10 @@ function ExpertCarousel() {
             <Reveal key={expert.id} variant="up" delay={idx * 0.1}>
               <article
                 onMouseEnter={() => setActive(idx)}
-                className="group cursor-pointer"
+                className="group cursor-pointer card-luxury"
                 data-cursor="view"
               >
-                <div className="relative aspect-[3/4] overflow-hidden bg-bone mb-5">
+                <div className="relative aspect-[3/4] overflow-hidden bg-bone mb-5 card-zoom">
                   <img
                     src={expert.image}
                     alt={expert.name}

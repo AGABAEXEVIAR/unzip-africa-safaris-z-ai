@@ -2,18 +2,21 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, PageId } from "@/lib/router";
+import { useLang } from "@/lib/language";
+import { LanguageSwitcher } from "@/components/luxury/LanguageSwitcher";
 import { cn } from "@/lib/utils";
 
-const navItems: { id: PageId; label: string }[] = [
-  { id: "home", label: "Home" },
-  { id: "about", label: "About" },
-  { id: "tours", label: "Tours" },
-  { id: "accommodation", label: "Accommodation" },
-  { id: "contact", label: "Contact" },
+const navItems: { id: PageId; labelKey: string }[] = [
+  { id: "home", labelKey: "nav.home" },
+  { id: "about", labelKey: "nav.about" },
+  { id: "tours", labelKey: "nav.tours" },
+  { id: "accommodation", labelKey: "nav.accommodation" },
+  { id: "contact", labelKey: "nav.contact" },
 ];
 
 export function Navigation() {
   const { page, navigate, openQuote } = useRouter();
+  const { t } = useLang();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -85,7 +88,7 @@ export function Navigation() {
                   page === item.id ? textColor : cn(subText, subTextHover)
                 )}
               >
-                {item.label}
+                {t(item.labelKey)}
                 <span
                   className={cn(
                     "absolute -bottom-0.5 left-0 right-0 h-px bg-gold transition-transform duration-500 origin-left",
@@ -96,8 +99,11 @@ export function Navigation() {
             ))}
           </nav>
 
-          {/* Right side: quote button */}
-          <div className="flex items-center gap-5">
+          {/* Right side: language switcher + quote button */}
+          <div className="flex items-center gap-3 md:gap-4">
+            <div className="hidden md:block">
+              <LanguageSwitcher scrolled={scrolled} />
+            </div>
             <button
               onClick={openQuote}
               className={cn(
@@ -108,7 +114,7 @@ export function Navigation() {
               )}
               style={{ borderRadius: 0 }}
             >
-              Request a Quote
+              {t("nav.requestQuote")}
             </button>
 
             {/* Mobile menu toggle */}
@@ -166,7 +172,7 @@ export function Navigation() {
                 <span className="font-label text-gold text-xs align-top mr-3 -translate-y-2 inline-block">
                   0{idx + 1}
                 </span>
-                {item.label}
+                {t(item.labelKey)}
               </button>
             ))}
           </nav>

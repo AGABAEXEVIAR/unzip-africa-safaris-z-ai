@@ -3,8 +3,10 @@
 import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { RouterProvider, useRouter } from "@/lib/router";
+import { LanguageProvider } from "@/lib/language";
 import { SmoothScroll } from "@/components/luxury/SmoothScroll";
 import { CustomCursor } from "@/components/luxury/CustomCursor";
+import { ScrollProgress } from "@/components/luxury/ScrollProgress";
 import { Navigation } from "@/components/luxury/Navigation";
 import { Footer } from "@/components/luxury/Footer";
 import { QuoteModal } from "@/components/luxury/QuoteModal";
@@ -38,6 +40,7 @@ function PageContent() {
 
   return (
     <div className="min-h-screen flex flex-col bg-canvas">
+      <ScrollProgress />
       <Navigation />
       <main className="flex-1">
         <AnimatePresence mode="wait">
@@ -63,10 +66,12 @@ function PageContent() {
 export default function Home() {
   return (
     <RouterProvider>
-      <SmoothScroll>
-        <CustomCursor />
-        <PageContent />
-      </SmoothScroll>
+      <LanguageProvider>
+        <SmoothScroll>
+          <CustomCursor />
+          <PageContent />
+        </SmoothScroll>
+      </LanguageProvider>
     </RouterProvider>
   );
 }

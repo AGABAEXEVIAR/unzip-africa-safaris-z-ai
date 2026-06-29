@@ -6,7 +6,7 @@ type RevealProps = {
   children: ReactNode;
   as?: ElementType;
   className?: string;
-  variant?: "up" | "fade" | "stagger";
+  variant?: "up" | "fade" | "stagger" | "scale" | "left" | "right";
   delay?: number;
   threshold?: number;
   once?: boolean;
@@ -49,7 +49,13 @@ export function Reveal({
   }, [threshold, once]);
 
   const variantClass =
-    variant === "up" ? "reveal-up" : variant === "fade" ? "reveal-fade" : "reveal-stagger";
+    variant === "up" ? "reveal-up"
+    : variant === "fade" ? "reveal-fade"
+    : variant === "stagger" ? "reveal-stagger"
+    : variant === "scale" ? "reveal-scale"
+    : variant === "left" ? "reveal-left"
+    : variant === "right" ? "reveal-right"
+    : "reveal-up";
 
   return (
     <Tag
