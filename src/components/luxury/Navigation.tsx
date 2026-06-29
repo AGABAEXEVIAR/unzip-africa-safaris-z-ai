@@ -18,14 +18,12 @@ export function Navigation() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    // On home page, hide nav until user scrolls past the cinematic hero (~80vh)
-    // On other pages, show after a small scroll
-    const threshold = page === "home" ? window.innerHeight * 0.75 : 40;
-    const onScroll = () => setScrolled(window.scrollY > threshold);
+    // Same behavior on every page: show condensed nav after small scroll
+    const onScroll = () => setScrolled(window.scrollY > 40);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, [page]);
+  }, []);
 
   // Lock scroll when mobile menu is open
   useEffect(() => {
@@ -41,20 +39,21 @@ export function Navigation() {
     setMenuOpen(false);
   };
 
-  // On home page, the nav is invisible until scrolled (SafariHero has its own pill nav)
-  // On other pages, always show but with the scrolled style applied based on scroll position
-  const isHidden = page === "home" && !scrolled;
+  // When transparent (not scrolled), use light text over dark hero/imagery
+  // When scrolled (cream bg), use dark text
+  const textColor = scrolled ? "text-charcoal" : "text-cream";
+  const subTextHover = scrolled ? "hover:text-charcoal" : "hover:text-cream";
+  const subText = scrolled ? "text-charcoal/60" : "text-cream/70";
+  const hamburgerBg = scrolled ? "bg-charcoal" : "bg-cream";
 
   return (
     <>
       <header
         className={cn(
           "fixed top-0 left-0 right-0 z-50 transition-all duration-700",
-          isHidden
-            ? "opacity-0 -translate-y-full pointer-events-none"
-            : scrolled
-              ? "bg-canvas/90 backdrop-blur-md py-4 border-b border-border/40 opacity-100 translate-y-0"
-              : "bg-transparent py-7 opacity-100 translate-y-0"
+          scrolled
+            ? "bg-canvas/90 backdrop-blur-md py-4 border-b border-border/40"
+            : "bg-transparent py-7"
         )}
       >
         <div className="mx-auto max-w-[1600px] px-6 md:px-10 flex items-center justify-between">
@@ -64,11 +63,11 @@ export function Navigation() {
             className="group flex items-center gap-3"
             aria-label="Unzip Africa Safaris — Home"
           >
-            <span className="font-display text-2xl md:text-[1.7rem] text-charcoal leading-none tracking-tight">
+            <span className={cn("font-display text-2xl md:text-[1.7rem] leading-none tracking-tight transition-colors duration-500", textColor)}>
               Unzip
             </span>
             <span className="hidden sm:inline font-label text-gold mt-1">Africa</span>
-            <span className="font-display text-2xl md:text-[1.7rem] italic text-charcoal/60 leading-none tracking-tight">
+            <span className={cn("font-display text-2xl md:text-[1.7rem] italic leading-none tracking-tight transition-colors duration-500", scrolled ? "text-charcoal/60" : "text-cream/70")}>
               Safaris
             </span>
           </button>
@@ -81,7 +80,7 @@ export function Navigation() {
                 onClick={() => handleNav(item.id)}
                 className={cn(
                   "font-label transition-colors duration-500 relative py-1",
-                  page === item.id ? "text-charcoal" : "text-charcoal/60 hover:text-charcoal"
+                  page === item.id ? textColor : cn(subText, subTextHover)
                 )}
               >
                 {item.label}
@@ -99,7 +98,10 @@ export function Navigation() {
           <div className="flex items-center gap-5">
             <button
               onClick={openQuote}
-              className="hidden md:inline-flex font-label text-charcoal/80 hover:text-charcoal transition-colors duration-500"
+              className={cn(
+                "hidden md:inline-flex font-label transition-colors duration-500",
+                scrolled ? "text-charcoal/80 hover:text-charcoal" : "text-cream/80 hover:text-cream"
+              )}
             >
               Request a Quote
             </button>
@@ -112,19 +114,22 @@ export function Navigation() {
             >
               <span
                 className={cn(
-                  "block h-px w-6 bg-charcoal transition-all duration-500",
+                  "block h-px w-6 transition-all duration-500",
+                  hamburgerBg,
                   menuOpen && "rotate-45 translate-y-[6px]"
                 )}
               />
               <span
                 className={cn(
-                  "block h-px w-6 bg-charcoal transition-all duration-300",
+                  "block h-px w-6 transition-all duration-300",
+                  hamburgerBg,
                   menuOpen && "opacity-0"
                 )}
               />
               <span
                 className={cn(
-                  "block h-px w-6 bg-charcoal transition-all duration-500",
+                  "block h-px w-6 transition-all duration-500",
+                  hamburgerBg,
                   menuOpen && "-rotate-45 -translate-y-[6px]"
                 )}
               />

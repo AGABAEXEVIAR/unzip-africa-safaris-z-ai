@@ -28,14 +28,14 @@ export default function SafariHero({
   loginText = "Request a Quote",
   title = (
     <>
-      Bespoke Safaris <br />
-      That Transform <span className="italic text-gold-soft">Your Soul</span>
+      Luxury Safaris Across <br />
+      <span className="italic text-gold-soft">Uganda, Kenya &amp; Tanzania</span>
     </>
   ),
   subtitle = (
     <>
-      Private, $50,000+ safaris across East and Southern Africa — <br className="hidden md:block" />
-      composed in silence, delivered in wonder.
+      Entirely private. Impossibly rare. <br className="hidden md:block" />
+      Journeys crafted around a single traveller — you.
     </>
   ),
   primaryActionText = "Begin Your Journey",
@@ -95,18 +95,6 @@ export default function SafariHero({
       v.removeEventListener("error", handleError);
     };
   }, [activeVideoIdx, videoSources.length]);
-
-  // Nav: single element, drops in from top with blur
-  const navVariants: Variants = {
-    hidden: { opacity: 0, y: -24, filter: "blur(8px)", scale: 0.97 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      filter: "blur(0px)",
-      scale: 1,
-      transition: { type: "spring", damping: 24, stiffness: 120, duration: 0.6 },
-    },
-  };
 
   // Title: rises up with a heavier mass — slow, majestic settling
   const titleVariants: Variants = {
@@ -193,45 +181,8 @@ export default function SafariHero({
       </div>
 
       <div className="relative z-10 flex min-h-screen flex-col pt-6">
-        {/* ===== Nav — single spring drop, sharp corners (no border radius) ===== */}
-        <motion.nav
-          variants={navVariants}
-          initial="hidden"
-          animate="visible"
-          className="mx-auto flex w-fit items-center gap-6 bg-cream/95 backdrop-blur-md px-3 py-3 shadow-[0_8px_32px_rgba(0,0,0,0.25)]"
-          style={{ borderRadius: 0 }}
-        >
-          <button
-            onClick={() => navigate("home")}
-            className="pl-3 pr-2 text-base font-serif font-medium tracking-tight text-charcoal md:text-lg"
-            style={{ fontFamily: "var(--font-cormorant), serif" }}
-          >
-            {logoText}
-          </button>
-          <div className="hidden items-center gap-6 px-4 md:flex">
-            {navItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => navigate(item.id)}
-                className="text-[0.7rem] font-medium tracking-[0.2em] uppercase text-charcoal/60 transition-colors hover:text-charcoal md:text-xs"
-                style={{ fontFamily: "var(--font-inter), sans-serif" }}
-              >
-                {item.label}
-              </button>
-            ))}
-          </div>
-          {/* Login/CTA button — NO border radius */}
-          <button
-            onClick={openQuote}
-            className="bg-forest px-6 py-2.5 text-[0.7rem] font-medium tracking-[0.2em] uppercase text-cream shadow-[inset_0_2px_0_rgba(255,255,255,0.15),inset_0_-2px_0_rgba(0,0,0,0.25)] transition-all hover:bg-forest-deep active:scale-[0.96]"
-            style={{ fontFamily: "var(--font-inter), sans-serif", borderRadius: 0 }}
-          >
-            {loginText}
-          </button>
-        </motion.nav>
-
         {/* ===== Hero Main Content — each element independently animated ===== */}
-        <div className="flex flex-1 items-center justify-center px-6 pt-24 md:pt-32">
+        <div className="flex flex-1 items-center justify-center px-6 pt-32 md:pt-40">
           <div className="flex max-w-4xl flex-col items-center text-center 2xl:max-w-6xl">
             {/* Eyebrow */}
             <motion.p

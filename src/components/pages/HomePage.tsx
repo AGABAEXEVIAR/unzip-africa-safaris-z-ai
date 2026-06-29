@@ -125,6 +125,8 @@ function HorizontalDestinations() {
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
+    // Start panning when the top of the section reaches the top of viewport (heading scrolls past)
+    // End panning when the bottom of the section reaches the bottom of viewport
     offset: ["start start", "end end"],
   });
 
@@ -132,33 +134,35 @@ function HorizontalDestinations() {
   const { navigate } = useRouter();
 
   return (
-    <section
-      ref={sectionRef}
-      className="relative"
-      style={{ height: `${trackWidth + viewportH}px` }}
-    >
-      <div className="sticky top-0 h-screen overflow-hidden flex flex-col justify-center">
-        {/* Section heading */}
-        <div className="absolute top-24 md:top-28 left-0 right-0 px-6 md:px-10 z-10">
-          <div className="mx-auto max-w-[1600px] flex flex-col md:flex-row md:items-end justify-between gap-4">
-            <div>
-              <p className="font-eyebrow text-gold mb-3">Our Destinations</p>
-              <h2 className="font-display text-4xl md:text-6xl text-charcoal tracking-tight">
-                Six Wildernesses, <span className="italic text-forest">One Continent</span>
-              </h2>
-            </div>
-            <p className="font-label text-charcoal/50 hidden md:block">
-              ↓ Scroll to pan the filmstrip
-            </p>
+    <>
+      {/* Section heading — in normal flow, ABOVE the filmstrip section, NOT overlapping */}
+      <div className="px-6 md:px-10 pt-32 md:pt-40 pb-16 md:pb-24">
+        <div className="mx-auto max-w-[1600px] flex flex-col md:flex-row md:items-end justify-between gap-4">
+          <div>
+            <p className="font-eyebrow text-gold mb-4">Our Destinations</p>
+            <h2 className="font-display text-4xl md:text-6xl text-charcoal tracking-tight leading-[1.05]">
+              Six Wildernesses, <span className="italic text-forest">One Continent</span>
+            </h2>
           </div>
+          <p className="font-label text-charcoal/50 hidden md:block">
+            ↓ Scroll to pan the filmstrip
+          </p>
         </div>
+      </div>
 
-        {/* Filmstrip track */}
-        <motion.div
-          ref={trackRef}
-          style={{ x }}
-          className="flex gap-6 md:gap-10 px-6 md:px-10 will-change-transform"
-        >
+      {/* Sticky filmstrip section — pans horizontally as user scrolls */}
+      <section
+        ref={sectionRef}
+        className="relative"
+        style={{ height: `${trackWidth + viewportH}px` }}
+      >
+        <div className="sticky top-0 h-screen overflow-hidden flex flex-col justify-center">
+          {/* Filmstrip track */}
+          <motion.div
+            ref={trackRef}
+            style={{ x }}
+            className="flex gap-6 md:gap-10 px-6 md:px-10 will-change-transform"
+          >
           {destinations.map((dest, idx) => (
             <article
               key={dest.id}
@@ -219,9 +223,10 @@ function HorizontalDestinations() {
               →
             </span>
           </div>
-        </motion.div>
-      </div>
-    </section>
+          </motion.div>
+        </div>
+      </section>
+    </>
   );
 }
 
