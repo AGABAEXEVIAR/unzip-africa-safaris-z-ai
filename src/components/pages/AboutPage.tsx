@@ -1,11 +1,10 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Reveal } from "@/components/luxury/Reveal";
 import ScrollReveal from "@/components/luxury/ScrollReveal";
 import { useRouter } from "@/lib/router";
-import { experts } from "@/lib/content";
 
 export function AboutPage() {
   const { navigate, openQuote } = useRouter();
@@ -22,7 +21,7 @@ export function AboutPage() {
       {/* ====================== HERO ====================== */}
       <section
         ref={heroRef}
-        className="relative h-[85vh] min-h-[600px] w-full overflow-hidden bg-charcoal grain"
+        className="relative h-[70vh] min-h-[500px] w-full overflow-hidden bg-charcoal grain"
       >
         <motion.div style={{ y: heroY, scale: heroScale }} className="absolute inset-0 will-change-transform">
           <img
@@ -40,145 +39,223 @@ export function AboutPage() {
             transition={{ duration: 1.2, delay: 0.4 }}
             className="font-eyebrow text-gold-soft mb-8 tracking-[0.4em]"
           >
-            Our Story
+            About Unzip Africa
           </motion.p>
           <motion.h1
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.6, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="font-display text-cream text-[3rem] sm:text-[4.5rem] md:text-[6rem] lg:text-[7rem] leading-[0.95] tracking-tight max-w-[90%]"
+            className="font-display text-cream text-[2.5rem] sm:text-[4rem] md:text-[5.5rem] lg:text-[6.5rem] leading-[0.95] tracking-tight max-w-[90%]"
+            style={{ fontFamily: "var(--font-cormorant), serif", fontWeight: 300 }}
           >
-            Founded on
-            <br />
-            <span className="italic text-gold-soft">a single silence.</span>
+            Africa is not simply a <span className="italic text-gold-soft">destination.</span>
           </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.4, delay: 1.1 }}
-            className="font-label text-cream/70 mt-10 max-w-md"
-            style={{ letterSpacing: "0.2em" }}
+        </div>
+      </section>
+
+      {/* ====================== MAIN STORY ====================== */}
+      <section className="py-16 md:py-24 px-6 md:px-10">
+        <div className="mx-auto max-w-[900px]">
+          <Reveal variant="up">
+            <p className="font-eyebrow text-gold mb-4">Our Story</p>
+          </Reveal>
+          <ScrollReveal
+            as="p"
+            containerClassName="font-display text-2xl md:text-4xl leading-[1.3] text-charcoal tracking-tight block mb-10"
+            textClassName="block"
+            baseOpacity={0.1}
+            blurStrength={5}
           >
-            ARUSHA, TANZANIA — 2009
-          </motion.p>
-        </div>
-      </section>
+            Africa is not simply a destination. It is a feeling, a story, and a journey waiting to be lived.
+          </ScrollReveal>
 
-      {/* ====================== HERITAGE STORY ====================== */}
-      <section className="py-32 md:py-48 px-6 md:px-10">
-        <div className="mx-auto max-w-[1400px] grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-20">
-          <div className="md:col-span-4">
-            <Reveal variant="up">
-              <p className="font-eyebrow text-gold mb-6">The Beginning</p>
-              <p className="font-label text-charcoal/60">
-                How a single gorilla trek
-                <br />
-                became a lifetime's work
-              </p>
-            </Reveal>
-          </div>
-
-          <div className="md:col-span-8">
-            <ScrollReveal
-              as="p"
-              containerClassName="font-display text-2xl md:text-3xl lg:text-4xl leading-[1.35] text-charcoal tracking-tight block"
-              textClassName="block"
-              baseOpacity={0.15}
-              blurStrength={5}
-            >
-              In 2006, our founder Amara Okello — then a Kisoro schoolteacher — knelt in the volcanic mud of Bwindi Impenetrable Forest, seven meters from a silverback named Rushegura. She did not move for an hour. When she returned to her village, she <span className="italic text-forest"> could not speak of what she had seen</span>.
-            </ScrollReveal>
-
-            <Reveal variant="up" delay={0.15}>
-              <p className="text-lg text-charcoal/75 leading-relaxed mt-10 max-w-2xl">
-                Three years of conservation biology, six years of guiding apprenticeship under the
-                legendary Dian Fossey Foundation trackers, and one quiet decision: that the silence
-                she had experienced was not a luxury for the few, but a necessity for any soul that
-                had forgotten the sound of its own breathing. Unzip Africa Safaris was founded in
-                Arusha in 2009, with a single Land Cruiser and a single rule — every journey
-                composed for one party, and one party alone.
-              </p>
-            </Reveal>
-
-            <Reveal variant="up" delay={0.25}>
-              <p className="text-lg text-charcoal/75 leading-relaxed mt-6 max-w-2xl">
-                Fifteen years later, we operate private safaris across eight African nations with a
-                team of thirty-two guides, four conservation partnerships, and a fleet of nine
-                custom-built Land Cruisers. We have never sold a group departure. We never will.
-              </p>
-            </Reveal>
-          </div>
-        </div>
-      </section>
-
-      {/* ====================== FULL-BLEED QUOTE ====================== */}
-      <section className="relative h-[70vh] min-h-[500px] overflow-hidden grain">
-        <div className="absolute inset-0">
-          <img
-            src="https://sfile.chatglm.cn/images-ppt/4423f54c77e6.jpg"
-            alt="Savanna landscape"
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-forest-deep/75" />
-        </div>
-
-        <div className="relative h-full flex items-center justify-center px-6">
-          <Reveal variant="fade">
-            <div className="text-center max-w-5xl">
-              <p className="font-eyebrow text-gold-soft mb-10">Our Promise</p>
-              <p className="font-display text-cream text-3xl md:text-5xl lg:text-6xl leading-[1.15] tracking-tight">
-                We will compose you hours
-                <br />
-                that no itinerary can describe,
-                <br />
-                <span className="italic text-gold-soft">no photograph can hold.</span>
-              </p>
-            </div>
+          <Reveal variant="up" delay={0.1}>
+            <p className="text-base md:text-lg text-charcoal/75 leading-relaxed mb-6">
+              At Unzip Africa, we create exceptional journeys across Uganda, Kenya, Rwanda and
+              Tanzania, designed for travelers who want more than a holiday. We believe the most
+              memorable journeys are personal — shaped by extraordinary landscapes, remarkable
+              wildlife, meaningful cultural encounters, and moments that stay with you long after
+              you return home.
+            </p>
+            <p className="text-base md:text-lg text-charcoal/75 leading-relaxed mb-6">
+              From the misty forests of Uganda, where mountain gorillas move quietly through the
+              ancient rainforest, to the endless plains of the Serengeti and the dramatic
+              landscapes of Kenya's Maasai Mara, we take you closer to the wild while making every
+              part of your journey feel effortless.
+            </p>
           </Reveal>
         </div>
       </section>
 
-      {/* ====================== VALUES — 3 PILLARS ====================== */}
-      <section className="py-32 md:py-48 px-6 md:px-10 bg-alabaster">
-        <div className="mx-auto max-w-[1600px]">
+      {/* ====================== TRAVEL CURATED AROUND YOU ====================== */}
+      <section className="py-16 md:py-24 px-6 md:px-10 bg-alabaster">
+        <div className="mx-auto max-w-[900px]">
           <Reveal variant="up">
-            <p className="font-eyebrow text-gold mb-6 text-center">Three Commitments</p>
+            <p className="font-eyebrow text-gold mb-4">Travel, Curated Around You</p>
           </Reveal>
           <ScrollReveal
             as="h2"
-            containerClassName="font-display text-4xl md:text-6xl text-charcoal tracking-tight text-center mb-20 max-w-4xl mx-auto leading-[1.05] block"
+            containerClassName="font-display text-3xl md:text-5xl text-charcoal tracking-tight leading-[1.1] block mb-8"
+            textClassName="block"
+            baseOpacity={0.1}
+            blurStrength={5}
+          >
+            No two travelers are the same, and neither should their <span className="italic text-forest">safari be.</span>
+          </ScrollReveal>
+          <Reveal variant="up" delay={0.2}>
+            <p className="text-base md:text-lg text-charcoal/75 leading-relaxed mb-6">
+              We specialize in tailor-made and private safari experiences, carefully designed
+              around your interests, pace, style, and expectations. Whether you dream of a luxury
+              safari, gorilla trekking, the Great Migration, intimate wildlife encounters,
+              cultural experiences, or simply escaping into nature, our team brings together the
+              right destinations, accommodation, guides, and experiences to create a journey that
+              feels uniquely yours.
+            </p>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ====================== WHERE LUXURY MEETS AUTHENTICITY ====================== */}
+      <section className="py-16 md:py-24 px-6 md:px-10">
+        <div className="mx-auto max-w-[900px]">
+          <Reveal variant="up">
+            <p className="font-eyebrow text-gold mb-4">Where Luxury Meets Authenticity</p>
+          </Reveal>
+          <ScrollReveal
+            as="h2"
+            containerClassName="font-display text-3xl md:text-5xl text-charcoal tracking-tight leading-[1.1] block mb-8"
+            textClassName="block"
+            baseOpacity={0.1}
+            blurStrength={5}
+          >
+            For us, luxury is not simply about beautiful lodges or <span className="italic text-forest">exceptional service.</span>
+          </ScrollReveal>
+          <Reveal variant="up" delay={0.2}>
+            <p className="text-base md:text-lg text-charcoal/75 leading-relaxed mb-6">
+              It is about having the freedom to slow down, the comfort to truly relax, and the
+              opportunity to experience Africa in a meaningful way. We combine carefully selected
+              accommodation, experienced local guides, seamless logistics, and thoughtful attention
+              to detail to create journeys where comfort and adventure exist naturally together.
+            </p>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ====================== BEYOND THE SAFARI ====================== */}
+      <section className="py-16 md:py-24 px-6 md:px-10 bg-alabaster">
+        <div className="mx-auto max-w-[900px]">
+          <Reveal variant="up">
+            <p className="font-eyebrow text-gold mb-4">Beyond the Safari</p>
+          </Reveal>
+          <ScrollReveal
+            as="h2"
+            containerClassName="font-display text-3xl md:text-5xl text-charcoal tracking-tight leading-[1.1] block mb-8"
+            textClassName="block"
+            baseOpacity={0.1}
+            blurStrength={5}
+          >
+            Africa's greatest treasures extend <span className="italic text-forest">beyond its wildlife.</span>
+          </ScrollReveal>
+          <Reveal variant="up" delay={0.2}>
+            <p className="text-base md:text-lg text-charcoal/75 leading-relaxed mb-6">
+              We believe in connecting travelers with the people, cultures, communities,
+              landscapes, and stories that make East Africa extraordinary. Our experiences are
+              designed to create genuine connections while supporting responsible tourism and the
+              communities that make these destinations their home.
+            </p>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ====================== OUR PROMISE ====================== */}
+      <section className="py-16 md:py-24 px-6 md:px-10 bg-forest-deep text-cream">
+        <div className="mx-auto max-w-[900px] text-center">
+          <Reveal variant="up">
+            <p className="font-eyebrow text-gold-soft mb-6">Our Promise</p>
+          </Reveal>
+          <ScrollReveal
+            as="p"
+            containerClassName="font-display text-2xl md:text-4xl leading-[1.3] text-cream tracking-tight block mb-8"
+            textClassName="block"
+            baseOpacity={0.1}
+            blurStrength={5}
+          >
+            From your first conversation with us to the moment you return home, we are committed to
+            making your journey <span className="italic text-gold-soft">seamless, personal, and unforgettable.</span>
+          </ScrollReveal>
+          <Reveal variant="up" delay={0.2}>
+            <p className="text-base md:text-lg text-cream/70 leading-relaxed mb-10">
+              Unzip Africa is your gateway to discovering East Africa differently — more
+              intimately, more intentionally, and with a touch of luxury.
+            </p>
+            <p className="font-display text-xl md:text-3xl italic text-gold-soft mb-2" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+              Uganda. Kenya. Tanzania. Rwanda.
+            </p>
+            <p className="text-cream/60 text-sm md:text-base leading-relaxed mb-2">
+              One extraordinary region. Countless stories waiting to be discovered.
+            </p>
+            <p className="font-display text-lg md:text-2xl text-cream mt-4" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+              Unzip Africa — <span className="italic text-gold-soft">Unzip the extraordinary.</span>
+            </p>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ====================== THREE COMMITMENTS ====================== */}
+      <section className="py-16 md:py-24 px-6 md:px-10 bg-canvas">
+        <div className="mx-auto max-w-[1600px]">
+          <Reveal variant="up">
+            <p className="font-eyebrow text-gold mb-4 text-center">Three Commitments</p>
+          </Reveal>
+          <ScrollReveal
+            as="h2"
+            containerClassName="font-display text-3xl md:text-5xl text-charcoal tracking-tight text-center mb-6 max-w-3xl mx-auto leading-[1.05] block"
             textClassName="block"
             baseOpacity={0.1}
             blurStrength={5}
           >
             The principles that <span className="italic text-forest">govern every journey</span>
           </ScrollReveal>
+          <Reveal variant="up" delay={0.2}>
+            <p className="text-base text-charcoal/65 leading-relaxed text-center max-w-2xl mx-auto mb-12">
+              At Unzip Africa, we believe a truly exceptional journey should leave a lasting
+              impression — not only on the traveler, but also on the places, people, and wildlife
+              that make it possible. Our three commitments guide how we design, deliver, and
+              continuously improve every experience.
+            </p>
+          </Reveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-16">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
             {[
               {
                 num: "01",
-                title: "Solitude",
-                body: "We will never put you in a vehicle with strangers. We will never drive within sight of another jeep. We will position your camp where no other camp can be seen. Solitude is not a feature of our safaris — it is the foundation.",
+                title: "Exceptional Experiences",
+                body: "We go beyond simply taking you from one destination to another. Every journey is thoughtfully curated around your interests, pace, and expectations, with carefully selected stays, experiences, and local expertise.",
+                tagline: "Every detail matters. Every moment counts.",
               },
               {
                 num: "02",
-                title: "Silence",
-                body: "Our guides speak less than you might expect. They will point, they will whisper, they will let the wind and the wild do the rest. The most common feedback we receive is that travelers heard — for the first time in years — the sound of their own thinking.",
+                title: "Authentic Connections",
+                body: "We believe the heart of Africa is found beyond the iconic landscapes. It lives in its people, cultures, communities, and stories. We create opportunities for meaningful encounters that allow you to experience East Africa with greater depth, respect, and authenticity.",
+                tagline: "Travel deeper. Connect genuinely.",
               },
               {
                 num: "03",
-                title: "Stewardship",
-                body: "Seven percent of every journey funds the conservation area you visit. Your presence protects the land that protects the wildlife that composes your hours. We do not view this as charity. We view it as the rent for what we have been lent.",
+                title: "Responsible Exploration",
+                body: "The privilege of experiencing Africa comes with a responsibility to protect it. We are committed to encouraging responsible travel that respects wildlife, supports local communities, values conservation, and helps preserve the destinations we are fortunate to share with our guests.",
+                tagline: "Explore beautifully. Leave a positive footprint.",
               },
             ].map((pillar, idx) => (
               <Reveal key={pillar.num} variant="up" delay={idx * 0.15}>
-                <div className="border-t border-border pt-8">
-                  <p className="font-display text-6xl text-gold/40 italic mb-6">{pillar.num}</p>
-                  <h3 className="font-display text-3xl md:text-4xl text-charcoal mb-6 tracking-tight">
+                <div className="card-hover-rich p-6 md:p-8 h-full">
+                  <p className="font-display text-5xl md:text-6xl text-gold/40 italic mb-4 leading-none">{pillar.num}</p>
+                  <h3 className="font-display text-2xl md:text-3xl text-charcoal mb-4 tracking-tight">
                     {pillar.title}
                   </h3>
-                  <p className="text-charcoal/75 leading-relaxed">{pillar.body}</p>
+                  <p className="text-charcoal/70 leading-relaxed mb-4">{pillar.body}</p>
+                  <p className="font-display text-base italic text-forest" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+                    {pillar.tagline}
+                  </p>
                 </div>
               </Reveal>
             ))}
@@ -186,149 +263,45 @@ export function AboutPage() {
         </div>
       </section>
 
-      {/* ====================== EXPERTS — HOVER POP CARDS ====================== */}
-      <section className="py-32 md:py-48 px-6 md:px-10">
-        <div className="mx-auto max-w-[1600px]">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-20">
-            <div className="md:col-span-5">
-              <Reveal variant="up">
-                <p className="font-eyebrow text-gold mb-6">Our Experts</p>
-              </Reveal>
-              <ScrollReveal
-                as="h2"
-                containerClassName="font-display text-4xl md:text-6xl text-charcoal leading-[1.05] tracking-tight block"
-                textClassName="block"
-                baseOpacity={0.1}
-                blurStrength={5}
-              >
-                Inheritors of <span className="italic text-forest">these landscapes</span>
-              </ScrollReveal>
-            </div>
-            <div className="md:col-span-6 md:col-start-7 flex items-end">
-              <Reveal variant="up" delay={0.2}>
-                <p className="text-charcoal/70 text-lg leading-relaxed">
-                  Hover over each expert to read their story. These are the people who will be in
-                  your vehicle at dawn, walking beside you in the forest, sharing meals around your
-                  campfire at night.
-                </p>
-              </Reveal>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-            {experts.map((expert, idx) => (
-              <Reveal key={expert.id} variant="up" delay={idx * 0.1}>
-                <article className="group cursor-pointer" data-cursor="view">
-                  <div className="relative aspect-[3/4] overflow-hidden bg-bone mb-5">
-                    <img
-                      src={expert.image}
-                      alt={expert.name}
-                      className="absolute inset-0 w-full h-full object-cover img-luxury transition-transform duration-[1.2s] group-hover:scale-[1.08]"
-                    />
-                    <div className="absolute inset-0 bg-charcoal/15 group-hover:bg-charcoal/0 transition-colors duration-700" />
-                    {/* Bio that "pops" on hover */}
-                    <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-charcoal/95 via-charcoal/60 to-transparent translate-y-full group-hover:translate-y-0 transition-transform duration-[0.8s] ease-[cubic-bezier(0.16,1,0.3,1)]">
-                      <p className="text-cream/85 text-xs leading-relaxed font-light line-clamp-6">
-                        {expert.bio}
-                      </p>
-                    </div>
-                    {/* Years badge */}
-                    <div className="absolute top-4 left-4">
-                      <span className="font-eyebrow text-cream/90 bg-charcoal/40 backdrop-blur-sm px-3 py-1.5">
-                        {expert.yearsExperience}
-                      </span>
-                    </div>
-                  </div>
-                  <p className="font-eyebrow text-gold mb-2">{expert.role}</p>
-                  <h3 className="font-display text-2xl md:text-3xl text-charcoal tracking-tight mb-2 group-hover:text-forest transition-colors duration-500">
-                    {expert.name}
-                  </h3>
-                  <p className="font-label text-charcoal/60">{expert.specialty}</p>
-                </article>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ====================== TIMELINE OF MILESTONES ====================== */}
-      <section className="py-32 md:py-48 px-6 md:px-10 bg-bone/40">
-        <div className="mx-auto max-w-[1400px]">
+      {/* ====================== COMMITMENT PROMISE ====================== */}
+      <section className="py-16 md:py-24 px-6 md:px-10 bg-forest-deep text-cream">
+        <div className="mx-auto max-w-[800px] text-center">
           <Reveal variant="up">
-            <p className="font-eyebrow text-gold mb-6">Milestones</p>
+            <p className="font-eyebrow text-gold-soft mb-6">Our Promise</p>
           </Reveal>
           <ScrollReveal
-            as="h2"
-            containerClassName="font-display text-4xl md:text-6xl text-charcoal tracking-tight mb-20 max-w-3xl leading-[1.05] block"
+            as="p"
+            containerClassName="font-display text-xl md:text-3xl leading-[1.4] text-cream tracking-tight block"
             textClassName="block"
             baseOpacity={0.1}
             blurStrength={5}
           >
-            Fifteen years of <span className="italic text-forest">measured growth</span>
+            These commitments are more than words. They are the principles behind every safari,
+            every recommendation, and every experience we create. Because the finest journeys are
+            not simply remembered — <span className="italic text-gold-soft">they make a difference.</span>
           </ScrollReveal>
-
-          <div className="relative">
-            {/* Vertical line */}
-            <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-border md:-translate-x-1/2" />
-
-            <div className="space-y-16 md:space-y-24">
-              {[
-                {
-                  year: "2009",
-                  title: "A single Land Cruiser",
-                  body: "Amara founds Unzip Africa Safaris in Arusha with one vehicle, one tent, and her childhood friend Daniel as the company's first tracker.",
-                },
-                {
-                  year: "2013",
-                  title: "The Bwindi Partnership",
-                  body: "We establish our first conservation partnership with the Bwindi Community Hospital, funding a mobile clinic that serves 12,000 Batwa people annually.",
-                },
-                {
-                  year: "2017",
-                  title: "Expansion into Botswana",
-                  body: "Nala Mwangi joins as Director of Conservation Partnerships, opening our Okavango Delta operations and pioneering the use of electric mokoro boats.",
-                },
-                {
-                  year: "2021",
-                  title: "The Carbon-Neutral Charter Fleet",
-                  body: "We replace our entire charter aircraft fleet with Cessna 208s converted to run on sustainable aviation fuel — the first safari operator in Africa to do so.",
-                },
-                {
-                  year: "2024",
-                  title: "The Long Run Membership",
-                  body: "We are admitted as the 38th member of The Long Run — the global association of conservation-focused luxury travel companies founded by Zeitz Foundation.",
-                },
-              ].map((m, idx) => {
-                // On desktop/tablet (md+): even indices (0, 2, 4) animate from LEFT, odd indices (1, 3) animate from RIGHT
-                // On mobile: all animate from the left (current behavior preserved)
-                return (
-                  <MilestoneItem key={m.year} idx={idx} year={m.year} title={m.title} body={m.body} />
-                );
-              })}
-            </div>
-          </div>
         </div>
       </section>
 
       {/* ====================== CTA ====================== */}
-      <section className="py-32 md:py-48 px-6 md:px-10">
-        <div className="mx-auto max-w-[1200px] text-center">
+      <section className="py-16 md:py-24 px-6 md:px-10">
+        <div className="mx-auto max-w-[1000px] text-center">
           <Reveal variant="up">
-            <p className="font-eyebrow text-gold mb-8">Meet the Team</p>
+            <p className="font-eyebrow text-gold mb-8">Begin Your Journey</p>
           </Reveal>
           <ScrollReveal
             as="h2"
-            containerClassName="font-display text-5xl md:text-7xl lg:text-8xl leading-[0.95] text-charcoal tracking-tight block mb-10"
+            containerClassName="font-display text-4xl md:text-6xl lg:text-7xl leading-[0.95] text-charcoal tracking-tight block mb-10"
             textClassName="block"
             baseOpacity={0.1}
             blurStrength={6}
           >
-            Come walk with us.
+            Unzip the <span className="italic text-forest">extraordinary.</span>
           </ScrollReveal>
           <Reveal variant="up" delay={0.2}>
             <p className="text-lg text-charcoal/70 max-w-xl mx-auto mt-10 leading-relaxed">
-              Every journey begins with a conversation — about you, your dreams, and the silence you
-              are seeking.
+              Every journey begins with a conversation. Tell us where your imagination wanders —
+              we will compose the rest.
             </p>
             <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-5">
               <button onClick={openQuote} className="btn-luxury btn-luxury-gold">
@@ -345,70 +318,5 @@ export function AboutPage() {
         </div>
       </section>
     </div>
-  );
-}
-
-/* ===================== Milestone Item with responsive slide-in direction ===================== */
-function useIsDesktop() {
-  const [isDesktop, setIsDesktop] = useState(false);
-  useEffect(() => {
-    const check = () => setIsDesktop(window.innerWidth >= 768);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
-  return isDesktop;
-}
-
-function MilestoneItem({
-  idx,
-  year,
-  title,
-  body,
-}: {
-  idx: number;
-  year: string;
-  title: string;
-  body: string;
-}) {
-  const isDesktop = useIsDesktop();
-  // On desktop/tablet: even indices (0, 2, 4) animate from LEFT, odd indices (1, 3) from RIGHT
-  // On mobile: all animate from the left
-  const isLeft = !isDesktop || idx % 2 === 0;
-  const xOffset = isLeft ? -60 : 60;
-  // On desktop: even indices go in the LEFT column (text-right), odd indices go in the RIGHT column (text-left)
-  const isRightColumn = idx % 2 === 1;
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, x: xOffset, y: 20 }}
-      whileInView={{ opacity: 1, x: 0, y: 0 }}
-      viewport={{ once: true, amount: 0.3 }}
-      transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-    >
-      <div className="relative grid md:grid-cols-2 gap-8 md:gap-16 items-start">
-        {/* Dot — centered on the vertical line */}
-        <div className="absolute left-4 md:left-1/2 top-2 w-3 h-3 rounded-full bg-gold -translate-x-1/2 ring-4 ring-canvas z-10" />
-
-        {/* Content: left column for even indices, right column for odd indices */}
-        <div
-          className={`pl-12 md:pl-0 ${
-            isRightColumn
-              ? "md:col-start-2 md:pl-16"
-              : "md:col-start-1 md:text-right md:pr-16"
-          }`}
-        >
-          <p className="font-display text-5xl md:text-7xl text-gold/50 italic mb-3 tracking-tight">
-            {year}
-          </p>
-          <h3 className="font-display text-2xl md:text-3xl text-charcoal mb-3 tracking-tight">
-            {title}
-          </h3>
-          <p className="text-charcoal/70 leading-relaxed max-w-md md:inline-block">
-            {body}
-          </p>
-        </div>
-      </div>
-    </motion.div>
   );
 }
