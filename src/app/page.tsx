@@ -18,6 +18,7 @@ import { ToursPage } from "@/components/pages/ToursPage";
 import { AccommodationPage } from "@/components/pages/AccommodationPage";
 import { ContactPage } from "@/components/pages/ContactPage";
 import { QuotePage } from "@/components/pages/QuotePage";
+import { DestinationPage } from "@/components/pages/DestinationPage";
 
 function PageContent() {
   const { page, openQuote } = useRouter();
@@ -35,6 +36,7 @@ function PageContent() {
     tours: <ToursPage />,
     accommodation: <AccommodationPage />,
     contact: <ContactPage />,
+    destinations: <DestinationPage />,
     quote: <QuotePage />,
   };
 
