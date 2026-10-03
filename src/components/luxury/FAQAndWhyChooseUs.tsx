@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Reveal } from "@/components/luxury/Reveal";
 import ScrollReveal from "@/components/luxury/ScrollReveal";
 
@@ -269,58 +269,208 @@ export function FounderMessageSection() {
   );
 }
 
-/* ===================== Safari Cars Section ===================== */
+/* ===================== Safari Cars Section — Two Column with Image Stack ===================== */
+
+const safariCarImages = [
+  "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/29d296b5dde8.jpg",
+  "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/8a1330843fc4.jpg",
+  "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/47d9868387d3.jpg",
+  "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/8821fb17b3de.jpg",
+];
+
 export function SafariCarsSection() {
   return (
     <section className="py-16 md:py-24 px-6 md:px-10 bg-canvas">
-      <div className="mx-auto max-w-[1200px]">
-        <div className="text-center mb-12">
-          <Reveal variant="up">
-            <p className="font-eyebrow text-gold mb-4">Travel in Comfort</p>
-          </Reveal>
-          <ScrollReveal
-            as="h2"
-            containerClassName="font-display text-3xl md:text-6xl text-charcoal tracking-tight leading-[1.05] block mb-6"
-            textClassName="block"
-            baseOpacity={0.1}
-            blurStrength={5}
-          >
-            Our <span className="italic text-forest">Safari Cars</span>
-          </ScrollReveal>
-          <Reveal variant="up" delay={0.2}>
-            <p className="text-base md:text-lg text-charcoal/70 leading-relaxed max-w-3xl mx-auto">
-              At Unzip Africa, every safari is designed for comfort, safety, and unforgettable
-              wildlife experiences. Our safari vehicles are specially equipped for African
-              adventures, offering comfortable seating, large viewing windows, pop-up roofs,
-              charging facilities, and ample space for photography equipment. Whether exploring
-              Uganda, Kenya, or Tanzania, our vehicles provide the perfect vantage point to
-              experience wildlife and landscapes while travelling in comfort.
-            </p>
-          </Reveal>
-        </div>
+      <div className="mx-auto max-w-[1400px]">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16 items-center">
 
-        {/* Features grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
-          {[
-            { title: "Comfortable Seating", icon: "seat" },
-            { title: "Large Viewing Windows", icon: "window" },
-            { title: "Pop-Up Roofs", icon: "roof" },
-            { title: "Charging Facilities", icon: "charge" },
-          ].map((feature, idx) => (
-            <Reveal key={feature.title} variant="up" delay={idx * 0.1}>
-              <div className="card-hover-rich p-6 text-center h-full">
-                <div className="flex-shrink-0 w-12 h-12 mx-auto mb-4 border border-charcoal/20 group-hover:border-gold flex items-center justify-center transition-all duration-500">
-                  <CarFeatureIcon name={feature.icon} />
-                </div>
-                <h3 className="font-display text-lg md:text-xl text-charcoal tracking-tight">
-                  {feature.title}
-                </h3>
+          {/* Left — Text + Features */}
+          <div>
+            <Reveal variant="up">
+              <p className="font-eyebrow text-gold mb-4">Travel in Comfort</p>
+            </Reveal>
+            <ScrollReveal
+              as="h2"
+              containerClassName="font-display text-3xl md:text-6xl text-charcoal tracking-tight leading-[1.05] block mb-6"
+              textClassName="block"
+              baseOpacity={0.1}
+              blurStrength={5}
+            >
+              Our <span className="italic text-forest">Safari Cars</span>
+            </ScrollReveal>
+            <Reveal variant="up" delay={0.2}>
+              <p className="text-base md:text-lg text-charcoal/70 leading-relaxed mb-8">
+                At Unzip Africa, every safari is designed for comfort, safety, and unforgettable
+                wildlife experiences. Our safari vehicles are specially equipped for African
+                adventures, offering comfortable seating, large viewing windows, pop-up roofs,
+                charging facilities, and ample space for photography equipment. Whether exploring
+                Uganda, Kenya, or Tanzania, our vehicles provide the perfect vantage point to
+                experience wildlife and landscapes while travelling in comfort.
+              </p>
+            </Reveal>
+
+            {/* Features list */}
+            <Reveal variant="up" delay={0.3}>
+              <div className="grid grid-cols-2 gap-4">
+                {[
+                  { title: "Comfortable Seating", icon: "seat" },
+                  { title: "Large Viewing Windows", icon: "window" },
+                  { title: "Pop-Up Roofs", icon: "roof" },
+                  { title: "Charging Facilities", icon: "charge" },
+                ].map((feature) => (
+                  <div key={feature.title} className="flex items-center gap-3 p-4 border border-border card-hover-rich">
+                    <div className="flex-shrink-0 w-10 h-10 border border-charcoal/20 flex items-center justify-center">
+                      <CarFeatureIcon name={feature.icon} />
+                    </div>
+                    <span className="font-label text-charcoal text-xs">{feature.title}</span>
+                  </div>
+                ))}
               </div>
             </Reveal>
-          ))}
+          </div>
+
+          {/* Right — Image Stack Swipe Effect */}
+          <Reveal variant="right" delay={0.2}>
+            <SafariCarImageStack images={safariCarImages} />
+          </Reveal>
+
         </div>
       </div>
     </section>
+  );
+}
+
+/* ===================== Image Stack Swipe Component ===================== */
+function SafariCarImageStack({ images }: { images: string[] }) {
+  const [stack, setStack] = useState<string[]>(images);
+  const [swipeDir, setSwipeDir] = useState<"left" | "right" | null>(null);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  // Swipe the top image to the back — it goes behind, next image shows
+  const swipeNext = (dir: "left" | "right") => {
+    if (isAnimating || stack.length <= 1) return;
+    setIsAnimating(true);
+    setSwipeDir(dir);
+    // After the animation completes, move the top image to the back
+    setTimeout(() => {
+      setStack((prev) => {
+        const next = [...prev];
+        const top = next.shift(); // Remove top
+        if (top) next.push(top); // Put it at the back
+        return next;
+      });
+      setSwipeDir(null);
+      setIsAnimating(false);
+    }, 500);
+  };
+
+  // Touch / mouse swipe handling
+  const touchStartX = useRef(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const deltaX = e.changedTouches[0].clientX - touchStartX.current;
+    if (Math.abs(deltaX) > 40) {
+      swipeNext(deltaX > 0 ? "right" : "left");
+    }
+  };
+
+  // Click to advance
+  const handleClick = () => {
+    swipeNext("left");
+  };
+
+  return (
+    <div
+      ref={containerRef}
+      className="relative w-full aspect-[4/5] max-w-[500px] mx-auto select-none"
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+      onClick={handleClick}
+      style={{ cursor: "pointer" }}
+      data-cursor="view"
+    >
+      <style>{`
+        @keyframes stackSwipeLeft {
+          0% { transform: translateX(0) rotate(0deg) scale(1); opacity: 1; z-index: 10; }
+          100% { transform: translateX(-120%) rotate(-15deg) scale(0.9); opacity: 0; z-index: 0; }
+        }
+        @keyframes stackSwipeRight {
+          0% { transform: translateX(0) rotate(0deg) scale(1); opacity: 1; z-index: 10; }
+          100% { transform: translateX(120%) rotate(15deg) scale(0.9); opacity: 0; z-index: 0; }
+        }
+        .stack-img {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+          will-change: transform, opacity;
+        }
+        .stack-img.swiping-left {
+          animation: stackSwipeLeft 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .stack-img.swiping-right {
+          animation: stackSwipeRight 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+      `}</style>
+
+      {/* Hint text */}
+      <div className="absolute -top-8 left-0 right-0 text-center">
+        <p className="font-eyebrow text-charcoal/40">Swipe or tap to view →</p>
+      </div>
+
+      {/* Stack of images — last in array is on top */}
+      {stack.map((src, idx) => {
+        const isTop = idx === 0;
+        const isSecond = idx === 1;
+        const isThird = idx === 2;
+
+        // Stack offset — cards behind the top one are slightly offset
+        const offset = isTop ? 0 : isSecond ? 12 : isThird ? 24 : 36;
+        const scale = isTop ? 1 : isSecond ? 0.95 : isThird ? 0.9 : 0.85;
+        const opacity = isTop ? 1 : isSecond ? 0.8 : isThird ? 0.6 : 0.4;
+
+        return (
+          <div
+            key={src}
+            className="absolute overflow-hidden bg-bone border border-border/30 shadow-lg"
+            style={{
+              top: `${offset}px`,
+              left: `${offset}px`,
+              right: `${-offset}px`,
+              bottom: `${-offset}px`,
+              zIndex: stack.length - idx,
+              transform: `scale(${scale})`,
+              opacity: opacity,
+              borderRadius: 0,
+            }}
+          >
+            <img
+              src={src}
+              alt={`Safari vehicle ${idx + 1}`}
+              className={`stack-img ${isTop && isAnimating ? (swipeDir === "right" ? "swiping-right" : "swiping-left") : ""}`}
+            />
+            {/* Gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-charcoal/40 via-transparent to-transparent" />
+            {/* Frame border */}
+            <div className="absolute inset-3 border border-cream/15 pointer-events-none" />
+          </div>
+        );
+      })}
+
+      {/* Counter */}
+      <div className="absolute -bottom-8 left-0 right-0 text-center">
+        <p className="font-label text-charcoal/40 text-xs">
+          {stack.length} photos — swipe to cycle
+        </p>
+      </div>
+    </div>
   );
 }
 
