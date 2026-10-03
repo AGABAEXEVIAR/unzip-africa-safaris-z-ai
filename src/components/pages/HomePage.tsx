@@ -8,7 +8,7 @@ import SafariHero from "@/components/luxury/SafariHero";
 import { WelcomeSection } from "@/components/luxury/WelcomeSection";
 import { SafariScrollStack } from "@/components/luxury/SafariScrollStack";
 import { LuxuryTestimonials } from "@/components/luxury/LuxuryTestimonials";
-import { FAQSection, WhyChooseUsSection } from "@/components/luxury/FAQAndWhyChooseUs";
+import { FAQSection, WhyChooseUsSection, FounderMessageSection, SafariCarsSection } from "@/components/luxury/FAQAndWhyChooseUs";
 import { useRouter } from "@/lib/router";
 import { useLang } from "@/lib/language";
 import { destinations, experts } from "@/lib/content";
@@ -46,7 +46,7 @@ export function HomePage() {
               baseOpacity={0.15}
               blurStrength={6}
             >
-              We do not sell safaris. We compose <span className="italic text-forest">silent, indelible hours</span> in the company of wild things — guided by trackers whose grandfathers walked these lands, and finished in lodges where the night sky is the only ceiling.
+              At Unzip Africa, we believe the best African safari experiences are personal, authentic and thoughtfully designed. We create bespoke luxury safaris in Uganda, Kenya and Tanzania, connecting discerning travellers with extraordinary wildlife, landscapes, cultures and unforgettable moments. <span className="italic text-forest">Local knowledge. Personal journeys. Meaningful travel.</span>
             </ScrollReveal>
 
             <div className="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-8 md:gap-12">
@@ -77,6 +77,9 @@ export function HomePage() {
       {/* ====================== WHY CHOOSE US ====================== */}
       <WhyChooseUsSection />
 
+      {/* ====================== FOUNDER MESSAGE ====================== */}
+      <FounderMessageSection />
+
       {/* ====================== THE EXPERIENCE — PARALLAX BAND ====================== */}
       <ParallaxQuote />
 
@@ -88,6 +91,9 @@ export function HomePage() {
 
       {/* ====================== FAQ ====================== */}
       <FAQSection />
+
+      {/* ====================== SAFARI CARS ====================== */}
+      <SafariCarsSection />
 
       {/* ====================== FINAL CTA — Two Column (Text + YouTube Video) ====================== */}
       <section className="py-16 md:py-24 px-6 md:px-10 bg-bone/50">
@@ -307,16 +313,16 @@ function ExpertCarousel() {
               baseOpacity={0.1}
               blurStrength={5}
             >
-              The people who will compose your <span className="italic text-forest">hours</span>
+              Africa, <span className="italic text-forest">intimately known.</span> Exceptionally experienced.
             </ScrollReveal>
           </div>
           <div className="md:col-span-6 md:col-start-7 flex items-end">
             <Reveal variant="up" delay={0.2}>
               <p className="text-charcoal/70 text-lg leading-relaxed">
-                Our guides are not employees. They are the fourth-generation inheritors of these
-                landscapes — trackers, conservationists, and storytellers whose families have lived
-                these lands for centuries. They are the difference between a safari and an
-                awakening.
+                Our destination experts combine deep local knowledge, exclusive connections and
+                an eye for extraordinary detail to curate seamless, bespoke journeys across
+                Uganda, Kenya and Tanzania — revealing Africa at its most authentic, private and
+                unforgettable.
               </p>
             </Reveal>
           </div>

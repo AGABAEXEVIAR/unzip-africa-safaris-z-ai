@@ -34,15 +34,16 @@ const translations: Record<Lang, Record<string, string>> = {
     "nav.scroll": "Scroll",
     // Hero
     "hero.eyebrow": "UNZIP AFRICA SAFARI",
-    "hero.title1": "Luxury Safaris Across",
-    "hero.title2": "Uganda, Kenya & Tanzania",
-    "hero.subtitle": "Entirely private. Impossibly rare. Journeys crafted around a single traveller — you.",
+    "hero.title1": "Bespoke Safaris Across",
+    "hero.title2": "East Africa",
+    "hero.subtitle": "Africa is not a destination you simply visit. It is a place you experience.",
     // Welcome
     "welcome.eyebrow": "Welcome to Unzip Africa",
-    "welcome.heading1": "Feed Your",
-    "welcome.heading2": "Wanderlust",
-    "welcome.para1": "Welcome to Unzip Africa, a luxury safari company specialising in tailor-made wildlife adventures, gorilla trekking experiences, Great Migration safaris, and exclusive journeys across Uganda, Kenya, and Tanzania.",
-    "welcome.para2": "We create extraordinary safari experiences for travellers seeking authenticity, luxury, adventure, and meaningful connections with Africa's wildlife and cultures.",
+    "welcome.heading1": "Where Africa Becomes",
+    "welcome.heading2": "Extraordinary.",
+    "welcome.para1": "Discover bespoke luxury safaris across Uganda, Rwanda, Kenya and Tanzania, crafted for discerning travelers seeking authentic experiences, exceptional wildlife and unforgettable moments.",
+    "welcome.para2": "From gorilla trekking and the Great Migration to exclusive wilderness escapes, Unzip Africa brings you closer to the heart of East Africa — with every journey tailored around you.",
+    "welcome.para3": "Your journey. Your Africa. Unzip it.",
     "welcome.cta1": "Plan Your Safari",
     "welcome.cta2": "Discover Our Story",
     "welcome.stat1": "Countries",
@@ -50,12 +51,12 @@ const translations: Record<Lang, Record<string, string>> = {
     "welcome.stat3": "Private Journeys",
     // Philosophy
     "philosophy.heading": "Our Philosophy",
-    "philosophy.quote": "No two journeys are alike",
+    "philosophy.quote": "Travel Deeper. Experience More.",
     // Destinations
     "destinations.eyebrow": "Our Destinations",
     "destinations.heading1": "Our top",
     "destinations.heading2": "safari parks",
-    "destinations.subtitle": "Africa is home to the world's most iconic safari destinations, offering unmatched wildlife encounters, breathtaking landscapes, and unforgettable cultural experiences.",
+    "destinations.subtitle": "Wild Places. Extraordinary Journeys. Discover East Africa's iconic safari parks and reserves, where incredible wildlife, breathtaking landscapes and authentic experiences come together to create unforgettable African adventures.",
     "destinations.scrollHint": "↓ Scroll to pan the filmstrip",
     // Scroll stack
     "scrollstack.heading1": "Explore our most popular",
@@ -133,9 +134,9 @@ const translations: Record<Lang, Record<string, string>> = {
     "nav.scroll": "Scrollen",
     // Hero
     "hero.eyebrow": "UNZIP AFRICA SAFARI",
-    "hero.title1": "Luxus-Safaris durch",
-    "hero.title2": "Uganda, Kenia & Tansania",
-    "hero.subtitle": "Vollständig privat. Unglaublich selten. Reisen, die um einen einzigen Reisenden gestaltet sind — Sie.",
+    "hero.title1": "Maßgeschneiderte Safaris durch",
+    "hero.title2": "Ostafrika",
+    "hero.subtitle": "Afrika ist kein Ziel, das man einfach besucht. Es ist ein Ort, den man erlebt.",
     // Welcome
     "welcome.eyebrow": "Willkommen bei Unzip Africa",
     "welcome.heading1": "Wecken Sie Ihre",
@@ -232,9 +233,9 @@ const translations: Record<Lang, Record<string, string>> = {
     "nav.scroll": "Défiler",
     // Hero
     "hero.eyebrow": "UNZIP AFRICA SAFARI",
-    "hero.title1": "Safaris de luxe à travers",
-    "hero.title2": "l'Ouganda, le Kenya et la Tanzanie",
-    "hero.subtitle": "Entièrement privé. Incroyablement rare. Des voyages conçus autour d'un seul voyageur — vous.",
+    "hero.title1": "Safaris sur mesure à travers",
+    "hero.title2": "l'Afrique de l'Est",
+    "hero.subtitle": "L'Afrique n'est pas une destination qu'on visite simplement. C'est un lieu qu'on vit.",
     // Welcome
     "welcome.eyebrow": "Bienvenue chez Unzip Africa",
     "welcome.heading1": "Nourrissez Votre",
@@ -332,8 +333,8 @@ const translations: Record<Lang, Record<string, string>> = {
     // Hero
     "hero.eyebrow": "UNZIP AFRICA SAFARI",
     "hero.title1": "穿越",
-    "hero.title2": "乌干达、肯尼亚和坦桑尼亚的豪华游猎",
-    "hero.subtitle": "完全私密。极其罕见。围绕单一旅行者——您——精心打造的旅程。",
+    "hero.title2": "东非的定制游猎",
+    "hero.subtitle": "非洲不仅仅是一个简单的目的地。它是一个您需要去体验的地方。",
     // Welcome
     "welcome.eyebrow": "欢迎来到 Unzip Africa",
     "welcome.heading1": "满足您的",

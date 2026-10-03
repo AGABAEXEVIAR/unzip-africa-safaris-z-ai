@@ -48,8 +48,11 @@ export function WelcomeSection() {
               <p className="text-base md:text-lg text-charcoal/75 leading-relaxed mb-6">
                 {t("welcome.para1")}
               </p>
-              <p className="text-base md:text-lg text-charcoal/75 leading-relaxed mb-10">
+              <p className="text-base md:text-lg text-charcoal/75 leading-relaxed mb-6">
                 {t("welcome.para2")}
+              </p>
+              <p className="font-display text-xl md:text-2xl italic text-forest mb-10" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+                {t("welcome.para3")}
               </p>
 
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">

@@ -35,12 +35,15 @@ export function SafariScrollStack() {
           className="font-display text-3xl md:text-6xl text-charcoal tracking-tight leading-[1.05] mb-4 md:mb-6"
           style={{ fontFamily: "var(--font-cormorant), serif", fontWeight: 300 }}
         >
-          Explore our most <span className="italic text-forest">popular destinations</span>
+          Explore Our <span className="italic text-forest">Signature Destinations</span>
         </h2>
         <p className="text-sm md:text-lg text-charcoal/70 leading-relaxed">
-          Our expert travel designers are on hand to create the perfect trip for you. Take a look
-          at some of the amazing destinations we offer below, or get hold of us and let us
-          tailor-make your trip through East Africa.
+          Discover East Africa's most remarkable destinations, from Uganda's wild heart to Kenya
+          and Tanzania's iconic safari landscapes. Our travel specialists create bespoke journeys
+          tailored to your interests and style.
+        </p>
+        <p className="font-display text-base md:text-xl italic text-forest mt-3" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+          Explore. Experience. Unzip Africa.
         </p>
       </div>
 

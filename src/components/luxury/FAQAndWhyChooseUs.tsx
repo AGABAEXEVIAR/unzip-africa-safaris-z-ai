@@ -7,73 +7,57 @@ import ScrollReveal from "@/components/luxury/ScrollReveal";
 const faqs = [
   {
     q: "What makes Unzip Africa Safaris different from other safari operators?",
-    a: "Every journey we compose is built for a single party — never shared, never replicated. Our guides are fourth-generation inheritors of these landscapes, not employees. We refuse to crowd a horizon, and seven percent of every journey funds the conservation area you visit. The difference is silence: we orchestrate hours that no itinerary can describe.",
+    a: "We don't just plan safaris — we curate extraordinary African journeys. Unzip Africa combines bespoke luxury, deep local expertise and exceptional personal service to create seamless journeys across Uganda, Kenya and Tanzania. From exclusive wildlife encounters to handpicked luxury lodges and private experiences, every detail is thoughtfully tailored to you. Because luxury is not just where you stay — it's how you experience Africa.",
   },
   {
-    q: "What is the minimum investment for a private safari?",
-    a: "Our journeys begin at $25,000 per person for a five-day gorilla trek in Uganda, and extend to $250,000+ for two-week, multi-country expeditions. The investment reflects the level of access, the quality of the lodges, the exclusivity of the guiding, and the conservation contributions we make on your behalf.",
+    q: "How do you ensure the safety of your clients?",
+    a: "Adventure should feel exhilarating — never uncertain. At Unzip Africa, safety is woven into every journey. We partner with trusted safari professionals, carefully vetted camps and lodges, experienced guides and well-maintained vehicles. Our local team stays connected throughout your journey, ready to support you whenever needed. All our clients are also covered by AMREF Flying Doctors medical evacuation, giving you access to emergency medical assistance and evacuation support across East Africa.",
   },
   {
-    q: "How far in advance should I book?",
-    a: "We recommend booking six to twelve months in advance for peak season (June–October, December–February). Gorilla trekking permits in Rwanda and Uganda are particularly scarce — we secure these the moment you confirm. For last-minute travel, we maintain a small allocation of permits and camp slots for our returning guests.",
-  },
-  {
-    q: "Are your safaris suitable for families with children?",
-    a: "Yes, with consideration. We design family journeys for children aged eight and older, with age-appropriate activities, shorter drives, and dedicated family suites. Our guides are skilled at reading children's interest levels and adjusting the pace. For younger children, we recommend our private conservancy journeys rather than gorilla trekking.",
-  },
-  {
-    q: "What is your cancellation and refund policy?",
-    a: "We offer a tiered cancellation policy: full refund less deposit up to 120 days before departure, 50% refund up to 60 days before, and no refund within 60 days. We strongly recommend travel insurance, which we can arrange through our partner AIG Travel Guard. Gorilla permit fees are non-refundable but can sometimes be transferred to alternative dates.",
-  },
-  {
-    q: "How do you ensure the safety of your guests?",
-    a: "Every journey is accompanied by a certified first-aid guide, a satellite phone, and a medical evacuation plan with AMREF Flying Doctors. Our vehicles are equipped with trauma kits and water purification. We monitor political and health advisories daily and will reroute any journey at no cost if we believe a destination has become unsafe.",
-  },
-  {
-    q: "What is your approach to conservation and community?",
-    a: "Seven percent of every journey funds the conservation area you visit — directly, with no intermediary. Each lodge we partner with is at least 30% locally owned. We employ 32 African guides and 140 camp staff across eight nations. We are members of The Long Run, ATTA, and PACK, and we publish an annual conservation impact report.",
+    q: "What is your approach to conservation and communities?",
+    a: "We believe protecting Africa starts with those who protect it. At Unzip Africa, every safari is an opportunity to create a positive impact. We support wildlife conservation, local communities and the rangers who work on the frontline of protecting Africa's wilderness. As part of our commitment, Unzip Africa contributes 5% of the net safari revenue from every booking towards ranger welfare. This contribution is made by us and is not added as a separate fee to your safari price. Through this commitment, every journey helps support the people who dedicate their lives to safeguarding East Africa's wildlife and protected areas. Travel with purpose. Protect the wild. Support its guardians.",
   },
   {
     q: "Can you accommodate dietary restrictions and accessibility needs?",
-    a: "Absolutely. Our private chefs accommodate vegan, kosher, halal, gluten-free, and allergy-specific diets without compromise. For mobility needs, we have adaptive vehicles and have arranged journeys for guests using wheelchairs across the Serengeti, Okavango, and Kruger. Please discuss your needs with your specialist during the planning phase.",
+    a: "Absolutely. Your comfort is part of the journey. From vegetarian, vegan, halal and allergy-sensitive dining to mobility and accessibility requirements, we plan ahead with our trusted lodges, camps and local partners to ensure your needs are understood and accommodated wherever possible. Tell us what you need — we'll tailor the journey around you.",
   },
 ];
 
 const whyChooseUs = [
   {
     num: "01",
-    title: "Solitude, Guaranteed",
-    body: "We will never put you in a vehicle with strangers. We will never drive within sight of another jeep. We will position your camp where no other camp can be seen. Solitude is not a feature — it is the foundation.",
+    title: "Bespoke by Design",
+    body: "Every safari is tailor-made around your interests, pace and travel style.",
     icon: "silence",
   },
   {
     num: "02",
-    title: "Fourth-Generation Guides",
-    body: "Our trackers are the inheritors of these landscapes. They speak seven tribal languages, know every waterhole by name, and can read a predator's intent from the angle of a vulture's wing. This is not a job for them. It is a heritage.",
+    title: "Local Expertise",
+    body: "Deep East African knowledge brings you closer to authentic places and experiences.",
     icon: "guide",
   },
   {
     num: "03",
-    title: "Conservation Through Presence",
-    body: "Seven percent of every journey funds the conservation area you visit. Your presence protects the land that protects the wildlife. We do not view this as charity — we view it as the rent for what we have been lent.",
+    title: "Exceptional Wildlife",
+    body: "From gorilla trekking to the Great Migration, experience Africa's most remarkable wildlife encounters.",
     icon: "leaf",
   },
   {
     num: "04",
-    title: "Carbon-Neutral Operations",
-    body: "Our entire charter aircraft fleet runs on sustainable aviation fuel — the first safari operator in Africa to achieve this. Every journey is offset through the Wildlife Works Carbon Project in Kenya's Kasigau Corridor.",
+    title: "Handpicked Stays",
+    body: "We select distinctive lodges and camps that complement your journey.",
     icon: "globe",
   },
   {
     num: "05",
-    title: "Access Beyond the Reserve",
-    body: "We hold private concessions in eight African nations, granting you off-road access, night drives, and walking safaris impossible inside the main parks. Our guests have met Hadzabe bushmen, walked with San trackers, and dined with Maasai elders.",
+    title: "Seamless Service",
+    body: "From planning to your return home, every detail is thoughtfully coordinated.",
     icon: "key",
   },
   {
     num: "06",
-    title: "A Single Point of Contact",
-    body: "From your first conversation to your final departure, you have one specialist — chosen for your destination — who knows every detail of your journey. No call centers. No handoffs. No surprises. A human answers before the third ring.",
+    title: "Africa, Personally Experienced",
+    body: "We don't simply sell safaris — we create meaningful journeys designed to be remembered.",
     icon: "phone",
   },
 ];
@@ -243,6 +227,129 @@ function ReasonIcon({ name }: { name: string }) {
       return (
         <svg className={iconClass} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
           <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z" strokeLinejoin="round" />
+        </svg>
+      );
+    default:
+      return null;
+  }
+}
+
+/* ===================== Founder Message Section ===================== */
+export function FounderMessageSection() {
+  return (
+    <section className="py-16 md:py-24 px-6 md:px-10 bg-forest-deep text-cream relative overflow-hidden">
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at 30% 50%, rgba(201,177,135,0.5) 1px, transparent 1px)",
+            backgroundSize: "50px 50px",
+          }}
+        />
+      </div>
+      <div className="mx-auto max-w-[1000px] relative text-center">
+        <Reveal variant="up">
+          <p className="font-eyebrow text-gold-soft mb-6">A Message from Our Founder</p>
+        </Reveal>
+        <ScrollReveal
+          as="blockquote"
+          containerClassName="font-display text-2xl md:text-4xl lg:text-5xl leading-[1.3] text-cream tracking-tight block mb-8"
+          textClassName="block"
+          baseOpacity={0.1}
+          blurStrength={5}
+        >
+          &ldquo;Africa is not simply a place to visit; it is a story to experience. At Unzip Africa, we are passionate about creating thoughtful, authentic and unforgettable journeys that bring you closer to the heart of East Africa.&rdquo;
+        </ScrollReveal>
+        <Reveal variant="up" delay={0.3}>
+          <p className="font-label text-gold-soft">&mdash; Ssebuuma Ivan, Founder</p>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* ===================== Safari Cars Section ===================== */
+export function SafariCarsSection() {
+  return (
+    <section className="py-16 md:py-24 px-6 md:px-10 bg-canvas">
+      <div className="mx-auto max-w-[1200px]">
+        <div className="text-center mb-12">
+          <Reveal variant="up">
+            <p className="font-eyebrow text-gold mb-4">Travel in Comfort</p>
+          </Reveal>
+          <ScrollReveal
+            as="h2"
+            containerClassName="font-display text-3xl md:text-6xl text-charcoal tracking-tight leading-[1.05] block mb-6"
+            textClassName="block"
+            baseOpacity={0.1}
+            blurStrength={5}
+          >
+            Our <span className="italic text-forest">Safari Cars</span>
+          </ScrollReveal>
+          <Reveal variant="up" delay={0.2}>
+            <p className="text-base md:text-lg text-charcoal/70 leading-relaxed max-w-3xl mx-auto">
+              At Unzip Africa, every safari is designed for comfort, safety, and unforgettable
+              wildlife experiences. Our safari vehicles are specially equipped for African
+              adventures, offering comfortable seating, large viewing windows, pop-up roofs,
+              charging facilities, and ample space for photography equipment. Whether exploring
+              Uganda, Kenya, or Tanzania, our vehicles provide the perfect vantage point to
+              experience wildlife and landscapes while travelling in comfort.
+            </p>
+          </Reveal>
+        </div>
+
+        {/* Features grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+          {[
+            { title: "Comfortable Seating", icon: "seat" },
+            { title: "Large Viewing Windows", icon: "window" },
+            { title: "Pop-Up Roofs", icon: "roof" },
+            { title: "Charging Facilities", icon: "charge" },
+          ].map((feature, idx) => (
+            <Reveal key={feature.title} variant="up" delay={idx * 0.1}>
+              <div className="card-hover-rich p-6 text-center h-full">
+                <div className="flex-shrink-0 w-12 h-12 mx-auto mb-4 border border-charcoal/20 group-hover:border-gold flex items-center justify-center transition-all duration-500">
+                  <CarFeatureIcon name={feature.icon} />
+                </div>
+                <h3 className="font-display text-lg md:text-xl text-charcoal tracking-tight">
+                  {feature.title}
+                </h3>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function CarFeatureIcon({ name }: { name: string }) {
+  const iconClass = "w-6 h-6 text-charcoal/70";
+  switch (name) {
+    case "seat":
+      return (
+        <svg className={iconClass} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+          <path d="M5 18v-6a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v6M5 18H3M5 18h14M19 18h2M7 9V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v4" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      );
+    case "window":
+      return (
+        <svg className={iconClass} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+          <rect x="4" y="4" width="16" height="16" rx="1" />
+          <path d="M12 4v16M4 12h16" strokeLinecap="round" />
+        </svg>
+      );
+    case "roof":
+      return (
+        <svg className={iconClass} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+          <path d="M3 16h18M5 16V9l7-5 7 5v7M9 16v-4h6v4" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      );
+    case "charge":
+      return (
+        <svg className={iconClass} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+          <path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       );
     default:
