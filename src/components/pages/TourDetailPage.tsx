@@ -309,24 +309,38 @@ export function TourDetailPage() {
             </ScrollReveal>
           </div>
 
-          {/* Animated timeline */}
-          <div className="relative">
-            {/* Vertical line — track (empty) + fill (gold, scales with scroll) */}
-            <div className="hidden md:block absolute left-[4.5%] top-0 bottom-0 w-px bg-charcoal/15">
-              <motion.div
-                style={{ scaleY: lineScaleY, transformOrigin: "top" }}
-                className="w-full bg-gradient-to-b from-gold via-gold-soft to-gold"
-              />
+          {/* Animated timeline with left progress rail */}
+          <div className="relative flex gap-6 md:gap-10">
+            {/* Left rail — progress line (sticky on desktop) */}
+            <div className="hidden md:flex flex-col items-center w-12 flex-shrink-0">
+              <p className="font-eyebrow text-charcoal/40 text-[0.55rem] tracking-[0.15em] uppercase mb-4 text-center leading-tight">
+                Itinerary<br />Progress
+              </p>
+              {/* Track + fill */}
+              <div className="flex-1 relative w-px bg-charcoal/15">
+                <motion.div
+                  style={{ scaleY: lineScaleY, transformOrigin: "top" }}
+                  className="absolute inset-0 w-full bg-charcoal"
+                />
+              </div>
+              {/* Bottom labels */}
+              <p className="font-display text-sm text-charcoal mt-4" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+                {tour.durationDays} days
+              </p>
+              <p className="font-eyebrow text-charcoal/40 text-[0.55rem] tracking-[0.15em] uppercase mt-1 text-center leading-tight">
+                Scroll to<br />advance
+              </p>
             </div>
 
-            <div className="space-y-12 md:space-y-20">
+            {/* Right — day entries */}
+            <div className="flex-1 space-y-12 md:space-y-20">
               {tour.days.map((day, idx) => (
                 <Reveal key={idx} variant="up" delay={idx * 0.05}>
-                  <div className="relative grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-10 items-center">
-                    {/* Timeline dot on the line */}
-                    <div className="hidden md:flex md:col-span-2 md:justify-start relative">
+                  <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 items-center">
+                    {/* Number */}
+                    <div className="md:col-span-2 flex md:justify-start">
                       <span
-                        className="font-display text-7xl md:text-8xl text-gold/50 italic leading-none"
+                        className="font-display text-6xl md:text-7xl text-charcoal/30 italic leading-none"
                         style={{ fontFamily: "var(--font-cormorant), serif" }}
                       >
                         {String(idx + 1).padStart(2, "0")}
@@ -346,14 +360,14 @@ export function TourDetailPage() {
 
                     {/* Text */}
                     <div className="md:col-span-5">
-                      <p className="font-eyebrow text-gold mb-3">{day.day}</p>
+                      <p className="font-eyebrow text-gold mb-2">{day.day}</p>
                       <h3
-                        className="font-display text-3xl md:text-4xl text-charcoal tracking-tight mb-4 leading-[1.05]"
+                        className="font-display text-2xl md:text-3xl text-charcoal tracking-tight mb-3 leading-[1.05]"
                         style={{ fontFamily: "var(--font-cormorant), serif" }}
                       >
                         {day.title}
                       </h3>
-                      <p className="text-charcoal/75 leading-relaxed">{day.description}</p>
+                      <p className="text-charcoal/70 leading-relaxed text-sm">{day.description}</p>
                     </div>
                   </div>
                 </Reveal>
