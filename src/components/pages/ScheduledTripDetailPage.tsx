@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import {
   ArrowLeft,
   ArrowRight,
@@ -33,6 +34,12 @@ export function ScheduledTripDetailPage() {
   } = useRouter();
 
   const [bookingOpen, setBookingOpen] = useState(false);
+  const itineraryRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: itineraryProgress } = useScroll({
+    target: itineraryRef,
+    offset: ["start center", "end end"],
+  });
+  const lineScaleY = useTransform(itineraryProgress, [0, 1], [0, 1]);
 
   const trip = trips.find((t) => t.id === selectedScheduledTripId);
 
@@ -295,7 +302,7 @@ export function ScheduledTripDetailPage() {
 
       {/* ====================== 4. JOURNEY OUTLINE — stops timeline ====================== */}
       {trip.stops && trip.stops.length > 0 && (
-        <section className="bg-[#EFE9DF] py-16 md:py-24 px-6 md:px-10">
+        <section ref={itineraryRef} className="bg-[#EFE9DF] py-16 md:py-24 px-6 md:px-10">
           <div className="mx-auto max-w-[1200px]">
             <div className="text-center mb-16 md:mb-20">
               <Reveal variant="up">
@@ -312,19 +319,29 @@ export function ScheduledTripDetailPage() {
               </ScrollReveal>
             </div>
 
-            <div className="space-y-12 md:space-y-20">
-              {trip.stops.map((stop, idx) => (
-                <Reveal key={idx} variant="up" delay={idx * 0.05}>
-                  <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-10 items-center">
-                    {/* Large number */}
-                    <div className="md:col-span-2 flex md:justify-start">
-                      <span
-                        className="font-display text-7xl md:text-8xl text-gold/50 italic leading-none"
-                        style={{ fontFamily: "var(--font-cormorant), serif" }}
-                      >
-                        {String(idx + 1).padStart(2, "0")}
-                      </span>
-                    </div>
+            {/* Animated timeline */}
+            <div className="relative">
+              {/* Vertical line — track (empty) + fill (gold, scales with scroll) */}
+              <div className="hidden md:block absolute left-[4.5%] top-0 bottom-0 w-px bg-charcoal/15">
+                <motion.div
+                  style={{ scaleY: lineScaleY, transformOrigin: "top" }}
+                  className="w-full bg-gradient-to-b from-gold via-gold-soft to-gold"
+                />
+              </div>
+
+              <div className="space-y-12 md:space-y-20">
+                {trip.stops.map((stop, idx) => (
+                  <Reveal key={idx} variant="up" delay={idx * 0.05}>
+                    <div className="relative grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-10 items-center">
+                      {/* Large number */}
+                      <div className="hidden md:flex md:col-span-2 md:justify-start relative">
+                        <span
+                          className="font-display text-7xl md:text-8xl text-gold/50 italic leading-none"
+                          style={{ fontFamily: "var(--font-cormorant), serif" }}
+                        >
+                          {String(idx + 1).padStart(2, "0")}
+                        </span>
+                      </div>
 
                     {/* Image */}
                     <div className="md:col-span-5">

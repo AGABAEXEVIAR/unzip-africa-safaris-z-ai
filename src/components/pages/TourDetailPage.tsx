@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import {
   ArrowLeft,
   ArrowRight,
@@ -27,6 +28,12 @@ export function TourDetailPage() {
     useRouter();
 
   const [bookingOpen, setBookingOpen] = useState(false);
+  const itineraryRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: itineraryProgress } = useScroll({
+    target: itineraryRef,
+    offset: ["start center", "end end"],
+  });
+  const lineScaleY = useTransform(itineraryProgress, [0, 1], [0, 1]);
 
   const tour = tours.find((t) => t.id === selectedTourId);
 
@@ -285,7 +292,7 @@ export function TourDetailPage() {
       </section>
 
       {/* ====================== 4. DAY-BY-DAY ITINERARY ====================== */}
-      <section className="bg-[#EFE9DF] py-16 md:py-24 px-6 md:px-10">
+      <section ref={itineraryRef} className="bg-[#EFE9DF] py-16 md:py-24 px-6 md:px-10">
         <div className="mx-auto max-w-[1200px]">
           <div className="text-center mb-16 md:mb-20">
             <Reveal variant="up">
@@ -302,45 +309,56 @@ export function TourDetailPage() {
             </ScrollReveal>
           </div>
 
-          <div className="space-y-12 md:space-y-20">
-            {tour.days.map((day, idx) => (
-              <Reveal key={idx} variant="up" delay={idx * 0.05}>
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-10 items-center">
-                  {/* Large number */}
-                  <div className="md:col-span-2 flex md:justify-start">
-                    <span
-                      className="font-display text-7xl md:text-8xl text-gold/50 italic leading-none"
-                      style={{ fontFamily: "var(--font-cormorant), serif" }}
-                    >
-                      {String(idx + 1).padStart(2, "0")}
-                    </span>
-                  </div>
+          {/* Animated timeline */}
+          <div className="relative">
+            {/* Vertical line — track (empty) + fill (gold, scales with scroll) */}
+            <div className="hidden md:block absolute left-[4.5%] top-0 bottom-0 w-px bg-charcoal/15">
+              <motion.div
+                style={{ scaleY: lineScaleY, transformOrigin: "top" }}
+                className="w-full bg-gradient-to-b from-gold via-gold-soft to-gold"
+              />
+            </div>
 
-                  {/* Image */}
-                  <div className="md:col-span-5">
-                    <div className="aspect-[4/3] overflow-hidden bg-bone" style={sharp}>
-                      <img
-                        src={day.image}
-                        alt={day.title}
-                        className="w-full h-full object-cover img-luxury"
-                      />
+            <div className="space-y-12 md:space-y-20">
+              {tour.days.map((day, idx) => (
+                <Reveal key={idx} variant="up" delay={idx * 0.05}>
+                  <div className="relative grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-10 items-center">
+                    {/* Timeline dot on the line */}
+                    <div className="hidden md:flex md:col-span-2 md:justify-start relative">
+                      <span
+                        className="font-display text-7xl md:text-8xl text-gold/50 italic leading-none"
+                        style={{ fontFamily: "var(--font-cormorant), serif" }}
+                      >
+                        {String(idx + 1).padStart(2, "0")}
+                      </span>
+                    </div>
+
+                    {/* Image */}
+                    <div className="md:col-span-5">
+                      <div className="aspect-[4/3] overflow-hidden bg-bone" style={sharp}>
+                        <img
+                          src={day.image}
+                          alt={day.title}
+                          className="w-full h-full object-cover img-luxury"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Text */}
+                    <div className="md:col-span-5">
+                      <p className="font-eyebrow text-gold mb-3">{day.day}</p>
+                      <h3
+                        className="font-display text-3xl md:text-4xl text-charcoal tracking-tight mb-4 leading-[1.05]"
+                        style={{ fontFamily: "var(--font-cormorant), serif" }}
+                      >
+                        {day.title}
+                      </h3>
+                      <p className="text-charcoal/75 leading-relaxed">{day.description}</p>
                     </div>
                   </div>
-
-                  {/* Text */}
-                  <div className="md:col-span-5">
-                    <p className="font-eyebrow text-gold mb-3">{day.day}</p>
-                    <h3
-                      className="font-display text-3xl md:text-4xl text-charcoal tracking-tight mb-4 leading-[1.05]"
-                      style={{ fontFamily: "var(--font-cormorant), serif" }}
-                    >
-                      {day.title}
-                    </h3>
-                    <p className="text-charcoal/75 leading-relaxed">{day.description}</p>
-                  </div>
-                </div>
-              </Reveal>
-            ))}
+                </Reveal>
+              ))}
+            </div>
           </div>
         </div>
       </section>
