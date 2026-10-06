@@ -369,6 +369,7 @@ export function ScheduledTripDetailPage() {
                 </Reveal>
               ))}
             </div>
+            </div>
           </div>
         </section>
       )}
