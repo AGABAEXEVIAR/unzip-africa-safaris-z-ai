@@ -32,49 +32,6 @@ export function HomePage() {
       {/* ====================== WELCOME SECTION ====================== */}
       <WelcomeSection />
 
-      {/* ====================== NARRATIVE INTRO ====================== */}
-      <section className="py-16 md:py-24 px-6 md:px-10">
-        <div className="mx-auto max-w-[1400px] grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-20">
-          <div className="md:col-span-3">
-            <Reveal variant="up">
-              <h2 className="font-display text-3xl md:text-4xl text-charcoal tracking-tight mb-3 leading-[1.05]">
-                {t("philosophy.heading")}
-              </h2>
-              <p className="font-label text-charcoal/55 italic">&ldquo;{t("philosophy.quote")}&rdquo;</p>
-            </Reveal>
-          </div>
-
-          <div className="md:col-span-9">
-            <ScrollReveal
-              as="p"
-              containerClassName="font-display text-3xl md:text-5xl lg:text-[3.6rem] leading-[1.15] text-charcoal tracking-tight block"
-              textClassName="block"
-              enableBlur={true}
-              baseOpacity={0.15}
-              blurStrength={6}
-            >
-              At Unzip Africa, we believe the best African safari experiences are personal, authentic and thoughtfully designed. We create bespoke luxury safaris in Uganda, Kenya and Tanzania, connecting discerning travellers with extraordinary wildlife, landscapes, cultures and unforgettable moments. <span className="italic text-forest">Local knowledge. Personal journeys. Meaningful travel.</span>
-            </ScrollReveal>
-
-            <div className="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-8 md:gap-12">
-              {[
-                { stat: "15", label: "Years of craft", sub: "Founded in Arusha, 2009" },
-                { stat: "1,200+", label: "Private journeys", sub: "Each composed for one party" },
-                { stat: "8", label: "African nations", sub: "From the Sahel to the Cape" },
-              ].map((item, idx) => (
-                <Reveal key={item.label} variant="up" delay={idx * 0.12}>
-                  <div className="border-t border-border pt-5">
-                    <p className="font-display text-5xl text-forest">{item.stat}</p>
-                    <p className="font-label text-charcoal mt-3">{item.label}</p>
-                    <p className="text-sm text-charcoal/55 mt-1">{item.sub}</p>
-                  </div>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* ====================== SCROLL STACK — SAFARI IMAGES ====================== */}
       <SafariScrollStack />
 

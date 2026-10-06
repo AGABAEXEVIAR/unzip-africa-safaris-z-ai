@@ -21,6 +21,7 @@ import { QuotePage } from "@/components/pages/QuotePage";
 import { DestinationPage } from "@/components/pages/DestinationPage";
 import { TourDetailPage } from "@/components/pages/TourDetailPage";
 import { ScheduledTripDetailPage } from "@/components/pages/ScheduledTripDetailPage";
+import { ScheduledTripsPage } from "@/components/pages/ScheduledTripsPage";
 import { AccommodationDetailPage } from "@/components/pages/AccommodationDetailPage";
 import { AdminPage } from "@/components/pages/AdminPage";
 
@@ -39,7 +40,9 @@ function PageContent() {
   const pages: Record<typeof page, React.ReactNode> = {
     home: <HomePage />,
     about: <AboutPage />,
+    company: <AboutPage />,
     tours: <ToursPage />,
+    "scheduled-trips": <ScheduledTripsPage />,
     accommodation: <AccommodationPage />,
     contact: <ContactPage />,
     destinations: <DestinationPage />,

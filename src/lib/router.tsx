@@ -5,7 +5,9 @@ import { createContext, useContext, useState, useCallback, useEffect, ReactNode 
 export type PageId =
   | "home"
   | "about"
+  | "company"
   | "tours"
+  | "scheduled-trips"
   | "destinations"
   | "accommodation"
   | "contact"

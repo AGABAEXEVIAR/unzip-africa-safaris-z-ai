@@ -25,7 +25,9 @@ const translations: Record<Lang, Record<string, string>> = {
     // Nav
     "nav.home": "Home",
     "nav.about": "About",
+    "nav.company": "Company",
     "nav.tours": "Tours",
+    "nav.scheduledTrips": "Scheduled Trips",
     "nav.destinations": "Destinations",
     "nav.accommodation": "Accommodation",
     "nav.contact": "Contact",
@@ -126,7 +128,9 @@ const translations: Record<Lang, Record<string, string>> = {
     // Nav
     "nav.home": "Startseite",
     "nav.about": "Über uns",
+    "nav.company": "Unternehmen",
     "nav.tours": "Touren",
+    "nav.scheduledTrips": "Geplante Touren",
     "nav.destinations": "Reiseziele",
     "nav.accommodation": "Unterkunft",
     "nav.contact": "Kontakt",
@@ -226,7 +230,9 @@ const translations: Record<Lang, Record<string, string>> = {
     // Nav
     "nav.home": "Accueil",
     "nav.about": "À propos",
+    "nav.company": "Entreprise",
     "nav.tours": "Circuits",
+    "nav.scheduledTrips": "Voyages programmés",
     "nav.destinations": "Destinations",
     "nav.accommodation": "Hébergement",
     "nav.contact": "Contact",
@@ -326,7 +332,9 @@ const translations: Record<Lang, Record<string, string>> = {
     // Nav
     "nav.home": "首页",
     "nav.about": "关于我们",
+    "nav.company": "公司",
     "nav.tours": "行程",
+    "nav.scheduledTrips": "定期旅行",
     "nav.destinations": "目的地",
     "nav.accommodation": "住宿",
     "nav.contact": "联系",

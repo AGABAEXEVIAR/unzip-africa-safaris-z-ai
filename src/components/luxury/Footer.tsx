@@ -47,9 +47,9 @@ export function Footer() {
             <ul className="space-y-3">
               {([
                 ["home", t("nav.home")],
-                ["about", t("nav.about")],
+                ["company", t("nav.company")],
                 ["tours", t("nav.tours")],
-                ["accommodation", t("nav.accommodation")],
+                ["scheduled-trips", t("nav.scheduledTrips")],
                 ["contact", t("nav.contact")],
               ] as [PageId, string][]).map(([id, label]) => (
                 <li key={id}>
