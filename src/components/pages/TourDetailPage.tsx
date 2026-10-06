@@ -1,0 +1,488 @@
+"use client";
+
+import { useState } from "react";
+import { ArrowLeft, Clock, MapPin, Users, CheckCircle2, XCircle, Compass } from "lucide-react";
+import { Reveal } from "@/components/luxury/Reveal";
+import ScrollReveal from "@/components/luxury/ScrollReveal";
+import { HeroCarousel } from "@/components/luxury/HeroCarousel";
+import { BookingModal } from "@/components/luxury/BookingModal";
+import { useRouter } from "@/lib/router";
+import { useTours, useAccommodations } from "@/lib/store";
+import type { TourPackage } from "@/lib/content";
+
+const sharp = { borderRadius: 0 } as const;
+
+export function TourDetailPage() {
+  const tours = useTours();
+  const accommodations = useAccommodations();
+  const { selectedTourId, navigate, navigateToTour, navigateToAccommodation } = useRouter();
+
+  const [bookingOpen, setBookingOpen] = useState(false);
+
+  const tour = tours.find((t) => t.id === selectedTourId);
+
+  if (!tour) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-canvas">
+        <div className="text-center px-6">
+          <p className="font-display text-3xl text-charcoal mb-4" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+            Tour not found.
+          </p>
+          <button onClick={() => navigate("tours")} className="btn-luxury btn-luxury-gold">
+            View All Tours
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Resolve accommodations referenced by the tour
+  const stays = (tour.accommodationIds || [])
+    .map((id) => accommodations.find((a) => a.id === id))
+    .filter((a): a is NonNullable<typeof a> => Boolean(a));
+
+  const gallery = tour.galleryImages && tour.galleryImages.length > 0 ? tour.galleryImages : [tour.image];
+
+  // Suggested other tours
+  const others = tours.filter((t) => t.id !== tour.id).slice(0, 3);
+
+  return (
+    <div className="page-enter bg-canvas">
+      {/* ====================== SPLIT-SCREEN HERO ====================== */}
+      <section className="grid grid-cols-1 lg:grid-cols-2 min-h-[80vh]">
+        {/* Left — copy */}
+        <div className="flex items-center px-6 md:px-12 py-12 lg:py-0 bg-canvas">
+          <div className="max-w-xl">
+            <button
+              onClick={() => navigate("tours")}
+              className="flex items-center gap-2 text-charcoal/60 hover:text-charcoal transition-colors mb-8"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span className="font-eyebrow">All Tours</span>
+            </button>
+            <Reveal variant="up">
+              <p className="font-eyebrow text-gold mb-4">{tour.subtitle}</p>
+            </Reveal>
+            <Reveal variant="up" delay={0.1}>
+              <h1
+                className="font-display text-5xl md:text-7xl lg:text-8xl text-charcoal tracking-tight leading-[0.95] mb-8"
+                style={{ fontFamily: "var(--font-cormorant), serif" }}
+              >
+                {tour.name}
+              </h1>
+            </Reveal>
+            <Reveal variant="up" delay={0.2}>
+              <p className="text-charcoal/70 leading-relaxed mb-8 text-lg">
+                A private, fully-tailored {tour.durationDays}-day safari through {tour.destination}.
+                {tour.featured ? " One of our most-loved journeys, designed around you." : " Composed around your pace and interests."}
+              </p>
+            </Reveal>
+
+            {/* Meta */}
+            <Reveal variant="up" delay={0.3}>
+              <div className="flex flex-wrap gap-5 text-sm text-charcoal/70 mb-8">
+                <Meta icon={<Clock className="w-4 h-4" />} text={`${tour.durationDays} Days · ${tour.durationNights} Nights`} />
+                <Meta icon={<MapPin className="w-4 h-4" />} text={tour.destination} />
+                <Meta icon={<Users className="w-4 h-4" />} text={`Min age ${tour.minAge}+`} />
+              </div>
+            </Reveal>
+
+            {/* Quick Facts card */}
+            <Reveal variant="up" delay={0.4}>
+              <div className="p-6 text-cream grid grid-cols-2 gap-4" style={{ background: "#1f3a2f", ...sharp }}>
+                <div>
+                  <p className="font-eyebrow text-cream/50 mb-1">From</p>
+                  <p className="font-display text-3xl text-gold-soft" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+                    ${tour.priceFrom.toLocaleString()}
+                  </p>
+                  <p className="text-xs text-cream/60">per person</p>
+                </div>
+                <div>
+                  <p className="font-eyebrow text-cream/50 mb-1">Trip Type</p>
+                  <p className="font-display text-xl text-cream" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+                    {tour.tripType}
+                  </p>
+                  <p className="text-xs text-cream/60">{tour.accommodationLevel}</p>
+                </div>
+              </div>
+            </Reveal>
+
+            <Reveal variant="up" delay={0.5}>
+              <button
+                onClick={() => setBookingOpen(true)}
+                className="btn-luxury btn-luxury-gold mt-8 w-full"
+              >
+                Book Now
+              </button>
+            </Reveal>
+          </div>
+        </div>
+
+        {/* Right — HeroCarousel */}
+        <div className="relative bg-charcoal min-h-[60vh] lg:min-h-[80vh]">
+          <HeroCarousel images={gallery} alt={tour.name} aspectClass="h-full" className="h-full" />
+        </div>
+      </section>
+
+      {/* ====================== OVERVIEW + QUICK FACTS ====================== */}
+      <section className="py-16 md:py-24 px-6 md:px-10">
+        <div className="mx-auto max-w-[1400px] grid grid-cols-1 md:grid-cols-12 gap-12">
+          <div className="md:col-span-7">
+            <Reveal variant="up">
+              <p className="font-eyebrow text-gold mb-6">Overview</p>
+            </Reveal>
+            <ScrollReveal
+              as="p"
+              containerClassName="font-display text-2xl md:text-3xl lg:text-4xl leading-[1.3] text-charcoal tracking-tight block"
+              textClassName="block"
+              baseOpacity={0.15}
+              blurStrength={5}
+            >
+              A bespoke {tour.durationDays}-day journey through {tour.destination}, designed around your pace, your interests and your sense of wonder. <span className="italic text-forest">Every day, a new chapter.</span>
+            </ScrollReveal>
+            <Reveal variant="up" delay={0.2}>
+              <p className="text-charcoal/70 leading-relaxed mt-8">
+                {tour.highlights.join(" · ")}. Staying at {tour.accommodationLevel.toLowerCase()}, this journey is
+                crafted for guests aged {tour.minAge}+ and limited to your private party.
+              </p>
+            </Reveal>
+          </div>
+
+          <div className="md:col-span-5">
+            <Reveal variant="up" delay={0.3}>
+              <div className="p-6 md:p-8 text-cream" style={{ background: "#1f3a2f", ...sharp }}>
+                <p className="font-eyebrow text-gold-soft mb-5">Quick Facts</p>
+                <div className="space-y-3 text-sm">
+                  <FactRow label="Destination" value={tour.destination} />
+                  <FactRow label="Duration" value={`${tour.durationDays} Days · ${tour.durationNights} Nights`} />
+                  <FactRow label="Trip Type" value={tour.tripType} />
+                  <FactRow label="National Park" value={tour.nationalPark} />
+                  <FactRow label="Accommodation" value={tour.accommodationLevel} />
+                  <FactRow label="Activities" value={tour.activities.join(", ")} />
+                  <FactRow label="Min Age" value={`${tour.minAge}+`} />
+                </div>
+              </div>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* ====================== JOURNEY HIGHLIGHTS ====================== */}
+      <section className="py-16 md:py-24 px-6 md:px-10 bg-alabaster">
+        <div className="mx-auto max-w-[1400px]">
+          <Reveal variant="up">
+            <p className="font-eyebrow text-gold mb-6">Journey Highlights</p>
+          </Reveal>
+          <ScrollReveal
+            as="h2"
+            containerClassName="font-display text-4xl md:text-6xl text-charcoal tracking-tight leading-[1.05] block mb-12"
+            textClassName="block"
+            baseOpacity={0.1}
+            blurStrength={5}
+          >
+            What you'll <span className="italic text-forest">experience.</span>
+          </ScrollReveal>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+            {tour.highlights.map((h, idx) => (
+              <Reveal key={idx} variant="up" delay={(idx % 2) * 0.1}>
+                <div className="flex items-start gap-4 p-5 border border-border/60 bg-canvas" style={sharp}>
+                  <span className="font-display text-3xl text-gold/50 italic" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+                    {String(idx + 1).padStart(2, "0")}
+                  </span>
+                  <p className="text-charcoal/80 leading-relaxed flex-1 pt-1">{h}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ====================== DAY-BY-DAY ITINERARY ====================== */}
+      <section className="py-16 md:py-24 px-6 md:px-10 bg-canvas">
+        <div className="mx-auto max-w-[1200px]">
+          <Reveal variant="up">
+            <p className="font-eyebrow text-gold mb-6">Day-by-Day Itinerary</p>
+          </Reveal>
+          <ScrollReveal
+            as="h2"
+            containerClassName="font-display text-4xl md:text-6xl text-charcoal tracking-tight leading-[1.05] block mb-16"
+            textClassName="block"
+            baseOpacity={0.1}
+            blurStrength={5}
+          >
+            Your <span className="italic text-forest">journey.</span>
+          </ScrollReveal>
+
+          <div className="relative">
+            {/* Timeline line */}
+            <div className="absolute left-6 top-2 bottom-2 w-px bg-border hidden md:block" />
+            {tour.days.map((day, idx) => (
+              <Reveal key={idx} variant="up" delay={idx * 0.05}>
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-10 mb-12 last:mb-0">
+                  {/* Day marker */}
+                  <div className="md:col-span-3 flex md:justify-end">
+                    <div className="flex items-center gap-3 md:flex-col md:items-end md:text-right">
+                      <div className="relative">
+                        <div className="w-12 h-12 bg-forest text-cream flex items-center justify-center font-display text-sm" style={{ ...sharp, fontFamily: "var(--font-cormorant), serif" }}>
+                          {String(idx + 1).padStart(2, "0")}
+                        </div>
+                      </div>
+                      <p className="font-eyebrow text-gold">{day.day}</p>
+                    </div>
+                  </div>
+
+                  {/* Day image + content */}
+                  <div className="md:col-span-9">
+                    <div className="bg-alabaster border border-border/60 overflow-hidden" style={sharp}>
+                      <div className="aspect-[16/9] overflow-hidden bg-bone">
+                        <img src={day.image} alt={day.title} className="w-full h-full object-cover img-luxury" />
+                      </div>
+                      <div className="p-5 md:p-6">
+                        <h3
+                          className="font-display text-2xl md:text-3xl text-charcoal tracking-tight mb-3"
+                          style={{ fontFamily: "var(--font-cormorant), serif" }}
+                        >
+                          {day.title}
+                        </h3>
+                        <p className="text-charcoal/70 leading-relaxed">{day.description}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ====================== INCLUDED / EXCLUDED ====================== */}
+      <section className="py-16 md:py-24 px-6 md:px-10 bg-forest-deep text-cream">
+        <div className="mx-auto max-w-[1400px] grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20">
+          <div>
+            <Reveal variant="up">
+              <p className="font-eyebrow text-gold-soft mb-6">What's Included</p>
+            </Reveal>
+            <ScrollReveal
+              as="h2"
+              containerClassName="font-display text-4xl md:text-5xl text-cream tracking-tight leading-[1.05] block mb-10"
+              textClassName="block"
+              baseOpacity={0.1}
+              blurStrength={5}
+            >
+              <CheckCircle2 className="inline w-8 h-8 mr-3 text-gold-soft" />
+              Part of your journey.
+            </ScrollReveal>
+            <ul className="space-y-3">
+              {DEFAULT_INCLUSIONS.map((item, idx) => (
+                <Reveal key={idx} variant="up" delay={idx * 0.05}>
+                  <li className="flex items-start gap-3 text-cream/85">
+                    <CheckCircle2 className="w-5 h-5 text-gold-soft flex-shrink-0 mt-0.5" />
+                    <span className="leading-relaxed">{item}</span>
+                  </li>
+                </Reveal>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <Reveal variant="up">
+              <p className="font-eyebrow text-cream/50 mb-6">Not Included</p>
+            </Reveal>
+            <ScrollReveal
+              as="h2"
+              containerClassName="font-display text-4xl md:text-5xl text-cream tracking-tight leading-[1.05] block mb-10"
+              textClassName="block"
+              baseOpacity={0.1}
+              blurStrength={5}
+            >
+              <XCircle className="inline w-8 h-8 mr-3 text-cream/40" />
+              For you to arrange.
+            </ScrollReveal>
+            <ul className="space-y-3">
+              {DEFAULT_EXCLUSIONS.map((item, idx) => (
+                <Reveal key={idx} variant="up" delay={idx * 0.05}>
+                  <li className="flex items-start gap-3 text-cream/65">
+                    <XCircle className="w-5 h-5 text-cream/40 flex-shrink-0 mt-0.5" />
+                    <span className="leading-relaxed">{item}</span>
+                  </li>
+                </Reveal>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* ====================== WHERE YOU'LL STAY ====================== */}
+      {stays.length > 0 && (
+        <section className="py-16 md:py-24 px-6 md:px-10 bg-canvas">
+          <div className="mx-auto max-w-[1400px]">
+            <Reveal variant="up">
+              <p className="font-eyebrow text-gold mb-6">Where You'll Stay</p>
+            </Reveal>
+            <ScrollReveal
+              as="h2"
+              containerClassName="font-display text-4xl md:text-6xl text-charcoal tracking-tight leading-[1.05] block mb-12"
+              textClassName="block"
+              baseOpacity={0.1}
+              blurStrength={5}
+            >
+              Your <span className="italic text-forest">lodges & camps.</span>
+            </ScrollReveal>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+              {stays.map((acc, idx) => (
+                <Reveal key={acc.id} variant="up" delay={idx * 0.1}>
+                  <article
+                    onClick={() => navigateToAccommodation(acc.id)}
+                    className="bg-alabaster border border-border/60 overflow-hidden cursor-pointer group card-luxury"
+                    style={sharp}
+                  >
+                    <div className="aspect-[16/9] overflow-hidden bg-bone card-zoom">
+                      <img src={acc.image} alt={acc.name} className="w-full h-full object-cover img-luxury" />
+                    </div>
+                    <div className="p-5 md:p-6">
+                      <p className="font-eyebrow text-gold mb-2">{acc.location}</p>
+                      <h3
+                        className="font-display text-2xl text-charcoal tracking-tight mb-3 group-hover:text-forest transition-colors"
+                        style={{ fontFamily: "var(--font-cormorant), serif" }}
+                      >
+                        {acc.name}
+                      </h3>
+                      <p className="text-sm text-charcoal/70 leading-relaxed line-clamp-2 mb-4">{acc.description}</p>
+                      <div className="flex items-center justify-between pt-3 border-t border-border">
+                        <span className="font-label text-charcoal/60">{acc.pricePerNight}</span>
+                        <span className="font-eyebrow text-gold">Explore →</span>
+                      </div>
+                    </div>
+                  </article>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ====================== MAP PLACEHOLDER ====================== */}
+      <section className="py-16 md:py-24 px-6 md:px-10 bg-alabaster">
+        <div className="mx-auto max-w-[1400px]">
+          <Reveal variant="up">
+            <p className="font-eyebrow text-gold mb-6">The Map</p>
+            <h2
+              className="font-display text-4xl md:text-6xl text-charcoal tracking-tight leading-[1.05] mb-12"
+              style={{ fontFamily: "var(--font-cormorant), serif" }}
+            >
+              Where you'll <span className="italic text-forest">travel.</span>
+            </h2>
+          </Reveal>
+          <Reveal variant="up" delay={0.2}>
+            <div className="relative aspect-[16/7] bg-forest border border-border overflow-hidden" style={sharp}>
+              <div className="absolute inset-0 opacity-10" style={{
+                backgroundImage: "radial-gradient(circle at 20% 30%, rgba(201,177,135,1) 2px, transparent 2px), radial-gradient(circle at 70% 60%, rgba(201,177,135,1) 2px, transparent 2px)",
+                backgroundSize: "60px 60px, 80px 80px",
+              }} />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="text-center text-cream">
+                  <Compass className="w-12 h-12 mx-auto mb-3 text-gold-soft" />
+                  <p
+                    className="font-display text-3xl md:text-4xl mb-2"
+                    style={{ fontFamily: "var(--font-cormorant), serif" }}
+                  >
+                    {tour.destination}
+                  </p>
+                  <p className="text-cream/70 text-sm">{tour.nationalPark}</p>
+                </div>
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ====================== CONTINUE EXPLORING ====================== */}
+      <section className="py-16 md:py-24 px-6 md:px-10 bg-canvas">
+        <div className="mx-auto max-w-[1400px]">
+          <Reveal variant="up">
+            <p className="font-eyebrow text-gold mb-6">Continue Exploring</p>
+            <h2
+              className="font-display text-4xl md:text-6xl text-charcoal tracking-tight leading-[1.05] mb-12"
+              style={{ fontFamily: "var(--font-cormorant), serif" }}
+            >
+              Other journeys to <span className="italic text-forest">consider.</span>
+            </h2>
+          </Reveal>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+            {others.map((t, idx) => (
+              <Reveal key={t.id} variant="up" delay={idx * 0.1}>
+                <article
+                  onClick={() => navigateToTour(t.id)}
+                  className="bg-alabaster border border-border/60 overflow-hidden cursor-pointer group card-luxury"
+                  style={sharp}
+                >
+                  <div className="aspect-[4/3] overflow-hidden bg-bone card-zoom">
+                    <img src={t.image} alt={t.name} className="w-full h-full object-cover img-luxury" />
+                  </div>
+                  <div className="p-5">
+                    <p className="font-eyebrow text-gold mb-2">{t.subtitle}</p>
+                    <h3
+                      className="font-display text-xl md:text-2xl text-charcoal tracking-tight group-hover:text-forest transition-colors mb-2"
+                      style={{ fontFamily: "var(--font-cormorant), serif" }}
+                    >
+                      {t.name}
+                    </h3>
+                    <div className="flex items-center justify-between pt-3 border-t border-border">
+                      <span className="text-xs text-charcoal/60">{t.durationDays} days</span>
+                      <span className="font-display text-lg text-forest" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+                        ${t.priceFrom.toLocaleString()}
+                      </span>
+                    </div>
+                  </div>
+                </article>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ====================== BOOKING MODAL ====================== */}
+      <BookingModal tripType="tour" trip={tour as TourPackage} open={bookingOpen} onClose={() => setBookingOpen(false)} />
+    </div>
+  );
+}
+
+function Meta({ icon, text }: { icon: React.ReactNode; text: string }) {
+  return (
+    <span className="flex items-center gap-2">
+      <span className="text-gold">{icon}</span>
+      <span>{text}</span>
+    </span>
+  );
+}
+
+function FactRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-start justify-between gap-4 border-b border-cream/10 pb-2 last:border-0 last:pb-0">
+      <span className="font-eyebrow text-cream/50 text-xs tracking-[0.2em] uppercase flex-shrink-0">{label}</span>
+      <span className="text-cream text-sm text-right">{value}</span>
+    </div>
+  );
+}
+
+const DEFAULT_INCLUSIONS = [
+  "All lodging in luxury lodges and camps as listed",
+  "Private guide and 4x4 vehicle throughout",
+  "All meals, drinks and sundowners",
+  "Park entry and conservation fees",
+  "Internal charter flights between camps",
+  "AMREF Flying Doctors emergency evacuation cover",
+  "5% contribution to ranger welfare",
+];
+
+const DEFAULT_EXCLUSIONS = [
+  "International airfare to/from Africa",
+  "Visa and passport fees",
+  "Travel and medical insurance",
+  "Personal items, laundry at certain camps",
+  "Optional activities not listed in the itinerary",
+  "Gratuities for guides and lodge staff",
+];

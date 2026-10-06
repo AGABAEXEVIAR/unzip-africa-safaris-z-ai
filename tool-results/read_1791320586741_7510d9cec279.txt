@@ -1,0 +1,770 @@
+     1→"use client";
+     2→
+     3→import { useRef, useState, useMemo, useEffect } from "react";
+     4→import { motion, useScroll, useTransform } from "framer-motion";
+     5→import { Reveal } from "@/components/luxury/Reveal";
+     6→import { useRouter } from "@/lib/router";
+     7→import { tourPackages, TourPackage } from "@/lib/content";
+     8→import { toast } from "sonner";
+     9→
+    10→// Build filter option lists from the tour data
+    11→const destinationsList = Array.from(new Set(tourPackages.map((t) => t.destination)));
+    12→const activitiesList = Array.from(new Set(tourPackages.flatMap((t) => t.activities)));
+    13→const tripTypesList = Array.from(new Set(tourPackages.map((t) => t.tripType)));
+    14→const accommodationLevelsList = Array.from(new Set(tourPackages.map((t) => t.accommodationLevel)));
+    15→const nationalParksList = Array.from(new Set(tourPackages.map((t) => t.nationalPark)));
+    16→
+    17→const PRICE_MIN = Math.min(...tourPackages.map((t) => t.priceFrom));
+    18→const PRICE_MAX = Math.max(...tourPackages.map((t) => t.priceFrom));
+    19→const DURATION_MIN = Math.min(...tourPackages.map((t) => t.durationDays));
+    20→const DURATION_MAX = Math.max(...tourPackages.map((t) => t.durationDays));
+    21→
+    22→type FilterState = {
+    23→  destinations: string[];
+    24→  activities: string[];
+    25→  tripTypes: string[];
+    26→  accommodationLevels: string[];
+    27→  nationalParks: string[];
+    28→  priceMax: number;
+    29→  durationMax: number;
+    30→};
+    31→
+    32→const initialFilters: FilterState = {
+    33→  destinations: [],
+    34→  activities: [],
+    35→  tripTypes: [],
+    36→  accommodationLevels: [],
+    37→  nationalParks: [],
+    38→  priceMax: PRICE_MAX,
+    39→  durationMax: DURATION_MAX,
+    40→};
+    41→
+    42→export function ToursPage() {
+    43→  const { openQuote, navigate } = useRouter();
+    44→  const heroRef = useRef<HTMLDivElement>(null);
+    45→  const [filters, setFilters] = useState<FilterState>(initialFilters);
+    46→  const [selectedTour, setSelectedTour] = useState<TourPackage | null>(null);
+    47→  const [sortBy, setSortBy] = useState<"recommended" | "price-low" | "price-high" | "duration">("recommended");
+    48→
+    49→  const { scrollYProgress } = useScroll({
+    50→    target: heroRef,
+    51→    offset: ["start start", "end start"],
+    52→  });
+    53→  const heroY = useTransform(scrollYProgress, [0, 1], ["0%", "35%"]);
+    54→  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
+    55→
+    56→  // Filter + sort tours
+    57→  const filteredTours = useMemo(() => {
+    58→    let result = tourPackages.filter((t) => {
+    59→      if (filters.destinations.length > 0 && !filters.destinations.includes(t.destination)) return false;
+    60→      if (filters.activities.length > 0 && !filters.activities.some((a) => t.activities.includes(a))) return false;
+    61→      if (filters.tripTypes.length > 0 && !filters.tripTypes.includes(t.tripType)) return false;
+    62→      if (filters.accommodationLevels.length > 0 && !filters.accommodationLevels.includes(t.accommodationLevel)) return false;
+    63→      if (filters.nationalParks.length > 0 && !filters.nationalParks.includes(t.nationalPark)) return false;
+    64→      if (t.priceFrom > filters.priceMax) return false;
+    65→      if (t.durationDays > filters.durationMax) return false;
+    66→      return true;
+    67→    });
+    68→
+    69→    if (sortBy === "price-low") result = [...result].sort((a, b) => a.priceFrom - b.priceFrom);
+    70→    if (sortBy === "price-high") result = [...result].sort((a, b) => b.priceFrom - a.priceFrom);
+    71→    if (sortBy === "duration") result = [...result].sort((a, b) => b.durationDays - a.durationDays);
+    72→    if (sortBy === "recommended") result = [...result].sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+    73→
+    74→    return result;
+    75→  }, [filters, sortBy]);
+    76→
+    77→  const toggleArrayFilter = (key: keyof Pick<FilterState, "destinations" | "activities" | "tripTypes" | "accommodationLevels" | "nationalParks">, value: string) => {
+    78→    setFilters((f) => ({
+    79→      ...f,
+    80→      [key]: f[key].includes(value) ? f[key].filter((x) => x !== value) : [...f[key], value],
+    81→    }));
+    82→  };
+    83→
+    84→  const clearFilters = () => setFilters(initialFilters);
+    85→
+    86→  const activeFilterCount =
+    87→    filters.destinations.length +
+    88→    filters.activities.length +
+    89→    filters.tripTypes.length +
+    90→    filters.accommodationLevels.length +
+    91→    filters.nationalParks.length +
+    92→    (filters.priceMax !== PRICE_MAX ? 1 : 0) +
+    93→    (filters.durationMax !== DURATION_MAX ? 1 : 0);
+    94→
+    95→  return (
+    96→    <div className="page-enter">
+    97→      {/* ====================== HERO ====================== */}
+    98→      <section ref={heroRef} className="relative h-[60vh] min-h-[500px] overflow-hidden bg-charcoal grain">
+    99→        <motion.div style={{ y: heroY, scale: heroScale }} className="absolute inset-0 will-change-transform">
+   100→          <img
+   101→            src="https://images.unsplash.com/photo-1542202229-7d93c33f5d07?auto=format&fit=crop&w=2400&q=85"
+   102→            alt="Wildebeest migration crossing a river"
+   103→            className="w-full h-full object-cover"
+   104→          />
+   105→          <div className="absolute inset-0 bg-charcoal/55" />
+   106→        </motion.div>
+   107→
+   108→        <div className="relative h-full flex flex-col items-center justify-center text-center px-6">
+   109→          <motion.p
+   110→            initial={{ opacity: 0, y: 20 }}
+   111→            animate={{ opacity: 1, y: 0 }}
+   112→            transition={{ duration: 1.2, delay: 0.4 }}
+   113→            className="font-eyebrow text-gold-soft mb-8 tracking-[0.4em]"
+   114→          >
+   115→            Curated Journeys
+   116→          </motion.p>
+   117→          <motion.h1
+   118→            initial={{ opacity: 0, y: 40 }}
+   119→            animate={{ opacity: 1, y: 0 }}
+   120→            transition={{ duration: 1.6, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
+   121→            className="font-display text-cream text-[2.8rem] sm:text-[4rem] md:text-[5.5rem] lg:text-[6.5rem] leading-[0.95] tracking-tight max-w-[90%]"
+   122→            style={{ fontFamily: "var(--font-cormorant), serif", fontWeight: 300 }}
+   123→          >
+   124→            All Tours
+   125→          </motion.h1>
+   126→          <motion.p
+   127→            initial={{ opacity: 0, y: 30 }}
+   128→            animate={{ opacity: 1, y: 0 }}
+   129→            transition={{ duration: 1.4, delay: 1.1 }}
+   130→            className="text-cream/75 text-lg max-w-2xl mt-8 leading-relaxed"
+   131→          >
+   132→            Explore our complete collection of bespoke safari journeys across East and Southern Africa.
+   133→            Filter by destination, duration, activities, and more.
+   134→          </motion.p>
+   135→        </div>
+   136→      </section>
+   137→
+   138→      {/* ====================== FILTERS + TOURS GRID ====================== */}
+   139→      <section className="py-16 md:py-24 px-6 md:px-10">
+   140→        <div className="mx-auto max-w-[1600px]">
+   141→          {/* Mobile filter toggle */}
+   142→          <MobileFilterToggle filters={filters} setFilters={setFilters} activeCount={activeFilterCount} clearFilters={clearFilters} toggleArrayFilter={toggleArrayFilter} />
+   143→
+   144→          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+   145→            {/* Filter Sidebar — desktop */}
+   146→            <aside className="hidden lg:block lg:col-span-3">
+   147→              <div className="sticky top-28">
+   148→                <FilterSidebar
+   149→                  filters={filters}
+   150→                  setFilters={setFilters}
+   151→                  toggleArrayFilter={toggleArrayFilter}
+   152→                  clearFilters={clearFilters}
+   153→                  activeCount={activeFilterCount}
+   154→                />
+   155→              </div>
+   156→            </aside>
+   157→
+   158→            {/* Tour cards grid */}
+   159→            <div className="lg:col-span-9">
+   160→              {/* Toolbar */}
+   161→              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-6 border-b border-border">
+   162→                <div>
+   163→                  <p className="font-display text-2xl md:text-3xl text-charcoal tracking-tight">
+   164→                    {filteredTours.length} {filteredTours.length === 1 ? "journey" : "journeys"} found
+   165→                  </p>
+   166→                  <p className="text-sm text-charcoal/55 mt-1">Curated private safaris across Africa</p>
+   167→                </div>
+   168→                <div className="flex items-center gap-3">
+   169→                  <label className="font-eyebrow text-charcoal/50">Sort by</label>
+   170→                  <select
+   171→                    value={sortBy}
+   172→                    onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
+   173→                    className="bg-transparent border border-border px-4 py-2 text-sm text-charcoal focus:outline-none focus:border-forest transition-colors"
+   174→                    style={{ borderRadius: 0 }}
+   175→                  >
+   176→                    <option value="recommended">Recommended</option>
+   177→                    <option value="price-low">Price: Low to High</option>
+   178→                    <option value="price-high">Price: High to Low</option>
+   179→                    <option value="duration">Duration: Longest First</option>
+   180→                  </select>
+   181→                </div>
+   182→              </div>
+   183→
+   184→              {/* Grid */}
+   185→              {filteredTours.length === 0 ? (
+   186→                <div className="text-center py-24">
+   187→                  <p className="font-display text-3xl text-charcoal/60 mb-4">No journeys match your filters.</p>
+   188→                  <button onClick={clearFilters} className="btn-luxury btn-luxury-gold mt-4">
+   189→                    Clear All Filters
+   190→                  </button>
+   191→                </div>
+   192→              ) : (
+   193→                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8">
+   194→                  {filteredTours.map((tour, idx) => (
+   195→                    <TourCard
+   196→                      key={tour.id}
+   197→                      tour={tour}
+   198→                      onViewDetails={() => setSelectedTour(tour)}
+   199→                      onBookNow={() => openQuote()}
+   200→                    />
+   201→                  ))}
+   202→                </div>
+   203→              )}
+   204→            </div>
+   205→          </div>
+   206→        </div>
+   207→      </section>
+   208→
+   209→      {/* ====================== WHAT'S INCLUDED BAND ====================== */}
+   210→      <section className="py-24 md:py-32 px-6 md:px-10 bg-forest text-cream">
+   211→        <div className="mx-auto max-w-[1400px]">
+   212→          <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-12">
+   213→            <div className="md:col-span-5">
+   214→              <Reveal variant="up">
+   215→                <p className="font-eyebrow text-gold-soft mb-6">What's Included</p>
+   216→                <h2 className="font-display text-4xl md:text-5xl leading-[1.05] tracking-tight">
+   217→                  Every detail, <span className="italic text-gold-soft">composed in advance.</span>
+   218→                </h2>
+   219→              </Reveal>
+   220→            </div>
+   221→            <div className="md:col-span-6 md:col-start-7 flex items-end">
+   222→              <Reveal variant="up" delay={0.2}>
+   223→                <p className="text-cream/75 text-lg leading-relaxed">
+   224→                  The price of every Unzip Africa journey includes everything below — and countless
+   225→                  details we manage silently, so you can simply arrive.
+   226→                </p>
+   227→              </Reveal>
+   228→            </div>
+   229→          </div>
+   230→
+   231→          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-12 border-t border-cream/15 pt-12">
+   232→            {[
+   233→              { title: "Private Guiding", body: "Your own dedicated guide, vehicle, and tracker from arrival to departure. Never shared." },
+   234→              { title: "Charter Flights", body: "All inter-camp flights by private Cessna Caravan, piloted by our own aviation team." },
+   235→              { title: "All Lodging & Meals", body: "Every night in luxury lodges or private mobile camps. Every meal, every drink, every sundowner." },
+   236→              { title: "Conservation Fees", body: "All park fees, conservation contributions, and community levies — 7% of every journey." },
+   237→            ].map((item, idx) => (
+   238→              <Reveal key={item.title} variant="up" delay={idx * 0.1}>
+   239→                <h3 className="font-display text-2xl text-gold-soft mb-3">{item.title}</h3>
+   240→                <p className="text-cream/70 text-sm leading-relaxed">{item.body}</p>
+   241→              </Reveal>
+   242→            ))}
+   243→          </div>
+   244→        </div>
+   245→      </section>
+   246→
+   247→      {/* ====================== CTA ====================== */}
+   248→      <section className="py-32 md:py-48 px-6 md:px-10">
+   249→        <div className="mx-auto max-w-[1100px] text-center">
+   250→          <Reveal variant="up">
+   251→            <p className="font-eyebrow text-gold mb-8">Inspired?</p>
+   252→            <h2 className="font-display text-5xl md:text-7xl lg:text-8xl leading-[0.95] text-charcoal tracking-tight">
+   253→              Let us compose
+   254→              <br />
+   255→              <span className="italic text-forest">your journey.</span>
+   256→            </h2>
+   257→            <p className="text-lg text-charcoal/70 max-w-xl mx-auto mt-10 leading-relaxed">
+   258→              Tell us which journey speaks to you — or describe one we have not yet imagined.
+   259→            </p>
+   260→            <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-5">
+   261→              <button onClick={openQuote} className="btn-luxury btn-luxury-gold">
+   262→                Request a Quote
+   263→              </button>
+   264→              <button
+   265→                onClick={() => navigate("accommodation")}
+   266→                className="link-underline text-charcoal/70"
+   267→              >
+   268→                View Accommodation
+   269→              </button>
+   270→            </div>
+   271→          </Reveal>
+   272→        </div>
+   273→      </section>
+   274→
+   275→      {/* Tour detail modal */}
+   276→      {selectedTour && (
+   277→        <TourDetailModal
+   278→          tour={selectedTour}
+   279→          onClose={() => setSelectedTour(null)}
+   280→          onBookNow={() => {
+   281→            setSelectedTour(null);
+   282→            openQuote();
+   283→          }}
+   284→        />
+   285→      )}
+   286→    </div>
+   287→  );
+   288→}
+   289→
+   290→/* ===================== Filter Sidebar ===================== */
+   291→function FilterSidebar({
+   292→  filters,
+   293→  setFilters,
+   294→  toggleArrayFilter,
+   295→  clearFilters,
+   296→  activeCount,
+   297→}: {
+   298→  filters: FilterState;
+   299→  setFilters: React.Dispatch<React.SetStateAction<FilterState>>;
+   300→  toggleArrayFilter: (key: keyof Pick<FilterState, "destinations" | "activities" | "tripTypes" | "accommodationLevels" | "nationalParks">, value: string) => void;
+   301→  clearFilters: () => void;
+   302→  activeCount: number;
+   303→}) {
+   304→  return (
+   305→    <div className="bg-alabaster border border-border p-6" style={{ borderRadius: 0 }}>
+   306→      <div className="flex items-center justify-between mb-6 pb-4 border-b border-border">
+   307→        <p className="font-display text-xl text-charcoal tracking-tight">Filter By</p>
+   308→        {activeCount > 0 && (
+   309→          <button
+   310→            onClick={clearFilters}
+   311→            className="text-xs text-charcoal/50 hover:text-gold transition-colors underline"
+   312→          >
+   313→            Clear ({activeCount})
+   314→          </button>
+   315→        )}
+   316→      </div>
+   317→
+   318→      <div className="space-y-6">
+   319→        {/* Destination */}
+   320→        <FilterSection title="Destination">
+   321→          {destinationsList.map((d) => (
+   322→            <FilterCheckbox
+   323→              key={d}
+   324→              label={d}
+   325→              checked={filters.destinations.includes(d)}
+   326→              onChange={() => toggleArrayFilter("destinations", d)}
+   327→            />
+   328→          ))}
+   329→        </FilterSection>
+   330→
+   331→        {/* Price */}
+   332→        <FilterSection title="Price (per person)">
+   333→          <div className="px-1">
+   334→            <input
+   335→              type="range"
+   336→              min={PRICE_MIN}
+   337→              max={PRICE_MAX}
+   338→              step={1000}
+   339→              value={filters.priceMax}
+   340→              onChange={(e) => setFilters({ ...filters, priceMax: Number(e.target.value) })}
+   341→              className="w-full accent-forest"
+   342→            />
+   343→            <div className="flex justify-between text-xs text-charcoal/60 mt-2">
+   344→              <span>${PRICE_MIN.toLocaleString()}</span>
+   345→              <span className="font-medium text-charcoal">${filters.priceMax.toLocaleString()}</span>
+   346→            </div>
+   347→          </div>
+   348→        </FilterSection>
+   349→
+   350→        {/* Duration */}
+   351→        <FilterSection title="Duration">
+   352→          <div className="px-1">
+   353→            <input
+   354→              type="range"
+   355→              min={DURATION_MIN}
+   356→              max={DURATION_MAX}
+   357→              step={1}
+   358→              value={filters.durationMax}
+   359→              onChange={(e) => setFilters({ ...filters, durationMax: Number(e.target.value) })}
+   360→              className="w-full accent-forest"
+   361→            />
+   362→            <div className="flex justify-between text-xs text-charcoal/60 mt-2">
+   363→              <span>{DURATION_MIN} days</span>
+   364→              <span className="font-medium text-charcoal">up to {filters.durationMax} days</span>
+   365→            </div>
+   366→          </div>
+   367→        </FilterSection>
+   368→
+   369→        {/* Activities */}
+   370→        <FilterSection title="Activities">
+   371→          {activitiesList.map((a) => (
+   372→            <FilterCheckbox
+   373→              key={a}
+   374→              label={a}
+   375→              checked={filters.activities.includes(a)}
+   376→              onChange={() => toggleArrayFilter("activities", a)}
+   377→            />
+   378→          ))}
+   379→        </FilterSection>
+   380→
+   381→        {/* Trip Types */}
+   382→        <FilterSection title="Trip Types">
+   383→          {tripTypesList.map((t) => (
+   384→            <FilterCheckbox
+   385→              key={t}
+   386→              label={t}
+   387→              checked={filters.tripTypes.includes(t)}
+   388→              onChange={() => toggleArrayFilter("tripTypes", t)}
+   389→            />
+   390→          ))}
+   391→        </FilterSection>
+   392→
+   393→        {/* Accommodation Level */}
+   394→        <FilterSection title="Accommodation Level">
+   395→          {accommodationLevelsList.map((l) => (
+   396→            <FilterCheckbox
+   397→              key={l}
+   398→              label={l}
+   399→              checked={filters.accommodationLevels.includes(l)}
+   400→              onChange={() => toggleArrayFilter("accommodationLevels", l)}
+   401→            />
+   402→          ))}
+   403→        </FilterSection>
+   404→
+   405→        {/* National Parks */}
+   406→        <FilterSection title="National Parks">
+   407→          {nationalParksList.map((p) => (
+   408→            <FilterCheckbox
+   409→              key={p}
+   410→              label={p}
+   411→              checked={filters.nationalParks.includes(p)}
+   412→              onChange={() => toggleArrayFilter("nationalParks", p)}
+   413→            />
+   414→          ))}
+   415→        </FilterSection>
+   416→      </div>
+   417→    </div>
+   418→  );
+   419→}
+   420→
+   421→function FilterSection({ title, children }: { title: string; children: React.ReactNode }) {
+   422→  const [open, setOpen] = useState(true);
+   423→  return (
+   424→    <div className="border-b border-border pb-4">
+   425→      <button
+   426→        onClick={() => setOpen(!open)}
+   427→        className="w-full flex items-center justify-between mb-3 text-left"
+   428→      >
+   429→        <span className="font-label text-charcoal">{title}</span>
+   430→        <svg
+   431→          width="12"
+   432→          height="12"
+   433→          viewBox="0 0 24 24"
+   434→          fill="none"
+   435→          stroke="currentColor"
+   436→          strokeWidth="2"
+   437→          className={`text-charcoal/50 transition-transform duration-300 ${open ? "rotate-180" : ""}`}
+   438→        >
+   439→          <path d="M6 9l6 6 6-6" />
+   440→        </svg>
+   441→      </button>
+   442→      {open && <div className="space-y-2">{children}</div>}
+   443→    </div>
+   444→  );
+   445→}
+   446→
+   447→function FilterCheckbox({
+   448→  label,
+   449→  checked,
+   450→  onChange,
+   451→}: {
+   452→  label: string;
+   453→  checked: boolean;
+   454→  onChange: () => void;
+   455→}) {
+   456→  return (
+   457→    <label className="flex items-center gap-2.5 cursor-pointer group">
+   458→      <span
+   459→        className={`w-4 h-4 border flex items-center justify-center transition-all flex-shrink-0 ${
+   460→          checked ? "bg-forest border-forest" : "border-charcoal/30 group-hover:border-charcoal"
+   461→        }`}
+   462→        style={{ borderRadius: 0 }}
+   463→      >
+   464→        {checked && (
+   465→          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3">
+   466→            <path d="M20 6 9 17l-5-5" />
+   467→          </svg>
+   468→        )}
+   469→      </span>
+   470→      <input type="checkbox" checked={checked} onChange={onChange} className="sr-only" />
+   471→      <span className={`text-sm transition-colors ${checked ? "text-charcoal" : "text-charcoal/65 group-hover:text-charcoal"}`}>
+   472→        {label}
+   473→      </span>
+   474→    </label>
+   475→  );
+   476→}
+   477→
+   478→/* ===================== Mobile Filter Toggle ===================== */
+   479→function MobileFilterToggle({
+   480→  filters,
+   481→  setFilters,
+   482→  activeCount,
+   483→  clearFilters,
+   484→  toggleArrayFilter,
+   485→}: {
+   486→  filters: FilterState;
+   487→  setFilters: React.Dispatch<React.SetStateAction<FilterState>>;
+   488→  activeCount: number;
+   489→  clearFilters: () => void;
+   490→  toggleArrayFilter: (key: keyof Pick<FilterState, "destinations" | "activities" | "tripTypes" | "accommodationLevels" | "nationalParks">, value: string) => void;
+   491→}) {
+   492→  const [open, setOpen] = useState(false);
+   493→
+   494→  useEffect(() => {
+   495→    if (open) {
+   496→      document.body.style.overflow = "hidden";
+   497→    } else {
+   498→      document.body.style.overflow = "";
+   499→    }
+   500→  }, [open]);
+   501→
+   502→  return (
+   503→    <div className="lg:hidden mb-8">
+   504→      <div className="flex items-center justify-between gap-4">
+   505→        <button
+   506→          onClick={() => setOpen(true)}
+   507→          className="btn-luxury flex-1 sm:flex-none"
+   508→        >
+   509→          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="mr-2">
+   510→            <path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z" />
+   511→          </svg>
+   512→          Filters {activeCount > 0 && `(${activeCount})`}
+   513→        </button>
+   514→        {activeCount > 0 && (
+   515→          <button onClick={clearFilters} className="text-xs text-charcoal/60 hover:text-gold underline">
+   516→            Clear all
+   517→          </button>
+   518→        )}
+   519→      </div>
+   520→
+   521→      {open && (
+   522→        <div className="fixed inset-0 z-[60] bg-charcoal/70 backdrop-blur-sm flex">
+   523→          <div className="bg-canvas w-full max-w-md h-full overflow-y-auto p-6 ml-auto">
+   524→            <div className="flex items-center justify-between mb-6 pb-4 border-b border-border">
+   525→              <p className="font-display text-2xl text-charcoal">Filters</p>
+   526→              <button
+   527→                onClick={() => setOpen(false)}
+   528→                aria-label="Close filters"
+   529→                className="text-charcoal/50 hover:text-charcoal"
+   530→              >
+   531→                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+   532→                  <path d="M18 6 6 18M6 6l12 12" />
+   533→                </svg>
+   534→              </button>
+   535→            </div>
+   536→            <FilterSidebar
+   537→              filters={filters}
+   538→              setFilters={setFilters}
+   539→              toggleArrayFilter={toggleArrayFilter}
+   540→              clearFilters={clearFilters}
+   541→              activeCount={activeCount}
+   542→            />
+   543→            <button
+   544→              onClick={() => setOpen(false)}
+   545→              className="btn-luxury btn-luxury-gold w-full mt-6"
+   546→            >
+   547→              Show Results
+   548→            </button>
+   549→          </div>
+   550→        </div>
+   551→      )}
+   552→    </div>
+   553→  );
+   554→}
+   555→
+   556→/* ===================== Tour Card ===================== */
+   557→function TourCard({
+   558→  tour,
+   559→  onViewDetails,
+   560→  onBookNow,
+   561→}: {
+   562→  tour: TourPackage;
+   563→  onViewDetails: () => void;
+   564→  onBookNow: () => void;
+   565→}) {
+   566→  return (
+   567→    <article className="bg-alabaster border border-border/60 overflow-hidden flex flex-col group card-luxury" style={{ borderRadius: 0 }}>
+   568→      {/* Image */}
+   569→      <div className="relative aspect-[4/3] overflow-hidden bg-bone cursor-pointer card-zoom" onClick={onViewDetails}>
+   570→        <img
+   571→          src={tour.image}
+   572→          alt={tour.name}
+   573→          className="w-full h-full object-cover img-luxury"
+   574→        />
+   575→        {tour.featured && (
+   576→          <div className="absolute top-3 left-3 bg-gold text-charcoal px-3 py-1 text-[0.6rem] font-medium tracking-[0.15em] uppercase" style={{ borderRadius: 0 }}>
+   577→            Featured
+   578→          </div>
+   579→        )}
+   580→        {tour.priceOriginal && (
+   581→          <div className="absolute top-3 right-3 bg-forest text-cream px-3 py-1 text-[0.6rem] font-medium tracking-[0.15em] uppercase" style={{ borderRadius: 0 }}>
+   582→            {Math.round((1 - tour.priceFrom / tour.priceOriginal) * 100)}% Off
+   583→          </div>
+   584→        )}
+   585→      </div>
+   586→
+   587→      {/* Content */}
+   588→      <div className="p-5 md:p-6 flex flex-col flex-1">
+   589→        <h3
+   590→          className="font-display text-xl md:text-2xl text-forest tracking-tight mb-3 leading-[1.15] cursor-pointer hover:text-gold transition-colors"
+   591→          onClick={onViewDetails}
+   592→          style={{ fontFamily: "var(--font-cormorant), serif" }}
+   593→        >
+   594→          {tour.name}
+   595→        </h3>
+   596→
+   597→        {/* Metadata */}
+   598→        <div className="space-y-1.5 mb-4 text-xs text-charcoal/60">
+   599→          <div className="flex items-center gap-2">
+   600→            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+   601→              <circle cx="12" cy="12" r="10" />
+   602→              <path d="M12 6v6l4 2" />
+   603→            </svg>
+   604→            <span>{tour.durationDays} Days · {tour.durationNights} Nights</span>
+   605→          </div>
+   606→          <div className="flex items-center gap-2">
+   607→            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+   608→              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+   609→              <circle cx="12" cy="7" r="4" />
+   610→            </svg>
+   611→            <span>Min age {tour.minAge}+</span>
+   612→          </div>
+   613→          <div className="flex items-center gap-2">
+   614→            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+   615→              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+   616→              <circle cx="12" cy="10" r="3" />
+   617→            </svg>
+   618→            <span>{tour.destination}</span>
+   619→          </div>
+   620→        </div>
+   621→
+   622→        {/* Activities tags */}
+   623→        <div className="flex flex-wrap gap-1.5 mb-5">
+   624→          {tour.activities.slice(0, 3).map((a) => (
+   625→            <span key={a} className="text-[0.65rem] text-charcoal/60 border border-border px-2 py-0.5" style={{ borderRadius: 0 }}>
+   626→              {a}
+   627→            </span>
+   628→          ))}
+   629→        </div>
+   630→
+   631→        {/* Price + CTA */}
+   632→        <div className="mt-auto pt-4 border-t border-border">
+   633→          <div className="flex items-end justify-between mb-3">
+   634→            <div>
+   635→              {tour.priceOriginal && (
+   636→                <p className="text-xs text-charcoal/40 line-through">${tour.priceOriginal.toLocaleString()}</p>
+   637→              )}
+   638→              <p className="font-display text-2xl md:text-3xl text-forest tracking-tight" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+   639→                ${tour.priceFrom.toLocaleString()}
+   640→              </p>
+   641→              <p className="text-[0.65rem] text-charcoal/50 tracking-wide">per person</p>
+   642→            </div>
+   643→          </div>
+   644→          <div className="flex gap-2">
+   645→            <button
+   646→              onClick={onViewDetails}
+   647→              className="flex-1 border border-charcoal text-charcoal py-2.5 text-[0.65rem] font-medium tracking-[0.2em] uppercase hover:bg-charcoal hover:text-cream transition-all"
+   648→              style={{ borderRadius: 0 }}
+   649→            >
+   650→              Details
+   651→            </button>
+   652→            <button
+   653→              onClick={onBookNow}
+   654→              className="flex-1 bg-forest text-cream py-2.5 text-[0.65rem] font-medium tracking-[0.2em] uppercase hover:bg-forest-deep transition-colors shadow-[inset_0_2px_0_rgba(255,255,255,0.15),inset_0_-2px_0_rgba(0,0,0,0.25)]"
+   655→              style={{ borderRadius: 0 }}
+   656→            >
+   657→              Book Now
+   658→            </button>
+   659→          </div>
+   660→        </div>
+   661→      </div>
+   662→    </article>
+   663→  );
+   664→}
+   665→
+   666→/* ===================== Tour Detail Modal ===================== */
+   667→function TourDetailModal({
+   668→  tour,
+   669→  onClose,
+   670→  onBookNow,
+   671→}: {
+   672→  tour: TourPackage;
+   673→  onClose: () => void;
+   674→  onBookNow: () => void;
+   675→}) {
+   676→  return (
+   677→    <div
+   678→      className="fixed inset-0 z-[70] bg-charcoal/85 backdrop-blur-md flex items-center justify-center p-4 md:p-8 overflow-y-auto"
+   679→      onClick={onClose}
+   680→    >
+   681→      <motion.div
+   682→        initial={{ opacity: 0, y: 50, scale: 0.96 }}
+   683→        animate={{ opacity: 1, y: 0, scale: 1 }}
+   684→        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+   685→        onClick={(e) => e.stopPropagation()}
+   686→        className="bg-canvas w-full max-w-[1100px] my-auto max-h-[92vh] overflow-y-auto no-scrollbar grid grid-cols-1 md:grid-cols-2"
+   687→        style={{ borderRadius: 0 }}
+   688→      >
+   689→        {/* Image */}
+   690→        <div className="relative aspect-square md:aspect-auto md:min-h-[600px] overflow-hidden bg-bone">
+   691→          <img src={tour.image} alt={tour.name} className="absolute inset-0 w-full h-full object-cover" />
+   692→          {tour.featured && (
+   693→            <div className="absolute top-4 left-4 bg-gold text-charcoal px-3 py-1.5 text-[0.65rem] font-medium tracking-[0.15em] uppercase" style={{ borderRadius: 0 }}>
+   694→              Featured
+   695→            </div>
+   696→          )}
+   697→        </div>
+   698→
+   699→        {/* Content */}
+   700→        <div className="p-8 md:p-12 flex flex-col">
+   701→          <button
+   702→            onClick={onClose}
+   703→            className="self-end mb-4 text-charcoal/50 hover:text-charcoal transition-colors"
+   704→            aria-label="Close"
+   705→          >
+   706→            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+   707→              <path d="M18 6 6 18M6 6l12 12" />
+   708→            </svg>
+   709→          </button>
+   710→
+   711→          <p className="font-eyebrow text-gold mb-3">{tour.subtitle}</p>
+   712→          <h2 className="font-display text-3xl md:text-4xl text-charcoal tracking-tight mb-4 leading-[1.05]" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+   713→            {tour.name}
+   714→          </h2>
+   715→
+   716→          <div className="flex flex-wrap gap-4 mb-6 text-sm text-charcoal/70">
+   717→            <span>📅 {tour.durationDays} days · {tour.durationNights} nights</span>
+   718→            <span>👤 Min age {tour.minAge}+</span>
+   719→            <span>📍 {tour.destination}</span>
+   720→          </div>
+   721→
+   722→          <div className="border-t border-border pt-4 mb-6">
+   723→            <p className="font-eyebrow text-charcoal/40 mb-3">Highlights</p>
+   724→            <ul className="space-y-2">
+   725→              {tour.highlights.map((h) => (
+   726→                <li key={h} className="flex items-start gap-2 text-sm text-charcoal/75">
+   727→                  <span className="text-gold mt-1 leading-none">—</span>
+   728→                  <span>{h}</span>
+   729→                </li>
+   730→              ))}
+   731→            </ul>
+   732→          </div>
+   733→
+   734→          <div className="border-t border-border pt-4 mb-6">
+   735→            <p className="font-eyebrow text-charcoal/40 mb-3">Activities</p>
+   736→            <div className="flex flex-wrap gap-2">
+   737→              {tour.activities.map((a) => (
+   738→                <span key={a} className="text-xs text-charcoal/70 border border-border px-3 py-1" style={{ borderRadius: 0 }}>
+   739→                  {a}
+   740→                </span>
+   741→              ))}
+   742→            </div>
+   743→          </div>
+   744→
+   745→          <div className="mt-auto pt-6 border-t border-border">
+   746→            <div className="flex items-end justify-between mb-4">
+   747→              <div>
+   748→                {tour.priceOriginal && (
+   749→                  <p className="text-sm text-charcoal/40 line-through">${tour.priceOriginal.toLocaleString()}</p>
+   750→                )}
+   751→                <p className="font-display text-3xl md:text-4xl text-forest italic" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+   752→                  ${tour.priceFrom.toLocaleString()}
+   753→                </p>
+   754→                <p className="text-xs text-charcoal/50">per person</p>
+   755→              </div>
+   756→              <div className="text-right">
+   757→                <p className="font-eyebrow text-charcoal/40">Trip Type</p>
+   758→                <p className="text-sm text-charcoal/75">{tour.tripType}</p>
+   759→              </div>
+   760→            </div>
+   761→            <button onClick={onBookNow} className="btn-luxury btn-luxury-gold w-full">
+   762→              Book This Journey
+   763→            </button>
+   764→          </div>
+   765→        </div>
+   766→      </motion.div>
+   767→    </div>
+   768→  );
+   769→}
+   770→

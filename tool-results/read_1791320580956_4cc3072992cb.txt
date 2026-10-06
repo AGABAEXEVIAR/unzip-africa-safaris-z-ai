@@ -1,0 +1,1039 @@
+     1→// Shared content data for Unzip Africa Safaris
+     2→// All imagery sourced from Unsplash (royalty-free, retina-ready via their CDN)
+     3→
+     4→export type Destination = {
+     5→  id: string;
+     6→  name: string;
+     7→  country: string;
+     8→  tagline: string;
+     9→  description: string;
+    10→  image: string;
+    11→  imagePortrait: string;
+    12→  days: string;
+    13→  price: string;
+    14→};
+    15→
+    16→export type Expert = {
+    17→  id: string;
+    18→  name: string;
+    19→  role: string;
+    20→  specialty: string;
+    21→  bio: string;
+    22→  image: string;
+    23→  yearsExperience: string;
+    24→};
+    25→
+    26→export type TourPackage = {
+    27→  id: string;
+    28→  name: string;
+    29→  subtitle: string;
+    30→  duration: string;
+    31→  durationDays: number;
+    32→  durationNights: number;
+    33→  price: string;
+    34→  priceFrom: number;
+    35→  priceOriginal?: number;
+    36→  highlights: string[];
+    37→  image: string;
+    38→  days: { day: string; title: string; description: string; image: string }[];
+    39→  destination: string;
+    40→  activities: string[];
+    41→  tripType: string;
+    42→  accommodationLevel: string;
+    43→  nationalPark: string;
+    44→  featured?: boolean;
+    45→  minAge: number;
+    46→};
+    47→
+    48→export type Accommodation = {
+    49→  id: string;
+    50→  name: string;
+    51→  location: string;
+    52→  type: string;
+    53→  description: string;
+    54→  image: string;
+    55→  features: string[];
+    56→  pricePerNight: string;
+    57→};
+    58→
+    59→export const destinations: Destination[] = [
+    60→  {
+    61→    id: "serengeti",
+    62→    name: "Serengeti",
+    63→    country: "Tanzania",
+    64→    tagline: "The Great Migration",
+    65→    description:
+    66→      "Witness two million wildebeest thundering across endless golden plains — a primal, deafening tide of life that has reshaped this land for ten thousand years. We position you ahead of the herd, in private mobile camps that move with the migration.",
+    67→    image:
+    68→      "https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?auto=format&fit=crop&w=1600&q=80",
+    69→    imagePortrait:
+    70→      "https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?auto=format&fit=crop&w=900&q=80",
+    71→    days: "8 Days",
+    72→    price: "From $48,500",
+    73→  },
+    74→  {
+    75→    id: "bwindi",
+    76→    name: "Bwindi Impenetrable Forest",
+    77→    country: "Uganda",
+    78→    tagline: "Gorilla Encounters",
+    79→    description:
+    80→      "A mist-shrouded primeval forest where half the world's mountain gorillas live. After a measured trek through ancient undergrowth, you sit in silent reverence seven meters from a silverback — a moment that reorders everything you thought you knew about wildness.",
+    81→    image:
+    82→      "https://images.unsplash.com/photo-1549366021-9f761d450615?auto=format&fit=crop&w=1600&q=80",
+    83→    imagePortrait:
+    84→      "https://images.unsplash.com/photo-1549366021-9f761d450615?auto=format&fit=crop&w=900&q=80",
+    85→    days: "6 Days",
+    86→    price: "From $32,000",
+    87→  },
+    88→  {
+    89→    id: "okavango",
+    90→    name: "Okavango Delta",
+    91→    country: "Botswana",
+    92→    tagline: "The Inland Oasis",
+    93→    description:
+    94→      "An immense river that never reaches the sea — instead, it spills into the Kalahari, creating a watery Eden of crystal channels, papyrus islands, and silent mokoro passages. Here, you glide past elephant herds half-submerged in lilac water.",
+    95→    image:
+    96→      "https://images.unsplash.com/photo-1505761671935-60b3a7427bad?auto=format&fit=crop&w=1600&q=80",
+    97→    imagePortrait:
+    98→      "https://images.unsplash.com/photo-1505761671935-60b3a7427bad?auto=format&fit=crop&w=900&q=80",
+    99→    days: "9 Days",
+   100→    price: "From $54,200",
+   101→  },
+   102→  {
+   103→    id: "maasai-mara",
+   104→    name: "Maasai Mara",
+   105→    country: "Kenya",
+   106→    tagline: "Big Cat Country",
+   107→    description:
+   108→      "The northern extension of the Serengeti ecosystem — and the densest concentration of big cats on earth. Our private conservancies grant you off-road access, night drives, and walking safaris impossible inside the main reserve.",
+   109→    image:
+   110→      "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1600&q=80",
+   111→    imagePortrait:
+   112→      "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=900&q=80",
+   113→    days: "7 Days",
+   114→    price: "From $42,800",
+   115→  },
+   116→  {
+   117→    id: "namib",
+   118→    name: "Sossusvlei",
+   119→    country: "Namibia",
+   120→    tagline: "The Living Desert",
+   121→    description:
+   122→      "Iron-red dunes rising a thousand feet from a clay pan white as bone — the oldest desert on earth, sculpted by wind for eighty million years. At dawn we climb Big Daddy in silence, then descend into Dead Vlei, where 900-year-old camel thorn trees stand petrified against orange sand.",
+   123→    image:
+   124→      "https://sfile.chatglm.cn/images-ppt/84ed8813798e.jpg",
+   125→    imagePortrait:
+   126→      "https://sfile.chatglm.cn/images-ppt/4dd444015d49.jpg",
+   127→    days: "8 Days",
+   128→    price: "From $46,900",
+   129→  },
+   130→  {
+   131→    id: "virunga",
+   132→    name: "Virunga Volcanoes",
+   133→    country: "Rwanda",
+   134→    tagline: "In the Mist",
+   135→    description:
+   136→      "Five volcanic peaks shrouded in bamboo and Hagenia forest, where Dian Fossey lived and died among the gorillas. The trek is steep, the air thin, the reward transcendental — you sit among a family of twenty, infants tumbling around you, the silverback watching with unhurried eyes.",
+   137→    image:
+   138→      "https://sfile.chatglm.cn/images-ppt/f2522b36c1bf.jpg",
+   139→    imagePortrait:
+   140→      "https://sfile.chatglm.cn/images-ppt/55f6eb85ac39.jpg",
+   141→    days: "5 Days",
+   142→    price: "From $38,500",
+   143→  },
+   144→];
+   145→
+   146→export const experts: Expert[] = [
+   147→  {
+   148→    id: "amara",
+   149→    name: "Amara Okello",
+   150→    role: "Founder & Lead Guide",
+   151→    specialty: "Gorilla Trekking · Uganda & Rwanda",
+   152→    bio: "Born in Kisoro at the foot of the Virunga range, Amara has tracked mountain gorillas for twenty-three years. She holds the rare distinction of having named three silverbacks and was the first Ugandan woman certified as a Senior Gorilla Guide.",
+   153→    image:
+   154→      "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=900&q=80",
+   155→    yearsExperience: "23 years",
+   156→  },
+   157→  {
+   158→    id: "tariq",
+   159→    name: "Tariq Hassan",
+   160→    role: "Director of Operations, East Africa",
+   161→    specialty: "Serengeti Migration · Tanzania",
+   162→    bio: "A fourth-generation Tanzanian of Hadzabe and Omani descent, Tariq speaks seven tribal languages and has logged over 4,000 hours guiding the migration. His grandfather guided Hemingway's last safari in 1956.",
+   163→    image:
+   164→      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=900&q=80",
+   165→    yearsExperience: "19 years",
+   166→  },
+   167→  {
+   168→    id: "nala",
+   169→    name: "Nala Mwangi",
+   170→    role: "Head of Conservation Partnerships",
+   171→    specialty: "Okavango Delta · Botswana",
+   172→    bio: "A Maasai conservation biologist educated at Oxford, Nala divides her time between Maun and the delta's most remote camps. She has co-authored three papers on human-elephant conflict mitigation and serves on the board of the Botswana Rhino Reintroduction Project.",
+   173→    image:
+   174→      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=900&q=80",
+   175→    yearsExperience: "16 years",
+   176→  },
+   177→  {
+   178→    id: "kofi",
+   179→    name: "Kofi Mensah",
+   180→    role: "Director of Private Journeys",
+   181→    specialty: "Namib Desert · Skeleton Coast",
+   182→    bio: "Ghanaian-born, Namibian by choice, Kofi spent a decade as chief pilot for Skeleton Coast Flying Safaris. He has landed on every dirt strip between Sossusvlei and the Angolan border and has a particular love for the desert-adapted lions of Kunene.",
+   183→    image:
+   184→      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=900&q=80",
+   185→    yearsExperience: "21 years",
+   186→  },
+   187→];
+   188→
+   189→export const tourPackages: TourPackage[] = [
+   190→  {
+   191→    id: "migration",
+   192→    name: "The Migration Symphony",
+   193→    subtitle: "Tanzania & Kenya · September–October",
+   194→    duration: "12 Days",
+   195→    durationDays: 12,
+   196→    durationNights: 11,
+   197→    price: "From $78,500 per person",
+   198→    priceFrom: 78500,
+   199→    highlights: [
+   200→      "Private mobile camp that moves with the herd",
+   201→      "Hot air balloon flight over the Mara River",
+   202→      "Walking safari with a Hadzabe bushman",
+   203→      "Private dinner on a kopje at sunset",
+   204→    ],
+   205→    image:
+   206→      "https://images.unsplash.com/photo-1542202229-7d93c33f5d07?auto=format&fit=crop&w=1600&q=80",
+   207→    destination: "Tanzania",
+   208→    activities: ["Game Drives", "Hot Air Balloon", "Walking Safaris", "Cultural Tours"],
+   209→    tripType: "Luxury Safaris",
+   210→    accommodationLevel: "Luxury Lodges",
+   211→    nationalPark: "Serengeti National Park",
+   212→    featured: true,
+   213→    minAge: 8,
+   214→    days: [
+   215→      {
+   216→        day: "Day 01",
+   217→        title: "Arrival · Arusha Coffee Lodge",
+   218→        description:
+   219→          "You land at Kilimanjaro International where Tariq meets you privately on the tarmac. A short drive delivers you to a restored 1900s coffee plantation house. Dinner is served on the verandah under acacia trees; the menu changes nightly around whatever the garden has yielded.",
+   220→        image:
+   221→          "https://images.unsplash.com/photo-1444723121867-7a241cacace9?auto=format&fit=crop&w=1200&q=80",
+   222→      },
+   223→      {
+   224→        day: "Day 02–04",
+   225→        title: "Serengeti South · Mobile Camp",
+   226→        description:
+   227→          "A Cessna Caravan lifts you into the southern plains. Your tented camp — moved twice weekly to track the herd — sits alone on a rise, with no other lights visible at night. Days are spent following the migration in a private Land Cruiser, returning to hot bucket showers and sundowners on the hood.",
+   228→        image:
+   229→          "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
+   230→      },
+   231→      {
+   232→        day: "Day 05–07",
+   233→        title: "Western Corridor · Grumeti River",
+   234→        description:
+   235→          "The migration reaches the Grumeti, where Nile crocodiles — some over a century old — wait in the reeds. We position you at a private conservancy overlooking the crossing points. A balloon flight at dawn on Day 06 reveals the herd from above, an unbroken black ribbon six miles long.",
+   236→        image:
+   237→          "https://images.unsplash.com/photo-1534177616072-ef7dc120449d?auto=format&fit=crop&w=1200&q=80",
+   238→      },
+   239→      {
+   240→        day: "Day 08–09",
+   241→        title: "Crossing into the Mara",
+   242→        description:
+   243→          "You cross into Kenya at a private border post — no queues, no formalities, just a stamp and a handshake. The Mara Conservancy is the densest big-cat territory on earth; we have denoted leopard viewing areas known only to our guides. On Day 09, a walking safari with a Maasai tracker concludes at a bush dinner lit by lanterns.",
+   244→        image:
+   245→          "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1200&q=80",
+   246→      },
+   247→      {
+   248→        day: "Day 10–11",
+   249→        title: "Private Kopje Retreat",
+   250→        description:
+   251→          "Two nights at a private retreat atop a granite kopje, with the entire Mara spread below. A sunrise yoga session, a private chef preparing East African-Indian fusion, and a star-bed sleep-out under the Southern Cross. The finale: a helicopter flight over the Mara River at first light.",
+   252→        image:
+   253→          "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1200&q=80",
+   254→      },
+   255→      {
+   256→        day: "Day 12",
+   257→        title: "Departure · Nairobi",
+   258→        description:
+   259→          "A final leisurely breakfast on the kopje, then a flight to Nairobi's Wilson Airport. A private day room at The Norfolk allows for a shower and lunch before your evening international departure — carrying with you the silence of the plains.",
+   260→        image:
+   261→          "https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?auto=format&fit=crop&w=1200&q=80",
+   262→      },
+   263→    ],
+   264→  },
+   265→  {
+   266→    id: "apes",
+   267→    name: "Apes of the Mist",
+   268→    subtitle: "Uganda & Rwanda · Year-round",
+   269→    duration: "9 Days",
+   270→    durationDays: 9,
+   271→    durationNights: 8,
+   272→    price: "From $62,000 per person",
+   273→    priceFrom: 62000,
+   274→    priceOriginal: 65000,
+   275→    highlights: [
+   276→      "Two gorilla treks in Bwindi & Volcanoes NP",
+   277→      "Chimpanzee habituation in Kibale Forest",
+   278→      "Private audience with a conservation researcher",
+   279→      "Golden monkey trek in the bamboo zone",
+   280→    ],
+   281→    image:
+   282→      "https://images.unsplash.com/photo-1549366021-9f761d450615?auto=format&fit=crop&w=1600&q=80",
+   283→    destination: "Uganda",
+   284→    activities: ["Gorilla Trekking", "Chimp Trekking", "Walking Safaris", "Cultural Tours"],
+   285→    tripType: "Luxury Safaris",
+   286→    accommodationLevel: "Luxury Lodges",
+   287→    nationalPark: "Bwindi Impenetrable National Park",
+   288→    featured: true,
+   289→    minAge: 15,
+   290→    days: [
+   291→      {
+   292→        day: "Day 01",
+   293→        title: "Arrival · Kigali",
+   294→        description:
+   295→          "You land in Kigali where Amara meets you. A short city orientation includes the genocide memorial — a sobering, essential prelude. The night is spent at The Retreat, a sanctuary of butter-cream walls and frangipani trees.",
+   296→        image:
+   297→          "https://sfile.chatglm.cn/images-ppt/f2522b36c1bf.jpg",
+   298→      },
+   299→      {
+   300→        day: "Day 02–03",
+   301→        title: "Volcanoes National Park",
+   302→        description:
+   303→          "A two-hour drive north delivers you to Singita Kwitonda Lodge, set on a tea plantation at the park's edge. Day 03 begins at 6 AM with the gorilla briefing. The trek through bamboo and Hagenia lasts ninety minutes — then you spend an hour with a family of seventeen, the silverback five meters away.",
+   304→        image:
+   305→          "https://sfile.chatglm.cn/images-ppt/8c0c59305dbc.jpg",
+   306→      },
+   307→      {
+   308→        day: "Day 04",
+   309→        title: "Golden Monkeys & Crossing to Uganda",
+   310→        description:
+   311→          "A morning trek for golden monkeys — electric-orange acrobats that live only here — then a private charter across the border to Kisoro, where Amara's family still farms the volcanic slopes below Mount Muhabura.",
+   312→        image:
+   313→          "https://sfile.chatglm.cn/images-ppt/25ee49aa2374.jpg",
+   314→      },
+   315→      {
+   316→        day: "Day 05–06",
+   317→        title: "Bwindi Impenetrable Forest",
+   318→        description:
+   319→          "Two days in Bwindi — the second gorilla trek is deeper, harder, and infinitely more intimate. You track the Rushegura family through primary forest that has not changed in 25,000 years. Evenings at your lodge are spent on the deck overlooking the Bwindi canopy, listening to hornbills.",
+   320→        image:
+   321→          "https://images.unsplash.com/photo-1549366021-9f761d450615?auto=format&fit=crop&w=1200&q=80",
+   322→      },
+   323→      {
+   324→        day: "Day 07–08",
+   325→        title: "Kibale Forest · Chimpanzee Habituation",
+   326→        description:
+   327→          "A charter flight to Kibale, where you spend a full day with a chimp habituation team — not the standard one-hour viewing, but from dawn to dusk, following the troop as they wake, hunt, mate, and nest. This is the rarest primate experience in Africa.",
+   328→        image:
+   329→          "https://sfile.chatglm.cn/images-ppt/ac9862af7e88.jpg",
+   330→      },
+   331→      {
+   332→        day: "Day 09",
+   333→        title: "Departure · Entebbe",
+   334→        description:
+   335→          "A morning flight to Entebbe, with a day room at the Protea Hotel by Lake Victoria. A sunset boat cruise to search for shoebill storks precedes your evening international departure.",
+   336→        image:
+   337→          "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
+   338→      },
+   339→    ],
+   340→  },
+   341→  {
+   342→    id: "delta",
+   343→    name: "The Delta & The Desert",
+   344→    subtitle: "Botswana & Namibia · May–September",
+   345→    duration: "14 Days",
+   346→    durationDays: 14,
+   347→    durationNights: 13,
+   348→    price: "From $94,000 per person",
+   349→    priceFrom: 94000,
+   350→    highlights: [
+   351→      "Mokoro safaris through papyrus channels",
+   352→      "Charter flight over the Okavango at flood",
+   353→      "Three nights on the Skeleton Coast",
+   354→      "Sossusvlei dunes at first light",
+   355→    ],
+   356→    image:
+   357→      "https://images.unsplash.com/photo-1505761671935-60b3a7427bad?auto=format&fit=crop&w=1600&q=80",
+   358→    destination: "Botswana",
+   359→    activities: ["Mokoro Safaris", "Game Drives", "Photography", "Stargazing"],
+   360→    tripType: "Luxury Safaris",
+   361→    accommodationLevel: "Luxury Lodges",
+   362→    nationalPark: "Okavango Delta",
+   363→    featured: false,
+   364→    minAge: 12,
+   365→    days: [
+   366→      {
+   367→        day: "Day 01",
+   368→        title: "Arrival · Maun",
+   369→        description:
+   370→          "Nala meets you in Maun — the dusty gateway to the delta — for a briefing over gin and tonics at your safari-style hotel. Tomorrow the water world begins.",
+   371→        image:
+   372→          "https://images.unsplash.com/photo-1580060839134-75a5edca2e99?auto=format&fit=crop&w=1200&q=80",
+   373→      },
+   374→      {
+   375→        day: "Day 02–05",
+   376→        title: "Okavango Delta · Mombo Camp",
+   377→        description:
+   378→          "Four nights at Mombo, the 'place of plenty' on Chief's Island. Days alternate between game drives, mokoro (dugout canoe) glides through papyrus, and helicopter flights over the floodplains. The big five are all here — including the only rhino population in the delta.",
+   379→        image:
+   380→          "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
+   381→      },
+   382→      {
+   383→        day: "Day 06–07",
+   384→        title: "Kalahari · Central San Lands",
+   385→        description:
+   386→          "A charter south to the Central Kalahari, where you walk with San Bushmen — the original inhabitants of southern Africa — learning the tracking skills that built our species. Evenings are spent around a fire listening to their language, with its 104 distinct click sounds.",
+   387→        image:
+   388→          "https://sfile.chatglm.cn/images-ppt/84ed8813798e.jpg",
+   389→      },
+   390→      {
+   391→        day: "Day 08–10",
+   392→        title: "Skeleton Coast · Namibia",
+   393→        description:
+   394→          "Kofi takes over in Namibia. Three nights at Shipwreck Lodge on the Skeleton Coast — a place of fog, seal colonies, and rusted whaling ships run aground in 1909. A drive along the beach reveals desert-adapted elephants walking in the surf.",
+   395→        image:
+   396→          "https://sfile.chatglm.cn/images-ppt/4423f54c77e6.jpg",
+   397→      },
+   398→      {
+   399→        day: "Day 11–12",
+   400→        title: "Damaraland · Desert Rhinos",
+   401→        description:
+   402→          "Two days tracking the free-ranging desert black rhino on foot with Save the Rhino Trust — perhaps the rarest wildlife encounter on earth. The landscape is volcanic, lunar, and silent in a way that recalibrates your nervous system.",
+   403→        image:
+   404→          "https://sfile.chatglm.cn/images-ppt/4423f54c77e6.jpg",
+   405→      },
+   406→      {
+   407→        day: "Day 13",
+   408→        title: "Sossusvlei · Big Daddy Dune",
+   409→        description:
+   410→          "A pre-dawn drive to the dunes. You climb Big Daddy — at 380 meters, one of the tallest on earth — in the cool dark, reaching the summit as the sun ignites the sand from coral to crimson. Below, Dead Vlei's petrified camel thorns stand like calligraphy.",
+   411→        image:
+   412→          "https://sfile.chatglm.cn/images-ppt/84ed8813798e.jpg",
+   413→      },
+   414→      {
+   415→        day: "Day 14",
+   416→        title: "Departure · Windhoek",
+   417→        description:
+   418→          "A scenic flight to Windhoek, with the dunes receding into the khaki interior. A day room at The Olive Exclusive precedes your evening departure.",
+   419→        image:
+   420→          "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=1200&q=80",
+   421→      },
+   422→    ],
+   423→  },
+   424→  {
+   425→    id: "gorilla-classic",
+   426→    name: "Gorilla Trek Classic",
+   427→    subtitle: "Rwanda · Year-round",
+   428→    duration: "5 Days",
+   429→    durationDays: 5,
+   430→    durationNights: 4,
+   431→    price: "From $38,500 per person",
+   432→    priceFrom: 38500,
+   433→    highlights: [
+   434→      "Two gorilla treks in Volcanoes National Park",
+   435→      "Golden monkey trek in the bamboo zone",
+   436→      "Stay at Bisate Lodge — geodesic forest pods",
+   437→      "Visit the Dian Fossey Fund research station",
+   438→    ],
+   439→    image:
+   440→      "https://sfile.chatglm.cn/images-ppt/f2522b36c1bf.jpg",
+   441→    destination: "Rwanda",
+   442→    activities: ["Gorilla Trekking", "Walking Safaris", "Cultural Tours"],
+   443→    tripType: "Family Safaris",
+   444→    accommodationLevel: "Luxury Lodges",
+   445→    nationalPark: "Volcanoes National Park",
+   446→    featured: false,
+   447→    minAge: 15,
+   448→    days: [
+   449→      {
+   450→        day: "Day 01",
+   451→        title: "Arrival · Kigali",
+   452→        description: "Arrive Kigali, city tour including the genocide memorial, overnight at The Retreat.",
+   453→        image: "https://sfile.chatglm.cn/images-ppt/f2522b36c1bf.jpg",
+   454→      },
+   455→      {
+   456→        day: "Day 02–04",
+   457→        title: "Volcanoes National Park · Bisate Lodge",
+   458→        description: "Three nights at Bisate Lodge with two gorilla treks and a golden monkey trek.",
+   459→        image: "https://sfile.chatglm.cn/images-ppt/8c0c59305dbc.jpg",
+   460→      },
+   461→      {
+   462→        day: "Day 05",
+   463→        title: "Departure",
+   464→        description: "Return to Kigali for international departure.",
+   465→        image: "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
+   466→      },
+   467→    ],
+   468→  },
+   469→  {
+   470→    id: "maasai-mara-classic",
+   471→    name: "Maasai Mara Big Cat Safari",
+   472→    subtitle: "Kenya · July–October",
+   473→    duration: "7 Days",
+   474→    durationDays: 7,
+   475→    durationNights: 6,
+   476→    price: "From $42,800 per person",
+   477→    priceFrom: 42800,
+   478→    highlights: [
+   479→      "Private conservancy with off-road access",
+   480→      "Night drives for nocturnal predators",
+   481→      "Walking safari with Maasai trackers",
+   482→      "Hot air balloon flight at dawn",
+   483→    ],
+   484→    image:
+   485→      "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1600&q=80",
+   486→    destination: "Kenya",
+   487→    activities: ["Game Drives", "Walking Safaris", "Hot Air Balloon", "Photography"],
+   488→    tripType: "Luxury Safaris",
+   489→    accommodationLevel: "Luxury Lodges",
+   490→    nationalPark: "Maasai Mara National Reserve",
+   491→    featured: true,
+   492→    minAge: 8,
+   493→    days: [
+   494→      {
+   495→        day: "Day 01",
+   496→        title: "Arrival · Nairobi",
+   497→        description: "Arrive Nairobi, overnight at The Norfolk.",
+   498→        image: "https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?auto=format&fit=crop&w=1200&q=80",
+   499→      },
+   500→      {
+   501→        day: "Day 02–06",
+   502→        title: "Mara Conservancy",
+   503→        description: "Five nights at a private conservancy with daily game drives and walking safaris.",
+   504→        image: "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1200&q=80",
+   505→      },
+   506→      {
+   507→        day: "Day 07",
+   508→        title: "Departure",
+   509→        description: "Flight to Nairobi for international departure.",
+   510→        image: "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
+   511→      },
+   512→    ],
+   513→  },
+   514→  {
+   515→    id: "namib-duchesert",
+   516→    name: "Namib Desert & Sossusvlei",
+   517→    subtitle: "Namibia · April–September",
+   518→    duration: "8 Days",
+   519→    durationDays: 8,
+   520→    durationNights: 7,
+   521→    price: "From $46,900 per person",
+   522→    priceFrom: 46900,
+   523→    highlights: [
+   524→      "Climb Big Daddy dune at dawn",
+   525→      "Photograph Dead Vlei's petrified trees",
+   526→      "Skeleton Coast shipwrecks and seal colonies",
+   527→      "Stargazing at &Beyond Sossusvlei observatory",
+   528→    ],
+   529→    image:
+   530→      "https://sfile.chatglm.cn/images-ppt/84ed8813798e.jpg",
+   531→    destination: "Namibia",
+   532→    activities: ["Photography", "Stargazing", "Walking Safaris", "Cultural Tours"],
+   533→    tripType: "Luxury Safaris",
+   534→    accommodationLevel: "Luxury Lodges",
+   535→    nationalPark: "Namib-Naukluft National Park",
+   536→    featured: false,
+   537→    minAge: 10,
+   538→    days: [
+   539→      {
+   540→        day: "Day 01",
+   541→        title: "Arrival · Windhoek",
+   542→        description: "Arrive Windhoek, overnight at The Olive Exclusive.",
+   543→        image: "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=1200&q=80",
+   544→      },
+   545→      {
+   546→        day: "Day 02–05",
+   547→        title: "Sossusvlei Desert Lodge",
+   548→        description: "Four nights exploring the dunes, Dead Vlei, and the night sky.",
+   549→        image: "https://sfile.chatglm.cn/images-ppt/84ed8813798e.jpg",
+   550→      },
+   551→      {
+   552→        day: "Day 06–07",
+   553→        title: "Skeleton Coast",
+   554→        description: "Two nights at Shipwreck Lodge on the Skeleton Coast.",
+   555→        image: "https://sfile.chatglm.cn/images-ppt/4423f54c77e6.jpg",
+   556→      },
+   557→      {
+   558→        day: "Day 08",
+   559→        title: "Departure",
+   560→        description: "Return to Windhoek for departure.",
+   561→        image: "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=1200&q=80",
+   562→      },
+   563→    ],
+   564→  },
+   565→  {
+   566→    id: "family-tanzania",
+   567→    name: "Tanzania Family Adventure",
+   568→    subtitle: "Tanzania · Year-round",
+   569→    duration: "10 Days",
+   570→    durationDays: 10,
+   571→    durationNights: 9,
+   572→    price: "From $36,400 per person",
+   573→    priceFrom: 36400,
+   574→    highlights: [
+   575→      "Age-appropriate activities for children 8+",
+   576→      "Family suites at each lodge",
+   577→      "Junior ranger program",
+   578→      "Visit to a Maasai village school",
+   579→    ],
+   580→    image:
+   581→      "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
+   582→    destination: "Tanzania",
+   583→    activities: ["Game Drives", "Cultural Tours", "Walking Safaris"],
+   584→    tripType: "Family Safaris",
+   585→    accommodationLevel: "Mid-Range Lodges",
+   586→    nationalPark: "Tarangire National Park",
+   587→    featured: false,
+   588→    minAge: 6,
+   589→    days: [
+   590→      {
+   591→        day: "Day 01–02",
+   592→        title: "Arusha & Tarangire",
+   593→        description: "Arrival and two nights at Tarangire with family-friendly game drives.",
+   594→        image: "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
+   595→      },
+   596→      {
+   597→        day: "Day 03–05",
+   598→        title: "Ngorongoro Crater",
+   599→        description: "Three nights at Ngorongoro with crater descents and a Maasai village visit.",
+   600→        image: "https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?auto=format&fit=crop&w=1200&q=80",
+   601→      },
+   602→      {
+   603→        day: "Day 06–09",
+   604→        title: "Serengeti",
+   605→        description: "Four nights in the Serengeti with the junior ranger program.",
+   606→        image: "https://images.unsplash.com/photo-1542202229-7d93c33f5d07?auto=format&fit=crop&w=1200&q=80",
+   607→      },
+   608→      {
+   609→        day: "Day 10",
+   610→        title: "Departure",
+   611→        description: "Flight to Kilimanjaro for international departure.",
+   612→        image: "https://images.unsplash.com/photo-1444723121867-7a241cacace9?auto=format&fit=crop&w=1200&q=80",
+   613→      },
+   614→    ],
+   615→  },
+   616→  {
+   617→    id: "chimp-uganda",
+   618→    name: "Chimp Habituation Experience",
+   619→    subtitle: "Uganda · Year-round",
+   620→    duration: "6 Days",
+   621→    durationDays: 6,
+   622→    durationNights: 5,
+   623→    price: "From $28,900 per person",
+   624→    priceFrom: 28900,
+   625→    priceOriginal: 31000,
+   626→    highlights: [
+   627→      "Full day with chimp habituation team in Kibale",
+   628→      "Forest walk in Bigodi Wetland Sanctuary",
+   629→      "Visit to Ngamba Island chimpanzee sanctuary",
+   630→      "Boat cruise on the Kazinga Channel",
+   631→    ],
+   632→    image:
+   633→      "https://sfile.chatglm.cn/images-ppt/ac9862af7e88.jpg",
+   634→    destination: "Uganda",
+   635→    activities: ["Chimp Trekking", "Walking Safaris", "Birding Tours", "Cultural Tours"],
+   636→    tripType: "Budget Safaris",
+   637→    accommodationLevel: "Mid-Range Lodges",
+   638→    nationalPark: "Kibale Forest National Park",
+   639→    featured: false,
+   640→    minAge: 12,
+   641→    days: [
+   642→      {
+   643→        day: "Day 01",
+   644→        title: "Arrival · Entebbe",
+   645→        description: "Arrive Entebbe, overnight at Protea Hotel by Lake Victoria.",
+   646→        image: "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
+   647→      },
+   648→      {
+   649→        day: "Day 02",
+   650→        title: "Ngamba Island",
+   651→        description: "Boat to Ngamba Island chimpanzee sanctuary.",
+   652→        image: "https://sfile.chatglm.cn/images-ppt/ac9862af7e88.jpg",
+   653→      },
+   654→      {
+   655→        day: "Day 03–05",
+   656→        title: "Kibale Forest",
+   657→        description: "Three nights with a full-day chimp habituation experience.",
+   658→        image: "https://sfile.chatglm.cn/images-ppt/ac9862af7e88.jpg",
+   659→      },
+   660→      {
+   661→        day: "Day 06",
+   662→        title: "Departure",
+   663→        description: "Flight to Entebbe for departure.",
+   664→        image: "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
+   665→      },
+   666→    ],
+   667→  },
+   668→  {
+   669→    id: "botswana-fly-in",
+   670→    name: "Botswana Fly-In Safari",
+   671→    subtitle: "Botswana · May–September",
+   672→    duration: "7 Days",
+   673→    durationDays: 7,
+   674→    durationNights: 6,
+   675→    price: "From $32,400 per person",
+   676→    priceFrom: 32400,
+   677→    highlights: [
+   678→      "Three luxury camps by light aircraft",
+   679→      "Mokoro (dugout canoe) safaris in the delta",
+   680→      "Game drives on Chief's Island",
+   681→      "Sunset boat cruise on the Chobe River",
+   682→    ],
+   683→    image:
+   684→      "https://images.unsplash.com/photo-1580060839134-75a5edca2e99?auto=format&fit=crop&w=1600&q=80",
+   685→    destination: "Botswana",
+   686→    activities: ["Game Drives", "Mokoro Safaris", "Birding Tours", "Photography"],
+   687→    tripType: "Fly In Safaris",
+   688→    accommodationLevel: "Luxury Lodges",
+   689→    nationalPark: "Chobe National Park",
+   690→    featured: false,
+   691→    minAge: 8,
+   692→    days: [
+   693→      {
+   694→        day: "Day 01",
+   695→        title: "Arrival · Maun",
+   696→        description: "Arrive Maun, charter flight to first camp.",
+   697→        image: "https://images.unsplash.com/photo-1580060839134-75a5edca2e99?auto=format&fit=crop&w=1200&q=80",
+   698→      },
+   699→      {
+   700→        day: "Day 02–03",
+   701→        title: "Okavango Delta Camp",
+   702→        description: "Two nights at a delta camp with mokoro and game drives.",
+   703→        image: "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
+   704→      },
+   705→      {
+   706→        day: "Day 04–05",
+   707→        title: "Chief's Island",
+   708→        description: "Two nights at Mombo Camp on Chief's Island.",
+   709→        image: "https://images.unsplash.com/photo-1505761671935-60b3a7427bad?auto=format&fit=crop&w=1200&q=80",
+   710→      },
+   711→      {
+   712→        day: "Day 06",
+   713→        title: "Chobe River",
+   714→        description: "Charter to Chobe for a sunset river cruise.",
+   715→        image: "https://images.unsplash.com/photo-1580060839134-75a5edca2e99?auto=format&fit=crop&w=1200&q=80",
+   716→      },
+   717→      {
+   718→        day: "Day 07",
+   719→        title: "Departure",
+   720→        description: "Flight to Maun for international departure.",
+   721→        image: "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
+   722→      },
+   723→    ],
+   724→  },
+   725→  {
+   726→    id: "rwanda-cultural",
+   727→    name: "Rwanda Cultural & Wildlife",
+   728→    subtitle: "Rwanda · Year-round",
+   729→    duration: "8 Days",
+   730→    durationDays: 8,
+   731→    durationNights: 7,
+   732→    price: "From $44,200 per person",
+   733→    priceFrom: 44200,
+   734→    highlights: [
+   735→      "Gorilla trek in Volcanoes National Park",
+   736→      "Coffee experience at a cooperative",
+   737→      "Visit the King's Palace Museum",
+   738→      "Canopy walk in Nyungwe Forest",
+   739→    ],
+   740→    image:
+   741→      "https://images.unsplash.com/photo-1568084680786-a84f91d1153c?auto=format&fit=crop&w=1600&q=80",
+   742→    destination: "Rwanda",
+   743→    activities: ["Gorilla Trekking", "Cultural Tours", "Walking Safaris", "Birding Tours"],
+   744→    tripType: "Group Safaris",
+   745→    accommodationLevel: "Mid-Range Lodges",
+   746→    nationalPark: "Nyungwe Forest National Park",
+   747→    featured: false,
+   748→    minAge: 12,
+   749→    days: [
+   750→      {
+   751→        day: "Day 01",
+   752→        title: "Arrival · Kigali",
+   753→        description: "Arrive Kigali, city tour and genocide memorial.",
+   754→        image: "https://images.unsplash.com/photo-1568084680786-a84f91d1153c?auto=format&fit=crop&w=1200&q=80",
+   755→      },
+   756→      {
+   757→        day: "Day 02–04",
+   758→        title: "Volcanoes NP",
+   759→        description: "Three nights with a gorilla trek and golden monkey trek.",
+   760→        image: "https://sfile.chatglm.cn/images-ppt/f2522b36c1bf.jpg",
+   761→      },
+   762→      {
+   763→        day: "Day 05–06",
+   764→        title: "Lake Kivu",
+   765→        description: "Two nights on Lake Kivu with a coffee experience.",
+   766→        image: "https://images.unsplash.com/photo-1568084680786-a84f91d1153c?auto=format&fit=crop&w=1200&q=80",
+   767→      },
+   768→      {
+   769→        day: "Day 07",
+   770→        title: "Nyungwe Forest",
+   771→        description: "Canopy walk in Nyungwe Forest.",
+   772→        image: "https://sfile.chatglm.cn/images-ppt/ac9862af7e88.jpg",
+   773→      },
+   774→      {
+   775→        day: "Day 08",
+   776→        title: "Departure",
+   777→        description: "Return to Kigali for departure.",
+   778→        image: "https://images.unsplash.com/photo-1568084680786-a84f91d1153c?auto=format&fit=crop&w=1200&q=80",
+   779→      },
+   780→    ],
+   781→  },
+   782→  {
+   783→    id: "kenya-birding",
+   784→    name: "Kenya Birding Safari",
+   785→    subtitle: "Kenya · November–April",
+   786→    duration: "11 Days",
+   787→    durationDays: 11,
+   788→    durationNights: 10,
+   789→    price: "From $34,800 per person",
+   790→    priceFrom: 34800,
+   791→    highlights: [
+   792→      "Over 400 bird species in 11 days",
+   793→      "Lake Nakuru's flamingo spectacle",
+   794→      " Kakamega Forest's rare forest species",
+   795→      "Expert ornithologist guide throughout",
+   796→    ],
+   797→    image:
+   798→      "https://images.unsplash.com/photo-1444723121867-7a241cacace9?auto=format&fit=crop&w=1600&q=80",
+   799→    destination: "Kenya",
+   800→    activities: ["Birding Tours", "Game Drives", "Walking Safaris", "Photography"],
+   801→    tripType: "Group Safaris",
+   802→    accommodationLevel: "Mid-Range Lodges",
+   803→    nationalPark: "Lake Nakuru National Park",
+   804→    featured: false,
+   805→    minAge: 12,
+   806→    days: [
+   807→      {
+   808→        day: "Day 01",
+   809→        title: "Arrival · Nairobi",
+   810→        description: "Arrive Nairobi, briefing with ornithologist guide.",
+   811→        image: "https://images.unsplash.com/photo-1444723121867-7a241cacace9?auto=format&fit=crop&w=1200&q=80",
+   812→      },
+   813→      {
+   814→        day: "Day 02–11",
+   815→        title: "Birding Circuit",
+   816→        description: "Ten days birding across Nakuru, Baringo, Kakamega, and the Mara.",
+   817→        image: "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1200&q=80",
+   818→      },
+   819→      {
+   820→        day: "Day 11",
+   821→        title: "Departure",
+   822→        description: "Return to Nairobi for departure.",
+   823→        image: "https://images.unsplash.com/photo-1444723121867-7a241cacace9?auto=format&fit=crop&w=1200&q=80",
+   824→      },
+   825→    ],
+   826→  },
+   827→  {
+   828→    id: "uganda-gorilla-murchison",
+   829→    name: "Uganda Gorillas & Murchison Falls",
+   830→    subtitle: "Uganda · Year-round",
+   831→    duration: "9 Days",
+   832→    durationDays: 9,
+   833→    durationNights: 8,
+   834→    price: "From $31,200 per person",
+   835→    priceFrom: 31200,
+   836→    highlights: [
+   837→      "Gorilla trek in Bwindi Impenetrable Forest",
+   838→      "Game drives in Murchison Falls NP",
+   839→      "Nile River cruise to the base of the falls",
+   840→      "Chimp trek in Budongo Forest",
+   841→    ],
+   842→    image:
+   843→      "https://images.unsplash.com/photo-1549366021-9f761d450615?auto=format&fit=crop&w=1600&q=80",
+   844→    destination: "Uganda",
+   845→    activities: ["Gorilla Trekking", "Game Drives", "Walking Safaris", "Birding Tours"],
+   846→    tripType: "Budget Safaris",
+   847→    accommodationLevel: "Mid-Range Lodges",
+   848→    nationalPark: "Murchison Falls National Park",
+   849→    featured: false,
+   850→    minAge: 15,
+   851→    days: [
+   852→      {
+   853→        day: "Day 01",
+   854→        title: "Arrival · Entebbe",
+   855→        description: "Arrive Entebbe, overnight at Protea Hotel.",
+   856→        image: "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
+   857→      },
+   858→      {
+   859→        day: "Day 02–04",
+   860→        title: "Murchison Falls NP",
+   861→        description: "Three nights with game drives and a Nile River cruise.",
+   862→        image: "https://images.unsplash.com/photo-1505761671935-60b3a7427bad?auto=format&fit=crop&w=1200&q=80",
+   863→      },
+   864→      {
+   865→        day: "Day 05",
+   866→        title: "Budongo Forest",
+   867→        description: "Chimp trek in Budongo Forest.",
+   868→        image: "https://sfile.chatglm.cn/images-ppt/ac9862af7e88.jpg",
+   869→      },
+   870→      {
+   871→        day: "Day 06–08",
+   872→        title: "Bwindi Impenetrable Forest",
+   873→        description: "Three nights with a gorilla trek.",
+   874→        image: "https://images.unsplash.com/photo-1549366021-9f761d450615?auto=format&fit=crop&w=1200&q=80",
+   875→      },
+   876→      {
+   877→        day: "Day 09",
+   878→        title: "Departure",
+   879→        description: "Flight to Entebbe for departure.",
+   880→        image: "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
+   881→      },
+   882→    ],
+   883→  },
+   884→  {
+   885→    id: "tanzania-zanzibar",
+   886→    name: "Serengeti & Zanzibar",
+   887→    subtitle: "Tanzania · Year-round",
+   888→    duration: "12 Days",
+   889→    durationDays: 12,
+   890→    durationNights: 11,
+   891→    price: "From $48,600 per person",
+   892→    priceFrom: 48600,
+   893→    priceOriginal: 52000,
+   894→    highlights: [
+   895→      "Serengeti safari with private vehicle",
+   896→      "Ngorongoro Crater descent",
+   897→      "Five nights on Zanzibar's beaches",
+   898→      "Stone Town cultural tour",
+   899→    ],
+   900→    image:
+   901→      "https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?auto=format&fit=crop&w=1600&q=80",
+   902→    destination: "Tanzania",
+   903→    activities: ["Game Drives", "Cultural Tours", "Birding Tours", "Photography"],
+   904→    tripType: "Family Safaris",
+   905→    accommodationLevel: "Luxury Lodges",
+   906→    nationalPark: "Serengeti National Park",
+   907→    featured: false,
+   908→    minAge: 6,
+   909→    days: [
+   910→      {
+   911→        day: "Day 01",
+   912→        title: "Arrival · Arusha",
+   913→        description: "Arrive Arusha, overnight at a coffee lodge.",
+   914→        image: "https://images.unsplash.com/photo-1444723121867-7a241cacace9?auto=format&fit=crop&w=1200&q=80",
+   915→      },
+   916→      {
+   917→        day: "Day 02–05",
+   918→        title: "Serengeti",
+   919→        description: "Four nights in the Serengeti with a private vehicle.",
+   920→        image: "https://images.unsplash.com/photo-1542202229-7d93c33f5d07?auto=format&fit=crop&w=1200&q=80",
+   921→      },
+   922→      {
+   923→        day: "Day 06",
+   924→        title: "Ngorongoro Crater",
+   925→        description: "Crater descent and overnight on the rim.",
+   926→        image: "https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?auto=format&fit=crop&w=1200&q=80",
+   927→      },
+   928→      {
+   929→        day: "Day 07–11",
+   930→        title: "Zanzibar",
+   931→        description: "Five nights on Zanzibar's beaches with a Stone Town tour.",
+   932→        image: "https://images.unsplash.com/photo-1505761671935-60b3a7427bad?auto=format&fit=crop&w=1200&q=80",
+   933→      },
+   934→      {
+   935→        day: "Day 12",
+   936→        title: "Departure",
+   937→        description: "Flight from Zanzibar for international departure.",
+   938→        image: "https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?auto=format&fit=crop&w=1200&q=80",
+   939→      },
+   940→    ],
+   941→  },
+   942→];
+   943→
+   944→export const accommodations: Accommodation[] = [
+   945→  {
+   946→    id: "singita",
+   947→    name: "Singita Pamushana",
+   948→    location: "Malilangwe Wildlife Reserve, Zimbabwe",
+   949→    type: "Lodge",
+   950→    description:
+   951→      "A cliff-top lodge of pale stone and leadwood timber overlooking an ancient lake. Six suites, each with a private plunge pool and a view that has not changed in eight hundred years.",
+   952→    image:
+   953→      "https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=1200&q=80",
+   954→    features: ["Private plunge pool", "Outrigger canoe deck", "Wine cellar — 12,000 bottles", "Spa & gym"],
+   955→    pricePerNight: "From $4,800",
+   956→  },
+   957→  {
+   958→    id: "mombo",
+   959→    name: "Mombo Camp",
+   960→    location: "Chief's Island, Okavango Delta",
+   961→    type: "Tented Camp",
+   962→    description:
+   963→      "The 'place of plenty' — nine raised tented suites on the delta's most game-rich island. Built entirely of canvas and reclaimed hardwood, with wrap-around decks that put you at eye level with passing elephant.",
+   964→    image:
+   965→      "https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1200&q=80",
+   966→    features: ["Saline plunge pool", "Star bed on deck", "Hammam spa", "Private guide & vehicle"],
+   967→    pricePerNight: "From $5,200",
+   968→  },
+   969→  {
+   970→    id: "bisate",
+   971→    name: "Bisate Lodge",
+   972→    location: "Volcanoes National Park, Rwanda",
+   973→    type: "Forest Lodge",
+   974→    description:
+   975→      "Six thatched forest pods nested into a natural amphitheatre of bamboo, with the Virunga volcanopes rising behind. Each pod is a geodesic dome of woven bamboo and volcanic stone.",
+   976→    image:
+   977→      "https://images.unsplash.com/photo-1568084680786-a84f91d1153c?auto=format&fit=crop&w=1200&q=80",
+   978→    features: ["Forest pod suite", "Private butler", "Conservation lab on-site", "Heated plunge pool"],
+   979→    pricePerNight: "From $4,400",
+   980→  },
+   981→  {
+   982→    id: "sossus",
+   983→    name: "&Beyond Sossusvlei Desert Lodge",
+   984→    location: "NamibRand Nature Reserve, Namibia",
+   985→    type: "Desert Lodge",
+   986→    description:
+   987→      "Ten glass-and-stone suites set against the Namib escarpment, each with a star-gazing skylight above the bed and a private verandah facing the world's oldest desert.",
+   988→    image:
+   989→      "https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=1200&q=80",
+   990→    features: ["Bedroom skylight", "Private infinity pool", "Resident astronomer & observatory", "Electric fat-bike trails"],
+   991→    pricePerNight: "From $3,900",
+   992→  },
+   993→  {
+   994→    id: "lapalala",
+   995→    name: "Lapalala Wilderness Lodge",
+   996→    location: "Waterberg, South Africa",
+   997→    type: "Wilderness Lodge",
+   998→    description:
+   999→      "A tented camp of just four suites on the Palala River, accessible only by chartered Cessna. Black rhino, sable antelope, and a breeding pair of Cape vultures call this 48,000-hectare reserve home.",
+  1000→    image:
+  1001→      "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1200&q=80",
+  1002→    features: ["River-tent suite", "Private guide, vehicle & tracker", "Rhino tracking on foot", "Bush sleep-out deck"],
+  1003→    pricePerNight: "From $3,400",
+  1004→  },
+  1005→  {
+  1006→    id: "mwamba",
+  1007→    name: "Mwamba Bush Camp",
+  1008→    location: "South Luangwa, Zambia",
+  1009→    type: "Mobile Bush Camp",
+  1010→    description:
+  1011→      "A seasonal camp of just three reed-and-thatch chalets on the Mwamba River — the most intimate walking safari camp in Africa. No electricity, no Wi-Fi, no other humans within ten miles.",
+  1012→    image:
+  1013→      "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
+  1014→    features: ["Reed-and-thatch chalet", "Walking safari focus", "Open-air star bath", "Last-broadcast radio at 7 PM"],
+  1015→    pricePerNight: "From $2,800",
+  1016→  },
+  1017→];
+  1018→
+  1019→export const testimonials = [
+  1020→  {
+  1021→    quote:
+  1022→      "Unzip Africa did not plan a safari. They orchestrated a week that has permanently recalibrated my sense of time, scale, and silence. Eight months later, I am still processing it.",
+  1023→    author: "Marcus V.",
+  1024→    title: "Founder, Private Equity Firm — London",
+  1025→  },
+  1026→  {
+  1027→    quote:
+  1028→      "We have travelled to 130 countries. Nothing has come close to what Amara and Tariq built for us in the Serengeti. The level of access — to the land, to the people, to the silence — was beyond anything we imagined possible.",
+  1029→    author: "Dr. Elena R.",
+  1030→    title: "Patron of Conservation — Milan",
+  1031→  },
+  1032→  {
+  1033→    quote:
+  1034→      "The gorilla trek in Bwindi was the single most profound hour of my life. Sitting seven meters from a silverback, watching his chest rise and fall — I understood, for the first time, what wildness actually means.",
+  1035→    author: "James K.",
+  1036→    title: "Tech Founder — San Francisco",
+  1037→  },
+  1038→];
+  1039→

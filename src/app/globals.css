@@ -700,6 +700,40 @@
   display: none;
 }
 
+/* ============ Modal scroll — always-visible scrollbar ============ */
+.modal-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--gold-soft) var(--charcoal);
+  scrollbar-gutter: stable;
+}
+
+.modal-scroll::-webkit-scrollbar {
+  width: 14px;
+  height: 14px;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.modal-scroll::-webkit-scrollbar-track {
+  background: var(--charcoal);
+}
+
+.modal-scroll::-webkit-scrollbar-thumb {
+  background: var(--gold-soft);
+  border: 3px solid var(--charcoal);
+  border-radius: 0;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.modal-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--gold);
+}
+
+.modal-scroll::-webkit-scrollbar-corner {
+  background: var(--charcoal);
+}
+
 /* ============ Mobile cursor reset ============ */
 @media (pointer: coarse) {
   body { cursor: auto; }

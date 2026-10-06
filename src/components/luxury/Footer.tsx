@@ -114,6 +114,12 @@ export function Footer() {
           <div className="flex flex-wrap gap-6 text-xs text-cream/40 items-center">
             <span>{t("footer.privacy")}</span>
             <span>{t("footer.terms")}</span>
+            <button
+              onClick={() => navigate("admin")}
+              className="text-gold-soft hover:text-gold transition-colors underline"
+            >
+              Admin
+            </button>
             <span>
               {t("footer.developedBy")}{" "}
               <a

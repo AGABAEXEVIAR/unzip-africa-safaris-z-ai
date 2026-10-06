@@ -8,10 +8,17 @@ import SafariHero from "@/components/luxury/SafariHero";
 import { WelcomeSection } from "@/components/luxury/WelcomeSection";
 import { SafariScrollStack } from "@/components/luxury/SafariScrollStack";
 import { LuxuryTestimonials } from "@/components/luxury/LuxuryTestimonials";
-import { FAQSection, WhyChooseUsSection, FounderMessageSection, SafariCarsSection } from "@/components/luxury/FAQAndWhyChooseUs";
+import {
+  FAQSection,
+  WhyChooseUsSection,
+  FounderMessageSection,
+  SafariCarsSection,
+  ScheduledTripsSection,
+} from "@/components/luxury/FAQAndWhyChooseUs";
+import { FeaturedTrips } from "@/components/luxury/FeaturedTrips";
 import { useRouter } from "@/lib/router";
 import { useLang } from "@/lib/language";
-import { destinations, experts } from "@/lib/content";
+import { destinations } from "@/lib/content";
 
 export function HomePage() {
   const { navigate, openQuote } = useRouter();
@@ -77,14 +84,14 @@ export function HomePage() {
       {/* ====================== WHY CHOOSE US ====================== */}
       <WhyChooseUsSection />
 
+      {/* ====================== FEATURED TRIPS ====================== */}
+      <FeaturedTrips />
+
       {/* ====================== FOUNDER MESSAGE ====================== */}
       <FounderMessageSection />
 
-      {/* ====================== THE EXPERIENCE — PARALLAX BAND ====================== */}
-      <ParallaxQuote />
-
-      {/* ====================== EXPERT CAROUSEL ====================== */}
-      <ExpertCarousel />
+      {/* ====================== SCHEDULED TRIPS ====================== */}
+      <ScheduledTripsSection />
 
       {/* ====================== TESTIMONIALS ====================== */}
       <LuxuryTestimonials />
@@ -291,134 +298,5 @@ function HorizontalDestinations() {
         </div>
       </section>
     </>
-  );
-}
-
-/* ===================== Expert Carousel ===================== */
-function ExpertCarousel() {
-  const [active, setActive] = useState(0);
-
-  return (
-    <section className="py-16 md:py-24 px-6 md:px-10 bg-alabaster">
-      <div className="mx-auto max-w-[1600px]">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-12">
-          <div className="md:col-span-5">
-            <Reveal variant="up">
-              <p className="font-eyebrow text-gold mb-6">Destination Experts</p>
-            </Reveal>
-            <ScrollReveal
-              as="h2"
-              containerClassName="font-display text-4xl md:text-6xl text-charcoal leading-[1.05] tracking-tight block"
-              textClassName="block"
-              baseOpacity={0.1}
-              blurStrength={5}
-            >
-              Africa, <span className="italic text-forest">intimately known.</span> Exceptionally experienced.
-            </ScrollReveal>
-          </div>
-          <div className="md:col-span-6 md:col-start-7 flex items-end">
-            <Reveal variant="up" delay={0.2}>
-              <p className="text-charcoal/70 text-lg leading-relaxed">
-                Our destination experts combine deep local knowledge, exclusive connections and
-                an eye for extraordinary detail to curate seamless, bespoke journeys across
-                Uganda, Kenya and Tanzania — revealing Africa at its most authentic, private and
-                unforgettable.
-              </p>
-            </Reveal>
-          </div>
-        </div>
-
-        {/* Cards row */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-          {experts.map((expert, idx) => (
-            <Reveal key={expert.id} variant="up" delay={idx * 0.1}>
-              <article
-                onMouseEnter={() => setActive(idx)}
-                className="group cursor-pointer card-luxury"
-                data-cursor="view"
-              >
-                <div className="relative aspect-[3/4] overflow-hidden bg-bone mb-5 card-zoom">
-                  <img
-                    src={expert.image}
-                    alt={expert.name}
-                    className="absolute inset-0 w-full h-full object-cover img-luxury group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-charcoal/20 group-hover:bg-charcoal/0 transition-colors duration-700" />
-                  <div className="absolute bottom-4 left-4 right-4">
-                    <span className="font-eyebrow text-cream/90 bg-charcoal/30 backdrop-blur-sm px-3 py-2 inline-block">
-                      {expert.yearsExperience}
-                    </span>
-                  </div>
-                </div>
-                {/* Text section with padding transition on hover */}
-                <div className="p-0 group-hover:p-4 transition-all duration-500">
-                  <p className="font-eyebrow text-gold mb-2 transition-colors">{expert.role}</p>
-                  <h3 className="font-display text-2xl md:text-3xl text-charcoal tracking-tight mb-2 group-hover:text-forest transition-colors duration-500">
-                    {expert.name}
-                  </h3>
-                  <p className="font-label text-charcoal/60">{expert.specialty}</p>
-                </div>
-              </article>
-            </Reveal>
-          ))}
-        </div>
-
-        {/* Active bio */}
-        <div className="mt-20 grid grid-cols-1 md:grid-cols-12 gap-12 border-t border-border pt-12">
-          <div className="md:col-span-3">
-            <p className="font-eyebrow text-gold mb-2">In focus</p>
-            <p className="font-display text-3xl text-charcoal">{experts[active].name}</p>
-          </div>
-          <div className="md:col-span-9">
-            <p className="text-lg md:text-xl text-charcoal/75 leading-relaxed font-display italic">
-              "{experts[active].bio}"
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ===================== Parallax Quote Band ===================== */
-function ParallaxQuote() {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-  const y = useTransform(scrollYProgress, [0, 1], ["-12%", "12%"]);
-
-  return (
-    <section ref={ref} className="relative h-[80vh] min-h-[600px] overflow-hidden grain">
-      <motion.div style={{ y }} className="absolute inset-0 will-change-transform scale-110">
-        <img
-          src="https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=2400&q=85"
-          alt="Elephant herd at dusk"
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-charcoal/55" />
-      </motion.div>
-
-      <div className="relative h-full flex items-center justify-center px-6">
-        <div className="text-center max-w-4xl">
-          <Reveal variant="fade">
-            <p className="font-eyebrow text-gold-soft mb-8">The Experience</p>
-          </Reveal>
-          <ScrollReveal
-            as="p"
-            containerClassName="font-display text-cream text-3xl md:text-5xl lg:text-6xl leading-[1.1] tracking-tight block"
-            textClassName="block"
-            baseOpacity={0.1}
-            blurStrength={5}
-          >
-            "The silence of the African bush at dawn is not the absence of sound. <span className="italic text-gold-soft">It is the presence of everything else."</span>
-          </ScrollReveal>
-          <Reveal variant="fade" delay={0.3}>
-            <p className="font-label text-cream/50 mt-10">— Amara Okello, Founder</p>
-          </Reveal>
-        </div>
-      </div>
-    </section>
   );
 }

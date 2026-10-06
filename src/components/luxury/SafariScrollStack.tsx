@@ -1,9 +1,12 @@
 "use client";
 
-import ScrollStack, { ScrollStackItem } from "@/components/luxury/ScrollStack";
+import { useRouter } from "@/lib/router";
+import { Reveal } from "@/components/luxury/Reveal";
 
-// Safari destination cards — one per country with a tagline
-const safariStackImages = [
+const sharp = { borderRadius: 0 } as const;
+
+// Four signature destinations in a 2x2 grid — NOT Namibia
+const signatureDestinations = [
   {
     src: "https://sfile.chatglm.cn/images-ppt/f2522b36c1bf.jpg",
     country: "Uganda",
@@ -20,15 +23,17 @@ const safariStackImages = [
     tagline: "Land of Kilimanjaro, Serengeti and Zanzibar",
   },
   {
-    src: "https://sfile.chatglm.cn/images-ppt/97c40e4746f3.jpg",
-    country: "Namibia",
-    tagline: "Endless Horizon",
+    src: "https://sfile.chatglm.cn/images-ppt/25ee49aa2374.jpg",
+    country: "Rwanda",
+    tagline: "Land of a Thousand Hills",
   },
 ];
 
 export function SafariScrollStack() {
+  const { navigateToDestination } = useRouter();
+
   return (
-    <section className="bg-canvas pt-12 md:pt-20 pb-0 overflow-hidden">
+    <section className="bg-canvas pt-12 md:pt-20 pb-12 md:pb-16 overflow-hidden">
       {/* Section heading */}
       <div className="px-6 md:px-10 mb-8 md:mb-12 text-center max-w-3xl mx-auto">
         <h2
@@ -47,50 +52,53 @@ export function SafariScrollStack() {
         </p>
       </div>
 
-      {/* ScrollStack — works on all devices (mobile + desktop) */}
-      <ScrollStack
-        itemDistance={80}
-        itemScale={0.04}
-        itemStackDistance={40}
-        stackPosition="15%"
-        scaleEndPosition="8%"
-        baseScale={0.85}
-        blurAmount={2}
-      >
-        {safariStackImages.map((img, idx) => (
-          <ScrollStackItem key={idx} itemClassName="!p-0 !h-[60vh] md:!h-[70vh]">
-            <div className="relative w-full h-full overflow-hidden bg-charcoal">
-              <img
-                src={img.src}
-                alt={`${img.country} — ${img.tagline}`}
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-              {/* Gradient overlay for caption legibility */}
-              <div className="absolute inset-0 bg-gradient-to-t from-charcoal/85 via-charcoal/25 to-transparent" />
+      {/* 2x2 grid */}
+      <div className="px-6 md:px-10 max-w-[1400px] mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+          {signatureDestinations.map((dest, idx) => (
+            <Reveal key={dest.country} variant="up" delay={idx * 0.08}>
+              <button
+                onClick={() => navigateToDestination(dest.country)}
+                data-cursor="view"
+                className="group relative w-full aspect-[3/2] overflow-hidden bg-charcoal block"
+                style={sharp}
+              >
+                <img
+                  src={dest.src}
+                  alt={`${dest.country} — ${dest.tagline}`}
+                  className="absolute inset-0 w-full h-full object-cover img-luxury"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-charcoal/85 via-charcoal/25 to-transparent" />
 
-              {/* Caption — country name + tagline, lower-left */}
-              <div className="absolute bottom-0 left-0 right-0 p-6 md:p-12">
-                <p className="font-eyebrow text-gold-soft mb-2 md:mb-3">0{idx + 1}</p>
-                <h3
-                  className="font-display text-4xl md:text-7xl lg:text-8xl text-cream tracking-tight mb-2 md:mb-3 leading-[0.95]"
-                  style={{ fontFamily: "var(--font-cormorant), serif", fontWeight: 300 }}
-                >
-                  {img.country}
-                </h3>
-                <p
-                  className="text-base md:text-xl text-cream/80 italic"
-                  style={{ fontFamily: "var(--font-cormorant), serif" }}
-                >
-                  {img.tagline}
-                </p>
-              </div>
+                {/* Number */}
+                <div className="absolute top-4 left-4 font-display text-cream/60 text-xl italic" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+                  0{idx + 1}
+                </div>
 
-              {/* Frame border */}
-              <div className="absolute inset-3 md:inset-6 border border-cream/15 pointer-events-none" />
-            </div>
-          </ScrollStackItem>
-        ))}
-      </ScrollStack>
+                {/* Caption */}
+                <div className="absolute bottom-0 left-0 right-0 p-5 md:p-8">
+                  <p className="font-eyebrow text-gold-soft mb-2">0{idx + 1}</p>
+                  <h3
+                    className="font-display text-3xl md:text-5xl lg:text-6xl text-cream tracking-tight mb-1 md:mb-2 leading-[0.95]"
+                    style={{ fontFamily: "var(--font-cormorant), serif", fontWeight: 300 }}
+                  >
+                    {dest.country}
+                  </h3>
+                  <p
+                    className="text-sm md:text-lg text-cream/80 italic"
+                    style={{ fontFamily: "var(--font-cormorant), serif" }}
+                  >
+                    {dest.tagline}
+                  </p>
+                </div>
+
+                {/* Frame border */}
+                <div className="absolute inset-3 md:inset-5 border border-cream/15 group-hover:border-cream/35 transition-all duration-700 pointer-events-none" />
+              </button>
+            </Reveal>
+          ))}
+        </div>
+      </div>
     </section>
   );
 }

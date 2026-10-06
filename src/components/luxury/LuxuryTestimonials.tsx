@@ -1,75 +1,12 @@
 "use client";
 
 import { Reveal } from "@/components/luxury/Reveal";
-
-const testimonials = [
-  {
-    name: "Marcus Verhoeven",
-    role: "Founder, Private Equity Firm — London",
-    avatar:
-      "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=200&q=80",
-    content:
-      "Unzip Africa did not plan a safari. They orchestrated a week that has permanently recalibrated my sense of time, scale, and silence. Eight months later, I am still processing it.",
-  },
-  {
-    name: "Dr. Elena Rinaldi",
-    role: "Patron of Conservation — Milan",
-    avatar:
-      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80",
-    content:
-      "We have travelled to 130 countries. Nothing has come close to what Amara and Tariq built for us in the Serengeti. The level of access — to the land, to the people, to the silence — was beyond anything we imagined possible.",
-  },
-  {
-    name: "James K. Tanaka",
-    role: "Tech Founder — San Francisco",
-    avatar:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
-    content:
-      "The gorilla trek in Bwindi was the single most profound hour of my life. Sitting seven meters from a silverback, watching his chest rise and fall — I understood, for the first time, what wildness actually means.",
-  },
-  {
-    name: "Sophie Laurent",
-    role: "Gallery Owner — Paris",
-    avatar:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80",
-    content:
-      "I have commissioned many things in my life — paintings, buildings, gowns. Unzip Africa composed a week in the Okavango that belongs in the same conversation. It was art, plain and simple.",
-  },
-  {
-    name: "Richard Aldridge",
-    role: "Retired CEO — Sydney",
-    avatar:
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80",
-    content:
-      "At 71, I assumed I had seen enough to be unsurpriseable. Sossusvlei at dawn — the dunes igniting from coral to crimson in absolute silence — proved me wrong. I wept. My wife wept. We are returning next year.",
-  },
-  {
-    name: "Amara Okafor",
-    role: "Author — Lagos",
-    avatar:
-      "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=200&q=80",
-    content:
-      "I came to write a single chapter. I left with a book. Unzip Africa understood what I needed before I could articulate it — solitude, access, and the kind of silence that makes sentences possible.",
-  },
-  {
-    name: "Henrik Møller",
-    role: "Architect — Copenhagen",
-    avatar:
-      "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=200&q=80",
-    content:
-      "I have spent my career thinking about light, materials, and restraint. Bisate Lodge in Rwanda is the most beautifully considered piece of architecture I have ever stayed in — and the gorillas were the encore.",
-  },
-  {
-    name: "Isabella Fontaine",
-    role: "Vintner — Bordeaux",
-    avatar:
-      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=200&q=80",
-    content:
-      "Twelve days. Three countries. Not a single moment that felt staged, commercial, or rushed. The team at Unzip Africa has perfected something rare — the art of stepping back so the wild can step forward.",
-  },
-];
+import { useTestimonials } from "@/lib/store";
 
 export function LuxuryTestimonials() {
+  const all = useTestimonials();
+  const testimonials = all.filter((t) => t.published);
+
   // Duplicate the list so the marquee can loop seamlessly
   const doubled = [...testimonials, ...testimonials];
 

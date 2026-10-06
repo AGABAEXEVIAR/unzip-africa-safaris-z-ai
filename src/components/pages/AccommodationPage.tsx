@@ -1,14 +1,17 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { Reveal } from "@/components/luxury/Reveal";
 import ScrollReveal from "@/components/luxury/ScrollReveal";
 import { useRouter } from "@/lib/router";
-import { accommodations, Accommodation } from "@/lib/content";
+import { useAccommodations } from "@/lib/store";
+
+const sharp = { borderRadius: 0 } as const;
 
 export function AccommodationPage() {
-  const { openQuote, navigate } = useRouter();
+  const accommodations = useAccommodations();
+  const { openQuote, navigate, navigateToAccommodation } = useRouter();
   const heroRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -17,6 +20,16 @@ export function AccommodationPage() {
   });
   const heroY = useTransform(scrollYProgress, [0, 1], ["0%", "35%"]);
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
+
+  // Asymmetric layout patterns — index-based
+  const layouts = [
+    "md:col-span-7 md:row-span-2",
+    "md:col-span-5",
+    "md:col-span-5",
+    "md:col-span-5",
+    "md:col-span-7",
+    "md:col-span-12 md:row-span-1",
+  ];
 
   return (
     <div className="page-enter">
@@ -45,6 +58,7 @@ export function AccommodationPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.6, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
             className="font-display text-cream text-[3rem] sm:text-[4.5rem] md:text-[6rem] lg:text-[7rem] leading-[0.95] tracking-tight max-w-[90%]"
+            style={{ fontFamily: "var(--font-cormorant), serif", fontWeight: 300 }}
           >
             Tented suites,
             <br />
@@ -89,8 +103,59 @@ export function AccommodationPage() {
         </div>
       </section>
 
-      {/* ====================== ASYMMETRIC GALLERY ====================== */}
-      <AccommodationGallery />
+      {/* ====================== ASYMMETRIC GALLERY (click to open detail page) ====================== */}
+      <section className="px-6 md:px-10 pb-32 md:pb-48">
+        <div className="mx-auto max-w-[1600px]">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 auto-rows-[280px] md:auto-rows-[320px]">
+            {accommodations.map((acc, idx) => (
+              <Reveal
+                key={acc.id}
+                variant="up"
+                delay={idx * 0.08}
+                className={`${layouts[idx % layouts.length]} ${idx === 0 ? "md:row-span-2" : ""}`}
+              >
+                <button
+                  onClick={() => navigateToAccommodation(acc.id)}
+                  className="group relative w-full h-full overflow-hidden text-left"
+                  data-cursor="view"
+                >
+                  <img
+                    src={acc.image}
+                    alt={acc.name}
+                    className="absolute inset-0 w-full h-full object-cover img-luxury"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-charcoal/85 via-charcoal/15 to-transparent" />
+                  <div className="absolute inset-4 border border-cream/0 group-hover:border-cream/25 transition-all duration-700 pointer-events-none" />
+
+                  <div className="absolute top-5 left-5">
+                    <span className="font-eyebrow text-cream/80 bg-charcoal/30 backdrop-blur-sm px-3 py-1.5">
+                      {acc.type}
+                    </span>
+                  </div>
+
+                  <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
+                    <p className="font-eyebrow text-gold-soft mb-2">{acc.location}</p>
+                    <h3 className={`font-display text-cream tracking-tight mb-2 ${idx === 0 ? "text-3xl md:text-5xl" : "text-2xl md:text-3xl"}`} style={{ fontFamily: "var(--font-cormorant), serif" }}>
+                      {acc.name}
+                    </h3>
+                    {idx === 0 && (
+                      <p className="text-cream/75 text-sm leading-relaxed max-w-md mb-3 line-clamp-2">
+                        {acc.description}
+                      </p>
+                    )}
+                    <div className="flex items-center justify-between pt-3 border-t border-cream/20">
+                      <span className="font-label text-cream/60">{acc.pricePerNight}</span>
+                      <span className="font-eyebrow text-cream/60 group-hover:text-gold-soft transition-colors">
+                        View
+                      </span>
+                    </div>
+                  </div>
+                </button>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* ====================== PHILOSOPHY BAND ====================== */}
       <section className="relative py-32 md:py-48 px-6 md:px-10 bg-forest text-cream overflow-hidden">
@@ -166,158 +231,5 @@ export function AccommodationPage() {
         </div>
       </section>
     </div>
-  );
-}
-
-/* ===================== Asymmetric Gallery ===================== */
-function AccommodationGallery() {
-  const [selected, setSelected] = useState<Accommodation | null>(null);
-
-  // Asymmetric layout patterns — index-based
-  const layouts = [
-    "md:col-span-7 md:row-span-2", // large left
-    "md:col-span-5",               // small right top
-    "md:col-span-5",               // small right bottom
-    "md:col-span-5",               // next row small left
-    "md:col-span-7",               // next row large right
-    "md:col-span-12 md:row-span-1", // wide bottom
-  ];
-
-  return (
-    <>
-      <section className="px-6 md:px-10 pb-32 md:pb-48">
-        <div className="mx-auto max-w-[1600px]">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 auto-rows-[280px] md:auto-rows-[320px]">
-            {accommodations.map((acc, idx) => (
-              <Reveal
-                key={acc.id}
-                variant="up"
-                delay={idx * 0.08}
-                className={`${layouts[idx]} ${idx === 0 ? "md:row-span-2" : ""}`}
-              >
-                <button
-                  onClick={() => setSelected(acc)}
-                  className="group relative w-full h-full overflow-hidden text-left"
-                  data-cursor="view"
-                >
-                  <img
-                    src={acc.image}
-                    alt={acc.name}
-                    className="absolute inset-0 w-full h-full object-cover img-luxury"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-charcoal/85 via-charcoal/15 to-transparent" />
-                  <div className="absolute inset-4 border border-cream/0 group-hover:border-cream/25 transition-all duration-700 pointer-events-none" />
-
-                  <div className="absolute top-5 left-5">
-                    <span className="font-eyebrow text-cream/80 bg-charcoal/30 backdrop-blur-sm px-3 py-1.5">
-                      {acc.type}
-                    </span>
-                  </div>
-
-                  <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
-                    <p className="font-eyebrow text-gold-soft mb-2">{acc.location}</p>
-                    <h3 className={`font-display text-cream tracking-tight mb-2 ${idx === 0 ? "text-3xl md:text-5xl" : "text-2xl md:text-3xl"}`}>
-                      {acc.name}
-                    </h3>
-                    {idx === 0 && (
-                      <p className="text-cream/75 text-sm leading-relaxed max-w-md mb-3 line-clamp-2">
-                        {acc.description}
-                      </p>
-                    )}
-                    <div className="flex items-center justify-between pt-3 border-t border-cream/20">
-                      <span className="font-label text-cream/60">{acc.pricePerNight}</span>
-                      <span className="font-eyebrow text-cream/60 group-hover:text-gold-soft transition-colors">
-                        View
-                      </span>
-                    </div>
-                  </div>
-                </button>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Detail modal */}
-      <AnimatePresence>
-        {selected && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-            onClick={() => setSelected(null)}
-            className="fixed inset-0 z-[60] bg-charcoal/80 backdrop-blur-md flex items-center justify-center p-4 md:p-8"
-          >
-            <motion.div
-              initial={{ opacity: 0, y: 40, scale: 0.96 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 40, scale: 0.96 }}
-              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-              onClick={(e) => e.stopPropagation()}
-              className="bg-alabaster max-w-[1100px] w-full max-h-[88vh] overflow-y-auto no-scrollbar grid grid-cols-1 md:grid-cols-2"
-            >
-              <div className="relative aspect-square md:aspect-auto md:min-h-[600px] overflow-hidden bg-bone">
-                <img
-                  src={selected.image}
-                  alt={selected.name}
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
-                <div className="absolute top-5 left-5">
-                  <span className="font-eyebrow text-cream/90 bg-charcoal/40 backdrop-blur-sm px-3 py-1.5">
-                    {selected.type}
-                  </span>
-                </div>
-              </div>
-
-              <div className="p-8 md:p-12 flex flex-col">
-                <button
-                  onClick={() => setSelected(null)}
-                  className="self-end mb-4 text-charcoal/50 hover:text-charcoal transition-colors"
-                  aria-label="Close"
-                >
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                    <path d="M18 6 6 18M6 6l12 12" />
-                  </svg>
-                </button>
-
-                <p className="font-eyebrow text-gold mb-3">{selected.location}</p>
-                <h2 className="font-display text-4xl md:text-5xl text-charcoal tracking-tight mb-6 leading-[1.05]">
-                  {selected.name}
-                </h2>
-
-                <p className="text-charcoal/75 leading-relaxed mb-8">{selected.description}</p>
-
-                <div className="border-t border-border pt-6 mb-8">
-                  <p className="font-eyebrow text-charcoal/40 mb-4">Features</p>
-                  <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {selected.features.map((f) => (
-                      <li key={f} className="flex items-start gap-2 text-sm text-charcoal/75">
-                        <span className="text-gold mt-1 leading-none">—</span>
-                        <span>{f}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div className="mt-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-6 border-t border-border">
-                  <p className="font-display text-2xl text-forest italic">{selected.pricePerNight}</p>
-                  <button
-                    onClick={() => {
-                      setSelected(null);
-                      // Trigger quote modal — handled at parent
-                      window.dispatchEvent(new CustomEvent("open-quote"));
-                    }}
-                    className="btn-luxury btn-luxury-gold"
-                  >
-                    Inquire
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
   );
 }

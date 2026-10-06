@@ -19,6 +19,10 @@ import { AccommodationPage } from "@/components/pages/AccommodationPage";
 import { ContactPage } from "@/components/pages/ContactPage";
 import { QuotePage } from "@/components/pages/QuotePage";
 import { DestinationPage } from "@/components/pages/DestinationPage";
+import { TourDetailPage } from "@/components/pages/TourDetailPage";
+import { ScheduledTripDetailPage } from "@/components/pages/ScheduledTripDetailPage";
+import { AccommodationDetailPage } from "@/components/pages/AccommodationDetailPage";
+import { AdminPage } from "@/components/pages/AdminPage";
 
 function PageContent() {
   const { page, openQuote } = useRouter();
@@ -30,7 +34,9 @@ function PageContent() {
     return () => window.removeEventListener("open-quote", handler);
   }, [openQuote]);
 
-  const pages = {
+  const isAdmin = page === "admin";
+
+  const pages: Record<typeof page, React.ReactNode> = {
     home: <HomePage />,
     about: <AboutPage />,
     tours: <ToursPage />,
@@ -38,12 +44,16 @@ function PageContent() {
     contact: <ContactPage />,
     destinations: <DestinationPage />,
     quote: <QuotePage />,
+    "tour-detail": <TourDetailPage />,
+    "accommodation-detail": <AccommodationDetailPage />,
+    "scheduled-trip-detail": <ScheduledTripDetailPage />,
+    admin: <AdminPage />,
   };
 
   return (
     <div className="min-h-screen flex flex-col bg-canvas">
-      <ScrollProgress />
-      <Navigation />
+      {!isAdmin && <ScrollProgress />}
+      {!isAdmin && <Navigation />}
       <main className="flex-1">
         <AnimatePresence mode="wait">
           <motion.div
@@ -57,10 +67,10 @@ function PageContent() {
           </motion.div>
         </AnimatePresence>
       </main>
-      <Footer />
-      <QuoteModal />
-      <WhatsAppChatbot />
-      <CookieConsent />
+      {!isAdmin && <Footer />}
+      {!isAdmin && <QuoteModal />}
+      {!isAdmin && <WhatsAppChatbot />}
+      {!isAdmin && <CookieConsent />}
     </div>
   );
 }

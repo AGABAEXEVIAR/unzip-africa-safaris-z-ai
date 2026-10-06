@@ -35,6 +35,7 @@ export type TourPackage = {
   priceOriginal?: number;
   highlights: string[];
   image: string;
+  galleryImages?: string[];
   days: { day: string; title: string; description: string; image: string }[];
   destination: string;
   activities: string[];
@@ -43,6 +44,7 @@ export type TourPackage = {
   nationalPark: string;
   featured?: boolean;
   minAge: number;
+  accommodationIds: string[];
 };
 
 export type Accommodation = {
@@ -52,8 +54,40 @@ export type Accommodation = {
   type: string;
   description: string;
   image: string;
+  galleryImages?: string[];
   features: string[];
   pricePerNight: string;
+};
+
+export type ScheduledTrip = {
+  id: string;
+  name: string;
+  destination: string;
+  startDate: string; // ISO date
+  endDate: string; // ISO date
+  durationDays: number;
+  priceFrom: number;
+  priceOriginal?: number;
+  image: string;
+  galleryImages?: string[];
+  description: string;
+  highlights: string[];
+  inclusions: string[];
+  exclusions: string[];
+  groupSize: string;
+  spotsLeft: number;
+  accommodationLevel: string;
+  stops?: { day: string; title: string; description: string; image: string }[];
+};
+
+export type Testimonial = {
+  id: string;
+  name: string;
+  role: string;
+  avatar: string;
+  content: string;
+  published: boolean;
+  date: string; // ISO date
 };
 
 export const destinations: Destination[] = [
@@ -261,6 +295,8 @@ export const tourPackages: TourPackage[] = [
           "https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?auto=format&fit=crop&w=1200&q=80",
       },
     ],
+    accommodationIds: ["singita", "mombo"],
+    galleryImages: ["https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg", "https://sfile.chatglm.cn/images-ppt/8c0c59305dbc.jpg", "https://sfile.chatglm.cn/images-ppt/25ee49aa2374.jpg"],
   },
   {
     id: "apes",
@@ -337,6 +373,8 @@ export const tourPackages: TourPackage[] = [
           "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
       },
     ],
+    accommodationIds: ["bisate", "mwamba"],
+    galleryImages: ["https://sfile.chatglm.cn/images-ppt/f2522b36c1bf.jpg", "https://sfile.chatglm.cn/images-ppt/8c0c59305dbc.jpg", "https://sfile.chatglm.cn/images-ppt/ac9862af7e88.jpg"],
   },
   {
     id: "delta",
@@ -420,6 +458,8 @@ export const tourPackages: TourPackage[] = [
           "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=1200&q=80",
       },
     ],
+    accommodationIds: ["mombo", "lapalala"],
+    galleryImages: ["https://sfile.chatglm.cn/images-ppt/1b293846f02b.jpg", "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg", "https://sfile.chatglm.cn/images-ppt/8c0c59305dbc.jpg"],
   },
   {
     id: "gorilla-classic",
@@ -465,6 +505,8 @@ export const tourPackages: TourPackage[] = [
         image: "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
       },
     ],
+    accommodationIds: ["bisate", "singita"],
+    galleryImages: ["https://sfile.chatglm.cn/images-ppt/25ee49aa2374.jpg", "https://sfile.chatglm.cn/images-ppt/f2522b36c1bf.jpg", "https://sfile.chatglm.cn/images-ppt/8c0c59305dbc.jpg"],
   },
   {
     id: "maasai-mara-classic",
@@ -510,6 +552,8 @@ export const tourPackages: TourPackage[] = [
         image: "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
       },
     ],
+    accommodationIds: ["singita", "mombo"],
+    galleryImages: ["https://sfile.chatglm.cn/images-ppt/1b293846f02b.jpg", "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg", "https://sfile.chatglm.cn/images-ppt/84ed8813798e.jpg"],
   },
   {
     id: "namib-duchesert",
@@ -561,6 +605,8 @@ export const tourPackages: TourPackage[] = [
         image: "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=1200&q=80",
       },
     ],
+    accommodationIds: ["sossus", "mwamba"],
+    galleryImages: ["https://sfile.chatglm.cn/images-ppt/97c40e4746f3.jpg", "https://sfile.chatglm.cn/images-ppt/f2522b36c1bf.jpg", "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg"],
   },
   {
     id: "family-tanzania",
@@ -612,6 +658,8 @@ export const tourPackages: TourPackage[] = [
         image: "https://images.unsplash.com/photo-1444723121867-7a241cacace9?auto=format&fit=crop&w=1200&q=80",
       },
     ],
+    accommodationIds: ["singita", "mombo"],
+    galleryImages: ["https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg", "https://sfile.chatglm.cn/images-ppt/8c0c59305dbc.jpg", "https://sfile.chatglm.cn/images-ppt/25ee49aa2374.jpg"],
   },
   {
     id: "chimp-uganda",
@@ -664,6 +712,8 @@ export const tourPackages: TourPackage[] = [
         image: "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
       },
     ],
+    accommodationIds: ["bisate", "mwamba"],
+    galleryImages: ["https://sfile.chatglm.cn/images-ppt/f2522b36c1bf.jpg", "https://sfile.chatglm.cn/images-ppt/8c0c59305dbc.jpg", "https://sfile.chatglm.cn/images-ppt/ac9862af7e88.jpg"],
   },
   {
     id: "botswana-fly-in",
@@ -721,6 +771,8 @@ export const tourPackages: TourPackage[] = [
         image: "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
       },
     ],
+    accommodationIds: ["mombo", "lapalala"],
+    galleryImages: ["https://sfile.chatglm.cn/images-ppt/1b293846f02b.jpg", "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg", "https://sfile.chatglm.cn/images-ppt/8c0c59305dbc.jpg"],
   },
   {
     id: "rwanda-cultural",
@@ -778,6 +830,8 @@ export const tourPackages: TourPackage[] = [
         image: "https://images.unsplash.com/photo-1568084680786-a84f91d1153c?auto=format&fit=crop&w=1200&q=80",
       },
     ],
+    accommodationIds: ["bisate", "singita"],
+    galleryImages: ["https://sfile.chatglm.cn/images-ppt/25ee49aa2374.jpg", "https://sfile.chatglm.cn/images-ppt/f2522b36c1bf.jpg", "https://sfile.chatglm.cn/images-ppt/8c0c59305dbc.jpg"],
   },
   {
     id: "kenya-birding",
@@ -823,6 +877,8 @@ export const tourPackages: TourPackage[] = [
         image: "https://images.unsplash.com/photo-1444723121867-7a241cacace9?auto=format&fit=crop&w=1200&q=80",
       },
     ],
+    accommodationIds: ["singita", "mombo"],
+    galleryImages: ["https://sfile.chatglm.cn/images-ppt/1b293846f02b.jpg", "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg", "https://sfile.chatglm.cn/images-ppt/84ed8813798e.jpg"],
   },
   {
     id: "uganda-gorilla-murchison",
@@ -880,6 +936,8 @@ export const tourPackages: TourPackage[] = [
         image: "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
       },
     ],
+    accommodationIds: ["bisate", "mwamba"],
+    galleryImages: ["https://sfile.chatglm.cn/images-ppt/f2522b36c1bf.jpg", "https://sfile.chatglm.cn/images-ppt/8c0c59305dbc.jpg", "https://sfile.chatglm.cn/images-ppt/ac9862af7e88.jpg"],
   },
   {
     id: "tanzania-zanzibar",
@@ -938,6 +996,8 @@ export const tourPackages: TourPackage[] = [
         image: "https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?auto=format&fit=crop&w=1200&q=80",
       },
     ],
+    accommodationIds: ["singita", "mombo"],
+    galleryImages: ["https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg", "https://sfile.chatglm.cn/images-ppt/8c0c59305dbc.jpg", "https://sfile.chatglm.cn/images-ppt/25ee49aa2374.jpg"],
   },
 ];
 
@@ -1016,23 +1076,377 @@ export const accommodations: Accommodation[] = [
   },
 ];
 
-export const testimonials = [
+export const testimonials: Testimonial[] = [
   {
-    quote:
+    id: "t1",
+    name: "Marcus Verhoeven",
+    role: "Founder, Private Equity Firm — London",
+    avatar:
+      "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=200&q=80",
+    content:
       "Unzip Africa did not plan a safari. They orchestrated a week that has permanently recalibrated my sense of time, scale, and silence. Eight months later, I am still processing it.",
-    author: "Marcus V.",
-    title: "Founder, Private Equity Firm — London",
+    published: true,
+    date: "2025-10-14",
   },
   {
-    quote:
+    id: "t2",
+    name: "Dr. Elena Rinaldi",
+    role: "Patron of Conservation — Milan",
+    avatar:
+      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80",
+    content:
       "We have travelled to 130 countries. Nothing has come close to what Amara and Tariq built for us in the Serengeti. The level of access — to the land, to the people, to the silence — was beyond anything we imagined possible.",
-    author: "Dr. Elena R.",
-    title: "Patron of Conservation — Milan",
+    published: true,
+    date: "2025-09-22",
   },
   {
-    quote:
+    id: "t3",
+    name: "James K. Tanaka",
+    role: "Tech Founder — San Francisco",
+    avatar:
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
+    content:
       "The gorilla trek in Bwindi was the single most profound hour of my life. Sitting seven meters from a silverback, watching his chest rise and fall — I understood, for the first time, what wildness actually means.",
-    author: "James K.",
-    title: "Tech Founder — San Francisco",
+    published: true,
+    date: "2025-08-08",
+  },
+  {
+    id: "t4",
+    name: "Sophie Laurent",
+    role: "Gallery Owner — Paris",
+    avatar:
+      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80",
+    content:
+      "I have commissioned many things in my life — paintings, buildings, gowns. Unzip Africa composed a week in the Okavango that belongs in the same conversation. It was art, plain and simple.",
+    published: true,
+    date: "2025-10-02",
+  },
+  {
+    id: "t5",
+    name: "Richard Aldridge",
+    role: "Retired CEO — Sydney",
+    avatar:
+      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80",
+    content:
+      "At 71, I assumed I had seen enough to be unsurpriseable. Sossusvlei at dawn — the dunes igniting from coral to crimson in absolute silence — proved me wrong. I wept. My wife wept. We are returning next year.",
+    published: true,
+    date: "2025-07-30",
+  },
+  {
+    id: "t6",
+    name: "Amara Okafor",
+    role: "Author — Lagos",
+    avatar:
+      "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=200&q=80",
+    content:
+      "I came to write a single chapter. I left with a book. Unzip Africa understood what I needed before I could articulate it — solitude, access, and the kind of silence that makes sentences possible.",
+    published: true,
+    date: "2025-09-05",
+  },
+  {
+    id: "t7",
+    name: "Henrik Møller",
+    role: "Architect — Copenhagen",
+    avatar:
+      "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=200&q=80",
+    content:
+      "I have spent my career thinking about light, materials, and restraint. Bisate Lodge in Rwanda is the most beautifully considered piece of architecture I have ever stayed in — and the gorillas were the encore.",
+    published: true,
+    date: "2025-08-19",
+  },
+  {
+    id: "t8",
+    name: "Isabella Fontaine",
+    role: "Vintner — Bordeaux",
+    avatar:
+      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=200&q=80",
+    content:
+      "Twelve days. Three countries. Not a single moment that felt staged, commercial, or rushed. The team at Unzip Africa has perfected something rare — the art of stepping back so the wild can step forward.",
+    published: true,
+    date: "2025-10-20",
+  },
+];
+
+export const scheduledTrips: ScheduledTrip[] = [
+  {
+    id: "st-migration-river-crossing",
+    name: "Migration River Crossing",
+    destination: "Tanzania",
+    startDate: "2026-10-14",
+    endDate: "2026-10-20",
+    durationDays: 7,
+    priceFrom: 6800,
+    priceOriginal: 7500,
+    image:
+      "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
+    galleryImages: [
+      "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
+      "https://sfile.chatglm.cn/images-ppt/8c0c59305dbc.jpg",
+      "https://sfile.chatglm.cn/images-ppt/25ee49aa2374.jpg",
+      "https://sfile.chatglm.cn/images-ppt/ac9862af7e88.jpg",
+    ],
+    description:
+      "Witness the great migration herds mass along the Mara River as they prepare to cross into Kenya. A small-group departure limited to 12 guests, with private mobile camps positioned at the heart of the action.",
+    highlights: [
+      "Mara River crossing viewings",
+      "Hot-air balloon flight at dawn",
+      "Private mobile camp with en-suite tents",
+      "Walking safari with a Hadzabe guide",
+    ],
+    inclusions: [
+      "All lodging in luxury mobile camps",
+      "Private guide and 4x4 vehicle",
+      "All meals, drinks and park fees",
+      "Internal charter flights",
+    ],
+    exclusions: [
+      "International airfare",
+      "Travel insurance",
+      "Visa fees",
+      "Personal items and gratuities",
+    ],
+    groupSize: "Max 12 guests",
+    spotsLeft: 4,
+    accommodationLevel: "Luxury Tented Camp",
+    stops: [
+      { day: "Day 01", title: "Arrival · Arusha", description: "Arrive at Kilimanjaro International Airport and transfer to a restored coffee-plantation lodge. Welcome dinner on the verandah.", image: "https://sfile.chatglm.cn/images-ppt/f2522b36c1bf.jpg" },
+      { day: "Day 02-03", title: "Serengeti South Plains", description: "Charter into the southern Serengeti. Two full days following the herds across the short-grass plains from your private mobile camp.", image: "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg" },
+      { day: "Day 04-05", title: "Mara River Crossings", description: "Move north to the Mara River. Spend two days in position for the dramatic crossings, where wildebeest and zebra brave the crocodiles.", image: "https://sfile.chatglm.cn/images-ppt/8c0c59305dbc.jpg" },
+      { day: "Day 06-07", title: "Hot-Air Balloon & Departure", description: "Dawn balloon flight over the herds. After brunch, fly back to Arusha for a day room and your onward flight home.", image: "https://sfile.chatglm.cn/images-ppt/25ee49aa2374.jpg" },
+    ],
+  },
+  {
+    id: "st-gorilla-trek-mist",
+    name: "Gorilla Trek in the Mist",
+    destination: "Rwanda",
+    startDate: "2026-11-04",
+    endDate: "2026-11-09",
+    durationDays: 6,
+    priceFrom: 5400,
+    image:
+      "https://sfile.chatglm.cn/images-ppt/8c0c59305dbc.jpg",
+    galleryImages: [
+      "https://sfile.chatglm.cn/images-ppt/8c0c59305dbc.jpg",
+      "https://sfile.chatglm.cn/images-ppt/25ee49aa2374.jpg",
+      "https://sfile.chatglm.cn/images-ppt/f2522b36c1bf.jpg",
+      "https://sfile.chatglm.cn/images-ppt/ac9862af7e88.jpg",
+    ],
+    description:
+      "An intimate six-day Rwanda departure built around two gorilla treks and a golden-monkey walk, based from a forest lodge on the slopes of the Virunga volcanoes.",
+    highlights: [
+      "Two gorilla treks in Volcanoes NP",
+      "Golden monkey trek in the bamboo zone",
+      "Visit to the Dian Fossey Fund lab",
+      "Cultural evening with a local village",
+    ],
+    inclusions: [
+      "Two gorilla permits per person",
+      "Golden monkey trek permit",
+      "All lodge stays on full board",
+      "Private vehicle and guide",
+    ],
+    exclusions: [
+      "International airfare",
+      "Visa fees",
+      "Tips for trackers and guides",
+      "Travel insurance",
+    ],
+    groupSize: "Max 8 guests",
+    spotsLeft: 3,
+    accommodationLevel: "Forest Lodge",
+    stops: [
+      { day: "Day 01", title: "Arrival · Kigali", description: "Arrive in Kigali. Visit the genocide memorial and overnight at a boutique hotel in the city.", image: "https://sfile.chatglm.cn/images-ppt/f2522b36c1bf.jpg" },
+      { day: "Day 02-03", title: "First Gorilla Trek & Forest Lodge", description: "Drive north to Volcanoes National Park. Briefing at park HQ and your first trek into the bamboo forest to spend an hour with a gorilla family.", image: "https://sfile.chatglm.cn/images-ppt/8c0c59305dbc.jpg" },
+      { day: "Day 04", title: "Golden Monkeys", description: "A gentler morning trek for the endangered golden monkey, followed by an afternoon at the Dian Fossey Fund research lab.", image: "https://sfile.chatglm.cn/images-ppt/25ee49aa2374.jpg" },
+      { day: "Day 05-06", title: "Second Trek & Departure", description: "A second gorilla trek to a different family group. Drive back to Kigali for your departure flight.", image: "https://sfile.chatglm.cn/images-ppt/ac9862af7e88.jpg" },
+    ],
+  },
+  {
+    id: "st-maasai-mara-big-cat",
+    name: "Maasai Mara Big Cat Safari",
+    destination: "Kenya",
+    startDate: "2026-11-18",
+    endDate: "2026-11-25",
+    durationDays: 8,
+    priceFrom: 5200,
+    priceOriginal: 5800,
+    image:
+      "https://sfile.chatglm.cn/images-ppt/1b293846f02b.jpg",
+    galleryImages: [
+      "https://sfile.chatglm.cn/images-ppt/1b293846f02b.jpg",
+      "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
+      "https://sfile.chatglm.cn/images-ppt/84ed8813798e.jpg",
+      "https://sfile.chatglm.cn/images-ppt/8c0c59305dbc.jpg",
+      "https://sfile.chatglm.cn/images-ppt/25ee49aa2374.jpg",
+    ],
+    description:
+      "Eight days in the Mara Conservancy during peak big-cat season, with a private guide and exclusive use of a small tented camp on the Talek River.",
+    highlights: [
+      "Big-cat territory with expert guide",
+      "Night drive in a private conservancy",
+      "Maasai village visit and walking safari",
+      "Hot-air balloon flight at dawn",
+    ],
+    inclusions: [
+      "All lodge and camp stays",
+      "Private 4x4 with guide",
+      "Park and conservancy fees",
+      "All meals and selected drinks",
+    ],
+    exclusions: [
+      "International airfare",
+      "Optional balloon flight",
+      "Visa fees",
+      "Travel insurance",
+    ],
+    groupSize: "Max 10 guests",
+    spotsLeft: 6,
+    accommodationLevel: "Tented Camp",
+    stops: [
+      { day: "Day 01", title: "Arrival · Nairobi", description: "Arrive in Nairobi. Transfer to a quiet boutique hotel near the Karura Forest for dinner and rest.", image: "https://sfile.chatglm.cn/images-ppt/1b293846f02b.jpg" },
+      { day: "Day 02-04", title: "Mara North Conservancy", description: "Fly into the Mara. Three full days of game drives focused on the resident prides and cheetah families.", image: "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg" },
+      { day: "Day 05-06", title: "Talek River & Walking Safari", description: "Move south to the Talek River. Two days combining drives with a guided walking safari and a Maasai village visit.", image: "https://sfile.chatglm.cn/images-ppt/84ed8813798e.jpg" },
+      { day: "Day 07-08", title: "Hot-Air Balloon & Departure", description: "Optional dawn balloon flight, brunch on the plains, then fly back to Nairobi for your onward flight.", image: "https://sfile.chatglm.cn/images-ppt/8c0c59305dbc.jpg" },
+    ],
+  },
+  {
+    id: "st-uganda-apes-wildlife",
+    name: "Uganda Apes & Wildlife",
+    destination: "Uganda",
+    startDate: "2026-12-02",
+    endDate: "2026-12-09",
+    durationDays: 8,
+    priceFrom: 4950,
+    image:
+      "https://sfile.chatglm.cn/images-ppt/f2522b36c1bf.jpg",
+    galleryImages: [
+      "https://sfile.chatglm.cn/images-ppt/f2522b36c1bf.jpg",
+      "https://sfile.chatglm.cn/images-ppt/8c0c59305dbc.jpg",
+      "https://sfile.chatglm.cn/images-ppt/ac9862af7e88.jpg",
+      "https://sfile.chatglm.cn/images-ppt/25ee49aa2374.jpg",
+      "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
+      "https://sfile.chatglm.cn/images-ppt/84ed8813798e.jpg",
+    ],
+    description:
+      "Eight days through Uganda's primate heartlands — one gorilla trek, two chimpanzee experiences, and a classic savannah finale in Queen Elizabeth National Park.",
+    highlights: [
+      "Gorilla trek in Bwindi Impenetrable",
+      "Full-day chimp habituation in Kibale",
+      "Tree-climbing lions of Ishasha",
+      "Boat cruise on the Kazinga Channel",
+    ],
+    inclusions: [
+      "One gorilla permit per person",
+      "Chimp habituation experience",
+      "All lodging on full board",
+      "Private vehicle and guide",
+    ],
+    exclusions: [
+      "International airfare",
+      "Visa fees",
+      "Tips and personal expenses",
+      "Travel insurance",
+    ],
+    groupSize: "Max 8 guests",
+    spotsLeft: 2,
+    accommodationLevel: "Lodge & Tented Camp",
+    stops: [
+      { day: "Day 01", title: "Arrival · Entebbe", description: "Arrive at Entebbe. Transfer to a lakeside lodge on the shores of Lake Victoria.", image: "https://sfile.chatglm.cn/images-ppt/f2522b36c1bf.jpg" },
+      { day: "Day 02-03", title: "Kibale Chimp Habituation", description: "Drive to Kibale Forest for a full day with a chimpanzee habituation team, following a troop from dawn to dusk.", image: "https://sfile.chatglm.cn/images-ppt/ac9862af7e88.jpg" },
+      { day: "Day 04-05", title: "Queen Elizabeth NP", description: "Savannah game drives in search of the famous tree-climbing lions and a sunset boat cruise on the Kazinga Channel.", image: "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg" },
+      { day: "Day 06-08", title: "Bwindi Gorilla Trek & Departure", description: "Trek into Bwindi Impenetrable Forest for one hour with a mountain-gorilla family. Then back to Entebbe for your flight home.", image: "https://sfile.chatglm.cn/images-ppt/8c0c59305dbc.jpg" },
+    ],
+  },
+  {
+    id: "st-serengeti-calving",
+    name: "Serengeti Calving Season",
+    destination: "Tanzania",
+    startDate: "2027-01-15",
+    endDate: "2027-01-22",
+    durationDays: 8,
+    priceFrom: 5800,
+    image:
+      "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
+    galleryImages: [
+      "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
+      "https://sfile.chatglm.cn/images-ppt/8c0c59305dbc.jpg",
+      "https://sfile.chatglm.cn/images-ppt/25ee49aa2374.jpg",
+      "https://sfile.chatglm.cn/images-ppt/f2522b36c1bf.jpg",
+    ],
+    description:
+      "Eight days on the southern Serengeti plains during the wildebeest calving season. Tens of thousands of calves are born each day, with big cats and wild dogs following close behind.",
+    highlights: [
+      "Calving-season predator action",
+      "Olduvai Gorge and shifting-sands walk",
+      "Night drive in a private conservancy",
+      "Maasai cultural exchange",
+    ],
+    inclusions: [
+      "All lodge and mobile-camp stays",
+      "Private guide and 4x4 vehicle",
+      "Park fees and conservancy fees",
+      "All meals and drinks",
+    ],
+    exclusions: [
+      "International airfare",
+      "Visa fees",
+      "Optional night-drive surcharge",
+      "Travel insurance",
+    ],
+    groupSize: "Max 12 guests",
+    spotsLeft: 8,
+    accommodationLevel: "Luxury Mobile Camp",
+    stops: [
+      { day: "Day 01", title: "Arrival · Arusha", description: "Arrive at Kilimanjaro International Airport and transfer to your hotel. Dinner with your guide.", image: "https://sfile.chatglm.cn/images-ppt/f2522b36c1bf.jpg" },
+      { day: "Day 02-04", title: "Ndutu Southern Plains", description: "Three full days on the southern Serengeti short-grass plains, where calving is in full swing and predators are never far away.", image: "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg" },
+      { day: "Day 05-06", title: "Olduvai & Ngorongoro Crater", description: "A morning at Olduvai Gorge, then a day on the floor of the Ngorongoro Crater for one of the densest game populations on earth.", image: "https://sfile.chatglm.cn/images-ppt/8c0c59305dbc.jpg" },
+      { day: "Day 07-08", title: "Walking Safari & Departure", description: "A morning walking safari with a Maasai guide, then fly back to Arusha for your onward flight.", image: "https://sfile.chatglm.cn/images-ppt/25ee49aa2374.jpg" },
+    ],
+  },
+  {
+    id: "st-rwanda-cultural-wildlife",
+    name: "Rwanda Cultural & Wildlife",
+    destination: "Rwanda",
+    startDate: "2027-02-12",
+    endDate: "2027-02-18",
+    durationDays: 7,
+    priceFrom: 4650,
+    image:
+      "https://sfile.chatglm.cn/images-ppt/25ee49aa2374.jpg",
+    galleryImages: [
+      "https://sfile.chatglm.cn/images-ppt/25ee49aa2374.jpg",
+      "https://sfile.chatglm.cn/images-ppt/f2522b36c1bf.jpg",
+      "https://sfile.chatglm.cn/images-ppt/8c0c59305dbc.jpg",
+      "https://sfile.chatglm.cn/images-ppt/ac9862af7e88.jpg",
+    ],
+    description:
+      "A seven-day cultural and wildlife journey across Rwanda, pairing a single gorilla trek with the country's coffee heartlands, the Nyungwe Forest canopy, and historic Kigali.",
+    highlights: [
+      "Gorilla trek in Volcanoes NP",
+      "Nyungwe Forest canopy walk",
+      "Coffee farm visit at Lake Kivu",
+      "Kigali Genocide Memorial & city tour",
+    ],
+    inclusions: [
+      "One gorilla permit per person",
+      "All lodge stays on full board",
+      "Canopy walk permit in Nyungwe",
+      "Private vehicle and guide",
+    ],
+    exclusions: [
+      "International airfare",
+      "Visa fees",
+      "Tips and personal expenses",
+      "Travel insurance",
+    ],
+    groupSize: "Max 10 guests",
+    spotsLeft: 5,
+    accommodationLevel: "Lodge",
+    stops: [
+      { day: "Day 01", title: "Arrival · Kigali", description: "Arrive in Kigali. City tour including the Genocide Memorial and a coffee-shop tasting in the Kimironko neighbourhood.", image: "https://sfile.chatglm.cn/images-ppt/f2522b36c1bf.jpg" },
+      { day: "Day 02-03", title: "Volcanoes NP & Gorilla Trek", description: "Drive north to the volcanoes. Briefing at park HQ and your trek into the bamboo forest for an hour with a gorilla family.", image: "https://sfile.chatglm.cn/images-ppt/8c0c59305dbc.jpg" },
+      { day: "Day 04-05", title: "Lake Kivu & Nyungwe", description: "Drive along Lake Kivu, visit a coffee farm, then continue south to Nyungwe Forest for the canopy walk.", image: "https://sfile.chatglm.cn/images-ppt/25ee49aa2374.jpg" },
+      { day: "Day 06-07", title: "Canopy Walk & Departure", description: "Morning canopy walk in Nyungwe, chimpanzee trek optional, then drive back to Kigali for your onward flight.", image: "https://sfile.chatglm.cn/images-ppt/ac9862af7e88.jpg" },
+    ],
   },
 ];

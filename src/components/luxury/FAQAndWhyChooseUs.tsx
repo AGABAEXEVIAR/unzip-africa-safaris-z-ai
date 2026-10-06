@@ -3,6 +3,10 @@
 import { useState, useRef } from "react";
 import { Reveal } from "@/components/luxury/Reveal";
 import ScrollReveal from "@/components/luxury/ScrollReveal";
+import { useRouter } from "@/lib/router";
+import { useScheduledTrips } from "@/lib/store";
+
+const sharp = { borderRadius: 0 } as const;
 
 const faqs = [
   {
@@ -234,7 +238,7 @@ function ReasonIcon({ name }: { name: string }) {
   }
 }
 
-/* ===================== Founder Message Section ===================== */
+/* ===================== Founder Message Section (two columns) ===================== */
 export function FounderMessageSection() {
   return (
     <section className="py-16 md:py-24 px-6 md:px-10 bg-forest-deep text-cream relative overflow-hidden">
@@ -248,25 +252,149 @@ export function FounderMessageSection() {
           }}
         />
       </div>
-      <div className="mx-auto max-w-[1000px] relative text-center">
-        <Reveal variant="up">
-          <p className="font-eyebrow text-gold-soft mb-6">A Message from Our Founder</p>
-        </Reveal>
-        <ScrollReveal
-          as="blockquote"
-          containerClassName="font-display text-2xl md:text-4xl lg:text-5xl leading-[1.3] text-cream tracking-tight block mb-8"
-          textClassName="block"
-          baseOpacity={0.1}
-          blurStrength={5}
-        >
-          &ldquo;Africa is not simply a place to visit; it is a story to experience. At Unzip Africa, we are passionate about creating thoughtful, authentic and unforgettable journeys that bring you closer to the heart of East Africa.&rdquo;
-        </ScrollReveal>
-        <Reveal variant="up" delay={0.3}>
-          <p className="font-label text-gold-soft">&mdash; Ssebuuma Ivan, Founder</p>
-        </Reveal>
+      <div className="mx-auto max-w-[1300px] relative grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16 items-center">
+        {/* Left — founder portrait */}
+        <div className="md:col-span-5">
+          <Reveal variant="left">
+            <div className="relative aspect-[4/5] overflow-hidden bg-charcoal" style={sharp}>
+              <img
+                src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=1200&q=80"
+                alt="Ssebuuma Ivan, Founder"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+              <div className="absolute inset-3 border border-cream/15 pointer-events-none" />
+              <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-charcoal/90 to-transparent">
+                <p className="font-eyebrow text-gold-soft mb-1">Founder</p>
+                <p className="font-display text-2xl text-cream tracking-tight" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+                  Ssebuuma Ivan
+                </p>
+              </div>
+            </div>
+          </Reveal>
+        </div>
+
+        {/* Right — message */}
+        <div className="md:col-span-7">
+          <Reveal variant="up">
+            <p className="font-eyebrow text-gold-soft mb-6">A Message from Our Founder</p>
+          </Reveal>
+          <ScrollReveal
+            as="blockquote"
+            containerClassName="font-display text-2xl md:text-4xl lg:text-5xl leading-[1.3] text-cream tracking-tight block mb-8"
+            textClassName="block"
+            baseOpacity={0.1}
+            blurStrength={5}
+          >
+            &ldquo;Africa is not simply a place to visit; it is a story to experience. At Unzip Africa, we are passionate about creating thoughtful, authentic and unforgettable journeys that bring you closer to the heart of East Africa.&rdquo;
+          </ScrollReveal>
+          <Reveal variant="up" delay={0.3}>
+            <p className="font-label text-gold-soft">&mdash; Ssebuuma Ivan, Founder</p>
+          </Reveal>
+        </div>
       </div>
     </section>
   );
+}
+
+/* ===================== Scheduled Trips Section ===================== */
+export function ScheduledTripsSection() {
+  const trips = useScheduledTrips();
+  const { navigateToScheduledTrip } = useRouter();
+
+  // Sort by start date ascending, take first 3
+  const upcoming = [...trips]
+    .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())
+    .slice(0, 3);
+
+  if (upcoming.length === 0) return null;
+
+  return (
+    <section className="py-16 md:py-24 px-6 md:px-10 bg-canvas">
+      <div className="mx-auto max-w-[1600px]">
+        {/* Heading */}
+        <div className="mb-12 md:mb-16 text-center">
+          <Reveal variant="up">
+            <p className="font-eyebrow text-gold mb-6">Upcoming Departures</p>
+          </Reveal>
+          <ScrollReveal
+            as="h2"
+            containerClassName="font-display text-5xl md:text-7xl lg:text-8xl text-charcoal tracking-tight leading-[0.95] block max-w-3xl mx-auto"
+            textClassName="block"
+            baseOpacity={0.1}
+            blurStrength={6}
+          >
+            Scheduled <span className="italic text-forest">Trips.</span>
+          </ScrollReveal>
+          <Reveal variant="up" delay={0.2}>
+            <p className="text-charcoal/70 leading-relaxed mt-6 max-w-2xl mx-auto">
+              Join a small group of like-minded travellers on a fixed-date departure. Each one is
+              led by our senior guides and limited to your party and a handful of others.
+            </p>
+          </Reveal>
+        </div>
+
+        {/* Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+          {upcoming.map((trip, idx) => (
+            <Reveal key={trip.id} variant="up" delay={idx * 0.1}>
+              <article
+                onClick={() => navigateToScheduledTrip(trip.id)}
+                className="bg-alabaster border border-border/60 overflow-hidden cursor-pointer group card-luxury flex flex-col"
+                style={sharp}
+              >
+                {/* Image */}
+                <div className="relative aspect-[4/3] overflow-hidden bg-bone card-zoom">
+                  <img src={trip.image} alt={trip.name} className="w-full h-full object-cover img-luxury" />
+                  <div className="absolute top-3 left-3 bg-charcoal/70 text-cream text-[0.65rem] tracking-[0.2em] uppercase px-3 py-1.5" style={sharp}>
+                    {formatDate(trip.startDate)}
+                  </div>
+                  {trip.spotsLeft <= 5 && (
+                    <div className="absolute top-3 right-3 bg-gold text-charcoal text-[0.6rem] tracking-[0.15em] uppercase px-3 py-1.5" style={sharp}>
+                      {trip.spotsLeft} spots left
+                    </div>
+                  )}
+                </div>
+
+                {/* Content */}
+                <div className="p-5 md:p-6 flex flex-col flex-1">
+                  <p className="font-eyebrow text-gold mb-2">{trip.destination}</p>
+                  <h3
+                    className="font-display text-2xl md:text-3xl text-charcoal tracking-tight mb-3 leading-[1.1] group-hover:text-forest transition-colors duration-500"
+                    style={{ fontFamily: "var(--font-cormorant), serif" }}
+                  >
+                    {trip.name}
+                  </h3>
+                  <p className="text-sm text-charcoal/70 leading-relaxed line-clamp-2 mb-5">{trip.description}</p>
+
+                  <div className="mt-auto pt-4 border-t border-border flex items-end justify-between">
+                    <div>
+                      <p className="font-display text-2xl text-forest" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+                        ${trip.priceFrom.toLocaleString()}
+                      </p>
+                      <p className="text-[0.65rem] text-charcoal/50">per person · {trip.durationDays} days</p>
+                    </div>
+                    <span className="font-eyebrow text-gold">Explore →</span>
+                  </div>
+                </div>
+              </article>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function formatDate(iso: string): string {
+  try {
+    return new Date(iso).toLocaleDateString("en-US", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+  } catch {
+    return iso;
+  }
 }
 
 /* ===================== Safari Cars Section — Two Column with Image Stack ===================== */
