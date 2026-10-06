@@ -32,34 +32,34 @@ export function HomePage() {
       {/* ====================== WELCOME SECTION ====================== */}
       <WelcomeSection />
 
-      {/* ====================== SCROLL STACK — SAFARI IMAGES ====================== */}
+      {/* ====================== SCHEDULED TRIPS ====================== */}
+      <ScheduledTripsSection />
+
+      {/* ====================== DESTINATIONS (Signature Destinations grid) ====================== */}
       <SafariScrollStack />
-
-      {/* ====================== HORIZONTAL FILMSTRIP — DESTINATIONS ====================== */}
-      <HorizontalDestinations />
-
-      {/* ====================== WHY CHOOSE US ====================== */}
-      <WhyChooseUsSection />
 
       {/* ====================== FEATURED TRIPS ====================== */}
       <FeaturedTrips />
 
-      {/* ====================== FOUNDER MESSAGE ====================== */}
-      <FounderMessageSection />
+      {/* ====================== WHY CHOOSE US ====================== */}
+      <WhyChooseUsSection />
 
-      {/* ====================== SCHEDULED TRIPS ====================== */}
-      <ScheduledTripsSection />
-
-      {/* ====================== TESTIMONIALS ====================== */}
+      {/* ====================== REVIEWS / TESTIMONIALS ====================== */}
       <LuxuryTestimonials />
 
-      {/* ====================== FAQ ====================== */}
-      <FAQSection />
+      {/* ====================== FOUNDER MESSAGE ====================== */}
+      <FounderMessageSection />
 
       {/* ====================== SAFARI CARS ====================== */}
       <SafariCarsSection />
 
-      {/* ====================== FINAL CTA — Two Column (Text + YouTube Video) ====================== */}
+      {/* ====================== FAQ ====================== */}
+      <FAQSection />
+
+      {/* ====================== OUR TOP SAFARI PARKS (Horizontal Filmstrip) ====================== */}
+      <HorizontalDestinations />
+
+      {/* ====================== FINAL CTA — The wild is waiting ====================== */}
       <section className="py-16 md:py-24 px-6 md:px-10 bg-bone/50">
         <div className="mx-auto max-w-[1400px]">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16 items-center">
