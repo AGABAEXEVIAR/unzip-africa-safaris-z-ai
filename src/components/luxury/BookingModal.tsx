@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { toast } from "sonner";
 import {
@@ -28,6 +28,7 @@ const modalScrollStyle = { overflowY: "auto", flex: "1 1 0%", minHeight: 0 } as 
 
 export function BookingModal(props: BookingModalProps) {
   const { open, onClose, tripType, trip } = props;
+  const overlayRef = useRef<HTMLDivElement>(null);
 
   const [form, setForm] = useState({
     name: "",
@@ -49,12 +50,27 @@ export function BookingModal(props: BookingModalProps) {
     }
   }, [open]);
 
-  // Lock body scroll + scroll modal into view immediately
+  // When modal opens: immediately scroll to top so it's visible
+  useEffect(() => {
+    if (open) {
+      // Stop Lenis smooth scroll and jump to top instantly
+      const lenis = (window as unknown as { __lenis?: { scrollTo: (target: number, opts?: unknown) => void; stop?: () => void } }).__lenis;
+      if (lenis) {
+        lenis.scrollTo(0, { immediate: true });
+      }
+      // Also use native scroll as backup
+      window.scrollTo(0, 0);
+      // Scroll the overlay itself to top
+      requestAnimationFrame(() => {
+        overlayRef.current?.scrollTo(0, 0);
+      });
+    }
+  }, [open]);
+
+  // Lock body scroll when modal is open
   useEffect(() => {
     if (open) {
       document.body.style.overflow = "hidden";
-      // Scroll to top so the modal is immediately visible
-      window.scrollTo({ top: 0, behavior: "auto" });
     } else {
       document.body.style.overflow = "";
     }
@@ -136,11 +152,12 @@ export function BookingModal(props: BookingModalProps) {
     <AnimatePresence>
       {open && (
         <motion.div
+          ref={overlayRef}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
-          className="fixed inset-0 z-[80] bg-charcoal/85 backdrop-blur-md flex items-center justify-center p-4 md:p-8 overflow-y-auto"
+          className="fixed inset-0 z-[80] bg-charcoal/85 backdrop-blur-md flex items-start md:items-center justify-center p-4 md:p-8 overflow-y-auto"
           onClick={onClose}
         >
           <motion.div
