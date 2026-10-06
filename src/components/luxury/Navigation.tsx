@@ -11,7 +11,6 @@ const navItems: { id: PageId; labelKey: string }[] = [
   { id: "home", labelKey: "nav.home" },
   { id: "tours", labelKey: "nav.tours" },
   { id: "scheduled-trips", labelKey: "nav.scheduledTrips" },
-  { id: "contact", labelKey: "nav.contact" },
 ];
 
 // About dropdown sub-items (Company + Accommodation)

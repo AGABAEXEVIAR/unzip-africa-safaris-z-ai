@@ -1,6 +1,15 @@
 // Shared content data for Unzip Africa Safaris
 // All imagery sourced from Unsplash (royalty-free, retina-ready via their CDN)
 
+export type GamePark = {
+  id: string;
+  name: string;
+  destinationId: string; // links to Destination.id (the country)
+  description: string;
+  image: string;
+  wildlife: string[];
+};
+
 export type Destination = {
   id: string;
   name: string;
@@ -11,6 +20,7 @@ export type Destination = {
   imagePortrait: string;
   days: string;
   price: string;
+  gameParks?: GamePark[];
 };
 
 export type Expert = {
@@ -104,6 +114,11 @@ export const destinations: Destination[] = [
       "https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?auto=format&fit=crop&w=900&q=80",
     days: "8 Days",
     price: "From $48,500",
+    gameParks: [
+      { id: "gp-serengeti", name: "Serengeti National Park", destinationId: "serengeti", description: "The flagship park — endless plains, the great migration, and predator densities found nowhere else on earth.", image: "https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?auto=format&fit=crop&w=1200&q=80", wildlife: ["Lion", "Leopard", "Cheetah", "Wildebeest", "Elephant"] },
+      { id: "gp-ngorongoro", name: "Ngorongoro Crater", destinationId: "serengeti", description: "A collapsed volcano caldera teeming with wildlife — the densest concentration of predators in Africa.", image: "https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=1200&q=80", wildlife: ["Black Rhino", "Lion", "Hyena", "Buffalo"] },
+      { id: "gp-tarangire", name: "Tarangire National Park", destinationId: "serengeti", description: "Ancient baobab trees and the largest elephant population in northern Tanzania.", image: "https://images.unsplash.com/photo-1568126756329-5ddba3f1f3be?auto=format&fit=crop&w=1200&q=80", wildlife: ["Elephant", "Lion", "Python", "Oryx"] },
+    ],
   },
   {
     id: "bwindi",
@@ -118,6 +133,11 @@ export const destinations: Destination[] = [
       "https://images.unsplash.com/photo-1549366021-9f761d450615?auto=format&fit=crop&w=900&q=80",
     days: "6 Days",
     price: "From $32,000",
+    gameParks: [
+      { id: "gp-bwindi", name: "Bwindi Impenetrable National Park", destinationId: "bwindi", description: "Home to half the world's mountain gorillas — mist-shrouded ancient forest on steep volcanic slopes.", image: "https://images.unsplash.com/photo-1549366021-9f761d450615?auto=format&fit=crop&w=1200&q=80", wildlife: ["Mountain Gorilla", "Chimpanzee", "Forest Elephant"] },
+      { id: "gp-murchison", name: "Murchison Falls National Park", destinationId: "bwindi", description: "The Nile explodes through a 7-meter gorge — Uganda's largest park with buffalo, giraffe, and lion.", image: "https://images.unsplash.com/photo-1547036967-23d11aacaee0?auto=format&fit=crop&w=1200&q=80", wildlife: ["Lion", "Elephant", "Giraffe", "Hipppo"] },
+      { id: "gp-kibale", name: "Kibale Forest National Park", destinationId: "bwindi", description: "13 primate species including the highest density of chimpanzees in East Africa.", image: "https://images.unsplash.com/photo-1517114593411-6c1a7a5c8b9b?auto=format&fit=crop&w=1200&q=80", wildlife: ["Chimpanzee", "Colobus Monkey", "Forest Hog"] },
+    ],
   },
   {
     id: "okavango",

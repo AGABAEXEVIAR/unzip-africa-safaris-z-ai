@@ -318,27 +318,29 @@ export function ScheduledTripDetailPage() {
               </ScrollReveal>
             </div>
 
-            {/* Animated timeline with left progress rail */}
+            {/* Animated timeline — sticky left rail + scrolling right content */}
             <div className="relative flex gap-6 md:gap-10">
-              {/* Left rail — progress line */}
-              <div className="hidden md:flex flex-col items-center w-12 flex-shrink-0">
-                <p className="font-eyebrow text-charcoal/40 text-[0.55rem] tracking-[0.15em] uppercase mb-4 text-center leading-tight">
-                  Itinerary<br />Progress
-                </p>
-                {/* Track + fill */}
-                <div className="flex-1 relative w-px bg-charcoal/15">
-                  <motion.div
-                    style={{ scaleY: lineScaleY, transformOrigin: "top" }}
-                    className="absolute inset-0 w-full bg-charcoal"
-                  />
+              {/* Left rail — sticky progress line */}
+              <div className="hidden md:block w-12 flex-shrink-0">
+                <div className="sticky top-24 flex flex-col items-center" style={{ height: "min(60vh, 400px)" }}>
+                  <p className="font-eyebrow text-charcoal/40 text-[0.55rem] tracking-[0.15em] uppercase mb-4 text-center leading-tight">
+                    Itinerary<br />Progress
+                  </p>
+                  {/* Track + fill — fixed height */}
+                  <div className="flex-1 relative w-px bg-charcoal/15">
+                    <motion.div
+                      style={{ scaleY: lineScaleY, transformOrigin: "top" }}
+                      className="absolute inset-0 w-full bg-charcoal"
+                    />
+                  </div>
+                  {/* Bottom labels */}
+                  <p className="font-display text-sm text-charcoal mt-4" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+                    {trip.durationDays} days
+                  </p>
+                  <p className="font-eyebrow text-charcoal/40 text-[0.55rem] tracking-[0.15em] uppercase mt-1 text-center leading-tight">
+                    Scroll to<br />advance
+                  </p>
                 </div>
-                {/* Bottom labels */}
-                <p className="font-display text-sm text-charcoal mt-4" style={{ fontFamily: "var(--font-cormorant), serif" }}>
-                  {trip.durationDays} days
-                </p>
-                <p className="font-eyebrow text-charcoal/40 text-[0.55rem] tracking-[0.15em] uppercase mt-1 text-center leading-tight">
-                  Scroll to<br />advance
-                </p>
               </div>
 
               {/* Right — stop entries */}
