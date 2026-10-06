@@ -21,7 +21,7 @@ import { useLang } from "@/lib/language";
 import { destinations } from "@/lib/content";
 
 export function HomePage() {
-  const { navigate, openQuote } = useRouter();
+  const { navigate } = useRouter();
   const { t } = useLang();
 
   return (
@@ -82,8 +82,8 @@ export function HomePage() {
                   {t("cta.subtitle")}
                 </p>
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
-                  <button onClick={openQuote} className="btn-luxury btn-luxury-gold">
-                    {t("cta.requestQuote")}
+                  <button onClick={() => navigate("contact")} className="btn-luxury btn-luxury-gold">
+                    {t("cta.contact")}
                   </button>
                   <button
                     onClick={() => navigate("contact")}
@@ -228,7 +228,6 @@ function HorizontalDestinations() {
                 </p>
                 <div className="flex items-center justify-between pt-4 border-t border-cream/20">
                   <span className="font-label text-cream/70">{dest.days}</span>
-                  <span className="font-label text-gold-soft">{dest.price}</span>
                 </div>
               </div>
 

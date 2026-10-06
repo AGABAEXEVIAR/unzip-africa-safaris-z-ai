@@ -30,7 +30,6 @@ export function ScheduledTripDetailPage() {
     navigate,
     navigateToScheduledTrip,
     navigateToAccommodation,
-    openQuote,
   } = useRouter();
 
   const [bookingOpen, setBookingOpen] = useState(false);
@@ -625,8 +624,8 @@ export function ScheduledTripDetailPage() {
             </p>
           </Reveal>
           <Reveal variant="up" delay={0.3}>
-            <button onClick={openQuote} className="btn-luxury btn-luxury-light">
-              Request a Quote
+            <button onClick={() => navigate("contact")} className="btn-luxury btn-luxury-light">
+              Contact
             </button>
           </Reveal>
         </div>

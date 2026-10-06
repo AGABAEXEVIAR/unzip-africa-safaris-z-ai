@@ -21,7 +21,7 @@ const aboutItems: { id: PageId; labelKey: string }[] = [
 ];
 
 export function Navigation() {
-  const { page, navigate, navigateToDestination, openQuote, destinationCountry } = useRouter();
+  const { page, navigate, navigateToDestination, destinationCountry } = useRouter();
   const { t } = useLang();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -395,7 +395,7 @@ export function Navigation() {
             </div>
 
             <button
-              onClick={openQuote}
+              onClick={() => navigate("contact")}
               className={cn(
                 "hidden lg:inline-flex font-label px-6 py-2.5 border transition-all duration-500",
                 scrolled
@@ -404,7 +404,7 @@ export function Navigation() {
               )}
               style={{ borderRadius: 0 }}
             >
-              {t("nav.requestQuote")}
+              {t("nav.contact")}
             </button>
 
             {/* Mobile/tablet menu toggle */}
@@ -557,7 +557,7 @@ export function Navigation() {
           >
             <button
               onClick={() => {
-                openQuote();
+                navigate("contact");
                 setMenuOpen(false);
               }}
               className="w-full inline-flex items-center justify-center gap-3 px-6 py-3.5 text-xs font-medium tracking-[0.25em] uppercase transition-all duration-500 hover:opacity-85 active:scale-[0.97]"
@@ -569,7 +569,7 @@ export function Navigation() {
                 fontFamily: "var(--font-inter), sans-serif",
               }}
             >
-              {t("nav.requestQuote")}
+              {t("nav.contact")}
             </button>
           </div>
         </div>

@@ -4,7 +4,7 @@ import { useRouter, PageId } from "@/lib/router";
 import { useLang } from "@/lib/language";
 
 export function Footer() {
-  const { navigate, openQuote } = useRouter();
+  const { navigate } = useRouter();
   const { t } = useLang();
 
   return (
@@ -21,8 +21,8 @@ export function Footer() {
             </h3>
           </div>
           <div className="md:col-span-5 flex md:justify-end items-end">
-            <button onClick={openQuote} className="btn-luxury btn-luxury-light">
-              {t("nav.requestQuote")}
+            <button onClick={() => navigate("contact")} className="btn-luxury btn-luxury-light">
+              {t("nav.contact")}
             </button>
           </div>
         </div>

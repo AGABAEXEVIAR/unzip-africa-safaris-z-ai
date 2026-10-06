@@ -46,7 +46,7 @@ export default function SafariHero({
   posterImage =
     "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
 }: SafariHeroProps) {
-  const { navigate, openQuote } = useRouter();
+  const { navigate } = useRouter();
   const { t } = useLang();
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -210,7 +210,7 @@ export default function SafariHero({
             >
               {/* Primary action button — sharp corners, glass effect */}
               <button
-                onClick={openQuote}
+                onClick={() => navigate("contact")}
                 className="flex min-h-12 items-center bg-cream/15 backdrop-blur-sm px-10 text-sm font-medium tracking-[0.2em] uppercase text-cream shadow-[inset_2px_2px_0_-0.5px_rgba(255,255,255,0.15),inset_-2px_-2px_0_-0.5px_rgba(255,255,255,0.15)] transition-transform hover:bg-cream/25 active:scale-[0.96] md:text-base"
                 style={{ fontFamily: "var(--font-inter), sans-serif", borderRadius: 0 }}
               >

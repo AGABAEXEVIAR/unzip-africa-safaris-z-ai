@@ -6,7 +6,7 @@ import { useRouter } from "@/lib/router";
 import { useLang } from "@/lib/language";
 
 export function WelcomeSection() {
-  const { navigate, openQuote } = useRouter();
+  const { navigate } = useRouter();
   const { t } = useLang();
 
   return (
@@ -56,7 +56,7 @@ export function WelcomeSection() {
               </p>
 
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
-                <button onClick={openQuote} className="btn-luxury btn-luxury-dark">
+                <button onClick={() => navigate("contact")} className="btn-luxury btn-luxury-dark">
                   {t("welcome.cta1")}
                 </button>
                 <button

@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { RouterProvider, useRouter } from "@/lib/router";
 import { LanguageProvider } from "@/lib/language";
@@ -9,7 +8,6 @@ import { CustomCursor } from "@/components/luxury/CustomCursor";
 import { ScrollProgress } from "@/components/luxury/ScrollProgress";
 import { Navigation } from "@/components/luxury/Navigation";
 import { Footer } from "@/components/luxury/Footer";
-import { QuoteModal } from "@/components/luxury/QuoteModal";
 import { WhatsAppChatbot } from "@/components/luxury/WhatsAppChatbot";
 import { CookieConsent } from "@/components/luxury/CookieConsent";
 import { HomePage } from "@/components/pages/HomePage";
@@ -17,7 +15,6 @@ import { AboutPage } from "@/components/pages/AboutPage";
 import { ToursPage } from "@/components/pages/ToursPage";
 import { AccommodationPage } from "@/components/pages/AccommodationPage";
 import { ContactPage } from "@/components/pages/ContactPage";
-import { QuotePage } from "@/components/pages/QuotePage";
 import { DestinationPage } from "@/components/pages/DestinationPage";
 import { TourDetailPage } from "@/components/pages/TourDetailPage";
 import { ScheduledTripDetailPage } from "@/components/pages/ScheduledTripDetailPage";
@@ -26,14 +23,7 @@ import { AccommodationDetailPage } from "@/components/pages/AccommodationDetailP
 import { AdminPage } from "@/components/pages/AdminPage";
 
 function PageContent() {
-  const { page, openQuote } = useRouter();
-
-  // Listen for global "open-quote" custom events (e.g., from accommodation modal)
-  useEffect(() => {
-    const handler = () => openQuote();
-    window.addEventListener("open-quote", handler);
-    return () => window.removeEventListener("open-quote", handler);
-  }, [openQuote]);
+  const { page } = useRouter();
 
   const isAdmin = page === "admin";
 
@@ -46,7 +36,6 @@ function PageContent() {
     accommodation: <AccommodationPage />,
     contact: <ContactPage />,
     destinations: <DestinationPage />,
-    quote: <QuotePage />,
     "tour-detail": <TourDetailPage />,
     "accommodation-detail": <AccommodationDetailPage />,
     "scheduled-trip-detail": <ScheduledTripDetailPage />,
@@ -71,7 +60,6 @@ function PageContent() {
         </AnimatePresence>
       </main>
       {!isAdmin && <Footer />}
-      {!isAdmin && <QuoteModal />}
       {!isAdmin && <WhatsAppChatbot />}
       {!isAdmin && <CookieConsent />}
     </div>

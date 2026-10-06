@@ -10,7 +10,7 @@ import { destinations, destinationCountries, type Destination } from "@/lib/dest
 import { cn } from "@/lib/utils";
 
 export function DestinationPage() {
-  const { destinationCountry, navigateToDestination, openQuote } = useRouter();
+  const { destinationCountry, navigateToDestination, navigate } = useRouter();
   const heroRef = useRef<HTMLDivElement>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
@@ -144,7 +144,7 @@ export function DestinationPage() {
               </Reveal>
               <Reveal variant="up" delay={0.3}>
                 <div className="mt-8">
-                  <LuxuryButton variant="gold" onClick={openQuote}>
+                  <LuxuryButton variant="gold" onClick={() => navigate("contact")}>
                     {data.intro.cta}
                   </LuxuryButton>
                 </div>
@@ -300,7 +300,7 @@ export function DestinationPage() {
             </div>
           </Reveal>
           <Reveal variant="up" delay={0.3}>
-            <LuxuryButton variant="gold" onClick={openQuote}>
+            <LuxuryButton variant="gold" onClick={() => navigate("contact")}>
               {data.luxury.cta}
             </LuxuryButton>
           </Reveal>
@@ -545,7 +545,7 @@ export function DestinationPage() {
                   If your question is not here, a specialist will reply within 24 hours.
                 </p>
                 <button
-                  onClick={openQuote}
+                  onClick={() => navigate("contact")}
                   className="link-underline text-charcoal/70"
                 >
                   Ask a Specialist
@@ -638,7 +638,7 @@ export function DestinationPage() {
           </Reveal>
           <Reveal variant="up" delay={0.3}>
             <div className="flex justify-center mb-10">
-              <LuxuryButton variant="gold" onClick={openQuote}>
+              <LuxuryButton variant="gold" onClick={() => navigate("contact")}>
                 {data.cta.cta}
               </LuxuryButton>
             </div>

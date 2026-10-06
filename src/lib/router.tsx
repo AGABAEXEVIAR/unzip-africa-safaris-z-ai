@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useCallback, useEffect, ReactNode } from "react";
+import { createContext, useContext, useState, useCallback, ReactNode } from "react";
 
 export type PageId =
   | "home"
@@ -11,7 +11,6 @@ export type PageId =
   | "destinations"
   | "accommodation"
   | "contact"
-  | "quote"
   | "tour-detail"
   | "accommodation-detail"
   | "scheduled-trip-detail"
@@ -19,7 +18,6 @@ export type PageId =
 
 type RouterContextValue = {
   page: PageId;
-  quoteOpen: boolean;
   destinationCountry: string | null;
   selectedTourId: string | null;
   selectedAccommodationId: string | null;
@@ -29,8 +27,6 @@ type RouterContextValue = {
   navigateToTour: (id: string) => void;
   navigateToAccommodation: (id: string) => void;
   navigateToScheduledTrip: (id: string) => void;
-  openQuote: () => void;
-  closeQuote: () => void;
 };
 
 const RouterContext = createContext<RouterContextValue | null>(null);
@@ -43,7 +39,6 @@ export function useRouter() {
 
 export function RouterProvider({ children }: { children: ReactNode }) {
   const [page, setPage] = useState<PageId>("home");
-  const [quoteOpen, setQuoteOpen] = useState(false);
   const [destinationCountry, setDestinationCountry] = useState<string | null>(null);
   const [selectedTourId, setSelectedTourId] = useState<string | null>(null);
   const [selectedAccommodationId, setSelectedAccommodationId] = useState<string | null>(null);
@@ -86,28 +81,10 @@ export function RouterProvider({ children }: { children: ReactNode }) {
     scrollToTop();
   }, [scrollToTop]);
 
-  const openQuote = useCallback(() => {
-    setPage("quote");
-    scrollToTop();
-  }, [scrollToTop]);
-  const closeQuote = useCallback(() => setQuoteOpen(false), []);
-
-  useEffect(() => {
-    if (quoteOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [quoteOpen]);
-
   return (
     <RouterContext.Provider
       value={{
         page,
-        quoteOpen,
         destinationCountry,
         selectedTourId,
         selectedAccommodationId,
@@ -117,8 +94,6 @@ export function RouterProvider({ children }: { children: ReactNode }) {
         navigateToTour,
         navigateToAccommodation,
         navigateToScheduledTrip,
-        openQuote,
-        closeQuote,
       }}
     >
       {children}

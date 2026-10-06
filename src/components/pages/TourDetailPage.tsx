@@ -24,7 +24,7 @@ const sharp = { borderRadius: 0 } as const;
 export function TourDetailPage() {
   const tours = useTours();
   const accommodations = useAccommodations();
-  const { selectedTourId, navigate, navigateToTour, navigateToAccommodation, openQuote } =
+  const { selectedTourId, navigate, navigateToTour, navigateToAccommodation } =
     useRouter();
 
   const [bookingOpen, setBookingOpen] = useState(false);
@@ -614,8 +614,8 @@ export function TourDetailPage() {
             </p>
           </Reveal>
           <Reveal variant="up" delay={0.3}>
-            <button onClick={openQuote} className="btn-luxury btn-luxury-light">
-              Request a Quote
+            <button onClick={() => navigate("contact")} className="btn-luxury btn-luxury-light">
+              Contact
             </button>
           </Reveal>
         </div>

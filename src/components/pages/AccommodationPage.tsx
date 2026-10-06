@@ -11,7 +11,7 @@ const sharp = { borderRadius: 0 } as const;
 
 export function AccommodationPage() {
   const accommodations = useAccommodations();
-  const { openQuote, navigate, navigateToAccommodation } = useRouter();
+  const { navigate, navigateToAccommodation } = useRouter();
   const heroRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -217,7 +217,7 @@ export function AccommodationPage() {
           </ScrollReveal>
           <Reveal variant="up" delay={0.2}>
             <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-5">
-              <button onClick={openQuote} className="btn-luxury btn-luxury-gold">
+              <button onClick={() => navigate("contact")} className="btn-luxury btn-luxury-gold">
                 Request a Quote
               </button>
               <button

@@ -8,7 +8,7 @@ import { useRouter } from "@/lib/router";
 import { useLang } from "@/lib/language";
 
 export function AboutPage() {
-  const { navigate, openQuote } = useRouter();
+  const { navigate } = useRouter();
   const { t } = useLang();
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -349,7 +349,7 @@ export function AboutPage() {
               we will compose the rest.
             </p>
             <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-5">
-              <button onClick={openQuote} className="btn-luxury btn-luxury-gold">
+              <button onClick={() => navigate("contact")} className="btn-luxury btn-luxury-gold">
                 Request a Quote
               </button>
               <button

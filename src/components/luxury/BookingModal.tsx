@@ -49,10 +49,12 @@ export function BookingModal(props: BookingModalProps) {
     }
   }, [open]);
 
-  // Lock body scroll
+  // Lock body scroll + scroll modal into view immediately
   useEffect(() => {
     if (open) {
       document.body.style.overflow = "hidden";
+      // Scroll to top so the modal is immediately visible
+      window.scrollTo({ top: 0, behavior: "auto" });
     } else {
       document.body.style.overflow = "";
     }

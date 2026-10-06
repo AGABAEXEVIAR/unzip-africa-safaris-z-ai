@@ -15,7 +15,7 @@ const sharp = { borderRadius: 0 } as const;
 export function ToursPage() {
   const tourPackages = useTours();
   const scheduledTrips = useScheduledTrips();
-  const { navigate, navigateToTour, navigateToScheduledTrip, openQuote } = useRouter();
+  const { navigate, navigateToTour, navigateToScheduledTrip } = useRouter();
 
   const heroRef = useRef<HTMLDivElement>(null);
   const [bookingTour, setBookingTour] = useState<TourPackage | null>(null);
@@ -387,8 +387,8 @@ export function ToursPage() {
               Tell us which journey speaks to you — or describe one we have not yet imagined.
             </p>
             <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-5">
-              <button onClick={openQuote} className="btn-luxury btn-luxury-gold">
-                Request a Quote
+              <button onClick={() => navigate("contact")} className="btn-luxury btn-luxury-gold">
+                Contact
               </button>
               <button
                 onClick={() => navigate("accommodation")}
