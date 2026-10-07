@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { toast } from "sonner";
 import {
@@ -148,7 +149,11 @@ export function BookingModal(props: BookingModalProps) {
     toast.success("Booking request received! We'll confirm within 24 hours.");
   };
 
-  return (
+  // Render via portal to document.body — bypasses any parent transforms
+  // (framer-motion page transitions use transform which breaks position:fixed)
+  if (typeof document === "undefined") return null;
+
+  return createPortal(
     <AnimatePresence>
       {open && (
         <motion.div
@@ -344,7 +349,8 @@ export function BookingModal(props: BookingModalProps) {
           </motion.div>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }
 
