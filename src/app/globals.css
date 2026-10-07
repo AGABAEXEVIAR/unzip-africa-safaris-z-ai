@@ -767,10 +767,10 @@
 }
 
 /* ============ Testimonials — continuous horizontal marquee with edge fading ============ */
-/* Mirrors the signature-destinations marquee pattern: originals duplicated
-   into doubled array, animation 0 → -50% = exactly one full set of originals,
-   then loops. Pauses on hover. Slow 40s loop because testimonials have more
-   text to read. */
+/* Mirrors the signature-destinations pattern: originals duplicated into 8,
+   track has explicit width = 8 × item width per breakpoint so -50% = exactly
+   4 originals = seamless loop (no jump at the loop point). Pauses on hover.
+   30s loop because testimonials have more text to read. */
 .testimonials-marquee {
   overflow: hidden;
   width: 100%;
@@ -779,8 +779,19 @@
 
 .testimonials-marquee-track {
   display: flex;
-  animation: testimonialsScroll 40s linear infinite;
+  width: 800vw; /* mobile: 8 × 100vw */
+  animation: testimonialsScroll 30s linear infinite;
   will-change: transform;
+}
+@media (min-width: 640px) {
+  .testimonials-marquee-track {
+    width: 400vw; /* tablet: 8 × 50vw */
+  }
+}
+@media (min-width: 1024px) {
+  .testimonials-marquee-track {
+    width: 266.67vw; /* desktop: 8 × 33.333vw */
+  }
 }
 
 .testimonials-marquee:hover .testimonials-marquee-track {
@@ -788,9 +799,6 @@
 }
 
 .testimonials-marquee-item {
-  /* Mobile: 1 per viewport (100vw). Tablet+: 2 per viewport (50vw).
-     Using vw units guarantees each card sizes to the viewport — never
-     collapses even though the track has no width. */
   flex: 0 0 100vw;
   padding: 0.5rem 0 0.5rem 1rem;
   box-sizing: border-box;
@@ -929,23 +937,35 @@ button:hover .whatsapp-icon-wiggle {
 }
 
 /* ============ Signature Destinations — continuous marquee ============ */
-/* 4 originals duplicated into 8. Each item is sized in VIEWPORT units (vw)
-   — NOT percentages of the track — so the cards never collapse even though
-   the track has no explicit width. Total track width = 8 × 25vw = 200vw on
-   desktop, 8 × 50vw = 400vw on tablet, 8 × 100vw = 800vw on mobile.
-   Animation 0 → -50% of TRACK width = -100vw (desktop) / -200vw (tablet) /
-   -400vw (mobile) = exactly one full set of 4 originals. At the loop point
-   the duplicate set is in the original's place — visually seamless, so when
-   image 1 exits the left viewport edge, it reappears behind image 4. */
+/* 4 originals duplicated into 8. The track has an EXPLICIT width = 8 × item
+   width per breakpoint. This is critical: with no explicit width, the track
+   would default to its parent's width (100vw), making the -50% transform
+   translate by only 50vw (2 cards) instead of 100vw (4 cards) — which would
+   cause a visible jump at the loop point. With the explicit widths below,
+   -50% of TRACK width = exactly 4 cards = one full set of originals, so the
+   loop is truly seamless: when image 1 exits the left viewport edge, the
+   duplicate of image 1 is already entering from the right side. */
 .signature-destinations-marquee {
   overflow: hidden;
   width: 100%;
+  position: relative;
 }
 
 .signature-destinations-marquee-track {
   display: flex;
-  animation: signatureDestinationsScroll 20s linear infinite;
+  width: 800vw; /* mobile: 8 × 100vw */
+  animation: signatureDestinationsScroll 15s linear infinite;
   will-change: transform;
+}
+@media (min-width: 640px) {
+  .signature-destinations-marquee-track {
+    width: 400vw; /* tablet: 8 × 50vw */
+  }
+}
+@media (min-width: 1024px) {
+  .signature-destinations-marquee-track {
+    width: 200vw; /* desktop: 8 × 25vw */
+  }
 }
 
 .signature-destinations-marquee:hover .signature-destinations-marquee-track {
@@ -953,9 +973,6 @@ button:hover .whatsapp-icon-wiggle {
 }
 
 .signature-destinations-marquee-item {
-  /* Mobile: 1 per viewport (100vw). Tablet: 2 per viewport (50vw). Desktop: 4 per viewport (25vw).
-     Using vw units guarantees each card sizes to the viewport — never collapses
-     to 0 like percentage-based flex-basis would when the track has no width. */
   flex: 0 0 100vw;
   padding-left: 1rem;
   box-sizing: border-box;
