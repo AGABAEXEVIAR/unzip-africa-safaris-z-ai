@@ -79,7 +79,7 @@ export function SafariScrollStack() {
                 <button
                   onClick={() => navigateToDestination(t(dest.countryKey))}
                   data-cursor="view"
-                  className="group relative w-full aspect-[3/4] sm:aspect-[4/5] lg:aspect-[3/4] overflow-hidden bg-charcoal block"
+                  className="group relative w-full aspect-[4/5] sm:aspect-[3/2] lg:aspect-[5/4] overflow-hidden bg-charcoal block"
                   style={sharp}
                 >
                   <img

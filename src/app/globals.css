@@ -900,10 +900,14 @@ button:hover .whatsapp-icon-wiggle {
 }
 
 /* ============ Signature Destinations — continuous marquee ============ */
-/* 4 originals duplicated into 8. Track animates 0 → -50% (= one full set of
-   originals) then loops back to 0. At the loop point the duplicate set is
-   in the original's place, so the reset is visually seamless — when image
-   1 exits the left side, it reappears on the right behind image 4. */
+/* 4 originals duplicated into 8. Each item is sized in VIEWPORT units (vw)
+   — NOT percentages of the track — so the cards never collapse even though
+   the track has no explicit width. Total track width = 8 × 25vw = 200vw on
+   desktop, 8 × 50vw = 400vw on tablet, 8 × 100vw = 800vw on mobile.
+   Animation 0 → -50% of TRACK width = -100vw (desktop) / -200vw (tablet) /
+   -400vw (mobile) = exactly one full set of 4 originals. At the loop point
+   the duplicate set is in the original's place — visually seamless, so when
+   image 1 exits the left viewport edge, it reappears behind image 4. */
 .signature-destinations-marquee {
   overflow: hidden;
   width: 100%;
@@ -911,8 +915,7 @@ button:hover .whatsapp-icon-wiggle {
 
 .signature-destinations-marquee-track {
   display: flex;
-  width: max-content;
-  animation: signatureDestinationsScroll 28s linear infinite;
+  animation: signatureDestinationsScroll 30s linear infinite;
   will-change: transform;
 }
 
@@ -921,19 +924,22 @@ button:hover .whatsapp-icon-wiggle {
 }
 
 .signature-destinations-marquee-item {
-  /* Mobile: 1 per viewport (100%). Tablet: 2 per viewport (50%). Desktop: 4 per viewport (25%). */
-  flex: 0 0 100%;
+  /* Mobile: 1 per viewport (100vw). Tablet: 2 per viewport (50vw). Desktop: 4 per viewport (25vw).
+     Using vw units guarantees each card sizes to the viewport — never collapses
+     to 0 like percentage-based flex-basis would when the track has no width. */
+  flex: 0 0 100vw;
   padding-left: 1rem;
+  box-sizing: border-box;
 }
 @media (min-width: 640px) {
   .signature-destinations-marquee-item {
-    flex: 0 0 50%;
+    flex: 0 0 50vw;
     padding-left: 1.5rem;
   }
 }
 @media (min-width: 1024px) {
   .signature-destinations-marquee-item {
-    flex: 0 0 25%;
+    flex: 0 0 25vw;
   }
 }
 
