@@ -1,6 +1,6 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 import {
   tourPackages as seedTours,
   accommodations as seedAccommodations,
@@ -124,17 +124,23 @@ function getSnapshot(): State {
   return state;
 }
 
-// For SSR — return the same default state with empty bookings
+// For SSR — return a stable constant reference.
+// Computing this once at module load (instead of building a fresh object on every call)
+// avoids the "result of getServerSnapshot should be cached to avoid an infinite loop"
+// warning from useSyncExternalStore, which fires when getServerSnapshot returns a new
+// object reference each call.
+const SERVER_SNAPSHOT: State = {
+  tours: [...seedTours],
+  accommodations: [...seedAccommodations],
+  scheduledTrips: [...seedScheduledTrips],
+  testimonials: [...seedTestimonials],
+  destinations: [...seedDestinations],
+  bookings: [],
+  quotes: [],
+};
+
 function getServerSnapshot(): State {
-  return {
-    tours: [...seedTours],
-    accommodations: [...seedAccommodations],
-    scheduledTrips: [...seedScheduledTrips],
-    testimonials: [...seedTestimonials],
-    destinations: [...seedDestinations],
-    bookings: [],
-    quotes: [],
-  };
+  return SERVER_SNAPSHOT;
 }
 
 /* ============================================================
@@ -339,7 +345,16 @@ export const store = {
  * Hooks
  * ============================================================ */
 function useStore<T>(selector: (s: State) => T): T {
-  return useSyncExternalStore(subscribe, () => selector(getSnapshot()), () => selector(getServerSnapshot()));
+  // Memoize the snapshot getters so they don't change identity every render.
+  // Without this, useSyncExternalStore sees a new function reference each render
+  // and re-subscribes / re-reads, which triggers "result of getServerSnapshot
+  // should be cached to avoid an infinite loop" warnings.
+  // The selector itself is in the dep array — callers typically pass inline
+  // arrows, but selector(s) returns a stable slice of the state object so the
+  // result is referentially stable across renders as long as state didn't change.
+  const getClientSnapshot = useCallback(() => selector(getSnapshot()), [selector]);
+  const getServerSnap = useCallback(() => selector(getServerSnapshot()), [selector]);
+  return useSyncExternalStore(subscribe, getClientSnapshot, getServerSnap);
 }
 
 export function useTours(): TourPackage[] {

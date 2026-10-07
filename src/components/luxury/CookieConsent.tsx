@@ -1,61 +1,36 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useLang } from "@/lib/language";
 
 const STORAGE_KEY = "unzip-africa-gdpr-consent";
 
 type ConsentChoice = "accepted" | "denied" | null;
 
-/**
- * Reads a value from localStorage, but only on the client (after hydration).
- * Returns null during SSR and the first client render to avoid hydration mismatches,
- * then re-renders with the actual value on the next tick.
- */
-function useClientStorage(key: string): ConsentChoice {
-  const [value, setValue] = useState<ConsentChoice>(null);
-  const [read, setRead] = useState(false);
-
-  // Mark as read on first render via a callback ref pattern
-  // (avoids setState-in-effect lint rule)
-  if (!read && typeof window !== "undefined") {
-    // Schedule state update via queueMicrotask so it runs after render commits
-    queueMicrotask(() => {
-      try {
-        const stored = localStorage.getItem(key) as ConsentChoice;
-        if (stored === "accepted" || stored === "denied") {
-          setValue(stored);
-        }
-      } catch {
-        // localStorage unavailable
-      }
-      setRead(true);
-    });
-  }
-
-  return value;
-}
-
 export function CookieConsent() {
   const [choice, setChoice] = useState<ConsentChoice>(null);
   const { t } = useLang();
   const [mounted, setMounted] = useState(false);
 
-  // Use queueMicrotask to schedule client-side initialization without
-  // triggering the setState-in-effect lint rule.
-  if (!mounted && typeof window !== "undefined") {
-    queueMicrotask(() => {
-      try {
-        const stored = localStorage.getItem(STORAGE_KEY) as ConsentChoice;
-        if (stored === "accepted" || stored === "denied") {
-          setChoice(stored);
-        }
-      } catch {
-        // localStorage unavailable — banner will show
+  // Run client-only initialization (localStorage read + mount flag) in useEffect.
+  // Previously used queueMicrotask inside the render body which fired before the
+  // component finished mounting, causing the runtime warning:
+  //   "Can't perform a React state update on a component that hasn't mounted yet."
+  // useEffect runs after mount, which is the correct React lifecycle for side-effects.
+  // The set-state-in-effect lint rule has a false positive here — this is a one-time
+  // mount-only initialization (not a cascading render pattern).
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY) as ConsentChoice;
+      if (stored === "accepted" || stored === "denied") {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setChoice(stored);
       }
-      setMounted(true);
-    });
-  }
+    } catch {
+      // localStorage unavailable — banner will show
+    }
+    setMounted(true);
+  }, []);
 
   const decide = useCallback((value: "accepted" | "denied") => {
     setChoice(value);
