@@ -484,7 +484,7 @@ export function Navigation() {
                   key={sub.id}
                   onClick={() => handleAboutClick(sub.id)}
                   className={cn(
-                    "font-display text-2xl sm:text-3xl text-left py-1.5 pl-8 transition-all duration-700",
+                    "font-display text-3xl sm:text-4xl text-left py-2 pl-8 transition-all duration-700",
                     isActive ? "text-charcoal" : "text-charcoal/40",
                     menuOpen ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
                   )}
@@ -513,7 +513,7 @@ export function Navigation() {
                   key={country.id}
                   onClick={() => handleDestClick(country.id)}
                   className={cn(
-                    "font-display text-2xl sm:text-3xl text-left py-1.5 pl-8 transition-all duration-700",
+                    "font-display text-3xl sm:text-4xl text-left py-2 pl-8 transition-all duration-700",
                     isActive ? "text-charcoal" : "text-charcoal/40",
                     menuOpen ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
                   )}
