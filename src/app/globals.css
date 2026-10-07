@@ -898,3 +898,12 @@ button:hover .whatsapp-icon-wiggle {
   }
   .flip-char { animation: none !important; }
 }
+
+/* ============ Signature Destinations carousel — slow, calm slide transition ============ */
+/* The autoplay moves to a new slide every 6s; this slows the actual slide
+   transition animation to 1.2s for a smooth, deliberate, cinematic feel
+   (embla's default is ~0.32s which feels too snappy for a luxury brand). */
+.signature-destinations-carousel > div {
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  will-change: transform;
+}
