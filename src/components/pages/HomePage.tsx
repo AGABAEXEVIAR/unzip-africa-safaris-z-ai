@@ -91,12 +91,6 @@ export function HomePage() {
                       <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </button>
-                  <button
-                    onClick={() => navigate("contact")}
-                    className="link-underline text-charcoal/70"
-                  >
-                    {t("cta.speakSpecialist")}
-                  </button>
                 </div>
               </Reveal>
             </div>
