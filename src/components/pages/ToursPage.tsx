@@ -5,7 +5,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { Reveal } from "@/components/luxury/Reveal";
 import ScrollReveal from "@/components/luxury/ScrollReveal";
 import { useRouter } from "@/lib/router";
-import { useTours, useScheduledTrips } from "@/lib/store";
+import { useTours } from "@/lib/store";
 import { BookingModal } from "@/components/luxury/BookingModal";
 import type { TourPackage } from "@/lib/content";
 import { Calendar, Clock, MapPin, Users } from "lucide-react";
@@ -14,8 +14,7 @@ const sharp = { borderRadius: 0 } as const;
 
 export function ToursPage() {
   const tourPackages = useTours();
-  const scheduledTrips = useScheduledTrips();
-  const { navigate, navigateToTour, navigateToScheduledTrip } = useRouter();
+  const { navigate, navigateToTour } = useRouter();
 
   const heroRef = useRef<HTMLDivElement>(null);
   const [bookingTour, setBookingTour] = useState<TourPackage | null>(null);
@@ -120,11 +119,6 @@ export function ToursPage() {
     (filters.durationMax !== DURATION_MAX ? 1 : 0);
 
   // Upcoming scheduled trips (sorted by start date)
-  const upcomingTrips = useMemo(
-    () => [...scheduledTrips].sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime()),
-    [scheduledTrips]
-  );
-
   return (
     <div className="page-enter">
       {/* ====================== HERO ====================== */}
@@ -167,76 +161,6 @@ export function ToursPage() {
           </motion.p>
         </div>
       </section>
-
-      {/* ====================== SCHEDULED TRIPS PREVIEW ====================== */}
-      {upcomingTrips.length > 0 && (
-        <section className="py-16 md:py-24 px-6 md:px-10 bg-alabaster">
-          <div className="mx-auto max-w-[1600px]">
-            <div className="flex items-end justify-between mb-10 md:mb-12">
-              <div>
-                <Reveal variant="up">
-                  <p className="font-eyebrow text-gold mb-4">Upcoming Departures</p>
-                </Reveal>
-                <ScrollReveal
-                  as="h2"
-                  containerClassName="font-display text-4xl md:text-6xl text-charcoal tracking-tight leading-[1.05] block"
-                  textClassName="block"
-                  baseOpacity={0.1}
-                  blurStrength={5}
-                >
-                  Scheduled <span className="italic text-forest">Trips.</span>
-                </ScrollReveal>
-              </div>
-              <p className="font-label text-charcoal/50 hidden md:block flex-shrink-0">
-                {upcomingTrips.length} fixed-date departures
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-              {upcomingTrips.slice(0, 3).map((trip, idx) => (
-                <Reveal key={trip.id} variant="up" delay={idx * 0.1}>
-                  <article
-                    onClick={() => navigateToScheduledTrip(trip.id)}
-                    className="bg-canvas border border-border/60 overflow-hidden cursor-pointer group card-luxury flex flex-col h-full"
-                    style={sharp}
-                  >
-                    <div className="relative aspect-[4/3] overflow-hidden bg-bone card-zoom">
-                      <img src={trip.image} alt={trip.name} className="w-full h-full object-cover img-luxury" />
-                      <div className="absolute top-3 left-3 bg-charcoal/70 text-cream text-[0.6rem] tracking-[0.15em] uppercase px-3 py-1.5" style={sharp}>
-                        {formatDate(trip.startDate)}
-                      </div>
-                      {trip.spotsLeft <= 5 && (
-                        <div className="absolute top-3 right-3 bg-gold text-charcoal text-[0.6rem] tracking-[0.15em] uppercase px-3 py-1.5" style={sharp}>
-                          {trip.spotsLeft} spots
-                        </div>
-                      )}
-                    </div>
-                    <div className="p-5 flex flex-col flex-1">
-                      <p className="font-eyebrow text-gold mb-2">{trip.destination}</p>
-                      <h3
-                        className="font-display text-2xl text-charcoal tracking-tight mb-3 leading-[1.1] group-hover:text-forest transition-colors"
-                        style={{ fontFamily: "var(--font-cormorant), serif" }}
-                      >
-                        {trip.name}
-                      </h3>
-                      <p className="text-sm text-charcoal/70 leading-relaxed line-clamp-2 mb-4 flex-1">{trip.description}</p>
-                      <div className="mt-auto pt-4 border-t border-border flex items-end justify-between">
-                        <div>
-                          <p className="font-display text-2xl text-forest" style={{ fontFamily: "var(--font-cormorant), serif" }}>
-                            ${trip.priceFrom.toLocaleString()}
-                          </p>
-                          <p className="text-[0.65rem] text-charcoal/50">per person · {trip.durationDays} days</p>
-                        </div>
-                        <span className="font-eyebrow text-gold">Explore →</span>
-                      </div>
-                    </div>
-                  </article>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* ====================== FILTERS + TOURS GRID ====================== */}
       <section className="py-16 md:py-24 px-6 md:px-10">

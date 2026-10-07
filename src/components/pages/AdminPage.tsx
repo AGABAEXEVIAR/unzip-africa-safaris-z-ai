@@ -44,7 +44,6 @@ import {
   ChevronUp,
   Compass,
   Eye,
-  Images,
   LayoutDashboard,
   LogOut,
   Mail,
@@ -109,7 +108,6 @@ type AdminSection =
   | "quotes"
   | "bookings"
   | "scheduled-trip-bookings"
-  | "gallery"
   | "testimonials"
   | "settings";
 
@@ -204,6 +202,7 @@ type SettingsState = {
   tagline: string;
   email: string;
   phone: string;
+  logoUrl: string;
   facebook: string;
   instagram: string;
   twitter: string;
@@ -221,6 +220,7 @@ const DEFAULT_SETTINGS: SettingsState = {
   tagline: "Curated African journeys",
   email: "hello@unzipafrica.com",
   phone: "+255 754 000 000",
+  logoUrl: "",
   facebook: "",
   instagram: "",
   twitter: "",
@@ -654,7 +654,6 @@ const NAV_ITEMS: { id: AdminSection; label: string; icon: React.ComponentType<{ 
   { id: "quotes", label: "Quote Requests", icon: Mail },
   { id: "bookings", label: "Tour Bookings", icon: CalendarCheck },
   { id: "scheduled-trip-bookings", label: "Scheduled Trip Bookings", icon: Calendar },
-  { id: "gallery", label: "Gallery", icon: Images },
   { id: "testimonials", label: "Testimonials", icon: Quote },
   { id: "settings", label: "Settings", icon: SettingsIcon },
 ];
@@ -3796,6 +3795,24 @@ function SettingsSection() {
                   />
                 </Field>
               </div>
+              {/* Logo upload */}
+              <div className="mt-6 border-t border-charcoal/10 pt-6">
+                <Field label="Dashboard Logo URL" hint="Paste a URL to your logo image. This will appear in the admin sidebar.">
+                  <TextInput
+                    value={form.logoUrl}
+                    onChange={(e) => update("logoUrl", e.target.value)}
+                    placeholder="https://example.com/logo.png"
+                  />
+                </Field>
+                {form.logoUrl && (
+                  <div className="mt-3 flex items-center gap-4">
+                    <div className="w-12 h-12 overflow-hidden bg-cream border border-charcoal/10 flex items-center justify-center" style={sharp}>
+                      <img src={form.logoUrl} alt="Logo preview" className="w-full h-full object-contain" />
+                    </div>
+                    <p className="text-xs text-charcoal/50">Logo preview</p>
+                  </div>
+                )}
+              </div>
             </TabsContent>
 
             <TabsContent value="social" className="mt-0">
@@ -3969,7 +3986,6 @@ export function AdminPage() {
           {section === "quotes" && <QuotesSection />}
           {section === "bookings" && <BookingsSection filterType="tour" title="Tour Bookings" />}
           {section === "scheduled-trip-bookings" && <BookingsSection filterType="scheduled-trip" title="Scheduled Trip Bookings" />}
-          {section === "gallery" && <GallerySection />}
           {section === "testimonials" && <TestimonialsSection />}
           {section === "settings" && <SettingsSection />}
         </div>
