@@ -98,6 +98,10 @@ const ScrollReveal = ({
       scrollContainerRef && scrollContainerRef.current ? scrollContainerRef.current : window;
 
     const ctx = gsap.context(() => {
+      // Check if element is already in viewport on first load
+      const rect = el.getBoundingClientRect();
+      const inView = rect.top < window.innerHeight && rect.bottom > 0;
+
       // Rotation: container rotates from baseRotation -> 0 across the scroll
       gsap.fromTo(
         el,
@@ -120,7 +124,7 @@ const ScrollReveal = ({
       // Word opacity stagger
       gsap.fromTo(
         wordElements,
-        { opacity: baseOpacity, willChange: "opacity" },
+        { opacity: inView ? 1 : baseOpacity, willChange: "opacity" },
         {
           ease: "none",
           opacity: 1,
@@ -139,7 +143,7 @@ const ScrollReveal = ({
       if (enableBlur) {
         gsap.fromTo(
           wordElements,
-          { filter: `blur(${blurStrength}px)` },
+          { filter: inView ? "blur(0px)" : `blur(${blurStrength}px)` },
           {
             ease: "none",
             filter: "blur(0px)",
@@ -154,6 +158,9 @@ const ScrollReveal = ({
           }
         );
       }
+
+      // Force ScrollTrigger to recalculate positions after mount
+      ScrollTrigger.refresh();
     });
 
     return () => ctx.revert();

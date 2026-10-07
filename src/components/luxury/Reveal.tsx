@@ -30,6 +30,17 @@ export function Reveal({
     const el = ref.current;
     if (!el) return;
 
+    // Check immediately if element is already in viewport on first mount
+    const rect = el.getBoundingClientRect();
+    const isInViewport =
+      rect.top < window.innerHeight * 0.9 &&
+      rect.bottom > window.innerHeight * 0.1;
+
+    if (isInViewport) {
+      setVisible(true);
+      if (once) return;
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
