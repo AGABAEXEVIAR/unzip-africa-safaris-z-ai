@@ -571,71 +571,162 @@ function LoginGate({
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-forest-deep px-4">
-      <div className="w-full max-w-md bg-alabaster" style={sharp}>
-        <div className="p-8 md:p-10">
-          <p className="font-eyebrow text-gold mb-3">UNZIP AFRICA · ADMIN</p>
-          <h1
-            className="text-3xl mb-2"
+    <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2 bg-forest-deep">
+      {/* ============ LEFT — Safari game park image ============ */}
+      <div className="relative hidden lg:block overflow-hidden bg-forest-deep">
+        <img
+          src="https://sfile.chatglm.cn/images-ppt/e9781ad7f905.jpg"
+          alt="Safari game park landscape with acacia trees at golden hour"
+          className="absolute inset-0 w-full h-full object-cover"
+          loading="eager"
+          decoding="sync"
+        />
+        {/* Gradient overlays for legibility + brand tint */}
+        <div className="absolute inset-0 bg-gradient-to-t from-forest-deep/85 via-forest-deep/30 to-charcoal/40" />
+        <div className="absolute inset-0 bg-gradient-to-r from-forest-deep/40 to-transparent" />
+
+        {/* Top-left — logo lockup */}
+        <div className="absolute top-8 left-8 right-8 flex items-center gap-3">
+          <img
+            src="/logo.png"
+            alt="Unzip Africa Safaris"
+            width={88}
+            height={44}
+            className="h-11 w-auto block"
+            loading="eager"
+            decoding="sync"
+            style={{ filter: "brightness(0) invert(1)" }}
+            onError={(e) => {
+              (e.currentTarget as HTMLImageElement).style.visibility = "hidden";
+            }}
+          />
+          <div className="leading-none">
+            <p className="font-eyebrow text-gold-soft tracking-[0.3em]">UNZIP AFRICA</p>
+            <p
+              className="text-xs text-cream/60 mt-1"
+              style={{ fontFamily: "var(--font-cormorant), serif" }}
+            >
+              Safaris &amp; Travel Platform
+            </p>
+          </div>
+        </div>
+
+        {/* Bottom-left — evocative tagline / quote */}
+        <div className="absolute bottom-10 left-8 right-8 max-w-xl">
+          <p
+            className="font-display text-3xl xl:text-4xl text-cream tracking-tight leading-[1.15]"
             style={{ fontFamily: "var(--font-cormorant), serif" }}
           >
-            Welcome back
-          </h1>
-          <p className="text-sm text-muted-foreground mb-6">
-            Sign in to manage your travel platform.
+            Behind every great safari is a quiet desk,
+            <br />
+            <span className="italic text-gold-soft">a careful plan,</span>
+            <br />
+            and a guide who knows the way.
           </p>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-[11px] font-medium uppercase tracking-[0.18em] text-charcoal/70 mb-2">
-                Username
-              </label>
-              <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="w-full h-11 px-3 bg-cream border border-charcoal/15 text-charcoal placeholder:text-muted-foreground focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold"
-                style={sharp}
-                placeholder="admin"
-                autoFocus
+          <div className="mt-6 flex items-center gap-3">
+            <span className="block w-12 h-px bg-gold-soft" />
+            <p className="font-eyebrow text-cream/60 tracking-[0.25em]">
+              ADMIN PORTAL · EST. 2009
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* ============ RIGHT — Login form ============ */}
+      <div className="flex items-center justify-center px-6 py-12 md:px-12 lg:px-20">
+        <div className="w-full max-w-md bg-alabaster" style={sharp}>
+          <div className="p-8 md:p-10">
+            {/* Mobile-only logo lockup (left column is hidden on mobile) */}
+            <div className="flex items-center gap-3 mb-6 lg:hidden">
+              <img
+                src="/logo.png"
+                alt="Unzip Africa Safaris"
+                width={120}
+                height={60}
+                className="h-12 w-auto block"
+                loading="eager"
+                decoding="sync"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).style.visibility = "hidden";
+                }}
               />
+              <div className="leading-none">
+                <p className="font-eyebrow text-gold">UNZIP AFRICA · ADMIN</p>
+                <p
+                  className="text-xs text-charcoal/50 mt-1"
+                  style={{ fontFamily: "var(--font-cormorant), serif" }}
+                >
+                  Safaris &amp; Travel Platform
+                </p>
+              </div>
             </div>
-            <div>
-              <label className="block text-[11px] font-medium uppercase tracking-[0.18em] text-charcoal/70 mb-2">
-                Password
-              </label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full h-11 px-3 bg-cream border border-charcoal/15 text-charcoal placeholder:text-muted-foreground focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold"
-                style={sharp}
-                placeholder="••••••••"
-              />
-            </div>
-            {error && (
-              <p
-                className="text-sm text-red-700 bg-red-50 border border-red-200 px-3 py-2"
+
+            {/* Desktop eyebrow */}
+            <p className="hidden lg:block font-eyebrow text-gold mb-3 tracking-[0.3em]">
+              ADMIN SIGN IN
+            </p>
+            <h1
+              className="text-3xl mb-2"
+              style={{ fontFamily: "var(--font-cormorant), serif" }}
+            >
+              Welcome back
+            </h1>
+            <p className="text-sm text-muted-foreground mb-6">
+              Sign in to manage your travel platform.
+            </p>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="block text-[11px] font-medium uppercase tracking-[0.18em] text-charcoal/70 mb-2">
+                  Username
+                </label>
+                <input
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="w-full h-11 px-3 bg-cream border border-charcoal/15 text-charcoal placeholder:text-muted-foreground focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold"
+                  style={sharp}
+                  placeholder="admin"
+                  autoFocus
+                />
+              </div>
+              <div>
+                <label className="block text-[11px] font-medium uppercase tracking-[0.18em] text-charcoal/70 mb-2">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full h-11 px-3 bg-cream border border-charcoal/15 text-charcoal placeholder:text-muted-foreground focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold"
+                  style={sharp}
+                  placeholder="••••••••"
+                />
+              </div>
+              {error && (
+                <p
+                  className="text-sm text-red-700 bg-red-50 border border-red-200 px-3 py-2"
+                  style={sharp}
+                >
+                  {error}
+                </p>
+              )}
+              <button
+                type="submit"
+                className="w-full h-11 bg-forest text-cream font-medium uppercase tracking-[0.2em] text-sm hover:bg-forest-deep transition-colors"
                 style={sharp}
               >
-                {error}
-              </p>
-            )}
-            <button
-              type="submit"
-              className="w-full h-11 bg-forest text-cream font-medium uppercase tracking-[0.2em] text-sm hover:bg-forest-deep transition-colors"
-              style={sharp}
-            >
-              Sign In
-            </button>
-            <button
-              type="button"
-              onClick={onBack}
-              className="w-full flex items-center justify-center gap-2 text-sm text-muted-foreground hover:text-charcoal transition-colors py-2"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Back to site
-            </button>
-          </form>
+                Sign In
+              </button>
+              <button
+                type="button"
+                onClick={onBack}
+                className="w-full flex items-center justify-center gap-2 text-sm text-muted-foreground hover:text-charcoal transition-colors py-2"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Back to site
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </div>
