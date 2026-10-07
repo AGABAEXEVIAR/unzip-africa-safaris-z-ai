@@ -900,11 +900,10 @@ button:hover .whatsapp-icon-wiggle {
 }
 
 /* ============ Signature Destinations — continuous marquee ============ */
-/* The track contains the 4 destinations duplicated (8 total). The animation
-   translates the track from 0% to -50% (exactly one full set of originals)
-   and then loops back to 0% — at the loop point the duplicate set is in the
-   original's place, so the reset is visually seamless. Slow 50s loop for a
-   calm, cinematic pace. Pauses on hover so users can read the captions. */
+/* 4 originals duplicated into 8. Track animates 0 → -50% (= one full set of
+   originals) then loops back to 0. At the loop point the duplicate set is
+   in the original's place, so the reset is visually seamless — when image
+   1 exits the left side, it reappears on the right behind image 4. */
 .signature-destinations-marquee {
   overflow: hidden;
   width: 100%;
@@ -913,7 +912,7 @@ button:hover .whatsapp-icon-wiggle {
 .signature-destinations-marquee-track {
   display: flex;
   width: max-content;
-  animation: signatureDestinationsScroll 50s linear infinite;
+  animation: signatureDestinationsScroll 28s linear infinite;
   will-change: transform;
 }
 
@@ -922,10 +921,7 @@ button:hover .whatsapp-icon-wiggle {
 }
 
 .signature-destinations-marquee-item {
-  /* Card width — 1 per viewport on mobile (100%), 2 per viewport on sm+ (50%).
-     Bigger cards = more substantial presence on screen. Track width is
-     doubled (8 items) so the -50% loop point equals one full set of
-     originals and the reset is seamless at every breakpoint. */
+  /* Mobile: 1 per viewport (100%). Tablet: 2 per viewport (50%). Desktop: 4 per viewport (25%). */
   flex: 0 0 100%;
   padding-left: 1rem;
 }
@@ -935,7 +931,11 @@ button:hover .whatsapp-icon-wiggle {
     padding-left: 1.5rem;
   }
 }
-/* No lg breakpoint override — keep 50% on lg+ so cards stay big (2 per viewport) */
+@media (min-width: 1024px) {
+  .signature-destinations-marquee-item {
+    flex: 0 0 25%;
+  }
+}
 
 @keyframes signatureDestinationsScroll {
   from {
