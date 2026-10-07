@@ -301,10 +301,8 @@ export function ScheduledTripsSection() {
   const trips = useScheduledTrips();
   const { navigateToScheduledTrip } = useRouter();
 
-  // Sort by start date ascending, take first 3
-  const upcoming = [...trips]
-    .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())
-    .slice(0, 3);
+  // Show the 3 most recently created trips (admin prepends new ones to the array)
+  const upcoming = trips.slice(0, 3);
 
   if (upcoming.length === 0) return null;
 

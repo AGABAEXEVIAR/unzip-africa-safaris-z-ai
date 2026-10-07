@@ -10,7 +10,7 @@ const sharp = { borderRadius: 0 } as const;
 
 export function FeaturedTrips() {
   const tours = useTours();
-  const featured = tours.filter((t) => t.featured);
+  const featured = tours.filter((t) => t.featured).slice(0, 3);
   const { navigateToTour, navigate } = useRouter();
 
   return (

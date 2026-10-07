@@ -1157,6 +1157,7 @@ function TourFormModal({
   onSave: (t: TourPackage) => void;
 }) {
   const accommodations = useAccommodations();
+  const allTours = useTours();
   const [form, setForm] = useState<TourFormState>(() =>
     tour ? tourToForm(tour) : emptyTourForm()
   );
@@ -1422,8 +1423,17 @@ function TourFormModal({
                 <div className="md:col-span-2 pt-2">
                   <Toggle
                     checked={form.featured}
-                    onChange={(v) => update("featured", v)}
-                    label="Show as featured tour on homepage"
+                    onChange={(v) => {
+                      if (v && !form.featured) {
+                        const currentFeatured = allTours.filter((t) => t.featured && t.id !== tour?.id);
+                        if (currentFeatured.length >= 3) {
+                          toast.warning("You already have 3 featured trips on the homepage. Unfeature one first before featuring another.");
+                          return;
+                        }
+                      }
+                      update("featured", v);
+                    }}
+                    label="Show as featured tour on homepage (max 3)"
                   />
                 </div>
               </div>
