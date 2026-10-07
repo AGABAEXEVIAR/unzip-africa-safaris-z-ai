@@ -65,13 +65,6 @@ export function SafariScrollStack() {
       {/* Continuous marquee track — pauses on hover via CSS in globals.css
           (.signature-destinations-marquee:hover { animation-play-state: paused }) */}
       <div className="signature-destinations-marquee">
-        {/* Left edge fade — mirrors the testimonials marquee's edge fading.
-            Fades to the section's bg-canvas color so cards disappear gracefully
-            instead of being hard-clipped at the viewport edge. */}
-        <div className="pointer-events-none absolute top-0 bottom-0 left-0 z-10 w-16 md:w-32 bg-gradient-to-r from-canvas via-canvas/80 to-transparent" />
-        {/* Right edge fade */}
-        <div className="pointer-events-none absolute top-0 bottom-0 right-0 z-10 w-16 md:w-32 bg-gradient-to-l from-canvas via-canvas/80 to-transparent" />
-
         <div className="signature-destinations-marquee-track">
           {doubled.map((dest, idx) => {
             // Stable key per country + position-in-doubled-array so React
