@@ -1,6 +1,8 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
+import useEmblaCarousel from "embla-carousel-react";
+import Autoplay from "embla-carousel-autoplay";
 import { Reveal } from "@/components/luxury/Reveal";
 import ScrollReveal from "@/components/luxury/ScrollReveal";
 import { useRouter } from "@/lib/router";
@@ -260,88 +262,168 @@ export function FounderMessageSection() {
   );
 }
 
-/* ===================== Scheduled Trips Section ===================== */
+/* ===================== Scheduled Trips Section — Horizontal Carousel ===================== */
 export function ScheduledTripsSection() {
   const trips = useScheduledTrips();
   const { navigateToScheduledTrip, navigate } = useRouter();
-  const { t } = useLang();
+  const { t, formatDate } = useLang();
 
-  // Show the 3 most recently created trips (admin prepends new ones to the array)
-  const upcoming = trips.slice(0, 3);
+  // Show the 6 most recently created trips (admin prepends new ones to the array)
+  const upcoming = trips.slice(0, 6);
+
+  const [emblaRef, emblaApi] = useEmblaCarousel(
+    {
+      loop: upcoming.length > 3,
+      align: "start",
+      containScroll: "trimSnaps",
+      dragFree: false,
+    },
+    upcoming.length > 1 ? [Autoplay({ delay: 5000, stopOnInteraction: false, stopOnMouseEnter: true })] : []
+  );
+
+  const [selected, setSelected] = useState(0);
+  const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
+
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setSelected(emblaApi.selectedScrollSnap());
+  }, [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    setScrollSnaps(emblaApi.scrollSnapList());
+    emblaApi.on("select", onSelect);
+    emblaApi.on("reInit", onSelect);
+    onSelect();
+    return () => {
+      emblaApi.off("select", onSelect);
+      emblaApi.off("reInit", onSelect);
+    };
+  }, [emblaApi, onSelect]);
+
+  const scrollTo = useCallback((i: number) => emblaApi?.scrollTo(i), [emblaApi]);
+  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
+  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
 
   if (upcoming.length === 0) return null;
 
   return (
     <section className="py-16 md:py-24 px-6 md:px-10 bg-canvas">
       <div className="mx-auto max-w-[1600px]">
-        {/* Heading */}
-        <div className="mb-12 md:mb-16 text-center">
-          <Reveal variant="up">
-            <p className="font-eyebrow text-gold mb-6">{t("scheduledSection.eyebrow")}</p>
-          </Reveal>
-          <ScrollReveal
-            as="h2"
-            containerClassName="font-display text-5xl md:text-7xl lg:text-8xl text-charcoal tracking-tight leading-[0.95] block max-w-3xl mx-auto"
-            textClassName="block"
-            baseOpacity={0.1}
-            blurStrength={6}
-          >
-            {t("scheduledSection.title1")} <span className="italic text-forest">{t("scheduledSection.title2")}</span>
-          </ScrollReveal>
+        {/* Heading + controls */}
+        <div className="mb-10 md:mb-14">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 max-w-3xl mx-auto text-center md:text-left md:max-w-none md:mx-0">
+            <div>
+              <Reveal variant="up">
+                <p className="font-eyebrow text-gold mb-4">{t("scheduledSection.eyebrow")}</p>
+              </Reveal>
+              <ScrollReveal
+                as="h2"
+                containerClassName="font-display text-4xl md:text-6xl lg:text-7xl text-charcoal tracking-tight leading-[0.95] block"
+                textClassName="block"
+                baseOpacity={0.1}
+                blurStrength={6}
+              >
+                {t("scheduledSection.title1")} <span className="italic text-forest">{t("scheduledSection.title2")}</span>
+              </ScrollReveal>
+            </div>
+            <div className="flex items-center gap-3 flex-shrink-0 mx-auto md:mx-0">
+              <button
+                onClick={scrollPrev}
+                aria-label="Previous scheduled trip"
+                className="w-11 h-11 border border-charcoal/30 text-charcoal hover:bg-forest hover:text-cream hover:border-forest transition-colors flex items-center justify-center"
+                style={sharp}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+              <button
+                onClick={scrollNext}
+                aria-label="Next scheduled trip"
+                className="w-11 h-11 border border-charcoal/30 text-charcoal hover:bg-forest hover:text-cream hover:border-forest transition-colors flex items-center justify-center"
+                style={sharp}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+            </div>
+          </div>
           <Reveal variant="up" delay={0.2}>
-            <p className="text-charcoal/70 leading-relaxed mt-6 max-w-2xl mx-auto">
+            <p className="text-charcoal/70 leading-relaxed mt-6 max-w-2xl mx-auto text-center md:text-left md:mx-0">
               {t("scheduledSection.subtitle")}
             </p>
           </Reveal>
         </div>
 
-        {/* Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-          {upcoming.map((trip, idx) => (
-            <Reveal key={trip.id} variant="up" delay={idx * 0.1}>
-              <article
-                onClick={() => navigateToScheduledTrip(trip.id)}
-                className="bg-alabaster border border-border/60 overflow-hidden cursor-pointer group card-luxury flex flex-col"
-                style={sharp}
+        {/* Embla viewport — single-row horizontal carousel */}
+        <div className="overflow-hidden" ref={emblaRef}>
+          <div className="flex -ml-4 md:-ml-6">
+            {upcoming.map((trip) => (
+              <div
+                key={trip.id}
+                className="flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_33.333%] min-w-0 pl-4 md:pl-6"
               >
-                {/* Image */}
-                <div className="relative aspect-[4/3] overflow-hidden bg-bone card-zoom">
-                  <img src={trip.image} alt={trip.name} className="w-full h-full object-cover img-luxury" />
-                  <div className="absolute top-3 left-3 bg-charcoal/70 text-cream text-[0.65rem] tracking-[0.2em] uppercase px-3 py-1.5" style={sharp}>
-                    {formatDate(trip.startDate)}
-                  </div>
-                  {trip.spotsLeft <= 5 && (
-                    <div className="absolute top-3 right-3 bg-gold text-charcoal text-[0.6rem] tracking-[0.15em] uppercase px-3 py-1.5" style={sharp}>
-                      {trip.spotsLeft} {t("scheduledSection.spotsLeft")}
+                <article
+                  onClick={() => navigateToScheduledTrip(trip.id)}
+                  className="bg-alabaster border border-border/60 overflow-hidden cursor-pointer group card-luxury flex flex-col h-full"
+                  style={sharp}
+                >
+                  {/* Image */}
+                  <div className="relative aspect-[4/3] overflow-hidden bg-bone card-zoom">
+                    <img src={trip.image} alt={trip.name} className="w-full h-full object-cover img-luxury" />
+                    <div className="absolute top-3 left-3 bg-charcoal/70 text-cream text-[0.65rem] tracking-[0.2em] uppercase px-3 py-1.5" style={sharp}>
+                      {formatDate(trip.startDate)}
                     </div>
-                  )}
-                </div>
-
-                {/* Content */}
-                <div className="p-5 md:p-6 flex flex-col flex-1">
-                  <p className="font-eyebrow text-gold mb-2">{trip.destination}</p>
-                  <h3
-                    className="font-display text-2xl md:text-3xl text-charcoal tracking-tight mb-3 leading-[1.1] group-hover:text-forest transition-colors duration-500"
-                    style={{ fontFamily: "var(--font-cormorant), serif" }}
-                  >
-                    {trip.name}
-                  </h3>
-                  <p className="text-sm text-charcoal/70 leading-relaxed line-clamp-2 mb-5">{trip.description}</p>
-
-                  <div className="mt-auto pt-4 border-t border-border flex items-end justify-between">
-                    <div>
-                      <p className="font-display text-2xl text-forest" style={{ fontFamily: "var(--font-cormorant), serif" }}>
-                        ${trip.priceFrom.toLocaleString()}
-                      </p>
-                      <p className="text-[0.65rem] text-charcoal/50">{t("common.perPerson")} · {trip.durationDays} {t("common.daysLower")}</p>
-                    </div>
-                    <span className="font-eyebrow text-gold">{t("scheduledSection.exploreArrow")}</span>
+                    {trip.spotsLeft <= 5 && (
+                      <div className="absolute top-3 right-3 bg-gold text-charcoal text-[0.6rem] tracking-[0.15em] uppercase px-3 py-1.5" style={sharp}>
+                        {trip.spotsLeft} {t("scheduledSection.spotsLeft")}
+                      </div>
+                    )}
                   </div>
-                </div>
-              </article>
-            </Reveal>
-          ))}
+
+                  {/* Content */}
+                  <div className="p-5 md:p-6 flex flex-col flex-1">
+                    <p className="font-eyebrow text-gold mb-2">{trip.destination}</p>
+                    <h3
+                      className="font-display text-2xl md:text-3xl text-charcoal tracking-tight mb-3 leading-[1.1] group-hover:text-forest transition-colors duration-500"
+                      style={{ fontFamily: "var(--font-cormorant), serif" }}
+                    >
+                      {trip.name}
+                    </h3>
+                    <p className="text-sm text-charcoal/70 leading-relaxed line-clamp-2 mb-5">{trip.description}</p>
+
+                    <div className="mt-auto pt-4 border-t border-border flex items-end justify-between">
+                      <div>
+                        <p className="font-display text-2xl text-forest" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+                          ${trip.priceFrom.toLocaleString()}
+                        </p>
+                        <p className="text-[0.65rem] text-charcoal/50">{t("common.perPerson")} · {trip.durationDays} {t("common.daysLower")}</p>
+                      </div>
+                      <span className="font-eyebrow text-gold">{t("scheduledSection.exploreArrow")}</span>
+                    </div>
+                  </div>
+                </article>
+              </div>
+            ))}
+          </div>
         </div>
+
+        {/* Dot pagination */}
+        {scrollSnaps.length > 1 && (
+          <div className="flex items-center justify-center gap-2 mt-10">
+            {scrollSnaps.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => scrollTo(i)}
+                aria-label={`Go to trip ${i + 1}`}
+                className={`transition-all duration-300 ${i === selected ? "w-8 h-1.5 bg-gold" : "w-1.5 h-1.5 bg-charcoal/30 hover:bg-charcoal/50"}`}
+                style={sharp}
+              />
+            ))}
+          </div>
+        )}
 
         {/* View All Scheduled Trips button */}
         <div className="text-center mt-12 md:mt-16">
@@ -358,18 +440,6 @@ export function ScheduledTripsSection() {
       </div>
     </section>
   );
-}
-
-function formatDate(iso: string): string {
-  try {
-    return new Date(iso).toLocaleDateString("en-US", {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    });
-  } catch {
-    return iso;
-  }
 }
 
 /* ===================== Safari Cars Section — Two Column with Image Stack ===================== */

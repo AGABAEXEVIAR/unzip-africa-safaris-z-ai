@@ -20,6 +20,7 @@ import {
   useScheduledTrips,
   useTestimonials,
   useTours,
+  useBlogPosts,
   store,
   generateId,
   type Booking,
@@ -32,10 +33,12 @@ import type {
   ScheduledTrip,
   Testimonial,
   TourPackage,
+  BlogPost,
 } from "@/lib/content";
 import { toast } from "sonner";
 import {
   ArrowLeft,
+  BookOpen,
   Building2,
   Calendar,
   CalendarCheck,
@@ -54,6 +57,7 @@ import {
   Save,
   Search,
   Settings as SettingsIcon,
+  Star,
   Trash2,
 } from "lucide-react";
 
@@ -105,6 +109,7 @@ type AdminSection =
   | "accommodations"
   | "scheduled-trips"
   | "destinations"
+  | "blog"
   | "quotes"
   | "bookings"
   | "scheduled-trip-bookings"
@@ -359,11 +364,13 @@ function IconBtn({
   icon: Icon,
   label,
   variant = "default",
+  active = false,
 }: {
   onClick: () => void;
   icon: React.ComponentType<{ className?: string }>;
   label: string;
   variant?: "default" | "danger";
+  active?: boolean;
 }) {
   return (
     <button
@@ -374,7 +381,9 @@ function IconBtn({
       className={`p-1.5 inline-flex items-center justify-center transition-colors ${
         variant === "danger"
           ? "text-red-700 hover:bg-red-50"
-          : "text-charcoal hover:bg-charcoal/10"
+          : active
+            ? "text-gold bg-gold/10"
+            : "text-charcoal hover:bg-charcoal/10"
       }`}
       style={sharp}
     >
@@ -742,6 +751,7 @@ const NAV_ITEMS: { id: AdminSection; label: string; icon: React.ComponentType<{ 
   { id: "accommodations", label: "Accommodations", icon: Building2 },
   { id: "scheduled-trips", label: "Scheduled Trips", icon: Calendar },
   { id: "destinations", label: "Destinations", icon: MapPin },
+  { id: "blog", label: "Blog Posts", icon: BookOpen },
   { id: "quotes", label: "Quote Requests", icon: Mail },
   { id: "bookings", label: "Tour Bookings", icon: CalendarCheck },
   { id: "scheduled-trip-bookings", label: "Scheduled Trip Bookings", icon: Calendar },
@@ -931,6 +941,11 @@ function DashboardSection({
               label="Add Destination"
               icon={Plus}
               onClick={() => onNavigate("destinations")}
+            />
+            <QuickAction
+              label="New Blog Post"
+              icon={Plus}
+              onClick={() => onNavigate("blog")}
             />
             <QuickAction
               label="Add Testimonial"
@@ -4024,6 +4039,451 @@ function SettingsSection() {
 }
 
 /* ============================================================
+ * Blog Section — manage blog posts (CRUD)
+ * ============================================================ */
+type BlogFormState = {
+  title: string;
+  excerpt: string;
+  body: string;
+  coverImage: string;
+  author: string;
+  authorRole: string;
+  authorAvatar: string;
+  publishedDate: string;
+  tags: string; // comma-separated in form
+  category: string;
+  readTimeMins: number | "";
+  published: boolean;
+  featured: boolean;
+};
+
+function emptyBlogForm(): BlogFormState {
+  return {
+    title: "",
+    excerpt: "",
+    body: "",
+    coverImage: "",
+    author: "Agaba Exeviar",
+    authorRole: "Founder & Lead Guide, Unzip Africa Safaris",
+    authorAvatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80",
+    publishedDate: new Date().toISOString().slice(0, 10),
+    tags: "",
+    category: "Field Notes",
+    readTimeMins: 5,
+    published: true,
+    featured: false,
+  };
+}
+
+function blogToForm(p: BlogPost): BlogFormState {
+  return {
+    title: p.title,
+    excerpt: p.excerpt,
+    body: p.body,
+    coverImage: p.coverImage,
+    author: p.author,
+    authorRole: p.authorRole ?? "",
+    authorAvatar: p.authorAvatar ?? "",
+    publishedDate: p.publishedDate,
+    tags: p.tags.join(", "),
+    category: p.category,
+    readTimeMins: p.readTimeMins,
+    published: p.published,
+    featured: p.featured ?? false,
+  };
+}
+
+function formToBlog(f: BlogFormState, id: string): BlogPost {
+  return {
+    id,
+    title: f.title.trim(),
+    excerpt: f.excerpt.trim(),
+    body: f.body,
+    coverImage: f.coverImage.trim(),
+    author: f.author.trim() || "Unzip Africa Safaris",
+    authorRole: f.authorRole.trim() || undefined,
+    authorAvatar: f.authorAvatar.trim() || undefined,
+    publishedDate: f.publishedDate,
+    tags: f.tags
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean),
+    category: f.category.trim() || "Field Notes",
+    readTimeMins: typeof f.readTimeMins === "number" ? f.readTimeMins : Number(f.readTimeMins) || 5,
+    published: f.published,
+    featured: f.featured,
+  };
+}
+
+function BlogSection() {
+  const posts = useBlogPosts();
+  const [editing, setEditing] = useState<BlogPost | "new" | null>(null);
+  const [query, setQuery] = useState("");
+
+  const handleSave = (data: BlogPost) => {
+    if (editing === "new") {
+      store.setBlogPosts([data, ...posts]);
+      toast.success("Blog post created");
+    } else {
+      store.setBlogPosts(posts.map((p) => (p.id === data.id ? data : p)));
+      toast.success("Blog post updated");
+    }
+    setEditing(null);
+  };
+
+  const handleDelete = (id: string) => {
+    if (!confirm("Delete this blog post?")) return;
+    store.setBlogPosts(posts.filter((p) => p.id !== id));
+    toast.success("Blog post deleted");
+  };
+
+  const togglePublished = (p: BlogPost) => {
+    store.updateBlogPost(p.id, { published: !p.published });
+  };
+
+  const toggleFeatured = (p: BlogPost) => {
+    store.updateBlogPost(p.id, { featured: !p.featured });
+  };
+
+  const filtered = posts.filter((p) => {
+    if (!query.trim()) return true;
+    const q = query.toLowerCase();
+    return (
+      p.title.toLowerCase().includes(q) ||
+      p.category.toLowerCase().includes(q) ||
+      p.author.toLowerCase().includes(q) ||
+      p.tags.some((tag) => tag.toLowerCase().includes(q))
+    );
+  });
+
+  return (
+    <div className="space-y-6">
+      <SectionHeader
+        eyebrow="FIELD NOTES"
+        title="Blog Posts"
+        action={
+          <PrimaryButton
+            label="New Post"
+            icon={Plus}
+            onClick={() => setEditing("new")}
+          />
+        }
+      />
+
+      <Panel className="p-4 md:p-6">
+        <div className="flex items-center gap-2 mb-4">
+          <div className="relative flex-1 max-w-sm">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-charcoal/40" />
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search by title, author, tag…"
+              className="w-full h-9 pl-9 pr-3 bg-cream border border-charcoal/15 text-sm text-charcoal placeholder:text-muted-foreground focus:outline-none focus:border-gold"
+              style={sharp}
+            />
+          </div>
+          <p className="text-xs text-charcoal/50 ml-auto">
+            {filtered.length} of {posts.length} post{posts.length === 1 ? "" : "s"}
+          </p>
+        </div>
+
+        {filtered.length === 0 ? (
+          <EmptyState
+            title="No blog posts yet"
+            message="Click 'New Post' to write your first article."
+          />
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-cream border-b border-charcoal/10">
+                  {["Post", "Category", "Author", "Date", "Status", "Actions"].map(
+                    (h, i) => (
+                      <th
+                        key={h}
+                        className={`px-4 py-3 font-medium uppercase tracking-wider text-[11px] text-muted-foreground ${
+                          i === 5 ? "text-right" : "text-left"
+                        }`}
+                      >
+                        {h}
+                      </th>
+                    )
+                  )}
+                </tr>
+              </thead>
+              <tbody>
+                {filtered.map((p) => (
+                  <tr key={p.id} className="border-b border-charcoal/5 hover:bg-cream/40 transition-colors">
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-3">
+                        <div
+                          className="w-12 h-12 overflow-hidden bg-charcoal/5 flex-shrink-0"
+                          style={sharp}
+                        >
+                          {p.coverImage && (
+                            <Img
+                              src={p.coverImage}
+                              alt={p.title}
+                              className="w-full h-full object-cover"
+                            />
+                          )}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="font-medium text-charcoal truncate max-w-[260px]">
+                            {p.title}
+                          </p>
+                          <p className="text-xs text-charcoal/55 truncate max-w-[260px]">
+                            {p.excerpt}
+                          </p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-charcoal/70">{p.category}</td>
+                    <td className="px-4 py-3 text-charcoal/70">{p.author}</td>
+                    <td className="px-4 py-3 text-charcoal/70">
+                      {new Date(p.publishedDate).toLocaleDateString("en-US", {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                      })}
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex flex-col gap-1">
+                        <button
+                          onClick={() => togglePublished(p)}
+                          className={`text-[10px] uppercase tracking-wider px-2 py-1 inline-block w-fit ${
+                            p.published
+                              ? "bg-forest/15 text-forest border border-forest/30"
+                              : "bg-charcoal/5 text-charcoal/60 border border-charcoal/20"
+                          }`}
+                          style={sharp}
+                          title="Toggle published"
+                        >
+                          {p.published ? "Published" : "Draft"}
+                        </button>
+                        {p.featured && (
+                          <span className="text-[10px] uppercase tracking-wider px-2 py-1 inline-block w-fit bg-gold/15 text-gold border border-gold/40" style={sharp}>
+                            Featured
+                          </span>
+                        )}
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <div className="inline-flex gap-1">
+                        <IconBtn
+                          icon={Pencil}
+                          label="Edit"
+                          onClick={() => setEditing(p)}
+                        />
+                        <IconBtn
+                          icon={p.featured ? Star : Star}
+                          label={p.featured ? "Unfeature" : "Feature"}
+                          onClick={() => toggleFeatured(p)}
+                          active={p.featured}
+                        />
+                        <IconBtn
+                          icon={Trash2}
+                          label="Delete"
+                          onClick={() => handleDelete(p.id)}
+                          danger
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </Panel>
+
+      {editing && (
+        <BlogFormDialog
+          post={editing === "new" ? null : editing}
+          onSave={handleSave}
+          onClose={() => setEditing(null)}
+        />
+      )}
+    </div>
+  );
+}
+
+function BlogFormDialog({
+  post,
+  onSave,
+  onClose,
+}: {
+  post: BlogPost | null;
+  onSave: (p: BlogPost) => void;
+  onClose: () => void;
+}) {
+  const [form, setForm] = useState<BlogFormState>(() =>
+    post ? blogToForm(post) : emptyBlogForm()
+  );
+
+  const update = <K extends keyof BlogFormState>(
+    key: K,
+    value: BlogFormState[K]
+  ) => setForm((f) => ({ ...f, [key]: value }));
+
+  const handleSubmit = () => {
+    if (!form.title.trim()) {
+      toast.error("Title is required");
+      return;
+    }
+    if (!form.excerpt.trim()) {
+      toast.error("Excerpt is required");
+      return;
+    }
+    if (!form.coverImage.trim()) {
+      toast.error("Cover image URL is required");
+      return;
+    }
+    const id = post?.id ?? generateId("blog");
+    onSave(formToBlog(form, id));
+  };
+
+  return (
+    <Dialog open onOpenChange={(o) => { if (!o) onClose(); }}>
+      <DialogContent
+        className="flex flex-col p-0 gap-0 max-h-[90vh] max-w-3xl"
+        style={sharp}
+      >
+        <DialogHeader className="p-5 border-b border-charcoal/10 flex-shrink-0 text-left">
+          <DialogTitle
+            className="text-2xl"
+            style={{ fontFamily: "var(--font-cormorant), serif" }}
+          >
+            {post ? "Edit Blog Post" : "New Blog Post"}
+          </DialogTitle>
+          <DialogDescription>
+            Fields marked with * are required.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="modal-scroll p-5" style={modalScrollStyle}>
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="md:col-span-2">
+              <Field label="Title *">
+                <TextInput
+                  value={form.title}
+                  onChange={(e) => update("title", e.target.value)}
+                  placeholder="Gorilla Trekking in Rwanda: A Quiet Conversation with the Wild"
+                />
+              </Field>
+            </div>
+            <div className="md:col-span-2">
+              <Field label="Excerpt *" hint="One or two sentences shown in cards and at the top of the article.">
+                <TextArea
+                  rows={2}
+                  value={form.excerpt}
+                  onChange={(e) => update("excerpt", e.target.value)}
+                  placeholder="An hour with a silverback family rewrites everything you thought you knew about stillness."
+                />
+              </Field>
+            </div>
+            <Field label="Category">
+              <TextInput
+                value={form.category}
+                onChange={(e) => update("category", e.target.value)}
+                placeholder="Field Notes"
+              />
+            </Field>
+            <Field label="Read time (minutes)">
+              <TextInput
+                type="number"
+                min={1}
+                value={form.readTimeMins}
+                onChange={(e) => update("readTimeMins", e.target.value === "" ? "" : Number(e.target.value))}
+              />
+            </Field>
+            <Field label="Published date">
+              <TextInput
+                type="date"
+                value={form.publishedDate}
+                onChange={(e) => update("publishedDate", e.target.value)}
+              />
+            </Field>
+            <Field label="Tags" hint="Comma-separated.">
+              <TextInput
+                value={form.tags}
+                onChange={(e) => update("tags", e.target.value)}
+                placeholder="Gorilla Trekking, Rwanda, Conservation"
+              />
+            </Field>
+            <Field label="Author name">
+              <TextInput
+                value={form.author}
+                onChange={(e) => update("author", e.target.value)}
+              />
+            </Field>
+            <Field label="Author role">
+              <TextInput
+                value={form.authorRole}
+                onChange={(e) => update("authorRole", e.target.value)}
+              />
+            </Field>
+            <div className="md:col-span-2">
+              <Field label="Author avatar URL">
+                <TextInput
+                  value={form.authorAvatar}
+                  onChange={(e) => update("authorAvatar", e.target.value)}
+                  placeholder="https://..."
+                />
+              </Field>
+            </div>
+            <div className="md:col-span-2">
+              <Field label="Cover image URL *">
+                <TextInput
+                  value={form.coverImage}
+                  onChange={(e) => update("coverImage", e.target.value)}
+                  placeholder="https://..."
+                />
+                {form.coverImage && (
+                  <div className="mt-2 w-full h-32 overflow-hidden border border-charcoal/10" style={sharp}>
+                    <Img
+                      src={form.coverImage}
+                      alt="Cover preview"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
+              </Field>
+            </div>
+            <div className="md:col-span-2">
+              <Field label="Body *" hint="Plain text. Use a blank line between paragraphs.">
+                <TextArea
+                  rows={10}
+                  value={form.body}
+                  onChange={(e) => update("body", e.target.value)}
+                  placeholder="The first paragraph of your article…"
+                />
+              </Field>
+            </div>
+            <div className="md:col-span-2 flex items-center gap-6 pt-2">
+              <Toggle
+                checked={form.published}
+                onChange={(v) => update("published", v)}
+                label="Published"
+              />
+              <Toggle
+                checked={form.featured}
+                onChange={(v) => update("featured", v)}
+                label="Featured on blog index"
+              />
+            </div>
+          </div>
+        </div>
+        <div className="p-4 border-t border-charcoal/10 flex justify-end gap-2 flex-shrink-0">
+          <CancelButton onClick={onClose} />
+          <SaveButton onClick={handleSubmit} label={post ? "Save Changes" : "Publish Post"} />
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+/* ============================================================
  * Root — AdminPage
  * ============================================================ */
 export function AdminPage() {
@@ -4074,6 +4534,7 @@ export function AdminPage() {
           {section === "accommodations" && <AccommodationsSection />}
           {section === "scheduled-trips" && <ScheduledTripsSection />}
           {section === "destinations" && <DestinationsSection />}
+          {section === "blog" && <BlogSection />}
           {section === "quotes" && <QuotesSection />}
           {section === "bookings" && <BookingsSection filterType="tour" title="Tour Bookings" />}
           {section === "scheduled-trip-bookings" && <BookingsSection filterType="scheduled-trip" title="Scheduled Trip Bookings" />}

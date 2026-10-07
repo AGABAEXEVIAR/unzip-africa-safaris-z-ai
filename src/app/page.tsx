@@ -20,6 +20,8 @@ import { TourDetailPage } from "@/components/pages/TourDetailPage";
 import { ScheduledTripDetailPage } from "@/components/pages/ScheduledTripDetailPage";
 import { ScheduledTripsPage } from "@/components/pages/ScheduledTripsPage";
 import { AccommodationDetailPage } from "@/components/pages/AccommodationDetailPage";
+import { BlogPage } from "@/components/pages/BlogPage";
+import { BlogDetailPage } from "@/components/pages/BlogDetailPage";
 import { AdminPage } from "@/components/pages/AdminPage";
 
 function PageContent() {
@@ -36,6 +38,8 @@ function PageContent() {
     accommodation: <AccommodationPage />,
     contact: <ContactPage />,
     destinations: <DestinationPage />,
+    blog: <BlogPage />,
+    "blog-detail": <BlogDetailPage />,
     "tour-detail": <TourDetailPage />,
     "accommodation-detail": <AccommodationDetailPage />,
     "scheduled-trip-detail": <ScheduledTripDetailPage />,

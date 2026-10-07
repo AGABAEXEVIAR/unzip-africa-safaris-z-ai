@@ -8,6 +8,15 @@ type RouterContextValue = {
   lang: Lang;
   setLang: (lang: Lang) => void;
   t: (key: string, params?: Record<string, string | number>) => string;
+  formatDate: (iso: string) => string;
+};
+
+// Locale mapping for date/number formatting — used by formatDate().
+const LOCALE_MAP: Record<Lang, string> = {
+  en: "en-US",
+  de: "de-DE",
+  fr: "fr-FR",
+  zh: "zh-CN",
 };
 
 const LanguageContext = createContext<RouterContextValue | null>(null);
@@ -37,6 +46,7 @@ const translations: Record<Lang, Record<string, string>> = {
     "nav.beginJourney": "Begin Your Journey",
     "nav.exploreTours": "Explore Tours",
     "nav.scroll": "Scroll",
+    "nav.blog": "Blog",
     // ===================== Hero =====================
     "hero.eyebrow": "UNZIP AFRICA SAFARI",
     "hero.title1": "Bespoke Safaris Across",
@@ -499,6 +509,28 @@ const translations: Record<Lang, Record<string, string>> = {
     "booking.errorRequired": "Please fill in all required fields.",
     "booking.successToast": "Booking request received! We'll confirm within 24 hours.",
     // ===================== Cookie + WhatsApp =====================
+    // ===================== Blog Page =====================
+    "blog.eyebrow": "FIELD NOTES",
+    "blog.heading1": "Stories from the",
+    "blog.heading2": "bush and beyond",
+    "blog.subtitle": "Long-form essays, field notes, and travel philosophy from our guides — on the migration, the gorillas, the lodges, and the quiet conversations that change how you see Africa.",
+    "blog.readArticle": "Read article",
+    "blog.minRead": "min read",
+    "blog.allPosts": "All posts",
+    "blog.featuredPost": "Featured post",
+    "blog.latestPosts": "Latest posts",
+    "blog.backToBlog": "Back to all posts",
+    "blog.byAuthor": "By",
+    "blog.publishedOn": "Published",
+    "blog.relatedPosts": "More from the journal",
+    "blog.noPosts": "No posts yet — check back soon.",
+    "blog.noPostsSubtitle": "Our guides are out in the field; new essays land every few weeks.",
+    "blog.category": "Category",
+    "blog.tags": "Tags",
+    "blog.sharePost": "Share this post",
+    "blog.emptyBody": "This post has no body content yet.",
+    "blog.prevArticle": "Previous article",
+    "blog.nextArticle": "Next article",
     "cookie.privacyTitle": "We value your privacy",
     "cookie.privacyBody": "We use cookies to enhance your browsing experience, serve personalized content, and analyse our traffic. By clicking \"Accept\", you consent to our use of cookies.",
     "cookie.privacyPolicy": "Privacy Policy",
@@ -524,6 +556,7 @@ const translations: Record<Lang, Record<string, string>> = {
     "nav.beginJourney": "Reise beginnen",
     "nav.exploreTours": "Touren entdecken",
     "nav.scroll": "Scrollen",
+    "nav.blog": "Blog",
     // ===================== Hero =====================
     "hero.eyebrow": "UNZIP AFRICA SAFARI",
     "hero.title1": "Maßgeschneiderte Safaris durch",
@@ -985,6 +1018,28 @@ const translations: Record<Lang, Record<string, string>> = {
     "booking.status": "Status",
     "booking.errorRequired": "Bitte füllen Sie alle Pflichtfelder aus.",
     "booking.successToast": "Buchungsanfrage erhalten! Wir bestätigen innerhalb von 24 Stunden.",
+    // ===================== Blog Page =====================
+    "blog.eyebrow": "NOTIZEN AUS DEM FELD",
+    "blog.heading1": "Geschichten aus dem",
+    "blog.heading2": "Busch und darüber hinaus",
+    "blog.subtitle": "Längere Essays, Feldnotizen und Reise-Philosophie unserer Guides — über die Migration, die Gorillas, die Lodges und die stillen Gespräche, die Ihre Sicht auf Afrika verändern.",
+    "blog.readArticle": "Artikel lesen",
+    "blog.minRead": "Min Lesezeit",
+    "blog.allPosts": "Alle Beiträge",
+    "blog.featuredPost": "Empfohlener Beitrag",
+    "blog.latestPosts": "Neueste Beiträge",
+    "blog.backToBlog": "Zurück zur Übersicht",
+    "blog.byAuthor": "Von",
+    "blog.publishedOn": "Veröffentlicht",
+    "blog.relatedPosts": "Mehr aus dem Journal",
+    "blog.noPosts": "Noch keine Beiträge — schauen Sie bald wieder vorbei.",
+    "blog.noPostsSubtitle": "Unsere Guides sind draußen im Feld; neue Essays erscheinen alle paar Wochen.",
+    "blog.category": "Kategorie",
+    "blog.tags": "Tags",
+    "blog.sharePost": "Diesen Beitrag teilen",
+    "blog.emptyBody": "Dieser Beitrag hat noch keinen Inhalt.",
+    "blog.prevArticle": "Vorheriger Artikel",
+    "blog.nextArticle": "Nächster Artikel",
     "cookie.privacyTitle": "Wir schätzen Ihre Privatsphäre",
     "cookie.privacyBody": "Wir verwenden Cookies, um Ihr Surferlebnis zu verbessern, personalisierte Inhalte bereitzustellen und unseren Datenverkehr zu analysieren. Mit dem Klick auf \"Akzeptieren\" stimmen Sie der Verwendung von Cookies zu.",
     "cookie.privacyPolicy": "Datenschutzerklärung",
@@ -1010,6 +1065,7 @@ const translations: Record<Lang, Record<string, string>> = {
     "nav.beginJourney": "Commencer votre voyage",
     "nav.exploreTours": "Explorer les circuits",
     "nav.scroll": "Défiler",
+    "nav.blog": "Blog",
     // ===================== Hero =====================
     "hero.eyebrow": "UNZIP AFRICA SAFARI",
     "hero.title1": "Safaris sur mesure à travers",
@@ -1469,6 +1525,28 @@ const translations: Record<Lang, Record<string, string>> = {
     "booking.trip": "Voyage",
     "booking.travellers": "Voyageurs",
     "booking.status": "Statut",
+    // ===================== Blog Page =====================
+    "blog.eyebrow": "NOTES DU TERRAIN",
+    "blog.heading1": "Récits depuis la",
+    "blog.heading2": "brousse et au-delà",
+    "blog.subtitle": "Essais longs, notes de terrain et philosophie du voyage par nos guides — sur la migration, les gorilles, les lodges, et les conversations silencieuses qui changent votre regard sur l'Afrique.",
+    "blog.readArticle": "Lire l'article",
+    "blog.minRead": "min de lecture",
+    "blog.allPosts": "Tous les articles",
+    "blog.featuredPost": "Article à la une",
+    "blog.latestPosts": "Derniers articles",
+    "blog.backToBlog": "Retour aux articles",
+    "blog.byAuthor": "Par",
+    "blog.publishedOn": "Publié",
+    "blog.relatedPosts": "Plus du journal",
+    "blog.noPosts": "Aucun article pour l'instant — revenez bientôt.",
+    "blog.noPostsSubtitle": "Nos guides sont sur le terrain ; de nouveaux essais paraissent toutes les quelques semaines.",
+    "blog.category": "Catégorie",
+    "blog.tags": "Étiquettes",
+    "blog.sharePost": "Partager cet article",
+    "blog.emptyBody": "Cet article n'a pas encore de contenu.",
+    "blog.prevArticle": "Article précédent",
+    "blog.nextArticle": "Article suivant",
     "cookie.privacyTitle": "Nous respectons votre vie privée",
     "cookie.privacyBody": "Nous utilisons des cookies pour améliorer votre expérience de navigation, diffuser du contenu personnalisé et analyser notre trafic. En cliquant sur \"Accepter\", vous consentez à notre utilisation des cookies.",
     "cookie.privacyPolicy": "Politique de confidentialité",
@@ -1496,6 +1574,7 @@ const translations: Record<Lang, Record<string, string>> = {
     "nav.beginJourney": "开启您的旅程",
     "nav.exploreTours": "探索行程",
     "nav.scroll": "滚动",
+    "nav.blog": "博客",
     // ===================== Hero =====================
     "hero.eyebrow": "UNZIP AFRICA SAFARI",
     "hero.title1": "穿越",
@@ -1949,6 +2028,28 @@ const translations: Record<Lang, Record<string, string>> = {
     "booking.total": "总计",
     "booking.confirm": "确认预订请求",
     "booking.disclaimer": "这是一次请求 —— 您的卡不会被扣款。专家将在24小时内确认。",
+    // ===================== Blog Page =====================
+    "blog.eyebrow": "田野笔记",
+    "blog.heading1": "来自丛林",
+    "blog.heading2": "及其之外的故事",
+    "blog.subtitle": "我们向导撰写的长篇散文、田野笔记和旅行哲学——关于迁徙、大猩猩、旅舍以及那些改变您看待非洲方式的静谧对话。",
+    "blog.readArticle": "阅读文章",
+    "blog.minRead": "分钟阅读",
+    "blog.allPosts": "所有文章",
+    "blog.featuredPost": "精选文章",
+    "blog.latestPosts": "最新文章",
+    "blog.backToBlog": "返回所有文章",
+    "blog.byAuthor": "作者：",
+    "blog.publishedOn": "发布于",
+    "blog.relatedPosts": "更多日志",
+    "blog.noPosts": "暂无文章——敬请期待。",
+    "blog.noPostsSubtitle": "我们的向导正在野外；每隔几周会发表新文章。",
+    "blog.category": "分类",
+    "blog.tags": "标签",
+    "blog.sharePost": "分享此文章",
+    "blog.emptyBody": "此文章暂无内容。",
+    "blog.prevArticle": "上一篇",
+    "blog.nextArticle": "下一篇",
     "cookie.privacyTitle": "我们重视您的隐私",
     "cookie.privacyBody": "我们使用cookies来增强您的浏览体验，提供个性化内容并分析我们的流量。点击\"接受\"，即表示您同意我们使用cookies。",
     "cookie.privacyPolicy": "隐私政策",
@@ -1994,8 +2095,22 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     });
   }, [lang]);
 
+  // Locale-aware date formatter — formats ISO date strings using the active
+  // language's BCP-47 locale. Falls back to the raw ISO string on error.
+  const formatDate = useCallback((iso: string): string => {
+    try {
+      return new Date(iso).toLocaleDateString(LOCALE_MAP[lang], {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      });
+    } catch {
+      return iso;
+    }
+  }, [lang]);
+
   return (
-    <LanguageContext.Provider value={{ lang, setLang, t }}>
+    <LanguageContext.Provider value={{ lang, setLang, t, formatDate }}>
       {children}
     </LanguageContext.Provider>
   );

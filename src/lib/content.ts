@@ -100,6 +100,23 @@ export type Testimonial = {
   date: string; // ISO date
 };
 
+export type BlogPost = {
+  id: string;
+  title: string;
+  excerpt: string;
+  body: string; // multi-paragraph, separated by \n\n
+  coverImage: string;
+  author: string;
+  authorRole?: string;
+  authorAvatar?: string;
+  publishedDate: string; // ISO date
+  tags: string[];
+  category: string;
+  readTimeMins: number;
+  published: boolean;
+  featured?: boolean;
+};
+
 export const destinations: Destination[] = [
   {
     id: "serengeti",
@@ -1468,5 +1485,83 @@ export const scheduledTrips: ScheduledTrip[] = [
       { day: "Day 04-05", title: "Lake Kivu & Nyungwe", description: "Drive along Lake Kivu, visit a coffee farm, then continue south to Nyungwe Forest for the canopy walk.", image: "https://sfile.chatglm.cn/images-ppt/25ee49aa2374.jpg" },
       { day: "Day 06-07", title: "Canopy Walk & Departure", description: "Morning canopy walk in Nyungwe, chimpanzee trek optional, then drive back to Kigali for your onward flight.", image: "https://sfile.chatglm.cn/images-ppt/ac9862af7e88.jpg" },
     ],
+  },
+];
+
+/* ============================================================
+ * Blog Posts — seed content for the Blog page + admin CRUD
+ * ============================================================ */
+export const blogPosts: BlogPost[] = [
+  {
+    id: "blog-gorilla-trekking-guide",
+    title: "Gorilla Trekking in Rwanda: A QuietConversation with the Wild",
+    excerpt:
+      "An hour with a silverback family rewrites everything you thought you knew about stillness, hierarchy, and what it means to be a guest on someone else's land.",
+    body:
+      "We left the lodge at 5:40 AM, long before the mist had lifted from the bamboo forest above Kinigi. Our guide, Jean-Pierre, had been tracking the Susa family for eleven years; he could read the bent stems of bamboo the way a librarian reads a card catalogue.\n\nThe trek took ninety minutes — steep, wet, gloriously quiet. And then we were there, ten metres from a 200-kilogram silverback chewing on bamboo shoots with the unhurried calm of a man who has nothing to prove. Around him, infants wrestled, juveniles swung from vines, a mother nursed. They ignored us entirely, as well they should. We were the visitors; they were home.\n\nThe hour passed in a kind of concentrated silence that I have only otherwise felt in cathedrals. When Jean-Pierre whispered that our time was up, the silverback raised his head, looked directly at us for perhaps four seconds, and then returned to his shoots. A dismissal, but not an unkind one.\n\nIf there is one rule of gorilla trekking it is this: you do not approach them. You wait. You wait until the forest decides you have been seen, and then you wait a little longer. The reward for that patience is something no photograph can carry — the recognition that wildness is not the opposite of intimacy. Sometimes, in the right hands, it is the door to it.",
+    coverImage: "https://sfile.chatglm.cn/images-ppt/55f6eb85ac39.jpg",
+    author: "Agaba Exeviar",
+    authorRole: "Founder & Lead Guide, Unzip Africa Safaris",
+    authorAvatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80",
+    publishedDate: "2026-09-12",
+    tags: ["Gorilla Trekking", "Rwanda", "Conservation", "Field Notes"],
+    category: "Field Notes",
+    readTimeMins: 6,
+    published: true,
+    featured: true,
+  },
+  {
+    id: "blog-migration-when-where",
+    title: "The Great Migration: When, Where, and How to Witness It",
+    excerpt:
+      "Two million wildebeest don't move on a schedule — but they do move on a rhythm. Here's how we plan journeys around the herds without resorting to guesswork.",
+    body:
+      "The Migration is not a single event. It is a 1,800-kilometre loop that the wildebeest walk every year of their lives, following the rains and the grass that follows them. To 'see the Migration' means almost nothing without context — what matters is where the herds are in the cycle when you arrive.\n\nJanuary through March: the southern Serengeti. Calving season. Half a million wildebeest born in a three-week window. Predators concentrated. Dramatic, dense, dusty.\n\nApril through May: the long rains. The herds begin to move west and north. Fewer visitors, lusher landscape, lower lodge rates — a favourite of returning clients.\n\nJune: the Grumeti river crossings. Smaller in scale than the Mara crossings but intimate and far less crowded. We position our mobile camps ahead of the herd here.\n\nJuly through October: the Mara river crossings in the northern Serengeti. This is the iconic scene — wildebeest leaping off cliffs into crocodile-infested water. It is also the most crowded window. We prefer to position our guests in private concessions adjacent to the river, where you watch the same drama without the convoy of vehicles.\n\nNovember through December: the herds turn south again, dispersing through the eastern Serengeti and into the Loliondo concessions. Quiet, beautiful, and dramatically under-visited.\n\nThere is no 'best' month. There is only the best month for what you want to feel. Tell us that, and we will tell you where to stand.",
+    coverImage: "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
+    author: "Agaba Exeviar",
+    authorRole: "Founder & Lead Guide, Unzip Africa Safaris",
+    authorAvatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80",
+    publishedDate: "2026-08-28",
+    tags: ["Great Migration", "Serengeti", "Safari Planning", "Wildlife"],
+    category: "Safari Planning",
+    readTimeMins: 8,
+    published: true,
+    featured: true,
+  },
+  {
+    id: "blog-why-private-guide",
+    title: "Why a Private Guide Changes Everything",
+    excerpt:
+      "A shared vehicle answers questions. A private guide anticipates them. The difference, measured over a week in the bush, is enormous.",
+    body:
+      "On a shared safari, the guide has eight guests, six of whom want different things. The birder wants to stop for the lilac-breasted roller; the photographer wants the cheetah in the shade of the acacia; the family with young children needs a bush toilet. The guide compromises beautifully, and everyone has a perfectly nice day.\n\nOn a private safari, none of those compromises are necessary. Your guide learns, in the first half-day, that you are secretly a birder, that you'd rather watch one elephant family for forty minutes than chase the Big Five in forty minutes, that your ten-year-old is obsessed with dung beetles. By Day Three, the guide is spotting things for you that you didn't know you wanted to see.\n\nThe economics are not trivial — a private guide costs more. But the value compounds. Over a week, the difference between 'a safari' and 'your safari' is not 20% better; it is a different category of experience entirely. We tell clients: if you have to choose between an extra night in a more luxurious lodge and a private guide for the journey, take the guide. The lodge is a place to sleep. The guide is the lens through which you will see the entire country.",
+    coverImage: "https://sfile.chatglm.cn/images-ppt/e9781ad7f905.jpg",
+    author: "Agaba Exeviar",
+    authorRole: "Founder & Lead Guide, Unzip Africa Safaris",
+    authorAvatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80",
+    publishedDate: "2026-08-10",
+    tags: ["Private Guide", "Safari Philosophy", "Travel Design"],
+    category: "Safari Philosophy",
+    readTimeMins: 5,
+    published: true,
+    featured: false,
+  },
+  {
+    id: "blog-okavango-from-above",
+    title: "The Okavango from Above: Why We Fly You In",
+    excerpt:
+      "There is no road into the heart of the Delta. There is only a six-seater Cessna, a low-altitude glide, and the moment the world reorganises itself into water and islands.",
+    body:
+      "You can drive into the Okavango's outer edge. You cannot drive into its heart. To reach the private concessions of the inner Delta — the places where the elephant densities are highest, where the wild dog den sites are protected, where the night drives are permitted — you must fly.\n\nThe flight itself is the first safari of the journey. A Cessna 206, six passengers, no co-pilot, the pilot doubling as narrator. You climb out of Maun, the desert town that frames the Delta's southern edge, and within three minutes the brown Kalahari gives way to something else: water. Lagoons. Channels. Hippo paths visible as dark tracings through the papyrus. Elephant herds casting small, dark shadows on the floodplain. From 800 feet, a hippo looks like a half-submerged suitcase.\n\nThe landing strip is a dirt ribbon cleared of grass. Sometimes giraffe scatter as the wheels touch. There will be a vehicle waiting — your guide, your first cold towel, your first gin and tonic if it's late afternoon. Within ten minutes of landing, you are in the bush.\n\nWe have clients who ask if we can shorten the flight, as if it were a commute. The answer is no. The flight is the threshold. You cross it, and the world you came from recedes.",
+    coverImage: "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1600&q=80",
+    author: "Agaba Exeviar",
+    authorRole: "Founder & Lead Guide, Unzip Africa Safaris",
+    authorAvatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80",
+    publishedDate: "2026-07-22",
+    tags: ["Okavango Delta", "Bush Flights", "Botswana", "Travel Design"],
+    category: "Travel Design",
+    readTimeMins: 4,
+    published: true,
+    featured: false,
   },
 ];

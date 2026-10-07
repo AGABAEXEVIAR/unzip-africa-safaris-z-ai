@@ -11,6 +11,8 @@ export type PageId =
   | "destinations"
   | "accommodation"
   | "contact"
+  | "blog"
+  | "blog-detail"
   | "tour-detail"
   | "accommodation-detail"
   | "scheduled-trip-detail"
@@ -22,11 +24,13 @@ type RouterContextValue = {
   selectedTourId: string | null;
   selectedAccommodationId: string | null;
   selectedScheduledTripId: string | null;
+  selectedBlogPostId: string | null;
   navigate: (page: PageId) => void;
   navigateToDestination: (country: string) => void;
   navigateToTour: (id: string) => void;
   navigateToAccommodation: (id: string) => void;
   navigateToScheduledTrip: (id: string) => void;
+  navigateToBlogPost: (id: string) => void;
 };
 
 const RouterContext = createContext<RouterContextValue | null>(null);
@@ -43,6 +47,7 @@ export function RouterProvider({ children }: { children: ReactNode }) {
   const [selectedTourId, setSelectedTourId] = useState<string | null>(null);
   const [selectedAccommodationId, setSelectedAccommodationId] = useState<string | null>(null);
   const [selectedScheduledTripId, setSelectedScheduledTripId] = useState<string | null>(null);
+  const [selectedBlogPostId, setSelectedBlogPostId] = useState<string | null>(null);
 
   const scrollToTop = useCallback(() => {
     if (typeof window !== "undefined") {
@@ -81,6 +86,12 @@ export function RouterProvider({ children }: { children: ReactNode }) {
     scrollToTop();
   }, [scrollToTop]);
 
+  const navigateToBlogPost = useCallback((id: string) => {
+    setSelectedBlogPostId(id);
+    setPage("blog-detail");
+    scrollToTop();
+  }, [scrollToTop]);
+
   return (
     <RouterContext.Provider
       value={{
@@ -89,11 +100,13 @@ export function RouterProvider({ children }: { children: ReactNode }) {
         selectedTourId,
         selectedAccommodationId,
         selectedScheduledTripId,
+        selectedBlogPostId,
         navigate,
         navigateToDestination,
         navigateToTour,
         navigateToAccommodation,
         navigateToScheduledTrip,
+        navigateToBlogPost,
       }}
     >
       {children}

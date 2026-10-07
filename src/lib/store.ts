@@ -7,11 +7,13 @@ import {
   scheduledTrips as seedScheduledTrips,
   testimonials as seedTestimonials,
   destinations as seedDestinations,
+  blogPosts as seedBlogPosts,
   type TourPackage,
   type Accommodation,
   type ScheduledTrip,
   type Testimonial,
   type Destination,
+  type BlogPost,
 } from "@/lib/content";
 
 /* ============================================================
@@ -70,6 +72,7 @@ type State = {
   scheduledTrips: ScheduledTrip[];
   testimonials: Testimonial[];
   destinations: Destination[];
+  blogPosts: BlogPost[];
   bookings: Booking[];
   quotes: QuoteRequest[];
 };
@@ -80,6 +83,7 @@ let state: State = {
   scheduledTrips: [...seedScheduledTrips],
   testimonials: [...seedTestimonials],
   destinations: [...seedDestinations],
+  blogPosts: [...seedBlogPosts],
   bookings: [],
   quotes: [],
 };
@@ -135,6 +139,7 @@ const SERVER_SNAPSHOT: State = {
   scheduledTrips: [...seedScheduledTrips],
   testimonials: [...seedTestimonials],
   destinations: [...seedDestinations],
+  blogPosts: [...seedBlogPosts],
   bookings: [],
   quotes: [],
 };
@@ -339,6 +344,29 @@ export const store = {
     state = { ...state, destinations: state.destinations.filter((d) => d.id !== id) };
     emit();
   },
+
+  /* Blog Posts */
+  setBlogPosts(posts: BlogPost[]) {
+    state = { ...state, blogPosts: posts };
+    emit();
+  },
+  addBlogPost(post: BlogPost) {
+    state = { ...state, blogPosts: [post, ...state.blogPosts] };
+    emit();
+  },
+  updateBlogPost(id: string, patch: Partial<BlogPost>) {
+    state = {
+      ...state,
+      blogPosts: state.blogPosts.map((p) =>
+        p.id === id ? { ...p, ...patch } : p
+      ),
+    };
+    emit();
+  },
+  deleteBlogPost(id: string) {
+    state = { ...state, blogPosts: state.blogPosts.filter((p) => p.id !== id) };
+    emit();
+  },
 };
 
 /* ============================================================
@@ -371,6 +399,9 @@ export function useTestimonials(): Testimonial[] {
 }
 export function useDestinations(): Destination[] {
   return useStore((s) => s.destinations);
+}
+export function useBlogPosts(): BlogPost[] {
+  return useStore((s) => s.blogPosts);
 }
 export function useBookings(): Booking[] {
   return useStore((s) => s.bookings);
