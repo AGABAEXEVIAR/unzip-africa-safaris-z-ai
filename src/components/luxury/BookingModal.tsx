@@ -171,7 +171,7 @@ export function BookingModal(props: BookingModalProps) {
             exit={{ opacity: 0, y: 40, scale: 0.97 }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-canvas w-full max-w-[1100px] my-auto max-h-[92vh] overflow-hidden flex flex-col grid grid-cols-1 md:grid-cols-2"
+            className="bg-canvas w-full max-w-[1100px] my-auto max-h-[92vh] overflow-y-auto md:overflow-hidden flex flex-col grid grid-cols-1 md:grid-cols-2"
             style={sharp}
           >
             {/* Left — dark trip info card (read-only) */}
