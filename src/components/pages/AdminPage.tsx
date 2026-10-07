@@ -108,6 +108,7 @@ type AdminSection =
   | "destinations"
   | "quotes"
   | "bookings"
+  | "scheduled-trip-bookings"
   | "gallery"
   | "testimonials"
   | "settings";
@@ -651,7 +652,8 @@ const NAV_ITEMS: { id: AdminSection; label: string; icon: React.ComponentType<{ 
   { id: "scheduled-trips", label: "Scheduled Trips", icon: Calendar },
   { id: "destinations", label: "Destinations", icon: MapPin },
   { id: "quotes", label: "Quote Requests", icon: Mail },
-  { id: "bookings", label: "Bookings", icon: CalendarCheck },
+  { id: "bookings", label: "Tour Bookings", icon: CalendarCheck },
+  { id: "scheduled-trip-bookings", label: "Scheduled Trip Bookings", icon: Calendar },
   { id: "gallery", label: "Gallery", icon: Images },
   { id: "testimonials", label: "Testimonials", icon: Quote },
   { id: "settings", label: "Settings", icon: SettingsIcon },
@@ -737,7 +739,8 @@ function DashboardSection({
     { label: "Accommodations", value: accommodations.length, section: "accommodations", icon: Building2 },
     { label: "Scheduled Trips", value: scheduledTrips.length, section: "scheduled-trips", icon: Calendar },
     { label: "Destinations", value: destinations.length, section: "destinations", icon: MapPin },
-    { label: "Bookings", value: bookings.length, section: "bookings", icon: CalendarCheck },
+    { label: "Tour Bookings", value: bookings.filter(b => b.type === "tour").length, section: "bookings", icon: CalendarCheck },
+    { label: "Scheduled Bookings", value: bookings.filter(b => b.type === "scheduled-trip").length, section: "scheduled-trip-bookings", icon: Calendar },
     { label: "Testimonials", value: testimonials.length, section: "testimonials", icon: Quote },
   ];
 
@@ -3101,8 +3104,9 @@ function Detail({
 /* ============================================================
  * Bookings
  * ============================================================ */
-function BookingsSection() {
-  const bookings = useBookings();
+function BookingsSection({ filterType, title }: { filterType: "tour" | "scheduled-trip"; title: string }) {
+  const allBookings = useBookings();
+  const bookings = allBookings.filter((b) => b.type === filterType);
   const [viewing, setViewing] = useState<Booking | null>(null);
 
   // Re-sync from localStorage on mount in case other tabs wrote data
@@ -3111,7 +3115,7 @@ function BookingsSection() {
       const raw = window.localStorage.getItem("unzip_africa_bookings");
       if (raw) {
         const parsed = JSON.parse(raw) as Booking[];
-        if (Array.isArray(parsed) && parsed.length !== bookings.length) {
+        if (Array.isArray(parsed) && parsed.length !== allBookings.length) {
           store.setBookings(parsed);
         }
       }
@@ -3134,7 +3138,7 @@ function BookingsSection() {
 
   return (
     <div className="space-y-6">
-      <SectionHeader eyebrow="RESERVATIONS" title="Bookings" />
+      <SectionHeader eyebrow="RESERVATIONS" title={title} />
 
       {bookings.length === 0 ? (
         <Panel>
@@ -3963,7 +3967,8 @@ export function AdminPage() {
           {section === "scheduled-trips" && <ScheduledTripsSection />}
           {section === "destinations" && <DestinationsSection />}
           {section === "quotes" && <QuotesSection />}
-          {section === "bookings" && <BookingsSection />}
+          {section === "bookings" && <BookingsSection filterType="tour" title="Tour Bookings" />}
+          {section === "scheduled-trip-bookings" && <BookingsSection filterType="scheduled-trip" title="Scheduled Trip Bookings" />}
           {section === "gallery" && <GallerySection />}
           {section === "testimonials" && <TestimonialsSection />}
           {section === "settings" && <SettingsSection />}
