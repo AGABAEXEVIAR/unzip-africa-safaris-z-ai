@@ -899,11 +899,58 @@ button:hover .whatsapp-icon-wiggle {
   .flip-char { animation: none !important; }
 }
 
-/* ============ Signature Destinations carousel — slow, calm slide transition ============ */
-/* The autoplay moves to a new slide every 6s; this slows the actual slide
-   transition animation to 1.2s for a smooth, deliberate, cinematic feel
-   (embla's default is ~0.32s which feels too snappy for a luxury brand). */
-.signature-destinations-carousel > div {
-  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+/* ============ Signature Destinations — continuous marquee ============ */
+/* The track contains the 4 destinations duplicated (8 total). The animation
+   translates the track from 0% to -50% (exactly one full set of originals)
+   and then loops back to 0% — at the loop point the duplicate set is in the
+   original's place, so the reset is visually seamless. Slow 60s loop for a
+   calm, cinematic pace. Pauses on hover so users can read the captions. */
+.signature-destinations-marquee {
+  overflow: hidden;
+  width: 100%;
+}
+
+.signature-destinations-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: signatureDestinationsScroll 60s linear infinite;
   will-change: transform;
+}
+
+.signature-destinations-marquee:hover .signature-destinations-marquee-track {
+  animation-play-state: paused;
+}
+
+.signature-destinations-marquee-item {
+  /* Card width — 4 per viewport on lg, 2 on sm, 1 on mobile.
+     Track width is doubled (8 items) so the -50% loop point equals one full
+     set of originals and the reset is seamless at every breakpoint. */
+  flex: 0 0 100%;
+  padding-left: 1rem;
+}
+@media (min-width: 640px) {
+  .signature-destinations-marquee-item {
+    flex: 0 0 50%;
+    padding-left: 1.5rem;
+  }
+}
+@media (min-width: 1024px) {
+  .signature-destinations-marquee-item {
+    flex: 0 0 25%;
+  }
+}
+
+@keyframes signatureDestinationsScroll {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .signature-destinations-marquee-track {
+    animation: none;
+  }
 }

@@ -1,8 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
-import useEmblaCarousel from "embla-carousel-react";
-import Autoplay from "embla-carousel-autoplay";
 import { useRouter } from "@/lib/router";
 import { useLang } from "@/lib/language";
 
@@ -37,37 +34,17 @@ export function SafariScrollStack() {
   const { navigateToDestination } = useRouter();
   const { t } = useLang();
 
-  // Pure autoplay carousel — no manual controls (no dots, no arrows).
-  // Slow, intentional pace: a new slide every 6 seconds.
-  // stopOnMouseEnter: true pauses the autoplay whenever the user hovers
-  // any card (or anywhere inside the carousel viewport), so they can read
-  // the caption without it sliding away.
-  const [emblaRef, emblaApi] = useEmblaCarousel(
-    {
-      loop: true,
-      align: "start",
-      containScroll: "trimSnaps",
-      dragFree: false,
-    },
-    [Autoplay({ delay: 6000, stopOnInteraction: false, stopOnMouseEnter: true })]
-  );
-
-  // No need to track selected/scrollSnaps since there's no dot pagination.
-  // Just ensure embla is initialised.
-  useEffect(() => {
-    if (!emblaApi) return;
-    // Force a re-init once mounted so the first autoplay tick starts cleanly.
-    emblaApi.reInit({
-      loop: true,
-      align: "start",
-      containScroll: "trimSnaps",
-      dragFree: false,
-    });
-  }, [emblaApi]);
+  // Duplicate the list so the marquee can loop seamlessly — when the track
+  // has scrolled exactly -50% (one full set of originals), the duplicate
+  // set is in the original's place and the animation can reset to 0 with
+  // no visible jump. This works for any card-count-per-breakpoint because
+  // -50% is always one full set of originals regardless of how many fit
+  // on screen at once.
+  const doubled = [...signatureDestinationKeys, ...signatureDestinationKeys];
 
   return (
     <section className="bg-canvas pt-12 md:pt-20 pb-12 md:pb-16 overflow-hidden">
-      {/* Section heading — no arrow controls (pure autoplay) */}
+      {/* Section heading — no controls (pure continuous marquee) */}
       <div className="px-6 md:px-10 max-w-[1600px] mx-auto">
         <div className="max-w-3xl text-center md:text-left mx-auto md:mx-0 mb-8 md:mb-12">
           <h2
@@ -85,54 +62,64 @@ export function SafariScrollStack() {
         </div>
       </div>
 
-      {/* Embla viewport — single-row horizontal carousel, autoplay, no manual controls */}
-      <div className="overflow-hidden signature-destinations-carousel" ref={emblaRef}>
-        <div className="flex -ml-4 md:-ml-6">
-          {signatureDestinationKeys.map((dest, idx) => (
-            <div
-              key={dest.countryKey}
-              className="flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_25%] min-w-0 pl-4 md:pl-6"
-            >
-              <button
-                onClick={() => navigateToDestination(t(dest.countryKey))}
-                data-cursor="view"
-                className="group relative w-full aspect-[3/4] sm:aspect-[4/5] lg:aspect-[3/4] overflow-hidden bg-charcoal block"
-                style={sharp}
+      {/* Continuous marquee track — pauses on hover via CSS in globals.css
+          (.signature-destinations-marquee:hover { animation-play-state: paused }) */}
+      <div className="signature-destinations-marquee">
+        <div className="signature-destinations-marquee-track">
+          {doubled.map((dest, idx) => {
+            // Stable key per country + position-in-doubled-array so React
+            // doesn't try to reuse nodes across the boundary in a way that
+            // breaks the seamless loop.
+            const key = `${dest.countryKey}-${idx}`;
+            return (
+              <div
+                key={key}
+                className="signature-destinations-marquee-item"
               >
-                <img
-                  src={dest.src}
-                  alt={`${t(dest.countryKey)} — ${t(dest.taglineKey)}`}
-                  className="absolute inset-0 w-full h-full object-cover img-luxury"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-charcoal/85 via-charcoal/25 to-transparent" />
+                <button
+                  onClick={() => navigateToDestination(t(dest.countryKey))}
+                  data-cursor="view"
+                  className="group relative w-full aspect-[3/4] sm:aspect-[4/5] lg:aspect-[3/4] overflow-hidden bg-charcoal block"
+                  style={sharp}
+                >
+                  <img
+                    src={dest.src}
+                    alt={`${t(dest.countryKey)} — ${t(dest.taglineKey)}`}
+                    className="absolute inset-0 w-full h-full object-cover img-luxury"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-charcoal/85 via-charcoal/25 to-transparent" />
 
-                {/* Number */}
-                <div className="absolute top-4 left-4 font-display text-cream/60 text-xl italic" style={{ fontFamily: "var(--font-cormorant), serif" }}>
-                  0{idx + 1}
-                </div>
+                  {/* Number — original index (idx % length) so duplicates
+                      show 01/02/03/04 instead of 05/06/07/08 */}
+                  <div className="absolute top-4 left-4 font-display text-cream/60 text-xl italic" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+                    0{(idx % signatureDestinationKeys.length) + 1}
+                  </div>
 
-                {/* Caption */}
-                <div className="absolute bottom-0 left-0 right-0 p-5 md:p-8">
-                  <p className="font-eyebrow text-gold-soft mb-2">0{idx + 1}</p>
-                  <h3
-                    className="font-display text-3xl md:text-4xl lg:text-5xl text-cream tracking-tight mb-1 md:mb-2 leading-[0.95]"
-                    style={{ fontFamily: "var(--font-cormorant), serif", fontWeight: 300 }}
-                  >
-                    {t(dest.countryKey)}
-                  </h3>
-                  <p
-                    className="text-sm md:text-base text-cream/80 italic"
-                    style={{ fontFamily: "var(--font-cormorant), serif" }}
-                  >
-                    {t(dest.taglineKey)}
-                  </p>
-                </div>
+                  {/* Caption */}
+                  <div className="absolute bottom-0 left-0 right-0 p-5 md:p-8">
+                    <p className="font-eyebrow text-gold-soft mb-2">
+                      0{(idx % signatureDestinationKeys.length) + 1}
+                    </p>
+                    <h3
+                      className="font-display text-3xl md:text-4xl lg:text-5xl text-cream tracking-tight mb-1 md:mb-2 leading-[0.95]"
+                      style={{ fontFamily: "var(--font-cormorant), serif", fontWeight: 300 }}
+                    >
+                      {t(dest.countryKey)}
+                    </h3>
+                    <p
+                      className="text-sm md:text-base text-cream/80 italic"
+                      style={{ fontFamily: "var(--font-cormorant), serif" }}
+                    >
+                      {t(dest.taglineKey)}
+                    </p>
+                  </div>
 
-                {/* Frame border */}
-                <div className="absolute inset-3 md:inset-5 border border-cream/15 group-hover:border-cream/35 transition-all duration-700 pointer-events-none" />
-              </button>
-            </div>
-          ))}
+                  {/* Frame border */}
+                  <div className="absolute inset-3 md:inset-5 border border-cream/15 group-hover:border-cream/35 transition-all duration-700 pointer-events-none" />
+                </button>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
