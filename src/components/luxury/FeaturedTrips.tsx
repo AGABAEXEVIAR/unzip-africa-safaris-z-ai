@@ -18,18 +18,29 @@ export function FeaturedTrips() {
   const { navigateToTour, navigate } = useRouter();
   const { t } = useLang();
 
+  // Duplicate the array when there are 3 or fewer featured trips so the
+  // carousel can actually scroll + loop. With only 3 cards visible per
+  // viewport at 33.333% width each, all 3 fit in one viewport and there's
+  // nothing to scroll to. Duplicating to 6 cards means there's always
+  // another card to scroll to, and with loop: true the rotation wraps
+  // around seamlessly — pressing Next shifts everything left by 1 card
+  // and the leftmost card wraps to the right end (the duplicate takes
+  // its place). After 3 clicks you're visually back to the start.
+  const carouselItems = featured.length > 0 && featured.length <= 3
+    ? [...featured, ...featured]
+    : featured;
+
   const [emblaRef, emblaApi] = useEmblaCarousel(
     {
-      loop: featured.length > 3,
+      loop: true,
       align: "start",
       containScroll: "trimSnaps",
       dragFree: false,
     },
-    featured.length > 1 ? [Autoplay({ delay: 5500, stopOnInteraction: false, stopOnMouseEnter: true })] : []
+    featured.length > 1 ? [Autoplay({ delay: 6000, stopOnInteraction: false, stopOnMouseEnter: true })] : []
   );
 
   const [selected, setSelected] = useState(0);
-  const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
 
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
@@ -38,7 +49,6 @@ export function FeaturedTrips() {
 
   useEffect(() => {
     if (!emblaApi) return;
-    setScrollSnaps(emblaApi.scrollSnapList());
     emblaApi.on("select", onSelect);
     emblaApi.on("reInit", onSelect);
     onSelect();
@@ -48,11 +58,24 @@ export function FeaturedTrips() {
     };
   }, [emblaApi, onSelect]);
 
-  const scrollTo = useCallback((i: number) => emblaApi?.scrollTo(i), [emblaApi]);
+  // Each click of Next/Prev rotates by exactly 1 card. With the array
+  // duplicated (6 cards) and 3 visible per viewport, scrollNext/scrollPrev
+  // advance by 1 snap point = 1 card. With loop: true, after the last
+  // card it wraps around — exactly the "first image becomes last,
+  // second becomes first" behavior the user asked for.
+  const scrollToCard = useCallback((i: number) => emblaApi?.scrollTo(i), [emblaApi]);
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
 
   if (featured.length === 0) return null;
+
+  // Show one dot per UNIQUE featured trip (3 if there are 3 featured,
+  // even though the carousel has 6 cards internally). The active dot
+  // is selected % featured.length so it correctly highlights the
+  // currently-leftmost unique card even when the carousel is showing
+  // the duplicate set.
+  const uniqueDotCount = featured.length;
+  const activeDot = uniqueDotCount > 0 ? selected % uniqueDotCount : 0;
 
   return (
     <section className="py-16 md:py-24 px-6 md:px-10 bg-canvas">
@@ -104,12 +127,12 @@ export function FeaturedTrips() {
           </Reveal>
         </div>
 
-        {/* Embla viewport — single-row horizontal carousel */}
+        {/* Embla viewport — single-row horizontal carousel with infinite loop */}
         <div className="overflow-hidden" ref={emblaRef}>
           <div className="flex -ml-4 md:-ml-6">
-            {featured.map((tour) => (
+            {carouselItems.map((tour, idx) => (
               <div
-                key={tour.id}
+                key={`${tour.id}-${idx}`}
                 className="flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_33.333%] min-w-0 pl-4 md:pl-6"
               >
                 <FeaturedCard tour={tour} onExplore={() => navigateToTour(tour.id)} />
@@ -118,15 +141,17 @@ export function FeaturedTrips() {
           </div>
         </div>
 
-        {/* Dot pagination */}
-        {scrollSnaps.length > 1 && (
+        {/* Dot pagination — one dot per UNIQUE featured trip (3 dots even
+            though the carousel has 6 cards internally). The active dot
+            reflects which unique card is currently leftmost. */}
+        {uniqueDotCount > 1 && (
           <div className="flex items-center justify-center gap-2 mt-10">
-            {scrollSnaps.map((_, i) => (
+            {Array.from({ length: uniqueDotCount }).map((_, i) => (
               <button
                 key={i}
-                onClick={() => scrollTo(i)}
+                onClick={() => scrollToCard(i)}
                 aria-label={`Go to featured trip ${i + 1}`}
-                className={`transition-all duration-300 ${i === selected ? "w-8 h-1.5 bg-gold" : "w-1.5 h-1.5 bg-charcoal/30 hover:bg-charcoal/50"}`}
+                className={`transition-all duration-300 ${i === activeDot ? "w-8 h-1.5 bg-gold" : "w-1.5 h-1.5 bg-charcoal/30 hover:bg-charcoal/50"}`}
                 style={sharp}
               />
             ))}
