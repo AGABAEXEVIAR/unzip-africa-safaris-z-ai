@@ -49,8 +49,14 @@ export function FeaturedTrips() {
 
         {/* View All */}
         <div className="text-center mt-12 md:mt-16">
-          <button onClick={() => navigate("tours")} className="btn-luxury btn-luxury-gold">
-            View All Journeys
+          <button
+            onClick={() => navigate("tours")}
+            className="btn-luxury"
+          >
+            View Featured Trips
+            <svg className="ml-2" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
           </button>
         </div>
       </div>
