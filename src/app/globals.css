@@ -766,29 +766,58 @@
   }
 }
 
-/* ============ Testimonials Vertical Infinite Marquee ============ */
+/* ============ Testimonials — continuous horizontal marquee with edge fading ============ */
+/* Mirrors the signature-destinations marquee pattern: originals duplicated
+   into doubled array, animation 0 → -50% = exactly one full set of originals,
+   then loops. Pauses on hover. Slow 40s loop because testimonials have more
+   text to read. */
 .testimonials-marquee {
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+}
+
+.testimonials-marquee-track {
   display: flex;
-  flex-direction: column;
-  animation: testimonialsScroll 30s linear infinite;
+  animation: testimonialsScroll 40s linear infinite;
   will-change: transform;
 }
 
-.testimonials-marquee:hover {
+.testimonials-marquee:hover .testimonials-marquee-track {
   animation-play-state: paused;
 }
 
-@keyframes testimonialsScroll {
-  0% {
-    transform: translateY(0);
+.testimonials-marquee-item {
+  /* Mobile: 1 per viewport (100vw). Tablet+: 2 per viewport (50vw).
+     Using vw units guarantees each card sizes to the viewport — never
+     collapses even though the track has no width. */
+  flex: 0 0 100vw;
+  padding: 0.5rem 0 0.5rem 1rem;
+  box-sizing: border-box;
+}
+@media (min-width: 640px) {
+  .testimonials-marquee-item {
+    flex: 0 0 50vw;
+    padding: 0.5rem 0 0.5rem 1.5rem;
   }
-  100% {
-    transform: translateY(-50%);
+}
+@media (min-width: 1024px) {
+  .testimonials-marquee-item {
+    flex: 0 0 33.333vw;
+  }
+}
+
+@keyframes testimonialsScroll {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .testimonials-marquee {
+  .testimonials-marquee-track {
     animation: none;
   }
 }
@@ -915,7 +944,7 @@ button:hover .whatsapp-icon-wiggle {
 
 .signature-destinations-marquee-track {
   display: flex;
-  animation: signatureDestinationsScroll 30s linear infinite;
+  animation: signatureDestinationsScroll 20s linear infinite;
   will-change: transform;
 }
 
