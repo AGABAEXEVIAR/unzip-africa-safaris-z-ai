@@ -16,6 +16,7 @@ import ScrollReveal from "@/components/luxury/ScrollReveal";
 import { HeroCarousel } from "@/components/luxury/HeroCarousel";
 import { BookingModal } from "@/components/luxury/BookingModal";
 import { useRouter } from "@/lib/router";
+import { useLang } from "@/lib/language";
 import { useScheduledTrips, useTours, useAccommodations } from "@/lib/store";
 import type { ScheduledTrip } from "@/lib/content";
 
@@ -31,6 +32,7 @@ export function ScheduledTripDetailPage() {
     navigateToScheduledTrip,
     navigateToAccommodation,
   } = useRouter();
+  const { t } = useLang();
 
   const [bookingOpen, setBookingOpen] = useState(false);
   const itineraryRef = useRef<HTMLDivElement>(null);
@@ -50,10 +52,10 @@ export function ScheduledTripDetailPage() {
             className="font-display text-3xl text-charcoal mb-4"
             style={{ fontFamily: "var(--font-cormorant), serif" }}
           >
-            Scheduled trip not found.
+            {t("scheduled.noResults")}
           </p>
           <button onClick={() => navigate("tours")} className="btn-luxury btn-luxury-gold">
-            View All Tours
+            {t("scheduled.viewAllTours")}
           </button>
         </div>
       </div>
@@ -103,11 +105,11 @@ export function ScheduledTripDetailPage() {
                 className="flex items-center gap-2 text-cream/60 hover:text-cream transition-colors mb-10"
               >
                 <ArrowLeft className="w-4 h-4" />
-                <span className="font-eyebrow">All Journeys</span>
+                <span className="font-eyebrow">{t("tourDetail.allJourneys")}</span>
               </button>
 
               <Reveal variant="up">
-                <p className="font-eyebrow text-gold-soft mb-4">Scheduled Departure</p>
+                <p className="font-eyebrow text-gold-soft mb-4">{t("tourDetail.scheduledDeparture")}</p>
               </Reveal>
 
               <Reveal variant="up" delay={0.1}>
@@ -128,7 +130,7 @@ export function ScheduledTripDetailPage() {
                   </span>
                   <span className="flex items-center gap-2">
                     <Clock className="w-4 h-4 text-gold-soft" />
-                    {trip.durationDays} Days
+                    {trip.durationDays} {t("common.days")}
                   </span>
                   <span className="flex items-center gap-2">
                     <Users className="w-4 h-4 text-gold-soft" />
@@ -148,7 +150,7 @@ export function ScheduledTripDetailPage() {
               {/* Price display */}
               <Reveal variant="up" delay={0.3}>
                 <div className="mb-10">
-                  <p className="font-eyebrow text-cream/50 mb-2">Starting From</p>
+                  <p className="font-eyebrow text-cream/50 mb-2">{t("common.startingFrom")}</p>
                   <div className="flex items-baseline gap-3">
                     <span
                       className="font-display text-4xl md:text-5xl text-gold-soft"
@@ -162,13 +164,13 @@ export function ScheduledTripDetailPage() {
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-cream/60 mt-1">per person</p>
+                  <p className="text-xs text-cream/60 mt-1">{t("common.perPerson")}</p>
                 </div>
               </Reveal>
 
               <Reveal variant="up" delay={0.4}>
                 <button onClick={() => setBookingOpen(true)} className="btn-luxury btn-luxury-gold">
-                  Book Now
+                  {t("common.bookNow")}
                 </button>
               </Reveal>
             </div>
@@ -192,7 +194,7 @@ export function ScheduledTripDetailPage() {
           {/* Left — overview copy */}
           <div className="md:col-span-7">
             <Reveal variant="up">
-              <p className="font-eyebrow text-gold mb-6">Tour Overview</p>
+              <p className="font-eyebrow text-gold mb-6">{t("tourDetail.overview")}</p>
             </Reveal>
             <ScrollReveal
               as="h2"
@@ -201,14 +203,11 @@ export function ScheduledTripDetailPage() {
               baseOpacity={0.15}
               blurStrength={5}
             >
-              A small-group journey through {trip.destination}, on fixed departure dates.
+              {t("tourDetail.scheduledOverviewHeading", { destination: trip.destination })}
             </ScrollReveal>
             <Reveal variant="up" delay={0.2}>
               <p className="text-charcoal/75 leading-relaxed text-base md:text-lg max-w-2xl">
-                {trip.description} Departing {formatDate(trip.startDate)} and concluding{" "}
-                {formatDate(trip.endDate)}, this {trip.durationDays}-day journey is the perfect way
-                to experience {trip.destination} with a private guide and a small party of fellow
-                travellers.
+                {trip.description} {t("tourDetail.scheduledOverviewBody", { startDate: formatDate(trip.startDate), endDate: formatDate(trip.endDate), duration: trip.durationDays, destination: trip.destination })}
               </p>
             </Reveal>
           </div>
@@ -217,19 +216,19 @@ export function ScheduledTripDetailPage() {
           <div className="md:col-span-5">
             <Reveal variant="up" delay={0.3}>
               <div className="p-6 md:p-8 text-cream" style={{ background: "#1f3a2f", ...sharp }}>
-                <p className="font-eyebrow text-gold-soft mb-6">Quick Facts</p>
+                <p className="font-eyebrow text-gold-soft mb-6">{t("tourDetail.quickFacts")}</p>
                 <div className="space-y-3 text-sm">
-                  <FactRow label="Departure" value={formatDate(trip.startDate)} />
-                  <FactRow label="Return" value={formatDate(trip.endDate)} />
-                  <FactRow label="Duration" value={`${trip.durationDays} Days`} />
-                  <FactRow label="Trip Type" value="Scheduled Departure" />
-                  <FactRow label="Accommodation" value={trip.accommodationLevel} />
-                  <FactRow label="Group Size" value={trip.groupSize} />
-                  <FactRow label="Spots Left" value={`${trip.spotsLeft}`} />
+                  <FactRow label={t("tourDetail.departure")} value={formatDate(trip.startDate)} />
+                  <FactRow label={t("tourDetail.return")} value={formatDate(trip.endDate)} />
+                  <FactRow label={t("tourDetail.duration")} value={`${trip.durationDays} ${t("common.days")}`} />
+                  <FactRow label={t("tourDetail.tripType")} value={t("tourDetail.scheduledDeparture")} />
+                  <FactRow label={t("common.accommodation")} value={trip.accommodationLevel} />
+                  <FactRow label={t("tourDetail.groupSize")} value={trip.groupSize} />
+                  <FactRow label={t("tourDetail.spotsLeft")} value={`${trip.spotsLeft}`} />
                 </div>
 
                 <div className="mt-6 pt-6 border-t border-cream/15">
-                  <p className="font-eyebrow text-cream/50 mb-1">Starting From</p>
+                  <p className="font-eyebrow text-cream/50 mb-1">{t("common.startingFrom")}</p>
                   <div className="flex items-baseline gap-3">
                     <span
                       className="font-display text-3xl text-gold-soft"
@@ -243,13 +242,13 @@ export function ScheduledTripDetailPage() {
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-cream/60 mt-1">per person</p>
+                  <p className="text-xs text-cream/60 mt-1">{t("common.perPerson")}</p>
 
                   <button
                     onClick={() => setBookingOpen(true)}
                     className="btn-luxury btn-luxury-gold w-full mt-5"
                   >
-                    Reserve a Spot
+                    {t("tourDetail.reserveSpot")}
                   </button>
                 </div>
               </div>
@@ -263,7 +262,7 @@ export function ScheduledTripDetailPage() {
         <div className="mx-auto max-w-[1400px]">
           <div className="max-w-3xl mb-12">
             <Reveal variant="up">
-              <p className="font-eyebrow text-gold mb-6">Journey Highlights</p>
+              <p className="font-eyebrow text-gold mb-6">{t("tourDetail.journeyHighlights")}</p>
             </Reveal>
             <ScrollReveal
               as="h2"
@@ -272,7 +271,7 @@ export function ScheduledTripDetailPage() {
               baseOpacity={0.1}
               blurStrength={5}
             >
-              What you'll <span className="italic">experience.</span>
+              {t("tourDetail.whatYoull")} <span className="italic">{t("tourDetail.experience")}</span>
             </ScrollReveal>
           </div>
 
@@ -305,7 +304,7 @@ export function ScheduledTripDetailPage() {
           <div className="mx-auto max-w-[1200px]">
             <div className="text-center mb-16 md:mb-20">
               <Reveal variant="up">
-                <p className="font-eyebrow text-gold mb-6">Day-by-Day Itinerary</p>
+                <p className="font-eyebrow text-gold mb-6">{t("tourDetail.dayByDay")}</p>
               </Reveal>
               <ScrollReveal
                 as="h2"
@@ -314,7 +313,7 @@ export function ScheduledTripDetailPage() {
                 baseOpacity={0.1}
                 blurStrength={5}
               >
-                Step by step.
+                {t("tourDetail.stepByStep")}
               </ScrollReveal>
             </div>
 
@@ -324,7 +323,7 @@ export function ScheduledTripDetailPage() {
               <div className="hidden md:block w-12 flex-shrink-0">
                 <div className="sticky top-24 flex flex-col items-center" style={{ height: "min(60vh, 400px)" }}>
                   <p className="font-eyebrow text-charcoal/40 text-[0.55rem] tracking-[0.15em] uppercase mb-4 text-center leading-tight">
-                    Itinerary<br />Progress
+                    {t("tourDetail.itineraryProgress1")}<br />{t("tourDetail.itineraryProgress2")}
                   </p>
                   {/* Track + fill — fixed height */}
                   <div className="flex-1 relative w-px bg-charcoal/15">
@@ -335,10 +334,10 @@ export function ScheduledTripDetailPage() {
                   </div>
                   {/* Bottom labels */}
                   <p className="font-display text-sm text-charcoal mt-4" style={{ fontFamily: "var(--font-cormorant), serif" }}>
-                    {trip.durationDays} days
+                    {trip.durationDays} {t("common.daysLower")}
                   </p>
                   <p className="font-eyebrow text-charcoal/40 text-[0.55rem] tracking-[0.15em] uppercase mt-1 text-center leading-tight">
-                    Scroll to<br />advance
+                    {t("tourDetail.scrollToAdvance1")}<br />{t("tourDetail.scrollToAdvance2")}
                   </p>
                 </div>
               </div>
@@ -395,7 +394,7 @@ export function ScheduledTripDetailPage() {
           {/* Included */}
           <div>
             <Reveal variant="up">
-              <p className="font-eyebrow text-gold mb-6">What's Included</p>
+              <p className="font-eyebrow text-gold mb-6">{t("tourDetail.included")}</p>
             </Reveal>
             <ScrollReveal
               as="h2"
@@ -404,7 +403,7 @@ export function ScheduledTripDetailPage() {
               baseOpacity={0.1}
               blurStrength={5}
             >
-              Part of your journey.
+              {t("tourDetail.partOfJourney")}
             </ScrollReveal>
             <ul className="space-y-4">
               {trip.inclusions.map((item, idx) => (
@@ -426,7 +425,7 @@ export function ScheduledTripDetailPage() {
           {/* Excluded */}
           <div>
             <Reveal variant="up">
-              <p className="font-eyebrow text-charcoal/40 mb-6">What's Excluded</p>
+              <p className="font-eyebrow text-charcoal/40 mb-6">{t("tourDetail.excluded")}</p>
             </Reveal>
             <ScrollReveal
               as="h2"
@@ -435,7 +434,7 @@ export function ScheduledTripDetailPage() {
               baseOpacity={0.1}
               blurStrength={5}
             >
-              For you to arrange.
+              {t("tourDetail.forYouToArrange")}
             </ScrollReveal>
             <ul className="space-y-4">
               {trip.exclusions.map((item, idx) => (
@@ -462,7 +461,7 @@ export function ScheduledTripDetailPage() {
           <div className="mx-auto max-w-[1400px]">
             <div className="max-w-3xl mb-12">
               <Reveal variant="up">
-                <p className="font-eyebrow text-gold mb-6">Where You'll Stay</p>
+                <p className="font-eyebrow text-gold mb-6">{t("tourDetail.whereYoullStay")}</p>
               </Reveal>
               <ScrollReveal
                 as="h2"
@@ -471,7 +470,7 @@ export function ScheduledTripDetailPage() {
                 baseOpacity={0.1}
                 blurStrength={5}
               >
-                Lodges &amp; camps selected for this journey.
+                {t("tourDetail.lodgesSelected")}
               </ScrollReveal>
             </div>
 
@@ -504,7 +503,7 @@ export function ScheduledTripDetailPage() {
                       <div className="flex items-center justify-between pt-3 border-t border-charcoal/10">
                         <span className="font-label text-charcoal/60">{acc.pricePerNight}</span>
                         <span className="font-eyebrow text-gold flex items-center gap-1.5">
-                          View Lodge
+                          {t("tourDetail.viewLodge")}
                           <ArrowRight className="w-3 h-3" />
                         </span>
                       </div>
@@ -522,12 +521,12 @@ export function ScheduledTripDetailPage() {
         <div className="mx-auto max-w-[1400px]">
           <div className="max-w-3xl mb-12">
             <Reveal variant="up">
-              <p className="font-eyebrow text-gold mb-6">The Route</p>
+              <p className="font-eyebrow text-gold mb-6">{t("tourDetail.theRoute")}</p>
               <h2
                 className="font-display text-4xl md:text-6xl text-charcoal tracking-tight leading-[1.05]"
                 style={{ fontFamily: "var(--font-cormorant), serif" }}
               >
-                Mapped across {trip.destination}.
+                {t("tourDetail.mappedAcross", { destination: trip.destination })}
               </h2>
             </Reveal>
           </div>
@@ -557,7 +556,7 @@ export function ScheduledTripDetailPage() {
         <div className="mx-auto max-w-[1400px]">
           <div className="max-w-3xl mb-12">
             <Reveal variant="up">
-              <p className="font-eyebrow text-gold-soft mb-6">Continue Exploring</p>
+              <p className="font-eyebrow text-gold-soft mb-6">{t("tourDetail.continueExploring")}</p>
             </Reveal>
             <ScrollReveal
               as="h2"

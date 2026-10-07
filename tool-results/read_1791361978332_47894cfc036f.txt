@@ -1,0 +1,669 @@
+     1→"use client";
+     2→
+     3→import { useState, useRef } from "react";
+     4→import { motion, useScroll, useTransform } from "framer-motion";
+     5→import {
+     6→  ArrowLeft,
+     7→  ArrowRight,
+     8→  Calendar,
+     9→  Clock,
+    10→  Users,
+    11→  Check,
+    12→  X,
+    13→} from "lucide-react";
+    14→import { Reveal } from "@/components/luxury/Reveal";
+    15→import ScrollReveal from "@/components/luxury/ScrollReveal";
+    16→import { HeroCarousel } from "@/components/luxury/HeroCarousel";
+    17→import { BookingModal } from "@/components/luxury/BookingModal";
+    18→import { useRouter } from "@/lib/router";
+    19→import { useScheduledTrips, useTours, useAccommodations } from "@/lib/store";
+    20→import type { ScheduledTrip } from "@/lib/content";
+    21→
+    22→const sharp = { borderRadius: 0 } as const;
+    23→
+    24→export function ScheduledTripDetailPage() {
+    25→  const trips = useScheduledTrips();
+    26→  const tours = useTours();
+    27→  const accommodations = useAccommodations();
+    28→  const {
+    29→    selectedScheduledTripId,
+    30→    navigate,
+    31→    navigateToScheduledTrip,
+    32→    navigateToAccommodation,
+    33→  } = useRouter();
+    34→
+    35→  const [bookingOpen, setBookingOpen] = useState(false);
+    36→  const itineraryRef = useRef<HTMLDivElement>(null);
+    37→  const { scrollYProgress: itineraryProgress } = useScroll({
+    38→    target: itineraryRef,
+    39→    offset: ["start center", "end end"],
+    40→  });
+    41→  const lineScaleY = useTransform(itineraryProgress, [0, 1], [0, 1]);
+    42→
+    43→  const trip = trips.find((t) => t.id === selectedScheduledTripId);
+    44→
+    45→  if (!trip) {
+    46→    return (
+    47→      <div className="min-h-screen flex items-center justify-center bg-[#EFE9DF]">
+    48→        <div className="text-center px-6">
+    49→          <p
+    50→            className="font-display text-3xl text-charcoal mb-4"
+    51→            style={{ fontFamily: "var(--font-cormorant), serif" }}
+    52→          >
+    53→            Scheduled trip not found.
+    54→          </p>
+    55→          <button onClick={() => navigate("tours")} className="btn-luxury btn-luxury-gold">
+    56→            View All Tours
+    57→          </button>
+    58→        </div>
+    59→      </div>
+    60→    );
+    61→  }
+    62→
+    63→  // Look up a tour with the same destination to surface related accommodations
+    64→  const relatedTour = tours.find((t) => t.destination === trip.destination);
+    65→  const stays = relatedTour
+    66→    ? (relatedTour.accommodationIds || [])
+    67→        .map((id) => accommodations.find((a) => a.id === id))
+    68→        .filter((a): a is NonNullable<typeof a> => Boolean(a))
+    69→    : [];
+    70→
+    71→  // Gallery: prefer galleryImages; otherwise fallback to [image, ...stops images]
+    72→  const gallery =
+    73→    trip.galleryImages && trip.galleryImages.length > 0
+    74→      ? trip.galleryImages
+    75→      : [trip.image, ...(trip.stops || []).map((s) => s.image).filter(Boolean)];
+    76→
+    77→  // Other scheduled trips for "Continue Exploring"
+    78→  const others = trips.filter((t) => t.id !== trip.id).slice(0, 3);
+    79→
+    80→  const hasDiscount = !!trip.priceOriginal && trip.priceOriginal > trip.priceFrom;
+    81→  const discountPercent = hasDiscount
+    82→    ? Math.round(((trip.priceOriginal! - trip.priceFrom) / trip.priceOriginal!) * 100)
+    83→    : 0;
+    84→
+    85→  const dateRange = `${formatDate(trip.startDate)} — ${formatDate(trip.endDate)}`;
+    86→
+    87→  return (
+    88→    <div className="page-enter">
+    89→      {/* ====================== 1. HERO ====================== */}
+    90→      <section className="relative bg-[#1A2520] text-cream overflow-hidden">
+    91→        {/* Atmospheric image at low opacity */}
+    92→        <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
+    93→          <img src={trip.image} alt="" className="w-full h-full object-cover opacity-20" />
+    94→          <div className="absolute inset-0 bg-gradient-to-br from-[#1A2520] via-[#1A2520]/85 to-[#1A2520]/55" />
+    95→        </div>
+    96→
+    97→        <div className="relative grid grid-cols-1 lg:grid-cols-2 min-h-[88vh]">
+    98→          {/* Left — copy */}
+    99→          <div className="flex items-center px-6 md:px-12 lg:px-16 py-16 lg:py-0">
+   100→            <div className="max-w-xl w-full">
+   101→              <button
+   102→                onClick={() => navigate("tours")}
+   103→                className="flex items-center gap-2 text-cream/60 hover:text-cream transition-colors mb-10"
+   104→              >
+   105→                <ArrowLeft className="w-4 h-4" />
+   106→                <span className="font-eyebrow">All Journeys</span>
+   107→              </button>
+   108→
+   109→              <Reveal variant="up">
+   110→                <p className="font-eyebrow text-gold-soft mb-4">Scheduled Departure</p>
+   111→              </Reveal>
+   112→
+   113→              <Reveal variant="up" delay={0.1}>
+   114→                <h1
+   115→                  className="font-display text-5xl md:text-6xl lg:text-7xl text-cream tracking-tight leading-[0.95] mb-8"
+   116→                  style={{ fontFamily: "var(--font-cormorant), serif" }}
+   117→                >
+   118→                  {trip.name}
+   119→                </h1>
+   120→              </Reveal>
+   121→
+   122→              {/* Metadata row */}
+   123→              <Reveal variant="up" delay={0.2}>
+   124→                <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-xs text-cream/80 mb-8">
+   125→                  <span className="flex items-center gap-2">
+   126→                    <Calendar className="w-4 h-4 text-gold-soft" />
+   127→                    {formatDate(trip.startDate)}
+   128→                  </span>
+   129→                  <span className="flex items-center gap-2">
+   130→                    <Clock className="w-4 h-4 text-gold-soft" />
+   131→                    {trip.durationDays} Days
+   132→                  </span>
+   133→                  <span className="flex items-center gap-2">
+   134→                    <Users className="w-4 h-4 text-gold-soft" />
+   135→                    {trip.groupSize}
+   136→                  </span>
+   137→                  {hasDiscount && (
+   138→                    <span
+   139→                      className="px-3 py-1 bg-gold text-charcoal font-eyebrow text-[0.55rem]"
+   140→                      style={sharp}
+   141→                    >
+   142→                      {discountPercent}% Off
+   143→                    </span>
+   144→                  )}
+   145→                </div>
+   146→              </Reveal>
+   147→
+   148→              {/* Price display */}
+   149→              <Reveal variant="up" delay={0.3}>
+   150→                <div className="mb-10">
+   151→                  <p className="font-eyebrow text-cream/50 mb-2">Starting From</p>
+   152→                  <div className="flex items-baseline gap-3">
+   153→                    <span
+   154→                      className="font-display text-4xl md:text-5xl text-gold-soft"
+   155→                      style={{ fontFamily: "var(--font-cormorant), serif" }}
+   156→                    >
+   157→                      ${trip.priceFrom.toLocaleString()}
+   158→                    </span>
+   159→                    {hasDiscount && (
+   160→                      <span className="text-cream/40 line-through text-lg">
+   161→                        ${trip.priceOriginal!.toLocaleString()}
+   162→                      </span>
+   163→                    )}
+   164→                  </div>
+   165→                  <p className="text-xs text-cream/60 mt-1">per person</p>
+   166→                </div>
+   167→              </Reveal>
+   168→
+   169→              <Reveal variant="up" delay={0.4}>
+   170→                <button onClick={() => setBookingOpen(true)} className="btn-luxury btn-luxury-gold">
+   171→                  Book Now
+   172→                </button>
+   173→              </Reveal>
+   174→            </div>
+   175→          </div>
+   176→
+   177→          {/* Right — HeroCarousel */}
+   178→          <div className="relative bg-[#0F1712] min-h-[60vh] lg:min-h-[88vh]">
+   179→            <HeroCarousel
+   180→              images={gallery}
+   181→              alt={trip.name}
+   182→              aspectClass="h-full"
+   183→              className="h-full"
+   184→            />
+   185→          </div>
+   186→        </div>
+   187→      </section>
+   188→
+   189→      {/* ====================== 2. OVERVIEW + QUICK FACTS ====================== */}
+   190→      <section className="bg-[#EFE9DF] py-16 md:py-24 px-6 md:px-10">
+   191→        <div className="mx-auto max-w-[1400px] grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16">
+   192→          {/* Left — overview copy */}
+   193→          <div className="md:col-span-7">
+   194→            <Reveal variant="up">
+   195→              <p className="font-eyebrow text-gold mb-6">Tour Overview</p>
+   196→            </Reveal>
+   197→            <ScrollReveal
+   198→              as="h2"
+   199→              containerClassName="font-display text-3xl md:text-5xl lg:text-6xl leading-[1.1] text-charcoal tracking-tight block mb-8"
+   200→              textClassName="block"
+   201→              baseOpacity={0.15}
+   202→              blurStrength={5}
+   203→            >
+   204→              A small-group journey through {trip.destination}, on fixed departure dates.
+   205→            </ScrollReveal>
+   206→            <Reveal variant="up" delay={0.2}>
+   207→              <p className="text-charcoal/75 leading-relaxed text-base md:text-lg max-w-2xl">
+   208→                {trip.description} Departing {formatDate(trip.startDate)} and concluding{" "}
+   209→                {formatDate(trip.endDate)}, this {trip.durationDays}-day journey is the perfect way
+   210→                to experience {trip.destination} with a private guide and a small party of fellow
+   211→                travellers.
+   212→              </p>
+   213→            </Reveal>
+   214→          </div>
+   215→
+   216→          {/* Right — Quick Facts card */}
+   217→          <div className="md:col-span-5">
+   218→            <Reveal variant="up" delay={0.3}>
+   219→              <div className="p-6 md:p-8 text-cream" style={{ background: "#1f3a2f", ...sharp }}>
+   220→                <p className="font-eyebrow text-gold-soft mb-6">Quick Facts</p>
+   221→                <div className="space-y-3 text-sm">
+   222→                  <FactRow label="Departure" value={formatDate(trip.startDate)} />
+   223→                  <FactRow label="Return" value={formatDate(trip.endDate)} />
+   224→                  <FactRow label="Duration" value={`${trip.durationDays} Days`} />
+   225→                  <FactRow label="Trip Type" value="Scheduled Departure" />
+   226→                  <FactRow label="Accommodation" value={trip.accommodationLevel} />
+   227→                  <FactRow label="Group Size" value={trip.groupSize} />
+   228→                  <FactRow label="Spots Left" value={`${trip.spotsLeft}`} />
+   229→                </div>
+   230→
+   231→                <div className="mt-6 pt-6 border-t border-cream/15">
+   232→                  <p className="font-eyebrow text-cream/50 mb-1">Starting From</p>
+   233→                  <div className="flex items-baseline gap-3">
+   234→                    <span
+   235→                      className="font-display text-3xl text-gold-soft"
+   236→                      style={{ fontFamily: "var(--font-cormorant), serif" }}
+   237→                    >
+   238→                      ${trip.priceFrom.toLocaleString()}
+   239→                    </span>
+   240→                    {hasDiscount && (
+   241→                      <span className="text-cream/40 line-through text-sm">
+   242→                        ${trip.priceOriginal!.toLocaleString()}
+   243→                      </span>
+   244→                    )}
+   245→                  </div>
+   246→                  <p className="text-xs text-cream/60 mt-1">per person</p>
+   247→
+   248→                  <button
+   249→                    onClick={() => setBookingOpen(true)}
+   250→                    className="btn-luxury btn-luxury-gold w-full mt-5"
+   251→                  >
+   252→                    Reserve a Spot
+   253→                  </button>
+   254→                </div>
+   255→              </div>
+   256→            </Reveal>
+   257→          </div>
+   258→        </div>
+   259→      </section>
+   260→
+   261→      {/* ====================== 3. JOURNEY HIGHLIGHTS ====================== */}
+   262→      <section className="bg-[#EFE9DF] py-16 md:py-24 px-6 md:px-10">
+   263→        <div className="mx-auto max-w-[1400px]">
+   264→          <div className="max-w-3xl mb-12">
+   265→            <Reveal variant="up">
+   266→              <p className="font-eyebrow text-gold mb-6">Journey Highlights</p>
+   267→            </Reveal>
+   268→            <ScrollReveal
+   269→              as="h2"
+   270→              containerClassName="font-display text-4xl md:text-6xl text-charcoal tracking-tight leading-[1.05] block"
+   271→              textClassName="block"
+   272→              baseOpacity={0.1}
+   273→              blurStrength={5}
+   274→            >
+   275→              What you'll <span className="italic">experience.</span>
+   276→            </ScrollReveal>
+   277→          </div>
+   278→
+   279→          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+   280→            {trip.highlights.map((h, idx) => (
+   281→              <Reveal key={idx} variant="up" delay={(idx % 2) * 0.1}>
+   282→                <div
+   283→                  className="flex items-start gap-5 p-6 md:p-8 bg-[#E8E0D2]/40 border border-charcoal/10"
+   284→                  style={sharp}
+   285→                >
+   286→                  <span
+   287→                    className="font-display text-4xl md:text-5xl text-gold/60 italic flex-shrink-0 leading-none"
+   288→                    style={{ fontFamily: "var(--font-cormorant), serif" }}
+   289→                  >
+   290→                    {String(idx + 1).padStart(2, "0")}
+   291→                  </span>
+   292→                  <p className="text-charcoal/80 leading-relaxed flex-1 pt-2 text-base md:text-lg">
+   293→                    {h}
+   294→                  </p>
+   295→                </div>
+   296→              </Reveal>
+   297→            ))}
+   298→          </div>
+   299→        </div>
+   300→      </section>
+   301→
+   302→      {/* ====================== 4. JOURNEY OUTLINE — stops timeline ====================== */}
+   303→      {trip.stops && trip.stops.length > 0 && (
+   304→        <section ref={itineraryRef} className="bg-[#EFE9DF] py-16 md:py-24 px-6 md:px-10">
+   305→          <div className="mx-auto max-w-[1200px]">
+   306→            <div className="text-center mb-16 md:mb-20">
+   307→              <Reveal variant="up">
+   308→                <p className="font-eyebrow text-gold mb-6">Day-by-Day Itinerary</p>
+   309→              </Reveal>
+   310→              <ScrollReveal
+   311→                as="h2"
+   312→                containerClassName="font-display text-4xl md:text-6xl text-charcoal tracking-tight leading-[1.05] block"
+   313→                textClassName="block"
+   314→                baseOpacity={0.1}
+   315→                blurStrength={5}
+   316→              >
+   317→                Step by step.
+   318→              </ScrollReveal>
+   319→            </div>
+   320→
+   321→            {/* Animated timeline — sticky left rail + scrolling right content */}
+   322→            <div className="relative flex gap-6 md:gap-10">
+   323→              {/* Left rail — sticky progress line */}
+   324→              <div className="hidden md:block w-12 flex-shrink-0">
+   325→                <div className="sticky top-24 flex flex-col items-center" style={{ height: "min(60vh, 400px)" }}>
+   326→                  <p className="font-eyebrow text-charcoal/40 text-[0.55rem] tracking-[0.15em] uppercase mb-4 text-center leading-tight">
+   327→                    Itinerary<br />Progress
+   328→                  </p>
+   329→                  {/* Track + fill — fixed height */}
+   330→                  <div className="flex-1 relative w-px bg-charcoal/15">
+   331→                    <motion.div
+   332→                      style={{ scaleY: lineScaleY, transformOrigin: "top" }}
+   333→                      className="absolute inset-0 w-full bg-charcoal"
+   334→                    />
+   335→                  </div>
+   336→                  {/* Bottom labels */}
+   337→                  <p className="font-display text-sm text-charcoal mt-4" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+   338→                    {trip.durationDays} days
+   339→                  </p>
+   340→                  <p className="font-eyebrow text-charcoal/40 text-[0.55rem] tracking-[0.15em] uppercase mt-1 text-center leading-tight">
+   341→                    Scroll to<br />advance
+   342→                  </p>
+   343→                </div>
+   344→              </div>
+   345→
+   346→              {/* Right — stop entries */}
+   347→              <div className="flex-1 space-y-12 md:space-y-20">
+   348→                {trip.stops.map((stop, idx) => (
+   349→                  <Reveal key={idx} variant="up" delay={idx * 0.05}>
+   350→                    <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 items-center">
+   351→                      {/* Number */}
+   352→                      <div className="md:col-span-2 flex md:justify-start">
+   353→                        <span
+   354→                          className="font-display text-6xl md:text-7xl text-charcoal/30 italic leading-none"
+   355→                          style={{ fontFamily: "var(--font-cormorant), serif" }}
+   356→                        >
+   357→                          {String(idx + 1).padStart(2, "0")}
+   358→                        </span>
+   359→                      </div>
+   360→
+   361→                      {/* Image */}
+   362→                      <div className="md:col-span-5">
+   363→                        <div className="aspect-[4/3] overflow-hidden bg-bone" style={sharp}>
+   364→                          <img
+   365→                            src={stop.image}
+   366→                            alt={stop.title}
+   367→                            className="w-full h-full object-cover img-luxury"
+   368→                          />
+   369→                        </div>
+   370→                      </div>
+   371→
+   372→                      {/* Text */}
+   373→                      <div className="md:col-span-5">
+   374→                        <p className="font-eyebrow text-gold mb-2">{stop.day}</p>
+   375→                        <h3
+   376→                          className="font-display text-2xl md:text-3xl text-charcoal tracking-tight mb-3 leading-[1.05]"
+   377→                          style={{ fontFamily: "var(--font-cormorant), serif" }}
+   378→                        >
+   379→                          {stop.title}
+   380→                        </h3>
+   381→                        <p className="text-charcoal/70 leading-relaxed text-sm">{stop.description}</p>
+   382→                      </div>
+   383→                    </div>
+   384→                  </Reveal>
+   385→                ))}
+   386→              </div>
+   387→            </div>
+   388→          </div>
+   389→        </section>
+   390→      )}
+   391→
+   392→      {/* ====================== 5. WHAT'S INCLUDED / EXCLUDED ====================== */}
+   393→      <section className="bg-[#EFE9DF] py-16 md:py-24 px-6 md:px-10">
+   394→        <div className="mx-auto max-w-[1400px] grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20">
+   395→          {/* Included */}
+   396→          <div>
+   397→            <Reveal variant="up">
+   398→              <p className="font-eyebrow text-gold mb-6">What's Included</p>
+   399→            </Reveal>
+   400→            <ScrollReveal
+   401→              as="h2"
+   402→              containerClassName="font-display text-4xl md:text-5xl text-charcoal tracking-tight leading-[1.05] block mb-10"
+   403→              textClassName="block"
+   404→              baseOpacity={0.1}
+   405→              blurStrength={5}
+   406→            >
+   407→              Part of your journey.
+   408→            </ScrollReveal>
+   409→            <ul className="space-y-4">
+   410→              {trip.inclusions.map((item, idx) => (
+   411→                <Reveal key={idx} variant="up" delay={idx * 0.05}>
+   412→                  <li className="flex items-start gap-3 text-charcoal/80">
+   413→                    <span
+   414→                      className="w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5"
+   415→                      style={{ ...sharp, background: "rgba(168, 139, 92, 0.15)" }}
+   416→                    >
+   417→                      <Check className="w-3.5 h-3.5 text-gold" />
+   418→                    </span>
+   419→                    <span className="leading-relaxed flex-1">{item}</span>
+   420→                  </li>
+   421→                </Reveal>
+   422→              ))}
+   423→            </ul>
+   424→          </div>
+   425→
+   426→          {/* Excluded */}
+   427→          <div>
+   428→            <Reveal variant="up">
+   429→              <p className="font-eyebrow text-charcoal/40 mb-6">What's Excluded</p>
+   430→            </Reveal>
+   431→            <ScrollReveal
+   432→              as="h2"
+   433→              containerClassName="font-display text-4xl md:text-5xl text-charcoal tracking-tight leading-[1.05] block mb-10"
+   434→              textClassName="block"
+   435→              baseOpacity={0.1}
+   436→              blurStrength={5}
+   437→            >
+   438→              For you to arrange.
+   439→            </ScrollReveal>
+   440→            <ul className="space-y-4">
+   441→              {trip.exclusions.map((item, idx) => (
+   442→                <Reveal key={idx} variant="up" delay={idx * 0.05}>
+   443→                  <li className="flex items-start gap-3 text-charcoal/60">
+   444→                    <span
+   445→                      className="w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5 border border-charcoal/20"
+   446→                      style={sharp}
+   447→                    >
+   448→                      <X className="w-3.5 h-3.5 text-charcoal/40" />
+   449→                    </span>
+   450→                    <span className="leading-relaxed flex-1">{item}</span>
+   451→                  </li>
+   452→                </Reveal>
+   453→              ))}
+   454→            </ul>
+   455→          </div>
+   456→        </div>
+   457→      </section>
+   458→
+   459→      {/* ====================== 6. WHERE YOU'LL STAY ====================== */}
+   460→      {stays.length > 0 && (
+   461→        <section className="bg-[#EFE9DF] py-16 md:py-24 px-6 md:px-10">
+   462→          <div className="mx-auto max-w-[1400px]">
+   463→            <div className="max-w-3xl mb-12">
+   464→              <Reveal variant="up">
+   465→                <p className="font-eyebrow text-gold mb-6">Where You'll Stay</p>
+   466→              </Reveal>
+   467→              <ScrollReveal
+   468→                as="h2"
+   469→                containerClassName="font-display text-4xl md:text-6xl text-charcoal tracking-tight leading-[1.05] block"
+   470→                textClassName="block"
+   471→                baseOpacity={0.1}
+   472→                blurStrength={5}
+   473→              >
+   474→                Lodges &amp; camps selected for this journey.
+   475→              </ScrollReveal>
+   476→            </div>
+   477→
+   478→            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+   479→              {stays.map((acc, idx) => (
+   480→                <Reveal key={acc.id} variant="up" delay={idx * 0.1}>
+   481→                  <article
+   482→                    onClick={() => navigateToAccommodation(acc.id)}
+   483→                    className="bg-[#FAF6EE] overflow-hidden cursor-pointer group card-luxury flex flex-col h-full"
+   484→                    style={sharp}
+   485→                  >
+   486→                    <div className="aspect-[4/3] overflow-hidden bg-bone card-zoom">
+   487→                      <img
+   488→                        src={acc.image}
+   489→                        alt={acc.name}
+   490→                        className="w-full h-full object-cover img-luxury"
+   491→                      />
+   492→                    </div>
+   493→                    <div className="p-5 md:p-6 flex flex-col flex-1">
+   494→                      <p className="font-eyebrow text-gold mb-2">{acc.location}</p>
+   495→                      <h3
+   496→                        className="font-display text-2xl text-charcoal tracking-tight mb-3 group-hover:text-forest transition-colors"
+   497→                        style={{ fontFamily: "var(--font-cormorant), serif" }}
+   498→                      >
+   499→                        {acc.name}
+   500→                      </h3>
+   501→                      <p className="text-sm text-charcoal/70 leading-relaxed line-clamp-2 mb-4 flex-1">
+   502→                        {acc.description}
+   503→                      </p>
+   504→                      <div className="flex items-center justify-between pt-3 border-t border-charcoal/10">
+   505→                        <span className="font-label text-charcoal/60">{acc.pricePerNight}</span>
+   506→                        <span className="font-eyebrow text-gold flex items-center gap-1.5">
+   507→                          View Lodge
+   508→                          <ArrowRight className="w-3 h-3" />
+   509→                        </span>
+   510→                      </div>
+   511→                    </div>
+   512→                  </article>
+   513→                </Reveal>
+   514→              ))}
+   515→            </div>
+   516→          </div>
+   517→        </section>
+   518→      )}
+   519→
+   520→      {/* ====================== 7. THE ROUTE / MAP ====================== */}
+   521→      <section className="bg-[#EFE9DF] py-16 md:py-24 px-6 md:px-10">
+   522→        <div className="mx-auto max-w-[1400px]">
+   523→          <div className="max-w-3xl mb-12">
+   524→            <Reveal variant="up">
+   525→              <p className="font-eyebrow text-gold mb-6">The Route</p>
+   526→              <h2
+   527→                className="font-display text-4xl md:text-6xl text-charcoal tracking-tight leading-[1.05]"
+   528→                style={{ fontFamily: "var(--font-cormorant), serif" }}
+   529→              >
+   530→                Mapped across {trip.destination}.
+   531→              </h2>
+   532→            </Reveal>
+   533→          </div>
+   534→          <Reveal variant="up" delay={0.2}>
+   535→            <div
+   536→              className="relative aspect-[16/7] bg-[#1f3a2f] overflow-hidden border border-charcoal/10"
+   537→              style={sharp}
+   538→            >
+   539→              <iframe
+   540→                title={`Map of ${trip.destination}`}
+   541→                src={`https://www.google.com/maps?q=${encodeURIComponent(
+   542→                  `${trip.destination} ${dateRange}`
+   543→                )}&output=embed`}
+   544→                className="absolute inset-0 w-full h-full"
+   545→                style={{ border: 0 }}
+   546→                loading="lazy"
+   547→                referrerPolicy="no-referrer-when-downgrade"
+   548→                allowFullScreen
+   549→              />
+   550→            </div>
+   551→          </Reveal>
+   552→        </div>
+   553→      </section>
+   554→
+   555→      {/* ====================== 8. CONTINUE EXPLORING ====================== */}
+   556→      <section className="bg-[#1A2520] text-cream py-16 md:py-24 px-6 md:px-10">
+   557→        <div className="mx-auto max-w-[1400px]">
+   558→          <div className="max-w-3xl mb-12">
+   559→            <Reveal variant="up">
+   560→              <p className="font-eyebrow text-gold-soft mb-6">Continue Exploring</p>
+   561→            </Reveal>
+   562→            <ScrollReveal
+   563→              as="h2"
+   564→              containerClassName="font-display text-4xl md:text-6xl text-cream tracking-tight leading-[1.05] block"
+   565→              textClassName="block"
+   566→              baseOpacity={0.1}
+   567→              blurStrength={5}
+   568→            >
+   569→              Related journeys in {trip.destination}.
+   570→            </ScrollReveal>
+   571→          </div>
+   572→
+   573→          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+   574→            {others.map((t, idx) => (
+   575→              <Reveal key={t.id} variant="up" delay={idx * 0.1}>
+   576→                <article
+   577→                  onClick={() => navigateToScheduledTrip(t.id)}
+   578→                  className="bg-[#0F1712] border border-cream/10 overflow-hidden cursor-pointer group card-luxury h-full"
+   579→                  style={sharp}
+   580→                >
+   581→                  <div className="aspect-[4/3] overflow-hidden card-zoom">
+   582→                    <img
+   583→                      src={t.image}
+   584→                      alt={t.name}
+   585→                      className="w-full h-full object-cover img-luxury"
+   586→                    />
+   587→                  </div>
+   588→                  <div className="p-5 md:p-6">
+   589→                    <p className="font-eyebrow text-gold-soft mb-2">{formatDate(t.startDate)}</p>
+   590→                    <h3
+   591→                      className="font-display text-xl md:text-2xl text-cream tracking-tight mb-4 group-hover:text-gold-soft transition-colors"
+   592→                      style={{ fontFamily: "var(--font-cormorant), serif" }}
+   593→                    >
+   594→                      {t.name}
+   595→                    </h3>
+   596→                    <div className="flex items-center justify-between pt-3 border-t border-cream/10">
+   597→                      <span className="text-xs text-cream/60">
+   598→                        From ${t.priceFrom.toLocaleString()} pp
+   599→                      </span>
+   600→                      <ArrowRight className="w-4 h-4 text-gold-soft group-hover:translate-x-1 transition-transform" />
+   601→                    </div>
+   602→                  </div>
+   603→                </article>
+   604→              </Reveal>
+   605→            ))}
+   606→          </div>
+   607→        </div>
+   608→      </section>
+   609→
+   610→      {/* ====================== 9. CTA SECTION ====================== */}
+   611→      <section className="bg-[#1A2520] text-cream py-20 md:py-32 px-6 md:px-10 border-t border-cream/10">
+   612→        <div className="mx-auto max-w-4xl text-center">
+   613→          <Reveal variant="up">
+   614→            <h2
+   615→              className="font-display text-4xl md:text-6xl lg:text-7xl text-cream tracking-tight leading-[1.05] mb-8"
+   616→              style={{ fontFamily: "var(--font-cormorant), serif" }}
+   617→            >
+   618→              Let us design a <span className="italic text-gold-soft">safari</span> composed
+   619→              entirely for you.
+   620→            </h2>
+   621→          </Reveal>
+   622→          <Reveal variant="up" delay={0.2}>
+   623→            <p className="text-cream/70 leading-relaxed mb-10 max-w-2xl mx-auto text-base md:text-lg">
+   624→              Every journey we craft begins with a conversation. Tell us about the safari you've
+   625→              been dreaming of — and we'll shape it, day by day, camp by camp, around you.
+   626→            </p>
+   627→          </Reveal>
+   628→          <Reveal variant="up" delay={0.3}>
+   629→            <button onClick={() => navigate("contact")} className="btn-luxury btn-luxury-light">
+   630→              Contact
+   631→            </button>
+   632→          </Reveal>
+   633→        </div>
+   634→      </section>
+   635→
+   636→      {/* ====================== BOOKING MODAL ====================== */}
+   637→      <BookingModal
+   638→        tripType="scheduled-trip"
+   639→        trip={trip as ScheduledTrip}
+   640→        open={bookingOpen}
+   641→        onClose={() => setBookingOpen(false)}
+   642→      />
+   643→    </div>
+   644→  );
+   645→}
+   646→
+   647→function FactRow({ label, value }: { label: string; value: string }) {
+   648→  return (
+   649→    <div className="flex items-start justify-between gap-4 border-b border-cream/10 pb-2 last:border-0 last:pb-0">
+   650→      <span className="font-eyebrow text-cream/50 text-[0.65rem] tracking-[0.2em] uppercase flex-shrink-0 pt-0.5">
+   651→        {label}
+   652→      </span>
+   653→      <span className="text-cream text-sm text-right">{value}</span>
+   654→    </div>
+   655→  );
+   656→}
+   657→
+   658→function formatDate(iso: string): string {
+   659→  try {
+   660→    return new Date(iso).toLocaleDateString("en-US", {
+   661→      day: "numeric",
+   662→      month: "short",
+   663→      year: "numeric",
+   664→    });
+   665→  } catch {
+   666→    return iso;
+   667→  }
+   668→}
+   669→

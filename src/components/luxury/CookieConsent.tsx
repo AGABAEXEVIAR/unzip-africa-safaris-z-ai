@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { useLang } from "@/lib/language";
 
 const STORAGE_KEY = "unzip-africa-gdpr-consent";
 
@@ -37,6 +38,7 @@ function useClientStorage(key: string): ConsentChoice {
 
 export function CookieConsent() {
   const [choice, setChoice] = useState<ConsentChoice>(null);
+  const { t } = useLang();
   const [mounted, setMounted] = useState(false);
 
   // Use queueMicrotask to schedule client-side initialization without
@@ -94,12 +96,10 @@ export function CookieConsent() {
 
             <div className="flex-1 min-w-0">
               <p className="font-display text-lg md:text-xl text-charcoal tracking-tight leading-tight mb-1">
-                We value your privacy
+                {t("cookie.privacyTitle")}
               </p>
               <p className="text-sm text-charcoal/70 leading-relaxed">
-                We use cookies to enhance your browsing experience, serve personalized content, and analyse our traffic.
-                By clicking &ldquo;Accept&rdquo;, you consent to our use of cookies. Read our{" "}
-                <a href="#" className="underline text-forest hover:text-gold transition-colors">Privacy Policy</a>.
+                {t("cookie.privacyBody")} <a href="#" className="underline text-forest hover:text-gold transition-colors">{t("cookie.privacyPolicy")}</a>.
               </p>
             </div>
           </div>
@@ -111,14 +111,14 @@ export function CookieConsent() {
               className="px-5 py-2.5 text-xs font-medium tracking-[0.2em] uppercase text-charcoal/70 hover:text-charcoal border border-charcoal/30 hover:border-charcoal transition-all"
               style={{ borderRadius: 0 }}
             >
-              Deny
+              {t("cookie.deny")}
             </button>
             <button
               onClick={() => decide("accepted")}
               className="px-5 py-2.5 text-xs font-medium tracking-[0.2em] uppercase text-cream bg-forest hover:bg-forest-deep transition-colors shadow-[inset_0_2px_0_rgba(255,255,255,0.15),inset_0_-2px_0_rgba(0,0,0,0.25)]"
               style={{ borderRadius: 0 }}
             >
-              Accept
+              {t("cookie.accept")}
             </button>
           </div>
         </div>

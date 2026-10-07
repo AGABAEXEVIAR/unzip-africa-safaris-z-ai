@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { store, generateId, type Booking } from "@/lib/store";
 import type { TourPackage, ScheduledTrip } from "@/lib/content";
+import { useLang } from "@/lib/language";
 
 const sharp = { borderRadius: 0 } as const;
 
@@ -30,6 +31,7 @@ const modalScrollStyle = { overflowY: "auto", flex: "1 1 0%", minHeight: 0 } as 
 export function BookingModal(props: BookingModalProps) {
   const { open, onClose, tripType, trip } = props;
   const overlayRef = useRef<HTMLDivElement>(null);
+  const { t } = useLang();
 
   const [form, setForm] = useState({
     name: "",
@@ -121,7 +123,7 @@ export function BookingModal(props: BookingModalProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name || !form.email || !form.phone || form.travellers < 1) {
-      toast.error("Please fill in all required fields.");
+      toast.error(t("booking.errorRequired"));
       return;
     }
 
@@ -146,7 +148,7 @@ export function BookingModal(props: BookingModalProps) {
     };
     store.addBooking(booking);
     setConfirmed(booking);
-    toast.success("Booking request received! We'll confirm within 24 hours.");
+    toast.success(t("booking.successToast"));
   };
 
   // Render via portal to document.body — bypasses any parent transforms
@@ -186,7 +188,7 @@ export function BookingModal(props: BookingModalProps) {
               />
               <div className="relative z-10 flex flex-col h-full">
                 <p className="font-eyebrow text-gold-soft mb-3">
-                  {tripType === "tour" ? "Tour Reservation" : "Scheduled Trip Reservation"}
+                  {tripType === "tour" ? t("booking.tourReservation") : t("booking.scheduledTripReservation")}
                 </p>
                 <h2
                   className="font-display text-3xl md:text-4xl tracking-tight leading-[1.05] mb-6"
@@ -196,29 +198,29 @@ export function BookingModal(props: BookingModalProps) {
                 </h2>
 
                 <div className="space-y-3 text-sm mb-6">
-                  <Row icon={<MapPin className="w-4 h-4" />} label="Destination" value={tripInfo.destination} />
-                  <Row icon={<Clock className="w-4 h-4" />} label="Duration" value={tripInfo.duration} />
-                  <Row icon={<Calendar className="w-4 h-4" />} label="Dates" value={tripInfo.dates} />
-                  <Row icon={<Users className="w-4 h-4" />} label="Group Size" value={tripType === "scheduled-trip" ? (trip as ScheduledTrip).groupSize : "Private party"} />
+                  <Row icon={<MapPin className="w-4 h-4" />} label={t("common.destination")} value={tripInfo.destination} />
+                  <Row icon={<Clock className="w-4 h-4" />} label={t("tourDetail.duration")} value={tripInfo.duration} />
+                  <Row icon={<Calendar className="w-4 h-4" />} label={t("booking.dates")} value={tripInfo.dates} />
+                  <Row icon={<Users className="w-4 h-4" />} label={t("tourDetail.groupSize")} value={tripType === "scheduled-trip" ? (trip as ScheduledTrip).groupSize : t("common.privateParty")} />
                   {tripInfo.spotsLeft !== undefined && (
                     <Row
                       icon={<Users className="w-4 h-4" />}
-                      label="Spots Left"
+                      label={t("tourDetail.spotsLeft")}
                       value={`${tripInfo.spotsLeft}`}
                     />
                   )}
-                  <Row icon={<Receipt className="w-4 h-4" />} label="Accommodation" value={tripInfo.level} />
+                  <Row icon={<Receipt className="w-4 h-4" />} label={t("common.accommodation")} value={tripInfo.level} />
                 </div>
 
                 <div className="mt-auto pt-6 border-t border-cream/15">
-                  <p className="font-eyebrow text-cream/50 mb-2">Price Per Person</p>
+                  <p className="font-eyebrow text-cream/50 mb-2">{t("booking.pricePerPerson")}</p>
                   <p
                     className="font-display text-4xl text-gold-soft mb-1"
                     style={{ fontFamily: "var(--font-cormorant), serif" }}
                   >
                     {tripInfo.price}
                   </p>
-                  <p className="text-xs text-cream/55">Excludes international airfare</p>
+                  <p className="text-xs text-cream/55">{t("booking.excludesAirfare")}</p>
                 </div>
               </div>
             </div>
@@ -233,11 +235,11 @@ export function BookingModal(props: BookingModalProps) {
                   className="font-display text-2xl text-charcoal tracking-tight"
                   style={{ fontFamily: "var(--font-cormorant), serif" }}
                 >
-                  {confirmed ? "Booking Confirmed" : "Reserve Your Spot"}
+                  {confirmed ? t("booking.confirmed") : t("booking.reserveYourSpot")}
                 </h3>
                 <button
                   onClick={onClose}
-                  aria-label="Close"
+                  aria-label={t("common.close")}
                   className="text-charcoal/50 hover:text-charcoal transition-colors"
                 >
                   <X className="w-5 h-5" />
@@ -248,41 +250,41 @@ export function BookingModal(props: BookingModalProps) {
                 <SuccessReceipt booking={confirmed} onClose={onClose} />
               ) : (
                 <form onSubmit={handleSubmit} className="flex flex-col gap-5 flex-1">
-                  <Field label="Full Name" icon={<User className="w-4 h-4" />}>
+                  <Field label={t("booking.fullName")} icon={<User className="w-4 h-4" />}>
                     <input
                       type="text"
                       value={form.name}
                       onChange={(e) => setForm({ ...form, name: e.target.value })}
                       required
-                      placeholder="Your full name"
+                      placeholder={t("booking.yourFullName")}
                       className="w-full bg-transparent border-b border-border py-2 text-sm text-charcoal focus:outline-none focus:border-forest transition-colors"
                     />
                   </Field>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <Field label="Email" icon={<Mail className="w-4 h-4" />}>
+                    <Field label={t("booking.email")} icon={<Mail className="w-4 h-4" />}>
                       <input
                         type="email"
                         value={form.email}
                         onChange={(e) => setForm({ ...form, email: e.target.value })}
                         required
-                        placeholder="you@example.com"
+                        placeholder={t("booking.emailPlaceholder")}
                         className="w-full bg-transparent border-b border-border py-2 text-sm text-charcoal focus:outline-none focus:border-forest transition-colors"
                       />
                     </Field>
-                    <Field label="Phone" icon={<Phone className="w-4 h-4" />}>
+                    <Field label={t("booking.phone")} icon={<Phone className="w-4 h-4" />}>
                       <input
                         type="tel"
                         value={form.phone}
                         onChange={(e) => setForm({ ...form, phone: e.target.value })}
                         required
-                        placeholder="+1 555 000 0000"
+                        placeholder={t("booking.phonePlaceholder")}
                         className="w-full bg-transparent border-b border-border py-2 text-sm text-charcoal focus:outline-none focus:border-forest transition-colors"
                       />
                     </Field>
                   </div>
 
-                  <Field label="Number of Travellers" icon={<Users className="w-4 h-4" />}>
+                  <Field label={t("booking.numTravellers")} icon={<Users className="w-4 h-4" />}>
                     <div className="flex items-center gap-3">
                       <button
                         type="button"
@@ -306,12 +308,12 @@ export function BookingModal(props: BookingModalProps) {
                     </div>
                   </Field>
 
-                  <Field label="Notes (optional)">
+                  <Field label={t("booking.notes")}>
                     <textarea
                       value={form.notes}
                       onChange={(e) => setForm({ ...form, notes: e.target.value })}
                       rows={3}
-                      placeholder="Tell us about any special requests, dietary needs, accessibility, etc."
+                      placeholder={t("booking.notesPlaceholder")}
                       className="w-full bg-transparent border border-border p-3 text-sm text-charcoal focus:outline-none focus:border-forest transition-colors"
                       style={sharp}
                     />
@@ -320,11 +322,11 @@ export function BookingModal(props: BookingModalProps) {
                   {/* Live price calculation */}
                   <div className="border-t border-border pt-4 mt-2">
                     <div className="flex justify-between text-sm text-charcoal/70 mb-2">
-                      <span>${pricePerPerson.toLocaleString()} × {form.travellers} travellers</span>
+                      <span>${pricePerPerson.toLocaleString()} × {form.travellers} {t("booking.travellersUnit")}</span>
                       <span>${totalPrice.toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between items-end">
-                      <span className="font-eyebrow text-charcoal/50">Total</span>
+                      <span className="font-eyebrow text-charcoal/50">{t("booking.total")}</span>
                       <span
                         className="font-display text-3xl text-forest"
                         style={{ fontFamily: "var(--font-cormorant), serif" }}
@@ -338,10 +340,10 @@ export function BookingModal(props: BookingModalProps) {
                     type="submit"
                     className="btn-luxury btn-luxury-gold w-full mt-2"
                   >
-                    Confirm Booking Request
+                    {t("booking.confirm")}
                   </button>
                   <p className="text-xs text-charcoal/50 text-center">
-                    This is a request — your card is not charged. A specialist will confirm within 24 hours.
+                    {t("booking.disclaimer")}
                   </p>
                 </form>
               )}
@@ -385,6 +387,8 @@ function Row({ icon, label, value }: { icon: React.ReactNode; label: string; val
 }
 
 function SuccessReceipt({ booking, onClose }: { booking: Booking; onClose: () => void }) {
+  const { t } = useLang();
+  const firstName = booking.customerName.split(" ")[0] || booking.customerName;
   return (
     <div className="flex flex-col items-center text-center py-6 flex-1">
       <CheckCircle2 className="w-14 h-14 text-forest mb-4" />
@@ -392,33 +396,31 @@ function SuccessReceipt({ booking, onClose }: { booking: Booking; onClose: () =>
         className="font-display text-3xl text-charcoal tracking-tight mb-3"
         style={{ fontFamily: "var(--font-cormorant), serif" }}
       >
-        Thank you, {booking.customerName.split(" ")[0]}.
+        {t("booking.thankYou", { name: firstName })}
       </h4>
       <p className="text-sm text-charcoal/70 leading-relaxed mb-6 max-w-md">
-        Your booking request for <strong>{booking.tripName}</strong> has been received. A
-        specialist will reach out to <strong>{booking.customerEmail}</strong> within 24 hours
-        to confirm the details.
+        {t("booking.successBody", { tripName: booking.tripName, email: booking.customerEmail })}
       </p>
 
       <div className="w-full bg-alabaster border border-border p-5 text-left text-sm" style={sharp}>
         <div className="flex justify-between mb-3 pb-3 border-b border-border">
-          <span className="text-charcoal/60">Booking Ref</span>
+          <span className="text-charcoal/60">{t("booking.bookingRef")}</span>
           <span className="font-medium text-charcoal">{booking.id.slice(0, 12).toUpperCase()}</span>
         </div>
         <div className="flex justify-between mb-3 pb-3 border-b border-border">
-          <span className="text-charcoal/60">Trip</span>
+          <span className="text-charcoal/60">{t("booking.trip")}</span>
           <span className="text-charcoal text-right max-w-[60%]">{booking.tripName}</span>
         </div>
         <div className="flex justify-between mb-3 pb-3 border-b border-border">
-          <span className="text-charcoal/60">Travellers</span>
+          <span className="text-charcoal/60">{t("booking.travellers")}</span>
           <span className="text-charcoal">{booking.numTravellers}</span>
         </div>
         <div className="flex justify-between mb-3 pb-3 border-b border-border">
-          <span className="text-charcoal/60">Status</span>
+          <span className="text-charcoal/60">{t("booking.status")}</span>
           <span className="text-gold capitalize">{booking.status}</span>
         </div>
         <div className="flex justify-between items-end">
-          <span className="text-charcoal/60">Total</span>
+          <span className="text-charcoal/60">{t("booking.total")}</span>
           <span
             className="font-display text-2xl text-forest"
             style={{ fontFamily: "var(--font-cormorant), serif" }}
@@ -429,7 +431,7 @@ function SuccessReceipt({ booking, onClose }: { booking: Booking; onClose: () =>
       </div>
 
       <button onClick={onClose} className="btn-luxury btn-luxury-gold w-full mt-6">
-        Close
+        {t("common.close")}
       </button>
     </div>
   );

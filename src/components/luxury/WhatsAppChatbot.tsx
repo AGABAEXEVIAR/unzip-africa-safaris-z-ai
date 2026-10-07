@@ -1,26 +1,28 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useLang } from "@/lib/language";
 
 const WHATSAPP_NUMBER = "+256706761092";
 const WHATSAPP_DISPLAY = "+256 706 761092";
 const WHATSAPP_MESSAGE = "Hello Unzip Africa Safaris, I'd like to inquire about a bespoke safari journey.";
 
 export function WhatsAppChatbot() {
+  const { t } = useLang();
   const [visible, setVisible] = useState(false);
   const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
     // Show after a short delay so it doesn't appear instantly on page load
-    const t = setTimeout(() => setVisible(true), 1500);
-    return () => clearTimeout(t);
+    const timer = setTimeout(() => setVisible(true), 1500);
+    return () => clearTimeout(timer);
   }, []);
 
   // Auto-collapse the chat preview after a few seconds
   useEffect(() => {
     if (!expanded) return;
-    const t = setTimeout(() => setExpanded(false), 8000);
-    return () => clearTimeout(t);
+    const collapseTimer = setTimeout(() => setExpanded(false), 8000);
+    return () => clearTimeout(collapseTimer);
   }, [expanded]);
 
   const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
@@ -42,7 +44,7 @@ export function WhatsAppChatbot() {
               <WhatsAppIcon className="w-6 h-6 text-cream" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-display text-charcoal text-base leading-tight">Chat with us</p>
+              <p className="font-display text-charcoal text-base leading-tight">{t("whatsapp.chatWithUs")}</p>
               <p className="text-xs text-charcoal/60 mt-0.5">We typically reply within minutes</p>
             </div>
             <button
@@ -56,7 +58,7 @@ export function WhatsAppChatbot() {
             </button>
           </div>
           <p className="text-sm text-charcoal/75 mt-3 leading-relaxed">
-            Have a question about a safari? Send us a WhatsApp message — a specialist is standing by.
+            {t("whatsapp.haveQuestion")}
           </p>
           <a
             href={whatsappUrl}
@@ -66,7 +68,7 @@ export function WhatsAppChatbot() {
             style={{ borderRadius: 0 }}
           >
             <WhatsAppIcon className="w-4 h-4 text-gold-soft" />
-            Start Chat
+            {t("whatsapp.startChat")}
           </a>
           <p className="text-[0.65rem] text-charcoal/50 mt-2 text-center">{WHATSAPP_DISPLAY}</p>
         </div>

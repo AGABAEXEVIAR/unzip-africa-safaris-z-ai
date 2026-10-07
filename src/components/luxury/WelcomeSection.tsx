@@ -95,7 +95,7 @@ export function WelcomeSection() {
                   </div>
                   {/* Text — standalone, no pill/oval */}
                   <p className="text-charcoal/60 text-xs md:text-sm">
-                    Trusted by <strong className="text-charcoal font-medium">1,200+</strong> discerning travellers.
+                    {t("welcome.trustedBy")} <strong className="text-charcoal font-medium">{t("welcome.trustedCount")}</strong> {t("welcome.discerningTravellers")}
                   </p>
                 </div>
               </div>

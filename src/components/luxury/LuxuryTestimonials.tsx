@@ -2,10 +2,12 @@
 
 import { Reveal } from "@/components/luxury/Reveal";
 import { useTestimonials } from "@/lib/store";
+import { useLang } from "@/lib/language";
 
 export function LuxuryTestimonials() {
   const all = useTestimonials();
-  const testimonials = all.filter((t) => t.published);
+  const { t } = useLang();
+  const testimonials = all.filter((tt) => tt.published);
 
   // Duplicate the list so the marquee can loop seamlessly
   const doubled = [...testimonials, ...testimonials];
@@ -29,15 +31,14 @@ export function LuxuryTestimonials() {
           {/* Left — heading */}
           <div className="flex flex-col items-start space-y-6 text-left">
             <Reveal variant="up">
-              <p className="font-eyebrow text-gold-soft mb-2">Voices from the Field</p>
+              <p className="font-eyebrow text-gold-soft mb-2">{t("testimonials.eyebrow")}</p>
               <h2 className="font-display text-4xl md:text-5xl lg:text-6xl leading-[1.05] tracking-tight text-cream">
-                Trusted by travellers
+                {t("testimonials.heading1")}
                 <br />
-                who have <span className="italic text-gold-soft">seen it all.</span>
+                {t("testimonials.heading2")}
               </h2>
               <p className="text-cream/65 text-base md:text-lg max-w-md mt-6 leading-relaxed">
-                Reduce the noise. Gain the silence. These are the words of guests
-                who arrived as clients and left as lifelong advocates.
+                {t("testimonials.subtitle")}
               </p>
             </Reveal>
           </div>

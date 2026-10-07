@@ -37,8 +37,7 @@ export function Footer() {
               style={{ filter: "brightness(0) invert(1)" }}
             />
             <p className="text-sm text-cream/60 leading-relaxed max-w-xs">
-              Bespoke private safaris across East and Southern Africa. Family-owned, founded in
-              Arusha in 2009. Members of ATTA, PACK, and the Long Run.
+              {t("footer.aboutText")}
             </p>
           </div>
 
@@ -67,20 +66,20 @@ export function Footer() {
           <div>
             <p className="font-eyebrow text-cream/40 mb-5">{t("footer.offices")}</p>
             <ul className="space-y-3 text-sm text-cream/70">
-              <li>Arusha, Tanzania</li>
-              <li>Maun, Botswana</li>
-              <li>Kigali, Rwanda</li>
-              <li>Windhoek, Namibia</li>
+              <li>{t("footer.office1")}</li>
+              <li>{t("footer.office2")}</li>
+              <li>{t("footer.office3")}</li>
+              <li>{t("footer.office4")}</li>
             </ul>
           </div>
 
           <div>
             <p className="font-eyebrow text-cream/40 mb-5">{t("footer.inquiries")}</p>
             <ul className="space-y-2 text-sm text-cream/70">
-              <li className="text-cream/50 text-xs uppercase tracking-wider mb-1">Numbers</li>
-              <li>Germany: +49 179 9372309</li>
-              <li>Uganda: +256 706 761092</li>
-              <li className="text-cream/50 text-xs uppercase tracking-wider mt-3 mb-1">Email</li>
+              <li className="text-cream/50 text-xs uppercase tracking-wider mb-1">{t("footer.numbers")}</li>
+              <li>{t("footer.germanyNumber")}</li>
+              <li>{t("footer.ugandaNumber")}</li>
+              <li className="text-cream/50 text-xs uppercase tracking-wider mt-3 mb-1">{t("footer.emailLabel")}</li>
               <li>
                 <a href="mailto:info@unzipafrica.com" className="hover:text-gold-soft transition-colors">
                   info@unzipafrica.com
@@ -91,10 +90,10 @@ export function Footer() {
                   booking@unzipafrica.com
                 </a>
               </li>
-              <li className="text-cream/50 text-xs uppercase tracking-wider mt-3 mb-1">Business Hours</li>
-              <li>Mon–Fri: 8:30am – 5pm</li>
-              <li>Sat: 10am – 3pm</li>
-              <li className="text-cream/50">Sun: Closed</li>
+              <li className="text-cream/50 text-xs uppercase tracking-wider mt-3 mb-1">{t("footer.businessHours")}</li>
+              <li>{t("footer.monFri")}</li>
+              <li>{t("footer.sat")}</li>
+              <li className="text-cream/50">{t("footer.sun")}</li>
             </ul>
           </div>
         </div>
@@ -118,7 +117,7 @@ export function Footer() {
               onClick={() => navigate("admin")}
               className="text-gold-soft hover:text-gold transition-colors underline"
             >
-              Admin
+              {t("footer.admin")}
             </button>
             <span>
               {t("footer.developedBy")}{" "}

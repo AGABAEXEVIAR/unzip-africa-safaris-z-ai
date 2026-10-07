@@ -16,6 +16,7 @@ import ScrollReveal from "@/components/luxury/ScrollReveal";
 import { HeroCarousel } from "@/components/luxury/HeroCarousel";
 import { BookingModal } from "@/components/luxury/BookingModal";
 import { useRouter } from "@/lib/router";
+import { useLang } from "@/lib/language";
 import { useTours, useAccommodations } from "@/lib/store";
 import type { TourPackage } from "@/lib/content";
 
@@ -26,6 +27,7 @@ export function TourDetailPage() {
   const accommodations = useAccommodations();
   const { selectedTourId, navigate, navigateToTour, navigateToAccommodation } =
     useRouter();
+  const { t } = useLang();
 
   const [bookingOpen, setBookingOpen] = useState(false);
   const itineraryRef = useRef<HTMLDivElement>(null);
@@ -45,10 +47,10 @@ export function TourDetailPage() {
             className="font-display text-3xl text-charcoal mb-4"
             style={{ fontFamily: "var(--font-cormorant), serif" }}
           >
-            Tour not found.
+            {t("tourDetail.notFound")}
           </p>
           <button onClick={() => navigate("tours")} className="btn-luxury btn-luxury-gold">
-            View All Tours
+            {t("tours.viewAllTours")}
           </button>
         </div>
       </div>
@@ -93,7 +95,7 @@ export function TourDetailPage() {
                 className="flex items-center gap-2 text-cream/60 hover:text-cream transition-colors mb-10"
               >
                 <ArrowLeft className="w-4 h-4" />
-                <span className="font-eyebrow">All Tours</span>
+                <span className="font-eyebrow">{t("tourDetail.allTours")}</span>
               </button>
 
               <Reveal variant="up">
@@ -118,11 +120,11 @@ export function TourDetailPage() {
                   </span>
                   <span className="flex items-center gap-2">
                     <Clock className="w-4 h-4 text-gold-soft" />
-                    {tour.durationDays} Days · {tour.durationNights} Nights
+                    {t("tourDetail.daysNights", { days: tour.durationDays, nights: tour.durationNights })}
                   </span>
                   <span className="flex items-center gap-2">
                     <Users className="w-4 h-4 text-gold-soft" />
-                    Private party · {tour.minAge}+
+                    {t("tourDetail.privatePartyMinAge", { age: tour.minAge })}
                   </span>
                   {hasDiscount && (
                     <span
@@ -138,7 +140,7 @@ export function TourDetailPage() {
               {/* Price display */}
               <Reveal variant="up" delay={0.3}>
                 <div className="mb-10">
-                  <p className="font-eyebrow text-cream/50 mb-2">Starting From</p>
+                  <p className="font-eyebrow text-cream/50 mb-2">{t("common.startingFrom")}</p>
                   <div className="flex items-baseline gap-3">
                     <span
                       className="font-display text-4xl md:text-5xl text-gold-soft"
@@ -152,13 +154,13 @@ export function TourDetailPage() {
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-cream/60 mt-1">per person</p>
+                  <p className="text-xs text-cream/60 mt-1">{t("common.perPerson")}</p>
                 </div>
               </Reveal>
 
               <Reveal variant="up" delay={0.4}>
                 <button onClick={() => setBookingOpen(true)} className="btn-luxury btn-luxury-gold">
-                  Book Now
+                  {t("common.bookNow")}
                 </button>
               </Reveal>
             </div>
@@ -182,7 +184,7 @@ export function TourDetailPage() {
           {/* Left — overview copy */}
           <div className="md:col-span-7">
             <Reveal variant="up">
-              <p className="font-eyebrow text-gold mb-6">Tour Overview</p>
+              <p className="font-eyebrow text-gold mb-6">{t("tourDetail.overview")}</p>
             </Reveal>
             <ScrollReveal
               as="h2"
@@ -191,14 +193,11 @@ export function TourDetailPage() {
               baseOpacity={0.15}
               blurStrength={5}
             >
-              A private journey through {tour.destination}, composed entirely around you.
+              {t("tourDetail.overviewHeading", { destination: tour.destination })}
             </ScrollReveal>
             <Reveal variant="up" delay={0.2}>
               <p className="text-charcoal/75 leading-relaxed text-base md:text-lg max-w-2xl">
-                {tour.highlights.join(" · ")}. A {tour.durationDays}-day curated passage through{" "}
-                {tour.nationalPark}, staying in {tour.accommodationLevel.toLowerCase()} lodges and
-                camps. Designed for travellers aged {tour.minAge}+ and limited to your private
-                party, with a dedicated guide and 4x4 vehicle throughout.
+                {tour.highlights.join(" · ")}.
               </p>
             </Reveal>
           </div>
@@ -207,21 +206,21 @@ export function TourDetailPage() {
           <div className="md:col-span-5">
             <Reveal variant="up" delay={0.3}>
               <div className="p-6 md:p-8 text-cream" style={{ background: "#1f3a2f", ...sharp }}>
-                <p className="font-eyebrow text-gold-soft mb-6">Quick Facts</p>
+                <p className="font-eyebrow text-gold-soft mb-6">{t("tourDetail.quickFacts")}</p>
                 <div className="space-y-3 text-sm">
                   <FactRow
-                    label="Duration"
-                    value={`${tour.durationDays} Days · ${tour.durationNights} Nights`}
+                    label={t("tourDetail.duration")}
+                    value={t("tourDetail.daysNights", { days: tour.durationDays, nights: tour.durationNights })}
                   />
-                  <FactRow label="Destination" value={tour.destination} />
-                  <FactRow label="National Park" value={tour.nationalPark} />
-                  <FactRow label="Trip Type" value={tour.tripType} />
-                  <FactRow label="Accommodation" value={tour.accommodationLevel} />
-                  <FactRow label="Group Size" value={`Private party · Min age ${tour.minAge}+`} />
+                  <FactRow label={t("common.destination")} value={tour.destination} />
+                  <FactRow label={t("tourDetail.nationalPark")} value={tour.nationalPark} />
+                  <FactRow label={t("tourDetail.tripType")} value={tour.tripType} />
+                  <FactRow label={t("common.accommodation")} value={tour.accommodationLevel} />
+                  <FactRow label={t("tourDetail.groupSize")} value={t("tourDetail.privatePartyMinAge", { age: tour.minAge })} />
                 </div>
 
                 <div className="mt-6 pt-6 border-t border-cream/15">
-                  <p className="font-eyebrow text-cream/50 mb-1">Starting From</p>
+                  <p className="font-eyebrow text-cream/50 mb-1">{t("common.startingFrom")}</p>
                   <div className="flex items-baseline gap-3">
                     <span
                       className="font-display text-3xl text-gold-soft"
@@ -235,13 +234,13 @@ export function TourDetailPage() {
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-cream/60 mt-1">per person</p>
+                  <p className="text-xs text-cream/60 mt-1">{t("common.perPerson")}</p>
 
                   <button
                     onClick={() => setBookingOpen(true)}
                     className="btn-luxury btn-luxury-gold w-full mt-5"
                   >
-                    Book Now
+                    {t("common.bookNow")}
                   </button>
                 </div>
               </div>
@@ -255,7 +254,7 @@ export function TourDetailPage() {
         <div className="mx-auto max-w-[1400px]">
           <div className="max-w-3xl mb-12">
             <Reveal variant="up">
-              <p className="font-eyebrow text-gold mb-6">Journey Highlights</p>
+              <p className="font-eyebrow text-gold mb-6">{t("tourDetail.journeyHighlights")}</p>
             </Reveal>
             <ScrollReveal
               as="h2"
@@ -264,7 +263,7 @@ export function TourDetailPage() {
               baseOpacity={0.1}
               blurStrength={5}
             >
-              What you'll <span className="italic">experience.</span>
+              {t("tourDetail.whatYoull")} <span className="italic">{t("tourDetail.experience")}</span>
             </ScrollReveal>
           </div>
 
@@ -296,7 +295,7 @@ export function TourDetailPage() {
         <div className="mx-auto max-w-[1200px]">
           <div className="text-center mb-16 md:mb-20">
             <Reveal variant="up">
-              <p className="font-eyebrow text-gold mb-6">Day-by-Day Itinerary</p>
+              <p className="font-eyebrow text-gold mb-6">{t("tourDetail.dayByDay")}</p>
             </Reveal>
             <ScrollReveal
               as="h2"
@@ -305,7 +304,7 @@ export function TourDetailPage() {
               baseOpacity={0.1}
               blurStrength={5}
             >
-              Step by step.
+              {t("tourDetail.stepByStep")}
             </ScrollReveal>
           </div>
 
@@ -315,7 +314,7 @@ export function TourDetailPage() {
             <div className="hidden md:block w-12 flex-shrink-0">
               <div className="sticky top-24 flex flex-col items-center" style={{ height: "min(60vh, 400px)" }}>
                 <p className="font-eyebrow text-charcoal/40 text-[0.55rem] tracking-[0.15em] uppercase mb-4 text-center leading-tight">
-                  Itinerary<br />Progress
+                  {t("tourDetail.itineraryProgress1")}<br />{t("tourDetail.itineraryProgress2")}
                 </p>
                 {/* Track + fill — fixed height, not stretching */}
                 <div className="flex-1 relative w-px bg-charcoal/15">
@@ -326,10 +325,10 @@ export function TourDetailPage() {
                 </div>
                 {/* Bottom labels */}
                 <p className="font-display text-sm text-charcoal mt-4" style={{ fontFamily: "var(--font-cormorant), serif" }}>
-                  {tour.durationDays} days
+                  {tour.durationDays} {t("common.daysLower")}
                 </p>
                 <p className="font-eyebrow text-charcoal/40 text-[0.55rem] tracking-[0.15em] uppercase mt-1 text-center leading-tight">
-                  Scroll to<br />advance
+                  {t("tourDetail.scrollToAdvance1")}<br />{t("tourDetail.scrollToAdvance2")}
                 </p>
               </div>
             </div>
@@ -385,7 +384,7 @@ export function TourDetailPage() {
           {/* Included */}
           <div>
             <Reveal variant="up">
-              <p className="font-eyebrow text-gold mb-6">What's Included</p>
+              <p className="font-eyebrow text-gold mb-6">{t("tourDetail.included")}</p>
             </Reveal>
             <ScrollReveal
               as="h2"
@@ -394,10 +393,10 @@ export function TourDetailPage() {
               baseOpacity={0.1}
               blurStrength={5}
             >
-              Part of your journey.
+              {t("tourDetail.partOfJourney")}
             </ScrollReveal>
             <ul className="space-y-4">
-              {DEFAULT_INCLUSIONS.map((item, idx) => (
+              {INCLUSION_KEYS.map((key, idx) => (
                 <Reveal key={idx} variant="up" delay={idx * 0.05}>
                   <li className="flex items-start gap-3 text-charcoal/80">
                     <span
@@ -406,7 +405,7 @@ export function TourDetailPage() {
                     >
                       <Check className="w-3.5 h-3.5 text-gold" />
                     </span>
-                    <span className="leading-relaxed flex-1">{item}</span>
+                    <span className="leading-relaxed flex-1">{t(key)}</span>
                   </li>
                 </Reveal>
               ))}
@@ -416,7 +415,7 @@ export function TourDetailPage() {
           {/* Excluded */}
           <div>
             <Reveal variant="up">
-              <p className="font-eyebrow text-charcoal/40 mb-6">What's Excluded</p>
+              <p className="font-eyebrow text-charcoal/40 mb-6">{t("tourDetail.excluded")}</p>
             </Reveal>
             <ScrollReveal
               as="h2"
@@ -425,10 +424,10 @@ export function TourDetailPage() {
               baseOpacity={0.1}
               blurStrength={5}
             >
-              For you to arrange.
+              {t("tourDetail.forYouToArrange")}
             </ScrollReveal>
             <ul className="space-y-4">
-              {DEFAULT_EXCLUSIONS.map((item, idx) => (
+              {EXCLUSION_KEYS.map((key, idx) => (
                 <Reveal key={idx} variant="up" delay={idx * 0.05}>
                   <li className="flex items-start gap-3 text-charcoal/60">
                     <span
@@ -437,7 +436,7 @@ export function TourDetailPage() {
                     >
                       <X className="w-3.5 h-3.5 text-charcoal/40" />
                     </span>
-                    <span className="leading-relaxed flex-1">{item}</span>
+                    <span className="leading-relaxed flex-1">{t(key)}</span>
                   </li>
                 </Reveal>
               ))}
@@ -452,7 +451,7 @@ export function TourDetailPage() {
           <div className="mx-auto max-w-[1400px]">
             <div className="max-w-3xl mb-12">
               <Reveal variant="up">
-                <p className="font-eyebrow text-gold mb-6">Where You'll Stay</p>
+                <p className="font-eyebrow text-gold mb-6">{t("tourDetail.whereYoullStay")}</p>
               </Reveal>
               <ScrollReveal
                 as="h2"
@@ -461,7 +460,7 @@ export function TourDetailPage() {
                 baseOpacity={0.1}
                 blurStrength={5}
               >
-                Lodges &amp; camps selected for this journey.
+                {t("tourDetail.lodgesSelected")}
               </ScrollReveal>
             </div>
 
@@ -494,7 +493,7 @@ export function TourDetailPage() {
                       <div className="flex items-center justify-between pt-3 border-t border-charcoal/10">
                         <span className="font-label text-charcoal/60">{acc.pricePerNight}</span>
                         <span className="font-eyebrow text-gold flex items-center gap-1.5">
-                          View Lodge
+                          {t("tourDetail.viewLodge")}
                           <ArrowRight className="w-3 h-3" />
                         </span>
                       </div>
@@ -512,12 +511,12 @@ export function TourDetailPage() {
         <div className="mx-auto max-w-[1400px]">
           <div className="max-w-3xl mb-12">
             <Reveal variant="up">
-              <p className="font-eyebrow text-gold mb-6">The Route</p>
+              <p className="font-eyebrow text-gold mb-6">{t("tourDetail.theRoute")}</p>
               <h2
                 className="font-display text-4xl md:text-6xl text-charcoal tracking-tight leading-[1.05]"
                 style={{ fontFamily: "var(--font-cormorant), serif" }}
               >
-                Mapped across {tour.destination}.
+                {t("tourDetail.mappedAcross", { destination: tour.destination })}
               </h2>
             </Reveal>
           </div>
@@ -547,7 +546,7 @@ export function TourDetailPage() {
         <div className="mx-auto max-w-[1400px]">
           <div className="max-w-3xl mb-12">
             <Reveal variant="up">
-              <p className="font-eyebrow text-gold-soft mb-6">Continue Exploring</p>
+              <p className="font-eyebrow text-gold-soft mb-6">{t("tourDetail.continueExploring")}</p>
             </Reveal>
             <ScrollReveal
               as="h2"
@@ -556,36 +555,36 @@ export function TourDetailPage() {
               baseOpacity={0.1}
               blurStrength={5}
             >
-              Related journeys in {tour.destination}.
+              {t("tourDetail.relatedJourneys", { destination: tour.destination })}
             </ScrollReveal>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {others.map((t, idx) => (
-              <Reveal key={t.id} variant="up" delay={idx * 0.1}>
+            {others.map((otherTour, idx) => (
+              <Reveal key={otherTour.id} variant="up" delay={idx * 0.1}>
                 <article
-                  onClick={() => navigateToTour(t.id)}
+                  onClick={() => navigateToTour(otherTour.id)}
                   className="bg-[#0F1712] border border-cream/10 overflow-hidden cursor-pointer group card-luxury h-full"
                   style={sharp}
                 >
                   <div className="aspect-[4/3] overflow-hidden card-zoom">
                     <img
-                      src={t.image}
-                      alt={t.name}
+                      src={otherTour.image}
+                      alt={otherTour.name}
                       className="w-full h-full object-cover img-luxury"
                     />
                   </div>
                   <div className="p-5 md:p-6">
-                    <p className="font-eyebrow text-gold-soft mb-2">{t.durationDays} days</p>
+                    <p className="font-eyebrow text-gold-soft mb-2">{otherTour.durationDays} {t("common.daysLower")}</p>
                     <h3
                       className="font-display text-xl md:text-2xl text-cream tracking-tight mb-4 group-hover:text-gold-soft transition-colors"
                       style={{ fontFamily: "var(--font-cormorant), serif" }}
                     >
-                      {t.name}
+                      {otherTour.name}
                     </h3>
                     <div className="flex items-center justify-between pt-3 border-t border-cream/10">
                       <span className="text-xs text-cream/60">
-                        From ${t.priceFrom.toLocaleString()} pp
+                        {t("common.fromPrice", { price: otherTour.priceFrom.toLocaleString() })}
                       </span>
                       <ArrowRight className="w-4 h-4 text-gold-soft group-hover:translate-x-1 transition-transform" />
                     </div>
@@ -605,19 +604,17 @@ export function TourDetailPage() {
               className="font-display text-4xl md:text-6xl lg:text-7xl text-cream tracking-tight leading-[1.05] mb-8"
               style={{ fontFamily: "var(--font-cormorant), serif" }}
             >
-              Let us design a <span className="italic text-gold-soft">safari</span> composed
-              entirely for you.
+              {t("tourDetail.ctaLine1")} <span className="italic text-gold-soft">{t("tourDetail.ctaSafari")}</span> {t("tourDetail.ctaComposed")}
             </h2>
           </Reveal>
           <Reveal variant="up" delay={0.2}>
             <p className="text-cream/70 leading-relaxed mb-10 max-w-2xl mx-auto text-base md:text-lg">
-              Every journey we craft begins with a conversation. Tell us about the safari you've
-              been dreaming of — and we'll shape it, day by day, camp by camp, around you.
+              {t("tourDetail.ctaBody")}
             </p>
           </Reveal>
           <Reveal variant="up" delay={0.3}>
             <button onClick={() => navigate("contact")} className="btn-luxury btn-luxury-light">
-              Contact
+              {t("cta.contact")}
             </button>
           </Reveal>
         </div>
@@ -645,21 +642,21 @@ function FactRow({ label, value }: { label: string; value: string }) {
   );
 }
 
-const DEFAULT_INCLUSIONS = [
-  "All lodging in luxury lodges and camps as listed",
-  "Private guide and 4x4 vehicle throughout",
-  "All meals, drinks and sundowners",
-  "Park entry and conservation fees",
-  "Internal charter flights between camps",
-  "AMREF Flying Doctors emergency evacuation cover",
-  "5% contribution to ranger welfare",
+const INCLUSION_KEYS = [
+  "tourDetail.inclusion1",
+  "tourDetail.inclusion2",
+  "tourDetail.inclusion3",
+  "tourDetail.inclusion4",
+  "tourDetail.inclusion5",
+  "tourDetail.inclusion6",
+  "tourDetail.inclusion7",
 ];
 
-const DEFAULT_EXCLUSIONS = [
-  "International airfare to/from Africa",
-  "Visa and passport fees",
-  "Travel and medical insurance",
-  "Personal items, laundry at certain camps",
-  "Optional activities not listed in the itinerary",
-  "Gratuities for guides and lodge staff",
+const EXCLUSION_KEYS = [
+  "tourDetail.exclusion1",
+  "tourDetail.exclusion2",
+  "tourDetail.exclusion3",
+  "tourDetail.exclusion4",
+  "tourDetail.exclusion5",
+  "tourDetail.exclusion6",
 ];

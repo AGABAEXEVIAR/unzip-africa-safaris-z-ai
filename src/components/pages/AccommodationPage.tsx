@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { Reveal } from "@/components/luxury/Reveal";
 import ScrollReveal from "@/components/luxury/ScrollReveal";
 import { useRouter } from "@/lib/router";
+import { useLang } from "@/lib/language";
 import { useAccommodations } from "@/lib/store";
 
 const sharp = { borderRadius: 0 } as const;
@@ -12,6 +13,7 @@ const sharp = { borderRadius: 0 } as const;
 export function AccommodationPage() {
   const accommodations = useAccommodations();
   const { navigate, navigateToAccommodation } = useRouter();
+  const { t } = useLang();
   const heroRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -51,7 +53,7 @@ export function AccommodationPage() {
             transition={{ duration: 1.2, delay: 0.4 }}
             className="font-eyebrow text-gold-soft mb-8 tracking-[0.4em]"
           >
-            Where You'll Sleep
+            {t("accommodation.eyebrow")}
           </motion.p>
           <motion.h1
             initial={{ opacity: 0, y: 40 }}
@@ -60,11 +62,11 @@ export function AccommodationPage() {
             className="font-display text-cream text-[3rem] sm:text-[4.5rem] md:text-[6rem] lg:text-[7rem] leading-[0.95] tracking-tight max-w-[90%]"
             style={{ fontFamily: "var(--font-cormorant), serif", fontWeight: 300 }}
           >
-            Tented suites,
+            {t("accommodation.heroLine1")}
             <br />
-            <span className="italic text-gold-soft">granite kopjes,</span>
+            <span className="italic text-gold-soft">{t("accommodation.heroLine2")}</span>
             <br />
-            star beds.
+            {t("accommodation.heroLine3")}
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 30 }}
@@ -72,8 +74,7 @@ export function AccommodationPage() {
             transition={{ duration: 1.4, delay: 1.1 }}
             className="text-cream/75 text-lg max-w-2xl mt-10 leading-relaxed"
           >
-            A curated collection of camps and lodges — from palatial cliff-top retreats to intimate
-            mobile tents that move with the migration. Each one chosen for its silence.
+            {t("accommodation.heroSubtitle")}
           </motion.p>
         </div>
       </section>
@@ -83,9 +84,9 @@ export function AccommodationPage() {
         <div className="mx-auto max-w-[1400px] grid grid-cols-1 md:grid-cols-12 gap-12">
           <div className="md:col-span-4">
             <Reveal variant="up">
-              <p className="font-eyebrow text-gold mb-6">The Collection</p>
+              <p className="font-eyebrow text-gold mb-6">{t("accommodation.theCollection")}</p>
               <p className="font-label text-charcoal/60">
-                Six properties, <br /> each a destination of its own
+                {t("accommodation.sixProperties1")} <br /> {t("accommodation.sixProperties2")}
               </p>
             </Reveal>
           </div>
@@ -97,7 +98,7 @@ export function AccommodationPage() {
               baseOpacity={0.15}
               blurStrength={5}
             >
-              We do not own these lodges. We partner with them — choosing only those that share our obsession with solitude, our refusal to crowd a horizon, and our commitment to the land on which they stand. Each property below is one we have stayed in, <span className="italic text-forest"> slept under, listened to.</span>
+              {t("accommodation.introBody")} <span className="italic text-forest">{t("accommodation.introItalic")}</span>
             </ScrollReveal>
           </div>
         </div>
@@ -146,7 +147,7 @@ export function AccommodationPage() {
                     <div className="flex items-center justify-between pt-3 border-t border-cream/20">
                       <span className="font-label text-cream/60">{acc.pricePerNight}</span>
                       <span className="font-eyebrow text-cream/60 group-hover:text-gold-soft transition-colors">
-                        View
+                        {t("accommodation.view")}
                       </span>
                     </div>
                   </div>
@@ -172,7 +173,7 @@ export function AccommodationPage() {
 
         <div className="mx-auto max-w-[1300px] relative">
           <Reveal variant="up">
-            <p className="font-eyebrow text-gold-soft mb-8">Our Standards</p>
+            <p className="font-eyebrow text-gold-soft mb-8">{t("accommodation.ourStandards")}</p>
           </Reveal>
           <ScrollReveal
             as="h2"
@@ -181,15 +182,15 @@ export function AccommodationPage() {
             baseOpacity={0.1}
             blurStrength={5}
           >
-            What every property <span className="italic text-gold-soft">must deliver.</span>
+            {t("accommodation.whatEvery")} <span className="italic text-gold-soft">{t("accommodation.mustDeliver")}</span>
           </ScrollReveal>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 border-t border-cream/15 pt-12">
             {[
-              { title: "Solitude by Design", body: "Fewer than 12 suites. No property we partner with has more — and several have only four." },
-              { title: "Architectural Restraint", body: "Materials drawn from the site itself — volcanic stone, reclaimed leadwood, woven bamboo. Nothing imported for show." },
-              { title: "Light Footprint", body: "Solar power, composting systems, water recycling. Every property is independently audited annually." },
-              { title: "Community Equity", body: "Each lodge is at least 30% owned by its local community. Your stay directly funds schools and clinics." },
+              { title: t("accommodation.standard1Title"), body: t("accommodation.standard1Body") },
+              { title: t("accommodation.standard2Title"), body: t("accommodation.standard2Body") },
+              { title: t("accommodation.standard3Title"), body: t("accommodation.standard3Body") },
+              { title: t("accommodation.standard4Title"), body: t("accommodation.standard4Body") },
             ].map((item, idx) => (
               <Reveal key={item.title} variant="up" delay={idx * 0.1}>
                 <h3 className="font-display text-2xl text-gold-soft mb-3">{item.title}</h3>
@@ -204,7 +205,7 @@ export function AccommodationPage() {
       <section className="py-32 md:py-48 px-6 md:px-10">
         <div className="mx-auto max-w-[1100px] text-center">
           <Reveal variant="up">
-            <p className="font-eyebrow text-gold mb-8">Where Will You Sleep?</p>
+            <p className="font-eyebrow text-gold mb-8">{t("accommodation.whereWillYouSleep")}</p>
           </Reveal>
           <ScrollReveal
             as="h2"
@@ -213,18 +214,18 @@ export function AccommodationPage() {
             baseOpacity={0.1}
             blurStrength={6}
           >
-            The choice is yours. <span className="italic text-forest">The silence is ours to compose.</span>
+            {t("accommodation.choiceYours")} <span className="italic text-forest">{t("accommodation.silenceOurs")}</span>
           </ScrollReveal>
           <Reveal variant="up" delay={0.2}>
             <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-5">
               <button onClick={() => navigate("contact")} className="btn-luxury btn-luxury-gold">
-                Request a Quote
+                {t("cta.requestQuote")}
               </button>
               <button
                 onClick={() => navigate("tours")}
                 className="link-underline text-charcoal/70"
               >
-                Explore Tours
+                {t("accommodation.exploreTours")}
               </button>
             </div>
           </Reveal>

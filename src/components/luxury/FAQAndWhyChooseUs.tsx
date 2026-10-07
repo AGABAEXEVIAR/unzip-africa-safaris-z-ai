@@ -4,70 +4,33 @@ import { useState, useRef } from "react";
 import { Reveal } from "@/components/luxury/Reveal";
 import ScrollReveal from "@/components/luxury/ScrollReveal";
 import { useRouter } from "@/lib/router";
+import { useLang } from "@/lib/language";
 import { useScheduledTrips } from "@/lib/store";
 
 const sharp = { borderRadius: 0 } as const;
 
-const faqs = [
-  {
-    q: "What makes Unzip Africa Safaris different from other safari operators?",
-    a: "We don't just plan safaris — we curate extraordinary African journeys. Unzip Africa combines bespoke luxury, deep local expertise and exceptional personal service to create seamless journeys across Uganda, Kenya and Tanzania. From exclusive wildlife encounters to handpicked luxury lodges and private experiences, every detail is thoughtfully tailored to you. Because luxury is not just where you stay — it's how you experience Africa.",
-  },
-  {
-    q: "How do you ensure the safety of your clients?",
-    a: "Adventure should feel exhilarating — never uncertain. At Unzip Africa, safety is woven into every journey. We partner with trusted safari professionals, carefully vetted camps and lodges, experienced guides and well-maintained vehicles. Our local team stays connected throughout your journey, ready to support you whenever needed. All our clients are also covered by AMREF Flying Doctors medical evacuation, giving you access to emergency medical assistance and evacuation support across East Africa.",
-  },
-  {
-    q: "What is your approach to conservation and communities?",
-    a: "We believe protecting Africa starts with those who protect it. At Unzip Africa, every safari is an opportunity to create a positive impact. We support wildlife conservation, local communities and the rangers who work on the frontline of protecting Africa's wilderness. As part of our commitment, Unzip Africa contributes 5% of the net safari revenue from every booking towards ranger welfare. This contribution is made by us and is not added as a separate fee to your safari price. Through this commitment, every journey helps support the people who dedicate their lives to safeguarding East Africa's wildlife and protected areas. Travel with purpose. Protect the wild. Support its guardians.",
-  },
-  {
-    q: "Can you accommodate dietary restrictions and accessibility needs?",
-    a: "Absolutely. Your comfort is part of the journey. From vegetarian, vegan, halal and allergy-sensitive dining to mobility and accessibility requirements, we plan ahead with our trusted lodges, camps and local partners to ensure your needs are understood and accommodated wherever possible. Tell us what you need — we'll tailor the journey around you.",
-  },
+// FAQ questions and answers use translation keys (faq.q1..q4, faq.a1..a4).
+// The list is just for ordering.
+const faqKeys = [
+  { qKey: "faq.q1", aKey: "faq.a1" },
+  { qKey: "faq.q2", aKey: "faq.a2" },
+  { qKey: "faq.q3", aKey: "faq.a3" },
+  { qKey: "faq.q4", aKey: "faq.a4" },
 ];
 
-const whyChooseUs = [
-  {
-    num: "01",
-    title: "Bespoke by Design",
-    body: "Every safari is tailor-made around your interests, pace and travel style.",
-    icon: "silence",
-  },
-  {
-    num: "02",
-    title: "Local Expertise",
-    body: "Deep East African knowledge brings you closer to authentic places and experiences.",
-    icon: "guide",
-  },
-  {
-    num: "03",
-    title: "Exceptional Wildlife",
-    body: "From gorilla trekking to the Great Migration, experience Africa's most remarkable wildlife encounters.",
-    icon: "leaf",
-  },
-  {
-    num: "04",
-    title: "Handpicked Stays",
-    body: "We select distinctive lodges and camps that complement your journey.",
-    icon: "globe",
-  },
-  {
-    num: "05",
-    title: "Seamless Service",
-    body: "From planning to your return home, every detail is thoughtfully coordinated.",
-    icon: "key",
-  },
-  {
-    num: "06",
-    title: "Africa, Personally Experienced",
-    body: "We don't simply sell safaris — we create meaningful journeys designed to be remembered.",
-    icon: "phone",
-  },
+// Why-choose-us items use translation keys (why.item1Title..item6Title, item1Body..item6Body).
+const whyChooseUsKeys = [
+  { num: "01", titleKey: "why.item1Title", bodyKey: "why.item1Body", icon: "silence" },
+  { num: "02", titleKey: "why.item2Title", bodyKey: "why.item2Body", icon: "guide" },
+  { num: "03", titleKey: "why.item3Title", bodyKey: "why.item3Body", icon: "leaf" },
+  { num: "04", titleKey: "why.item4Title", bodyKey: "why.item4Body", icon: "globe" },
+  { num: "05", titleKey: "why.item5Title", bodyKey: "why.item5Body", icon: "key" },
+  { num: "06", titleKey: "why.item6Title", bodyKey: "why.item6Body", icon: "phone" },
 ];
 
 export function FAQSection() {
   const [openIdx, setOpenIdx] = useState<number | null>(0);
+  const { t } = useLang();
 
   return (
     <section className="py-16 md:py-24 px-6 md:px-10 bg-alabaster">
@@ -76,7 +39,7 @@ export function FAQSection() {
           {/* Left — heading */}
           <div className="md:col-span-5">
             <Reveal variant="up">
-              <p className="font-eyebrow text-gold mb-6">Questions, Answered</p>
+              <p className="font-eyebrow text-gold mb-6">{t("faq.eyebrow")}</p>
             </Reveal>
             <ScrollReveal
               as="h2"
@@ -85,18 +48,17 @@ export function FAQSection() {
               baseOpacity={0.1}
               blurStrength={5}
             >
-              Frequently asked <span className="italic text-forest">questions.</span>
+              {t("faq.heading1")} <span className="italic text-forest">{t("faq.heading2")}</span>
             </ScrollReveal>
             <Reveal variant="up" delay={0.2}>
               <p className="text-charcoal/70 leading-relaxed mb-8">
-                Everything you need to know about composing a journey with us. If your question
-                is not here, a specialist will reply within 24 hours.
+                {t("faq.subtitle")}
               </p>
               <a
                 href="mailto:private@unzipafrica.com"
                 className="link-underline text-charcoal/70"
               >
-                Ask a Specialist
+                {t("faq.askSpecialist")}
               </a>
             </Reveal>
           </div>
@@ -104,7 +66,7 @@ export function FAQSection() {
           {/* Right — accordion */}
           <div className="md:col-span-7">
             <div className="border-t border-border">
-              {faqs.map((faq, idx) => {
+              {faqKeys.map((faq, idx) => {
                 const isOpen = openIdx === idx;
                 return (
                   <div key={idx} className="border-b border-border">
@@ -114,7 +76,7 @@ export function FAQSection() {
                       aria-expanded={isOpen}
                     >
                       <span className={`font-display text-xl md:text-2xl tracking-tight transition-colors duration-500 ${isOpen ? "text-forest" : "text-charcoal group-hover:text-forest"}`}>
-                        {faq.q}
+                        {t(faq.qKey)}
                       </span>
                       <span className={`flex-shrink-0 w-8 h-8 flex items-center justify-center transition-all duration-500 ${isOpen ? "rotate-45 bg-gold text-charcoal" : "border border-charcoal/30 text-charcoal/60 group-hover:border-charcoal"}`}>
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -130,7 +92,7 @@ export function FAQSection() {
                       }}
                     >
                       <p className="text-charcoal/75 leading-relaxed pb-6 pr-12">
-                        {faq.a}
+                        {t(faq.aKey)}
                       </p>
                     </div>
                   </div>
@@ -145,13 +107,14 @@ export function FAQSection() {
 }
 
 export function WhyChooseUsSection() {
+  const { t } = useLang();
   return (
     <section className="py-16 md:py-24 px-6 md:px-10 bg-canvas">
       <div className="mx-auto max-w-[1600px]">
         {/* Heading */}
         <div className="text-center mb-12 md:mb-16">
           <Reveal variant="up">
-            <p className="font-eyebrow text-gold mb-6">The Unzip Africa Difference</p>
+            <p className="font-eyebrow text-gold mb-6">{t("why.eyebrow")}</p>
           </Reveal>
           <ScrollReveal
             as="h2"
@@ -160,13 +123,13 @@ export function WhyChooseUsSection() {
             baseOpacity={0.1}
             blurStrength={6}
           >
-            Why discerning travellers <span className="italic text-forest">choose us.</span>
+            {t("why.heading1")} <span className="italic text-forest">{t("why.heading2")}</span>
           </ScrollReveal>
         </div>
 
         {/* Grid of reasons */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16 md:gap-y-20">
-          {whyChooseUs.map((item, idx) => (
+          {whyChooseUsKeys.map((item, idx) => (
             <Reveal key={item.num} variant="up" delay={(idx % 3) * 0.1}>
               <div className="group h-full card-hover-rich p-6 md:p-8">
                 <div className="flex items-start gap-5 mb-5">
@@ -178,9 +141,9 @@ export function WhyChooseUsSection() {
                   </div>
                 </div>
                 <h3 className="font-display text-2xl md:text-3xl text-charcoal tracking-tight mb-4 leading-[1.1] group-hover:text-forest transition-colors duration-500">
-                  {item.title}
+                  {t(item.titleKey)}
                 </h3>
-                <p className="text-charcoal/70 leading-relaxed">{item.body}</p>
+                <p className="text-charcoal/70 leading-relaxed">{t(item.bodyKey)}</p>
               </div>
             </Reveal>
           ))}
@@ -240,6 +203,7 @@ function ReasonIcon({ name }: { name: string }) {
 
 /* ===================== Founder Message Section (two columns) ===================== */
 export function FounderMessageSection() {
+  const { t } = useLang();
   return (
     <section className="py-16 md:py-24 px-6 md:px-10 bg-forest-deep text-cream relative overflow-hidden">
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
@@ -259,14 +223,14 @@ export function FounderMessageSection() {
             <div className="relative aspect-[4/5] overflow-hidden bg-charcoal" style={sharp}>
               <img
                 src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=1200&q=80"
-                alt="Ssebuuma Ivan, Founder"
+                alt={t("founder.name")}
                 className="absolute inset-0 w-full h-full object-cover"
               />
               <div className="absolute inset-3 border border-cream/15 pointer-events-none" />
               <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-charcoal/90 to-transparent">
-                <p className="font-eyebrow text-gold-soft mb-1">Founder</p>
+                <p className="font-eyebrow text-gold-soft mb-1">{t("founder.label")}</p>
                 <p className="font-display text-2xl text-cream tracking-tight" style={{ fontFamily: "var(--font-cormorant), serif" }}>
-                  Ssebuuma Ivan
+                  {t("founder.name")}
                 </p>
               </div>
             </div>
@@ -276,7 +240,7 @@ export function FounderMessageSection() {
         {/* Right — message */}
         <div className="md:col-span-7">
           <Reveal variant="up">
-            <p className="font-eyebrow text-gold-soft mb-6">A Message from Our Founder</p>
+            <p className="font-eyebrow text-gold-soft mb-6">{t("founder.eyebrow")}</p>
           </Reveal>
           <ScrollReveal
             as="blockquote"
@@ -285,10 +249,10 @@ export function FounderMessageSection() {
             baseOpacity={0.1}
             blurStrength={5}
           >
-            &ldquo;Africa is not simply a place to visit; it is a story to experience. At Unzip Africa, we are passionate about creating thoughtful, authentic and unforgettable journeys that bring you closer to the heart of East Africa.&rdquo;
+            {t("founder.quote")}
           </ScrollReveal>
           <Reveal variant="up" delay={0.3}>
-            <p className="font-label text-gold-soft">&mdash; Ssebuuma Ivan, Founder</p>
+            <p className="font-label text-gold-soft">{t("founder.attribution")}</p>
           </Reveal>
         </div>
       </div>
@@ -300,6 +264,7 @@ export function FounderMessageSection() {
 export function ScheduledTripsSection() {
   const trips = useScheduledTrips();
   const { navigateToScheduledTrip, navigate } = useRouter();
+  const { t } = useLang();
 
   // Show the 3 most recently created trips (admin prepends new ones to the array)
   const upcoming = trips.slice(0, 3);
@@ -312,7 +277,7 @@ export function ScheduledTripsSection() {
         {/* Heading */}
         <div className="mb-12 md:mb-16 text-center">
           <Reveal variant="up">
-            <p className="font-eyebrow text-gold mb-6">Upcoming Departures</p>
+            <p className="font-eyebrow text-gold mb-6">{t("scheduledSection.eyebrow")}</p>
           </Reveal>
           <ScrollReveal
             as="h2"
@@ -321,12 +286,11 @@ export function ScheduledTripsSection() {
             baseOpacity={0.1}
             blurStrength={6}
           >
-            Scheduled <span className="italic text-forest">Trips.</span>
+            {t("scheduledSection.title1")} <span className="italic text-forest">{t("scheduledSection.title2")}</span>
           </ScrollReveal>
           <Reveal variant="up" delay={0.2}>
             <p className="text-charcoal/70 leading-relaxed mt-6 max-w-2xl mx-auto">
-              Join a small group of like-minded travellers on a fixed-date departure. Each one is
-              led by our senior guides and limited to your party and a handful of others.
+              {t("scheduledSection.subtitle")}
             </p>
           </Reveal>
         </div>
@@ -348,7 +312,7 @@ export function ScheduledTripsSection() {
                   </div>
                   {trip.spotsLeft <= 5 && (
                     <div className="absolute top-3 right-3 bg-gold text-charcoal text-[0.6rem] tracking-[0.15em] uppercase px-3 py-1.5" style={sharp}>
-                      {trip.spotsLeft} spots left
+                      {trip.spotsLeft} {t("scheduledSection.spotsLeft")}
                     </div>
                   )}
                 </div>
@@ -369,9 +333,9 @@ export function ScheduledTripsSection() {
                       <p className="font-display text-2xl text-forest" style={{ fontFamily: "var(--font-cormorant), serif" }}>
                         ${trip.priceFrom.toLocaleString()}
                       </p>
-                      <p className="text-[0.65rem] text-charcoal/50">per person · {trip.durationDays} days</p>
+                      <p className="text-[0.65rem] text-charcoal/50">{t("common.perPerson")} · {trip.durationDays} {t("common.daysLower")}</p>
                     </div>
-                    <span className="font-eyebrow text-gold">Explore →</span>
+                    <span className="font-eyebrow text-gold">{t("scheduledSection.exploreArrow")}</span>
                   </div>
                 </div>
               </article>
@@ -385,7 +349,7 @@ export function ScheduledTripsSection() {
             onClick={() => navigate("scheduled-trips")}
             className="btn-luxury"
           >
-            View Scheduled Trips
+            {t("scheduledSection.viewAll")}
             <svg className="ml-2" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
@@ -418,6 +382,7 @@ const safariCarImages = [
 ];
 
 export function SafariCarsSection() {
+  const { t } = useLang();
   return (
     <section className="py-16 md:py-24 px-6 md:px-10 bg-canvas">
       <div className="mx-auto max-w-[1400px]">
@@ -426,7 +391,7 @@ export function SafariCarsSection() {
           {/* Left — Text + Features */}
           <div>
             <Reveal variant="up">
-              <p className="font-eyebrow text-gold mb-4">Travel in Comfort</p>
+              <p className="font-eyebrow text-gold mb-4">{t("safariCars.eyebrow")}</p>
             </Reveal>
             <ScrollReveal
               as="h2"
@@ -435,16 +400,11 @@ export function SafariCarsSection() {
               baseOpacity={0.1}
               blurStrength={5}
             >
-              Our <span className="italic text-forest">Safari Cars</span>
+              {t("safariCars.ourLine")} <span className="italic text-forest">{t("safariCars.cars")}</span>
             </ScrollReveal>
             <Reveal variant="up" delay={0.2}>
               <p className="text-base md:text-lg text-charcoal/70 leading-relaxed mb-8">
-                At Unzip Africa, every safari is designed for comfort, safety, and unforgettable
-                wildlife experiences. Our safari vehicles are specially equipped for African
-                adventures, offering comfortable seating, large viewing windows, pop-up roofs,
-                charging facilities, and ample space for photography equipment. Whether exploring
-                Uganda, Kenya, or Tanzania, our vehicles provide the perfect vantage point to
-                experience wildlife and landscapes while travelling in comfort.
+                {t("safariCars.body")}
               </p>
             </Reveal>
 
@@ -452,16 +412,16 @@ export function SafariCarsSection() {
             <Reveal variant="up" delay={0.3}>
               <div className="grid grid-cols-2 gap-4">
                 {[
-                  { title: "Comfortable Seating", icon: "seat" },
-                  { title: "Large Viewing Windows", icon: "window" },
-                  { title: "Pop-Up Roofs", icon: "roof" },
-                  { title: "Charging Facilities", icon: "charge" },
+                  { titleKey: "safariCars.feature1", icon: "seat" },
+                  { titleKey: "safariCars.feature2", icon: "window" },
+                  { titleKey: "safariCars.feature3", icon: "roof" },
+                  { titleKey: "safariCars.feature4", icon: "charge" },
                 ].map((feature) => (
-                  <div key={feature.title} className="flex items-center gap-3 p-4 border border-border card-hover-rich">
+                  <div key={feature.titleKey} className="flex items-center gap-3 p-4 border border-border card-hover-rich">
                     <div className="flex-shrink-0 w-10 h-10 border border-charcoal/20 flex items-center justify-center">
                       <CarFeatureIcon name={feature.icon} />
                     </div>
-                    <span className="font-label text-charcoal text-xs">{feature.title}</span>
+                    <span className="font-label text-charcoal text-xs">{t(feature.titleKey)}</span>
                   </div>
                 ))}
               </div>
@@ -481,6 +441,7 @@ export function SafariCarsSection() {
 
 /* ===================== Image Stack Swipe Component ===================== */
 function SafariCarImageStack({ images }: { images: string[] }) {
+  const { t } = useLang();
   const [stack, setStack] = useState<string[]>(images);
   const [swipeDir, setSwipeDir] = useState<"left" | "right" | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -561,7 +522,7 @@ function SafariCarImageStack({ images }: { images: string[] }) {
 
       {/* Hint text */}
       <div className="absolute -top-8 left-0 right-0 text-center">
-        <p className="font-eyebrow text-charcoal/40">Swipe or tap to view →</p>
+        <p className="font-eyebrow text-charcoal/40">{t("safariCars.swipeHint")}</p>
       </div>
 
       {/* Stack of images — last in array is on top */}
@@ -606,7 +567,7 @@ function SafariCarImageStack({ images }: { images: string[] }) {
       {/* Counter */}
       <div className="absolute -bottom-8 left-0 right-0 text-center">
         <p className="font-label text-charcoal/40 text-xs">
-          {stack.length} photos — swipe to cycle
+          {stack.length} {t("safariCars.photosCount")}
         </p>
       </div>
     </div>

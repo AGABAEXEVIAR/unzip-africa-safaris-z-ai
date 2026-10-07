@@ -242,9 +242,9 @@ function HorizontalDestinations() {
             onClick={() => navigate("tours")}
             className="group flex-shrink-0 w-[60vw] md:w-[28vw] aspect-[3/4] flex flex-col items-center justify-center text-center px-6 bg-forest cursor-pointer"
           >
-            <p className="font-eyebrow text-gold-soft mb-4">View All</p>
+            <p className="font-eyebrow text-gold-soft mb-4">{t("common.viewAll")}</p>
             <p className="font-display text-cream text-3xl md:text-4xl leading-tight">
-              Explore every <span className="italic">journey</span>
+              {t("common.exploreEvery")} <span className="italic">{t("common.journey")}</span>
             </p>
             <span className="mt-8 text-cream/70 group-hover:translate-x-2 transition-transform duration-500">
               →

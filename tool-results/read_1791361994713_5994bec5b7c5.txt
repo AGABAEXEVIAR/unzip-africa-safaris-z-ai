@@ -1,0 +1,648 @@
+     1→"use client";
+     2→
+     3→import { useState, useRef } from "react";
+     4→import { Reveal } from "@/components/luxury/Reveal";
+     5→import ScrollReveal from "@/components/luxury/ScrollReveal";
+     6→import { useRouter } from "@/lib/router";
+     7→import { useScheduledTrips } from "@/lib/store";
+     8→
+     9→const sharp = { borderRadius: 0 } as const;
+    10→
+    11→const faqs = [
+    12→  {
+    13→    q: "What makes Unzip Africa Safaris different from other safari operators?",
+    14→    a: "We don't just plan safaris — we curate extraordinary African journeys. Unzip Africa combines bespoke luxury, deep local expertise and exceptional personal service to create seamless journeys across Uganda, Kenya and Tanzania. From exclusive wildlife encounters to handpicked luxury lodges and private experiences, every detail is thoughtfully tailored to you. Because luxury is not just where you stay — it's how you experience Africa.",
+    15→  },
+    16→  {
+    17→    q: "How do you ensure the safety of your clients?",
+    18→    a: "Adventure should feel exhilarating — never uncertain. At Unzip Africa, safety is woven into every journey. We partner with trusted safari professionals, carefully vetted camps and lodges, experienced guides and well-maintained vehicles. Our local team stays connected throughout your journey, ready to support you whenever needed. All our clients are also covered by AMREF Flying Doctors medical evacuation, giving you access to emergency medical assistance and evacuation support across East Africa.",
+    19→  },
+    20→  {
+    21→    q: "What is your approach to conservation and communities?",
+    22→    a: "We believe protecting Africa starts with those who protect it. At Unzip Africa, every safari is an opportunity to create a positive impact. We support wildlife conservation, local communities and the rangers who work on the frontline of protecting Africa's wilderness. As part of our commitment, Unzip Africa contributes 5% of the net safari revenue from every booking towards ranger welfare. This contribution is made by us and is not added as a separate fee to your safari price. Through this commitment, every journey helps support the people who dedicate their lives to safeguarding East Africa's wildlife and protected areas. Travel with purpose. Protect the wild. Support its guardians.",
+    23→  },
+    24→  {
+    25→    q: "Can you accommodate dietary restrictions and accessibility needs?",
+    26→    a: "Absolutely. Your comfort is part of the journey. From vegetarian, vegan, halal and allergy-sensitive dining to mobility and accessibility requirements, we plan ahead with our trusted lodges, camps and local partners to ensure your needs are understood and accommodated wherever possible. Tell us what you need — we'll tailor the journey around you.",
+    27→  },
+    28→];
+    29→
+    30→const whyChooseUs = [
+    31→  {
+    32→    num: "01",
+    33→    title: "Bespoke by Design",
+    34→    body: "Every safari is tailor-made around your interests, pace and travel style.",
+    35→    icon: "silence",
+    36→  },
+    37→  {
+    38→    num: "02",
+    39→    title: "Local Expertise",
+    40→    body: "Deep East African knowledge brings you closer to authentic places and experiences.",
+    41→    icon: "guide",
+    42→  },
+    43→  {
+    44→    num: "03",
+    45→    title: "Exceptional Wildlife",
+    46→    body: "From gorilla trekking to the Great Migration, experience Africa's most remarkable wildlife encounters.",
+    47→    icon: "leaf",
+    48→  },
+    49→  {
+    50→    num: "04",
+    51→    title: "Handpicked Stays",
+    52→    body: "We select distinctive lodges and camps that complement your journey.",
+    53→    icon: "globe",
+    54→  },
+    55→  {
+    56→    num: "05",
+    57→    title: "Seamless Service",
+    58→    body: "From planning to your return home, every detail is thoughtfully coordinated.",
+    59→    icon: "key",
+    60→  },
+    61→  {
+    62→    num: "06",
+    63→    title: "Africa, Personally Experienced",
+    64→    body: "We don't simply sell safaris — we create meaningful journeys designed to be remembered.",
+    65→    icon: "phone",
+    66→  },
+    67→];
+    68→
+    69→export function FAQSection() {
+    70→  const [openIdx, setOpenIdx] = useState<number | null>(0);
+    71→
+    72→  return (
+    73→    <section className="py-16 md:py-24 px-6 md:px-10 bg-alabaster">
+    74→      <div className="mx-auto max-w-[1300px]">
+    75→        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16">
+    76→          {/* Left — heading */}
+    77→          <div className="md:col-span-5">
+    78→            <Reveal variant="up">
+    79→              <p className="font-eyebrow text-gold mb-6">Questions, Answered</p>
+    80→            </Reveal>
+    81→            <ScrollReveal
+    82→              as="h2"
+    83→              containerClassName="font-display text-4xl md:text-6xl text-charcoal tracking-tight leading-[1.05] block mb-8"
+    84→              textClassName="block"
+    85→              baseOpacity={0.1}
+    86→              blurStrength={5}
+    87→            >
+    88→              Frequently asked <span className="italic text-forest">questions.</span>
+    89→            </ScrollReveal>
+    90→            <Reveal variant="up" delay={0.2}>
+    91→              <p className="text-charcoal/70 leading-relaxed mb-8">
+    92→                Everything you need to know about composing a journey with us. If your question
+    93→                is not here, a specialist will reply within 24 hours.
+    94→              </p>
+    95→              <a
+    96→                href="mailto:private@unzipafrica.com"
+    97→                className="link-underline text-charcoal/70"
+    98→              >
+    99→                Ask a Specialist
+   100→              </a>
+   101→            </Reveal>
+   102→          </div>
+   103→
+   104→          {/* Right — accordion */}
+   105→          <div className="md:col-span-7">
+   106→            <div className="border-t border-border">
+   107→              {faqs.map((faq, idx) => {
+   108→                const isOpen = openIdx === idx;
+   109→                return (
+   110→                  <div key={idx} className="border-b border-border">
+   111→                    <button
+   112→                      onClick={() => setOpenIdx(isOpen ? null : idx)}
+   113→                      className="w-full flex items-center justify-between gap-6 py-6 text-left group"
+   114→                      aria-expanded={isOpen}
+   115→                    >
+   116→                      <span className={`font-display text-xl md:text-2xl tracking-tight transition-colors duration-500 ${isOpen ? "text-forest" : "text-charcoal group-hover:text-forest"}`}>
+   117→                        {faq.q}
+   118→                      </span>
+   119→                      <span className={`flex-shrink-0 w-8 h-8 flex items-center justify-center transition-all duration-500 ${isOpen ? "rotate-45 bg-gold text-charcoal" : "border border-charcoal/30 text-charcoal/60 group-hover:border-charcoal"}`}>
+   120→                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+   121→                          <path d="M12 5v14M5 12h14" />
+   122→                        </svg>
+   123→                      </span>
+   124→                    </button>
+   125→                    <div
+   126→                      className="overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
+   127→                      style={{
+   128→                        maxHeight: isOpen ? "400px" : "0px",
+   129→                        opacity: isOpen ? 1 : 0,
+   130→                      }}
+   131→                    >
+   132→                      <p className="text-charcoal/75 leading-relaxed pb-6 pr-12">
+   133→                        {faq.a}
+   134→                      </p>
+   135→                    </div>
+   136→                  </div>
+   137→                );
+   138→              })}
+   139→            </div>
+   140→          </div>
+   141→        </div>
+   142→      </div>
+   143→    </section>
+   144→  );
+   145→}
+   146→
+   147→export function WhyChooseUsSection() {
+   148→  return (
+   149→    <section className="py-16 md:py-24 px-6 md:px-10 bg-canvas">
+   150→      <div className="mx-auto max-w-[1600px]">
+   151→        {/* Heading */}
+   152→        <div className="text-center mb-12 md:mb-16">
+   153→          <Reveal variant="up">
+   154→            <p className="font-eyebrow text-gold mb-6">The Unzip Africa Difference</p>
+   155→          </Reveal>
+   156→          <ScrollReveal
+   157→            as="h2"
+   158→            containerClassName="font-display text-5xl md:text-7xl lg:text-8xl text-charcoal tracking-tight leading-[0.95] block max-w-4xl mx-auto"
+   159→            textClassName="block"
+   160→            baseOpacity={0.1}
+   161→            blurStrength={6}
+   162→          >
+   163→            Why discerning travellers <span className="italic text-forest">choose us.</span>
+   164→          </ScrollReveal>
+   165→        </div>
+   166→
+   167→        {/* Grid of reasons */}
+   168→        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16 md:gap-y-20">
+   169→          {whyChooseUs.map((item, idx) => (
+   170→            <Reveal key={item.num} variant="up" delay={(idx % 3) * 0.1}>
+   171→              <div className="group h-full card-hover-rich p-6 md:p-8">
+   172→                <div className="flex items-start gap-5 mb-5">
+   173→                  <span className="font-display text-5xl md:text-6xl text-gold/40 italic leading-none group-hover:text-gold transition-colors duration-700">
+   174→                    {item.num}
+   175→                  </span>
+   176→                  <div className="flex-shrink-0 w-10 h-10 mt-1 border border-charcoal/20 group-hover:border-gold group-hover:bg-gold/10 flex items-center justify-center transition-all duration-500">
+   177→                    <ReasonIcon name={item.icon} />
+   178→                  </div>
+   179→                </div>
+   180→                <h3 className="font-display text-2xl md:text-3xl text-charcoal tracking-tight mb-4 leading-[1.1] group-hover:text-forest transition-colors duration-500">
+   181→                  {item.title}
+   182→                </h3>
+   183→                <p className="text-charcoal/70 leading-relaxed">{item.body}</p>
+   184→              </div>
+   185→            </Reveal>
+   186→          ))}
+   187→        </div>
+   188→      </div>
+   189→    </section>
+   190→  );
+   191→}
+   192→
+   193→function ReasonIcon({ name }: { name: string }) {
+   194→  const iconClass = "w-5 h-5 text-charcoal/70 group-hover:text-gold transition-colors duration-500";
+   195→  switch (name) {
+   196→    case "silence":
+   197→      return (
+   198→        <svg className={iconClass} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+   199→          <path d="M3 12h2l2-8 4 16 4-12 2 4h4" strokeLinecap="round" strokeLinejoin="round" />
+   200→        </svg>
+   201→      );
+   202→    case "guide":
+   203→      return (
+   204→        <svg className={iconClass} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+   205→          <circle cx="12" cy="8" r="4" />
+   206→          <path d="M5 21c0-4.5 3.5-7 7-7s7 2.5 7 7" strokeLinecap="round" />
+   207→        </svg>
+   208→      );
+   209→    case "leaf":
+   210→      return (
+   211→        <svg className={iconClass} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+   212→          <path d="M11 20A7 7 0 0 1 4 13c0-6 8-9 16-9 0 8-3 16-9 16Z" strokeLinejoin="round" />
+   213→          <path d="M4 21c4-4 8-8 12-12" strokeLinecap="round" />
+   214→        </svg>
+   215→      );
+   216→    case "globe":
+   217→      return (
+   218→        <svg className={iconClass} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+   219→          <circle cx="12" cy="12" r="9" />
+   220→          <path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" strokeLinecap="round" />
+   221→        </svg>
+   222→      );
+   223→    case "key":
+   224→      return (
+   225→        <svg className={iconClass} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+   226→          <circle cx="8" cy="8" r="4" />
+   227→          <path d="M11 11l8 8M16 16l2-2M14 14l2-2" strokeLinecap="round" strokeLinejoin="round" />
+   228→        </svg>
+   229→      );
+   230→    case "phone":
+   231→      return (
+   232→        <svg className={iconClass} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+   233→          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z" strokeLinejoin="round" />
+   234→        </svg>
+   235→      );
+   236→    default:
+   237→      return null;
+   238→  }
+   239→}
+   240→
+   241→/* ===================== Founder Message Section (two columns) ===================== */
+   242→export function FounderMessageSection() {
+   243→  return (
+   244→    <section className="py-16 md:py-24 px-6 md:px-10 bg-forest-deep text-cream relative overflow-hidden">
+   245→      <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
+   246→        <div
+   247→          className="absolute inset-0"
+   248→          style={{
+   249→            backgroundImage:
+   250→              "radial-gradient(circle at 30% 50%, rgba(201,177,135,0.5) 1px, transparent 1px)",
+   251→            backgroundSize: "50px 50px",
+   252→          }}
+   253→        />
+   254→      </div>
+   255→      <div className="mx-auto max-w-[1300px] relative grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16 items-center">
+   256→        {/* Left — founder portrait */}
+   257→        <div className="md:col-span-5">
+   258→          <Reveal variant="left">
+   259→            <div className="relative aspect-[4/5] overflow-hidden bg-charcoal" style={sharp}>
+   260→              <img
+   261→                src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=1200&q=80"
+   262→                alt="Ssebuuma Ivan, Founder"
+   263→                className="absolute inset-0 w-full h-full object-cover"
+   264→              />
+   265→              <div className="absolute inset-3 border border-cream/15 pointer-events-none" />
+   266→              <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-charcoal/90 to-transparent">
+   267→                <p className="font-eyebrow text-gold-soft mb-1">Founder</p>
+   268→                <p className="font-display text-2xl text-cream tracking-tight" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+   269→                  Ssebuuma Ivan
+   270→                </p>
+   271→              </div>
+   272→            </div>
+   273→          </Reveal>
+   274→        </div>
+   275→
+   276→        {/* Right — message */}
+   277→        <div className="md:col-span-7">
+   278→          <Reveal variant="up">
+   279→            <p className="font-eyebrow text-gold-soft mb-6">A Message from Our Founder</p>
+   280→          </Reveal>
+   281→          <ScrollReveal
+   282→            as="blockquote"
+   283→            containerClassName="font-display text-2xl md:text-4xl lg:text-5xl leading-[1.3] text-cream tracking-tight block mb-8"
+   284→            textClassName="block"
+   285→            baseOpacity={0.1}
+   286→            blurStrength={5}
+   287→          >
+   288→            &ldquo;Africa is not simply a place to visit; it is a story to experience. At Unzip Africa, we are passionate about creating thoughtful, authentic and unforgettable journeys that bring you closer to the heart of East Africa.&rdquo;
+   289→          </ScrollReveal>
+   290→          <Reveal variant="up" delay={0.3}>
+   291→            <p className="font-label text-gold-soft">&mdash; Ssebuuma Ivan, Founder</p>
+   292→          </Reveal>
+   293→        </div>
+   294→      </div>
+   295→    </section>
+   296→  );
+   297→}
+   298→
+   299→/* ===================== Scheduled Trips Section ===================== */
+   300→export function ScheduledTripsSection() {
+   301→  const trips = useScheduledTrips();
+   302→  const { navigateToScheduledTrip, navigate } = useRouter();
+   303→
+   304→  // Show the 3 most recently created trips (admin prepends new ones to the array)
+   305→  const upcoming = trips.slice(0, 3);
+   306→
+   307→  if (upcoming.length === 0) return null;
+   308→
+   309→  return (
+   310→    <section className="py-16 md:py-24 px-6 md:px-10 bg-canvas">
+   311→      <div className="mx-auto max-w-[1600px]">
+   312→        {/* Heading */}
+   313→        <div className="mb-12 md:mb-16 text-center">
+   314→          <Reveal variant="up">
+   315→            <p className="font-eyebrow text-gold mb-6">Upcoming Departures</p>
+   316→          </Reveal>
+   317→          <ScrollReveal
+   318→            as="h2"
+   319→            containerClassName="font-display text-5xl md:text-7xl lg:text-8xl text-charcoal tracking-tight leading-[0.95] block max-w-3xl mx-auto"
+   320→            textClassName="block"
+   321→            baseOpacity={0.1}
+   322→            blurStrength={6}
+   323→          >
+   324→            Scheduled <span className="italic text-forest">Trips.</span>
+   325→          </ScrollReveal>
+   326→          <Reveal variant="up" delay={0.2}>
+   327→            <p className="text-charcoal/70 leading-relaxed mt-6 max-w-2xl mx-auto">
+   328→              Join a small group of like-minded travellers on a fixed-date departure. Each one is
+   329→              led by our senior guides and limited to your party and a handful of others.
+   330→            </p>
+   331→          </Reveal>
+   332→        </div>
+   333→
+   334→        {/* Cards */}
+   335→        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+   336→          {upcoming.map((trip, idx) => (
+   337→            <Reveal key={trip.id} variant="up" delay={idx * 0.1}>
+   338→              <article
+   339→                onClick={() => navigateToScheduledTrip(trip.id)}
+   340→                className="bg-alabaster border border-border/60 overflow-hidden cursor-pointer group card-luxury flex flex-col"
+   341→                style={sharp}
+   342→              >
+   343→                {/* Image */}
+   344→                <div className="relative aspect-[4/3] overflow-hidden bg-bone card-zoom">
+   345→                  <img src={trip.image} alt={trip.name} className="w-full h-full object-cover img-luxury" />
+   346→                  <div className="absolute top-3 left-3 bg-charcoal/70 text-cream text-[0.65rem] tracking-[0.2em] uppercase px-3 py-1.5" style={sharp}>
+   347→                    {formatDate(trip.startDate)}
+   348→                  </div>
+   349→                  {trip.spotsLeft <= 5 && (
+   350→                    <div className="absolute top-3 right-3 bg-gold text-charcoal text-[0.6rem] tracking-[0.15em] uppercase px-3 py-1.5" style={sharp}>
+   351→                      {trip.spotsLeft} spots left
+   352→                    </div>
+   353→                  )}
+   354→                </div>
+   355→
+   356→                {/* Content */}
+   357→                <div className="p-5 md:p-6 flex flex-col flex-1">
+   358→                  <p className="font-eyebrow text-gold mb-2">{trip.destination}</p>
+   359→                  <h3
+   360→                    className="font-display text-2xl md:text-3xl text-charcoal tracking-tight mb-3 leading-[1.1] group-hover:text-forest transition-colors duration-500"
+   361→                    style={{ fontFamily: "var(--font-cormorant), serif" }}
+   362→                  >
+   363→                    {trip.name}
+   364→                  </h3>
+   365→                  <p className="text-sm text-charcoal/70 leading-relaxed line-clamp-2 mb-5">{trip.description}</p>
+   366→
+   367→                  <div className="mt-auto pt-4 border-t border-border flex items-end justify-between">
+   368→                    <div>
+   369→                      <p className="font-display text-2xl text-forest" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+   370→                        ${trip.priceFrom.toLocaleString()}
+   371→                      </p>
+   372→                      <p className="text-[0.65rem] text-charcoal/50">per person · {trip.durationDays} days</p>
+   373→                    </div>
+   374→                    <span className="font-eyebrow text-gold">Explore →</span>
+   375→                  </div>
+   376→                </div>
+   377→              </article>
+   378→            </Reveal>
+   379→          ))}
+   380→        </div>
+   381→
+   382→        {/* View All Scheduled Trips button */}
+   383→        <div className="text-center mt-12 md:mt-16">
+   384→          <button
+   385→            onClick={() => navigate("scheduled-trips")}
+   386→            className="btn-luxury"
+   387→          >
+   388→            View Scheduled Trips
+   389→            <svg className="ml-2" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+   390→              <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+   391→            </svg>
+   392→          </button>
+   393→        </div>
+   394→      </div>
+   395→    </section>
+   396→  );
+   397→}
+   398→
+   399→function formatDate(iso: string): string {
+   400→  try {
+   401→    return new Date(iso).toLocaleDateString("en-US", {
+   402→      day: "numeric",
+   403→      month: "short",
+   404→      year: "numeric",
+   405→    });
+   406→  } catch {
+   407→    return iso;
+   408→  }
+   409→}
+   410→
+   411→/* ===================== Safari Cars Section — Two Column with Image Stack ===================== */
+   412→
+   413→const safariCarImages = [
+   414→  "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/29d296b5dde8.jpg",
+   415→  "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/8a1330843fc4.jpg",
+   416→  "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/47d9868387d3.jpg",
+   417→  "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/8821fb17b3de.jpg",
+   418→];
+   419→
+   420→export function SafariCarsSection() {
+   421→  return (
+   422→    <section className="py-16 md:py-24 px-6 md:px-10 bg-canvas">
+   423→      <div className="mx-auto max-w-[1400px]">
+   424→        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16 items-center">
+   425→
+   426→          {/* Left — Text + Features */}
+   427→          <div>
+   428→            <Reveal variant="up">
+   429→              <p className="font-eyebrow text-gold mb-4">Travel in Comfort</p>
+   430→            </Reveal>
+   431→            <ScrollReveal
+   432→              as="h2"
+   433→              containerClassName="font-display text-3xl md:text-6xl text-charcoal tracking-tight leading-[1.05] block mb-6"
+   434→              textClassName="block"
+   435→              baseOpacity={0.1}
+   436→              blurStrength={5}
+   437→            >
+   438→              Our <span className="italic text-forest">Safari Cars</span>
+   439→            </ScrollReveal>
+   440→            <Reveal variant="up" delay={0.2}>
+   441→              <p className="text-base md:text-lg text-charcoal/70 leading-relaxed mb-8">
+   442→                At Unzip Africa, every safari is designed for comfort, safety, and unforgettable
+   443→                wildlife experiences. Our safari vehicles are specially equipped for African
+   444→                adventures, offering comfortable seating, large viewing windows, pop-up roofs,
+   445→                charging facilities, and ample space for photography equipment. Whether exploring
+   446→                Uganda, Kenya, or Tanzania, our vehicles provide the perfect vantage point to
+   447→                experience wildlife and landscapes while travelling in comfort.
+   448→              </p>
+   449→            </Reveal>
+   450→
+   451→            {/* Features list */}
+   452→            <Reveal variant="up" delay={0.3}>
+   453→              <div className="grid grid-cols-2 gap-4">
+   454→                {[
+   455→                  { title: "Comfortable Seating", icon: "seat" },
+   456→                  { title: "Large Viewing Windows", icon: "window" },
+   457→                  { title: "Pop-Up Roofs", icon: "roof" },
+   458→                  { title: "Charging Facilities", icon: "charge" },
+   459→                ].map((feature) => (
+   460→                  <div key={feature.title} className="flex items-center gap-3 p-4 border border-border card-hover-rich">
+   461→                    <div className="flex-shrink-0 w-10 h-10 border border-charcoal/20 flex items-center justify-center">
+   462→                      <CarFeatureIcon name={feature.icon} />
+   463→                    </div>
+   464→                    <span className="font-label text-charcoal text-xs">{feature.title}</span>
+   465→                  </div>
+   466→                ))}
+   467→              </div>
+   468→            </Reveal>
+   469→          </div>
+   470→
+   471→          {/* Right — Image Stack Swipe Effect */}
+   472→          <Reveal variant="right" delay={0.2}>
+   473→            <SafariCarImageStack images={safariCarImages} />
+   474→          </Reveal>
+   475→
+   476→        </div>
+   477→      </div>
+   478→    </section>
+   479→  );
+   480→}
+   481→
+   482→/* ===================== Image Stack Swipe Component ===================== */
+   483→function SafariCarImageStack({ images }: { images: string[] }) {
+   484→  const [stack, setStack] = useState<string[]>(images);
+   485→  const [swipeDir, setSwipeDir] = useState<"left" | "right" | null>(null);
+   486→  const [isAnimating, setIsAnimating] = useState(false);
+   487→
+   488→  // Swipe the top image to the back — it goes behind, next image shows
+   489→  const swipeNext = (dir: "left" | "right") => {
+   490→    if (isAnimating || stack.length <= 1) return;
+   491→    setIsAnimating(true);
+   492→    setSwipeDir(dir);
+   493→    // After the animation completes, move the top image to the back
+   494→    setTimeout(() => {
+   495→      setStack((prev) => {
+   496→        const next = [...prev];
+   497→        const top = next.shift(); // Remove top
+   498→        if (top) next.push(top); // Put it at the back
+   499→        return next;
+   500→      });
+   501→      setSwipeDir(null);
+   502→      setIsAnimating(false);
+   503→    }, 500);
+   504→  };
+   505→
+   506→  // Touch / mouse swipe handling
+   507→  const touchStartX = useRef(0);
+   508→  const containerRef = useRef<HTMLDivElement>(null);
+   509→
+   510→  const handleTouchStart = (e: React.TouchEvent) => {
+   511→    touchStartX.current = e.touches[0].clientX;
+   512→  };
+   513→
+   514→  const handleTouchEnd = (e: React.TouchEvent) => {
+   515→    const deltaX = e.changedTouches[0].clientX - touchStartX.current;
+   516→    if (Math.abs(deltaX) > 40) {
+   517→      swipeNext(deltaX > 0 ? "right" : "left");
+   518→    }
+   519→  };
+   520→
+   521→  // Click to advance
+   522→  const handleClick = () => {
+   523→    swipeNext("left");
+   524→  };
+   525→
+   526→  return (
+   527→    <div
+   528→      ref={containerRef}
+   529→      className="relative w-full aspect-[4/5] max-w-[500px] mx-auto select-none"
+   530→      onTouchStart={handleTouchStart}
+   531→      onTouchEnd={handleTouchEnd}
+   532→      onClick={handleClick}
+   533→      style={{ cursor: "pointer" }}
+   534→      data-cursor="view"
+   535→    >
+   536→      <style>{`
+   537→        @keyframes stackSwipeLeft {
+   538→          0% { transform: translateX(0) rotate(0deg) scale(1); opacity: 1; z-index: 10; }
+   539→          100% { transform: translateX(-120%) rotate(-15deg) scale(0.9); opacity: 0; z-index: 0; }
+   540→        }
+   541→        @keyframes stackSwipeRight {
+   542→          0% { transform: translateX(0) rotate(0deg) scale(1); opacity: 1; z-index: 10; }
+   543→          100% { transform: translateX(120%) rotate(15deg) scale(0.9); opacity: 0; z-index: 0; }
+   544→        }
+   545→        .stack-img {
+   546→          position: absolute;
+   547→          inset: 0;
+   548→          width: 100%;
+   549→          height: 100%;
+   550→          object-fit: cover;
+   551→          transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+   552→          will-change: transform, opacity;
+   553→        }
+   554→        .stack-img.swiping-left {
+   555→          animation: stackSwipeLeft 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+   556→        }
+   557→        .stack-img.swiping-right {
+   558→          animation: stackSwipeRight 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+   559→        }
+   560→      `}</style>
+   561→
+   562→      {/* Hint text */}
+   563→      <div className="absolute -top-8 left-0 right-0 text-center">
+   564→        <p className="font-eyebrow text-charcoal/40">Swipe or tap to view →</p>
+   565→      </div>
+   566→
+   567→      {/* Stack of images — last in array is on top */}
+   568→      {stack.map((src, idx) => {
+   569→        const isTop = idx === 0;
+   570→        const isSecond = idx === 1;
+   571→        const isThird = idx === 2;
+   572→
+   573→        // Stack offset — cards behind the top one are slightly offset
+   574→        const offset = isTop ? 0 : isSecond ? 12 : isThird ? 24 : 36;
+   575→        const scale = isTop ? 1 : isSecond ? 0.95 : isThird ? 0.9 : 0.85;
+   576→        const opacity = isTop ? 1 : isSecond ? 0.8 : isThird ? 0.6 : 0.4;
+   577→
+   578→        return (
+   579→          <div
+   580→            key={src}
+   581→            className="absolute overflow-hidden bg-bone border border-border/30 shadow-lg"
+   582→            style={{
+   583→              top: `${offset}px`,
+   584→              left: `${offset}px`,
+   585→              right: `${-offset}px`,
+   586→              bottom: `${-offset}px`,
+   587→              zIndex: stack.length - idx,
+   588→              transform: `scale(${scale})`,
+   589→              opacity: opacity,
+   590→              borderRadius: 0,
+   591→            }}
+   592→          >
+   593→            <img
+   594→              src={src}
+   595→              alt={`Safari vehicle ${idx + 1}`}
+   596→              className={`stack-img ${isTop && isAnimating ? (swipeDir === "right" ? "swiping-right" : "swiping-left") : ""}`}
+   597→            />
+   598→            {/* Gradient overlay */}
+   599→            <div className="absolute inset-0 bg-gradient-to-t from-charcoal/40 via-transparent to-transparent" />
+   600→            {/* Frame border */}
+   601→            <div className="absolute inset-3 border border-cream/15 pointer-events-none" />
+   602→          </div>
+   603→        );
+   604→      })}
+   605→
+   606→      {/* Counter */}
+   607→      <div className="absolute -bottom-8 left-0 right-0 text-center">
+   608→        <p className="font-label text-charcoal/40 text-xs">
+   609→          {stack.length} photos — swipe to cycle
+   610→        </p>
+   611→      </div>
+   612→    </div>
+   613→  );
+   614→}
+   615→
+   616→function CarFeatureIcon({ name }: { name: string }) {
+   617→  const iconClass = "w-6 h-6 text-charcoal/70";
+   618→  switch (name) {
+   619→    case "seat":
+   620→      return (
+   621→        <svg className={iconClass} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+   622→          <path d="M5 18v-6a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v6M5 18H3M5 18h14M19 18h2M7 9V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v4" strokeLinecap="round" strokeLinejoin="round" />
+   623→        </svg>
+   624→      );
+   625→    case "window":
+   626→      return (
+   627→        <svg className={iconClass} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+   628→          <rect x="4" y="4" width="16" height="16" rx="1" />
+   629→          <path d="M12 4v16M4 12h16" strokeLinecap="round" />
+   630→        </svg>
+   631→      );
+   632→    case "roof":
+   633→      return (
+   634→        <svg className={iconClass} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+   635→          <path d="M3 16h18M5 16V9l7-5 7 5v7M9 16v-4h6v4" strokeLinecap="round" strokeLinejoin="round" />
+   636→        </svg>
+   637→      );
+   638→    case "charge":
+   639→      return (
+   640→        <svg className={iconClass} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+   641→          <path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" strokeLinecap="round" strokeLinejoin="round" />
+   642→        </svg>
+   643→      );
+   644→    default:
+   645→      return null;
+   646→  }
+   647→}
+   648→

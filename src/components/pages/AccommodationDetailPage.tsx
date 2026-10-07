@@ -6,6 +6,7 @@ import { ArrowLeft, Check, MapPin } from "lucide-react";
 import { Reveal } from "@/components/luxury/Reveal";
 import ScrollReveal from "@/components/luxury/ScrollReveal";
 import { useRouter } from "@/lib/router";
+import { useLang } from "@/lib/language";
 import { useAccommodations } from "@/lib/store";
 
 const sharp = { borderRadius: 0 } as const;
@@ -13,6 +14,7 @@ const sharp = { borderRadius: 0 } as const;
 export function AccommodationDetailPage() {
   const accommodations = useAccommodations();
   const { selectedAccommodationId, navigate } = useRouter();
+  const { t } = useLang();
 
   const acc = accommodations.find((a) => a.id === selectedAccommodationId);
   const heroRef = useRef<HTMLDivElement>(null);
@@ -29,10 +31,10 @@ export function AccommodationDetailPage() {
       <div className="min-h-screen flex items-center justify-center bg-canvas">
         <div className="text-center px-6">
           <p className="font-display text-3xl text-charcoal mb-4" style={{ fontFamily: "var(--font-cormorant), serif" }}>
-            Property not found.
+            {t("accommodationDetail.notFound")}
           </p>
           <button onClick={() => navigate("accommodation")} className="btn-luxury btn-luxury-gold">
-            View All Properties
+            {t("accommodationDetail.viewAll")}
           </button>
         </div>
       </div>
@@ -68,7 +70,7 @@ export function AccommodationDetailPage() {
             className="flex items-center gap-2 text-cream/80 hover:text-cream transition-colors self-start"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span className="font-eyebrow text-cream/80">All Properties</span>
+            <span className="font-eyebrow text-cream/80">{t("accommodationDetail.allProperties")}</span>
           </button>
 
           <div className="max-w-3xl">
@@ -107,7 +109,7 @@ export function AccommodationDetailPage() {
         <div className="mx-auto max-w-[1400px] grid grid-cols-1 md:grid-cols-12 gap-12">
           <div className="md:col-span-4">
             <Reveal variant="up">
-              <p className="font-eyebrow text-gold mb-6">Overview</p>
+              <p className="font-eyebrow text-gold mb-6">{t("accommodationDetail.overview")}</p>
               <p className="font-label text-charcoal/60">{acc.pricePerNight}</p>
             </Reveal>
           </div>
@@ -119,7 +121,7 @@ export function AccommodationDetailPage() {
               baseOpacity={0.15}
               blurStrength={5}
             >
-              {acc.description} <span className="italic text-forest">A base from which to listen to the wild.</span>
+              {acc.description} <span className="italic text-forest">{t("accommodationDetail.baseToListen")}</span>
             </ScrollReveal>
           </div>
         </div>
@@ -160,7 +162,7 @@ export function AccommodationDetailPage() {
 
         <div className="mx-auto max-w-[1300px] relative">
           <Reveal variant="up">
-            <p className="font-eyebrow text-gold-soft mb-6">Property Features</p>
+            <p className="font-eyebrow text-gold-soft mb-6">{t("accommodationDetail.features")}</p>
           </Reveal>
           <ScrollReveal
             as="h2"
@@ -169,7 +171,7 @@ export function AccommodationDetailPage() {
             baseOpacity={0.1}
             blurStrength={5}
           >
-            What this property <span className="italic text-gold-soft">offers.</span>
+            {t("accommodationDetail.whatThis")} <span className="italic text-gold-soft">{t("accommodationDetail.offers")}</span>
           </ScrollReveal>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 border-t border-cream/15 pt-12">

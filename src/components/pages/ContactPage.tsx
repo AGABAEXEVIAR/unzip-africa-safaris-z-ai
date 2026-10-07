@@ -5,10 +5,12 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { Reveal } from "@/components/luxury/Reveal";
 import ScrollReveal from "@/components/luxury/ScrollReveal";
 import { useRouter } from "@/lib/router";
+import { useLang } from "@/lib/language";
 import { toast } from "sonner";
 
 export function ContactPage() {
   const { navigate } = useRouter();
+  const { t } = useLang();
   const heroRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -21,6 +23,7 @@ export function ContactPage() {
   const [form, setForm] = useState({
     name: "",
     email: "",
+    phone: "",
     travelers: "2",
     dates: "",
     destinations: [] as string[],
@@ -32,17 +35,18 @@ export function ContactPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name || !form.email) {
-      toast.error("Please share your name and email so we may reply.");
+      toast.error(t("contact.errorRequired"));
       return;
     }
     setSubmitting(true);
     // Simulate API call
     await new Promise((r) => setTimeout(r, 1200));
     setSubmitting(false);
-    toast.success("Your inquiry has reached us. A specialist will reply within 24 hours.");
+    toast.success(t("contact.success"));
     setForm({
       name: "",
       email: "",
+      phone: "",
       travelers: "2",
       dates: "",
       destinations: [],
@@ -80,7 +84,7 @@ export function ContactPage() {
             transition={{ duration: 1.2, delay: 0.4 }}
             className="font-eyebrow text-gold-soft mb-8 tracking-[0.4em]"
           >
-            Begin the Conversation
+            {t("contact.eyebrow")}
           </motion.p>
           <motion.h1
             initial={{ opacity: 0, y: 40 }}
@@ -88,7 +92,7 @@ export function ContactPage() {
             transition={{ duration: 1.6, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
             className="font-display text-cream text-[3rem] sm:text-[4.5rem] md:text-[6rem] lg:text-[7rem] leading-[0.95] tracking-tight max-w-[90%]"
           >
-            Speak to a <span className="italic text-gold-soft">specialist.</span>
+            {t("contact.speakTo")} <span className="italic text-gold-soft">{t("contact.specialist")}</span>
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 30 }}
@@ -96,8 +100,7 @@ export function ContactPage() {
             transition={{ duration: 1.4, delay: 1.1 }}
             className="text-cream/75 text-lg max-w-2xl mt-10 leading-relaxed"
           >
-            No call centers. No bots. One specialist — chosen for your destination — will reply
-            within 24 hours.
+            {t("contact.subtitle")}
           </motion.p>
         </div>
       </section>
@@ -108,7 +111,7 @@ export function ContactPage() {
           {/* Left — Info */}
           <div className="md:col-span-4">
             <Reveal variant="up">
-              <p className="font-eyebrow text-gold mb-6">Direct Lines</p>
+              <p className="font-eyebrow text-gold mb-6">{t("contact.directLines")}</p>
             </Reveal>
             <ScrollReveal
               as="h2"
@@ -117,22 +120,22 @@ export function ContactPage() {
               baseOpacity={0.1}
               blurStrength={5}
             >
-              Reach us, <span className="italic text-forest">anywhere.</span>
+              {t("contact.reachUs")} <span className="italic text-forest">{t("contact.anywhere")}</span>
             </ScrollReveal>
 
             <Reveal variant="up" delay={0.1}>
               <div className="space-y-6">
                 {/* Numbers */}
                 <div className="border-t border-border pt-5">
-                  <p className="font-eyebrow text-charcoal/40 mb-3">Numbers</p>
+                  <p className="font-eyebrow text-charcoal/40 mb-3">{t("contact.numbers")}</p>
                   <div className="space-y-2">
-                    <p className="font-display text-xl text-charcoal">Germany <span className="text-charcoal/70">+49 179 9372309</span></p>
-                    <p className="font-display text-xl text-charcoal">Uganda <span className="text-charcoal/70">+256 706 761092</span></p>
+                    <p className="font-display text-xl text-charcoal">{t("contact.germany")} <span className="text-charcoal/70">+49 179 9372309</span></p>
+                    <p className="font-display text-xl text-charcoal">{t("contact.uganda")} <span className="text-charcoal/70">+256 706 761092</span></p>
                   </div>
                 </div>
                 {/* Email */}
                 <div className="border-t border-border pt-5">
-                  <p className="font-eyebrow text-charcoal/40 mb-3">Email</p>
+                  <p className="font-eyebrow text-charcoal/40 mb-3">{t("contact.emailLabel")}</p>
                   <div className="space-y-2">
                     <p className="text-lg text-charcoal">
                       <a href="mailto:info@unzipafrica.com" className="hover:text-gold transition-colors">info@unzipafrica.com</a>
@@ -144,11 +147,11 @@ export function ContactPage() {
                 </div>
                 {/* Business Hours */}
                 <div className="border-t border-border pt-5">
-                  <p className="font-eyebrow text-charcoal/40 mb-3">Business Hours</p>
+                  <p className="font-eyebrow text-charcoal/40 mb-3">{t("contact.businessHours")}</p>
                   <div className="space-y-1 text-sm text-charcoal/70">
-                    <p>Monday — Friday <span className="text-charcoal">8:30am – 5pm</span></p>
-                    <p>Saturday <span className="text-charcoal">10am – 3pm</span></p>
-                    <p>Sunday <span className="text-charcoal">Closed</span></p>
+                    <p>{t("contact.monFri")} <span className="text-charcoal">{t("contact.monFriHours")}</span></p>
+                    <p>{t("contact.saturday")} <span className="text-charcoal">{t("contact.satHours")}</span></p>
+                    <p>{t("contact.sunday")} <span className="text-charcoal">{t("contact.closed")}</span></p>
                   </div>
                 </div>
               </div>
@@ -161,7 +164,7 @@ export function ContactPage() {
               <form onSubmit={handleSubmit} className="space-y-8">
                 {/* Full Names */}
                 <div>
-                  <label className="font-eyebrow text-charcoal/40 block mb-2">Full Names *</label>
+                  <label className="font-eyebrow text-charcoal/40 block mb-2">{t("contact.fullName")}</label>
                   <input
                     type="text"
                     value={form.name}
@@ -173,7 +176,7 @@ export function ContactPage() {
 
                 {/* Email */}
                 <div>
-                  <label className="font-eyebrow text-charcoal/40 block mb-2">Email *</label>
+                  <label className="font-eyebrow text-charcoal/40 block mb-2">{t("contact.email")}</label>
                   <input
                     type="email"
                     value={form.email}
@@ -185,24 +188,24 @@ export function ContactPage() {
 
                 {/* Phone Number */}
                 <div>
-                  <label className="font-eyebrow text-charcoal/40 block mb-2">Phone Number</label>
+                  <label className="font-eyebrow text-charcoal/40 block mb-2">{t("contact.phone")}</label>
                   <input
                     type="tel"
                     value={form.phone}
                     onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                    placeholder="e.g., +256 706 761092"
+                    placeholder={t("contact.phonePlaceholder")}
                     className="w-full bg-transparent border-b border-border py-2 text-charcoal placeholder:text-charcoal/30 focus:outline-none focus:border-forest transition-colors"
                   />
                 </div>
 
                 {/* Description */}
                 <div>
-                  <label className="font-eyebrow text-charcoal/40 block mb-2">Description</label>
+                  <label className="font-eyebrow text-charcoal/40 block mb-2">{t("contact.description")}</label>
                   <textarea
                     value={form.message}
                     onChange={(e) => setForm({ ...form, message: e.target.value })}
                     rows={5}
-                    placeholder="Tell us about your dream safari..."
+                    placeholder={t("contact.dreamPlaceholder")}
                     className="w-full bg-transparent border-b border-border py-2 text-charcoal placeholder:text-charcoal/30 focus:outline-none focus:border-forest transition-colors duration-500 resize-none"
                   />
                 </div>
@@ -220,7 +223,7 @@ export function ContactPage() {
                       fontFamily: "var(--font-inter), sans-serif",
                     }}
                   >
-                    {submitting ? "Sending..." : "Send Inquiry"}
+                    {submitting ? t("contact.sending") : t("contact.sendInquiry")}
                   </button>
                 </div>
               </form>
@@ -233,7 +236,7 @@ export function ContactPage() {
       <section className="py-24 md:py-32 px-6 md:px-10 bg-alabaster">
         <div className="mx-auto max-w-[1600px]">
           <Reveal variant="up">
-            <p className="font-eyebrow text-gold mb-6 text-center">Our Offices</p>
+            <p className="font-eyebrow text-gold mb-6 text-center">{t("contact.ourOffices")}</p>
           </Reveal>
           <ScrollReveal
             as="h2"
@@ -242,15 +245,15 @@ export function ContactPage() {
             baseOpacity={0.1}
             blurStrength={5}
           >
-            Boots on the ground, <span className="italic text-forest">in four nations.</span>
+            {t("contact.bootsLine1")} <span className="italic text-forest">{t("contact.bootsLine2")}</span>
           </ScrollReveal>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
-              { city: "Arusha", country: "Tanzania", role: "Headquarters", address: "196 Njiro Road, Arusha" },
-              { city: "Kampala", country: "Uganda", role: "Uganda Operations", address: "Kampala Road, Kampala" },
-              { city: "Nairobi", country: "Kenya", role: "Kenya Operations", address: "Westlands, Nairobi" },
-              { city: "Windhoek", country: "Namibia", role: "Desert & Coast", address: "8 Avocadia Street, Windhoek" },
+              { city: "Arusha", country: "Tanzania", role: t("contact.hq"), address: "196 Njiro Road, Arusha" },
+              { city: "Kampala", country: "Uganda", role: t("contact.ugandaOps"), address: "Kampala Road, Kampala" },
+              { city: "Nairobi", country: "Kenya", role: t("contact.kenyaOps"), address: "Westlands, Nairobi" },
+              { city: "Windhoek", country: "Namibia", role: t("contact.desertCoast"), address: "8 Avocadia Street, Windhoek" },
             ].map((office, idx) => (
               <Reveal key={office.city} variant="up" delay={idx * 0.1}>
                 <div className="border-t border-border pt-6">
@@ -269,7 +272,7 @@ export function ContactPage() {
       <section className="py-16 md:py-24 px-6 md:px-10">
         <div className="mx-auto max-w-[1400px]">
           <Reveal variant="up">
-            <p className="font-eyebrow text-gold mb-4 text-center">Find Us</p>
+            <p className="font-eyebrow text-gold mb-4 text-center">{t("contact.findUs")}</p>
           </Reveal>
           <ScrollReveal
             as="h2"
@@ -278,7 +281,7 @@ export function ContactPage() {
             baseOpacity={0.1}
             blurStrength={5}
           >
-            Our <span className="italic text-forest">Kampala Office</span>
+            {t("contact.our")} <span className="italic text-forest">{t("contact.kampalaOffice")}</span>
           </ScrollReveal>
           <Reveal variant="up" delay={0.2}>
             <div className="relative w-full overflow-hidden border border-border shadow-lg" style={{ paddingBottom: "40%", minHeight: "300px" }}>
@@ -300,7 +303,7 @@ export function ContactPage() {
       <section className="py-32 md:py-40 px-6 md:px-10 bg-forest text-cream">
         <div className="mx-auto max-w-[1100px] text-center">
           <Reveal variant="up">
-            <p className="font-eyebrow text-gold-soft mb-8">Prefer to Talk?</p>
+            <p className="font-eyebrow text-gold-soft mb-8">{t("contact.preferToTalk")}</p>
           </Reveal>
           <ScrollReveal
             as="h2"
@@ -309,32 +312,31 @@ export function ContactPage() {
             baseOpacity={0.1}
             blurStrength={6}
           >
-            Call us directly. <span className="italic text-gold-soft">A human answers.</span>
+            {t("contact.callDirectly")} <span className="italic text-gold-soft">{t("contact.humanAnswers")}</span>
           </ScrollReveal>
           <Reveal variant="up" delay={0.2}>
             <p className="text-lg text-cream/70 max-w-xl mx-auto mt-10 leading-relaxed">
-              No menus, no queues, no hold music. One of our specialists picks up before the third
-              ring.
+              {t("contact.noMenus")}
             </p>
             <div className="mt-12 space-y-2">
               <a
                 href="tel:+491799372309"
                 className="font-display text-3xl md:text-5xl text-cream hover:text-gold-soft transition-colors duration-500 tracking-tight block"
               >
-                Germany: +49 179 9372309
+                {t("contact.germany")}: +49 179 9372309
               </a>
               <a
                 href="tel:+256706761092"
                 className="font-display text-3xl md:text-5xl text-cream hover:text-gold-soft transition-colors duration-500 tracking-tight block"
               >
-                Uganda: +256 706 761092
+                {t("contact.uganda")}: +256 706 761092
               </a>
             </div>
             <button
               onClick={() => navigate("tours")}
               className="link-underline text-cream/70 mt-12"
             >
-              Or Explore Tours
+              {t("contact.orExploreTours")}
             </button>
           </Reveal>
         </div>

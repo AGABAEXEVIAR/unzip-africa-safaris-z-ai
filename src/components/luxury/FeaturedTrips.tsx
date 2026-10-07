@@ -3,6 +3,7 @@
 import { Reveal } from "@/components/luxury/Reveal";
 import ScrollReveal from "@/components/luxury/ScrollReveal";
 import { useRouter } from "@/lib/router";
+import { useLang } from "@/lib/language";
 import { useTours } from "@/lib/store";
 import type { TourPackage } from "@/lib/content";
 
@@ -12,6 +13,7 @@ export function FeaturedTrips() {
   const tours = useTours();
   const featured = tours.filter((t) => t.featured).slice(0, 3);
   const { navigateToTour, navigate } = useRouter();
+  const { t } = useLang();
 
   return (
     <section className="py-16 md:py-24 px-6 md:px-10 bg-canvas">
@@ -19,7 +21,7 @@ export function FeaturedTrips() {
         {/* Heading */}
         <div className="text-center mb-12 md:mb-16">
           <Reveal variant="up">
-            <p className="font-eyebrow text-gold mb-6">Hand-picked Journeys</p>
+            <p className="font-eyebrow text-gold mb-6">{t("featured.eyebrow")}</p>
           </Reveal>
           <ScrollReveal
             as="h2"
@@ -28,12 +30,11 @@ export function FeaturedTrips() {
             baseOpacity={0.1}
             blurStrength={6}
           >
-            Featured <span className="italic text-forest">journeys.</span>
+            {t("featured.featuredLine1")} <span className="italic text-forest">{t("featured.featuredLine2")}</span>
           </ScrollReveal>
           <Reveal variant="up" delay={0.2}>
             <p className="text-charcoal/70 leading-relaxed mt-6 max-w-2xl mx-auto">
-              A small selection of our most-loved private safaris, designed to be adapted around
-              you. Each one is a starting point — never a fixed package.
+              {t("featured.subtitle")}
             </p>
           </Reveal>
         </div>
@@ -53,7 +54,7 @@ export function FeaturedTrips() {
             onClick={() => navigate("tours")}
             className="btn-luxury"
           >
-            View Featured Trips
+            {t("featured.viewAll")}
             <svg className="ml-2" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
@@ -65,6 +66,7 @@ export function FeaturedTrips() {
 }
 
 function FeaturedCard({ tour, onExplore }: { tour: TourPackage; onExplore: () => void }) {
+  const { t } = useLang();
   return (
     <article
       className="bg-alabaster border border-border/60 overflow-hidden flex flex-col group card-luxury cursor-pointer"
@@ -83,7 +85,7 @@ function FeaturedCard({ tour, onExplore }: { tour: TourPackage; onExplore: () =>
             className="absolute top-3 left-3 bg-gold text-charcoal px-3 py-1 text-[0.6rem] font-medium tracking-[0.15em] uppercase"
             style={sharp}
           >
-            Featured
+            {t("common.featured")}
           </div>
         )}
         {tour.priceOriginal && (
@@ -91,7 +93,7 @@ function FeaturedCard({ tour, onExplore }: { tour: TourPackage; onExplore: () =>
             className="absolute top-3 right-3 bg-forest text-cream px-3 py-1 text-[0.6rem] font-medium tracking-[0.15em] uppercase"
             style={sharp}
           >
-            {Math.round((1 - tour.priceFrom / tour.priceOriginal) * 100)}% Off
+            {Math.round((1 - tour.priceFrom / tour.priceOriginal) * 100)}% {t("common.off")}
           </div>
         )}
       </div>
@@ -131,11 +133,11 @@ function FeaturedCard({ tour, onExplore }: { tour: TourPackage; onExplore: () =>
               >
                 ${tour.priceFrom.toLocaleString()}
               </p>
-              <p className="text-[0.65rem] text-charcoal/50 tracking-wide">per person</p>
+              <p className="text-[0.65rem] text-charcoal/50 tracking-wide">{t("common.perPerson")}</p>
             </div>
             <div className="text-right">
-              <p className="font-eyebrow text-charcoal/40">Duration</p>
-              <p className="text-sm text-charcoal/75">{tour.durationDays} days</p>
+              <p className="font-eyebrow text-charcoal/40">{t("common.durationLabel")}</p>
+              <p className="text-sm text-charcoal/75">{tour.durationDays} {t("common.daysLower")}</p>
             </div>
           </div>
           <button
@@ -146,7 +148,7 @@ function FeaturedCard({ tour, onExplore }: { tour: TourPackage; onExplore: () =>
             className="w-full bg-forest text-cream py-2.5 text-[0.65rem] font-medium tracking-[0.2em] uppercase hover:bg-forest-deep transition-colors"
             style={sharp}
           >
-            Explore
+            {t("common.explore")}
           </button>
         </div>
       </div>

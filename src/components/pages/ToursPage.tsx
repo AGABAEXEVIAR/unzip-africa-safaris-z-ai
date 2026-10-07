@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { Reveal } from "@/components/luxury/Reveal";
 import ScrollReveal from "@/components/luxury/ScrollReveal";
 import { useRouter } from "@/lib/router";
+import { useLang } from "@/lib/language";
 import { useTours } from "@/lib/store";
 import { BookingModal } from "@/components/luxury/BookingModal";
 import type { TourPackage } from "@/lib/content";
@@ -15,6 +16,7 @@ const sharp = { borderRadius: 0 } as const;
 export function ToursPage() {
   const tourPackages = useTours();
   const { navigate, navigateToTour } = useRouter();
+  const { t } = useLang();
 
   const heroRef = useRef<HTMLDivElement>(null);
   const [bookingTour, setBookingTour] = useState<TourPackage | null>(null);
@@ -139,7 +141,7 @@ export function ToursPage() {
             transition={{ duration: 1.2, delay: 0.4 }}
             className="font-eyebrow text-gold-soft mb-8 tracking-[0.4em]"
           >
-            Curated Journeys
+            {t("tours.eyebrow")}
           </motion.p>
           <motion.h1
             initial={{ opacity: 0, y: 40 }}
@@ -148,7 +150,7 @@ export function ToursPage() {
             className="font-display text-cream text-[2.8rem] sm:text-[4rem] md:text-[5.5rem] lg:text-[6.5rem] leading-[0.95] tracking-tight max-w-[90%]"
             style={{ fontFamily: "var(--font-cormorant), serif", fontWeight: 300 }}
           >
-            All Tours
+            {t("tours.title")}
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 30 }}
@@ -156,8 +158,7 @@ export function ToursPage() {
             transition={{ duration: 1.4, delay: 1.1 }}
             className="text-cream/75 text-lg max-w-2xl mt-8 leading-relaxed"
           >
-            Explore our complete collection of bespoke safari journeys across East and Southern Africa.
-            Filter by destination, duration, activities, and more.
+            {t("tours.subtitle1")} {t("tours.subtitle2")}
           </motion.p>
         </div>
       </section>
@@ -212,22 +213,22 @@ export function ToursPage() {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-6 border-b border-border">
                 <div>
                   <p className="font-display text-2xl md:text-3xl text-charcoal tracking-tight">
-                    {filteredTours.length} {filteredTours.length === 1 ? "journey" : "journeys"} found
+                    {filteredTours.length} {filteredTours.length === 1 ? t("common.journeyFound") : t("common.journeysFound")}
                   </p>
-                  <p className="text-sm text-charcoal/55 mt-1">Curated private safaris across Africa</p>
+                  <p className="text-sm text-charcoal/55 mt-1">{t("tours.curatedPrivate")}</p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <label className="font-eyebrow text-charcoal/50">Sort by</label>
+                  <label className="font-eyebrow text-charcoal/50">{t("common.sortBy")}</label>
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
                     className="bg-transparent border border-border px-4 py-2 text-sm text-charcoal focus:outline-none focus:border-forest transition-colors"
                     style={{ borderRadius: 0 }}
                   >
-                    <option value="recommended">Recommended</option>
-                    <option value="price-low">Price: Low to High</option>
-                    <option value="price-high">Price: High to Low</option>
-                    <option value="duration">Duration: Longest First</option>
+                    <option value="recommended">{t("common.recommended")}</option>
+                    <option value="price-low">{t("common.priceLow")}</option>
+                    <option value="price-high">{t("common.priceHigh")}</option>
+                    <option value="duration">{t("common.duration")}</option>
                   </select>
                 </div>
               </div>
@@ -236,10 +237,10 @@ export function ToursPage() {
               {filteredTours.length === 0 ? (
                 <div className="text-center py-24">
                   <p className="font-display text-3xl text-charcoal/60 mb-4" style={{ fontFamily: "var(--font-cormorant), serif" }}>
-                    No journeys match your filters.
+                    {t("common.noResults")}
                   </p>
                   <button onClick={clearFilters} className="btn-luxury btn-luxury-gold mt-4">
-                    Clear All Filters
+                    {t("common.clearAllFilters")}
                   </button>
                 </div>
               ) : (
@@ -265,17 +266,16 @@ export function ToursPage() {
           <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-12">
             <div className="md:col-span-5">
               <Reveal variant="up">
-                <p className="font-eyebrow text-gold-soft mb-6">What's Included</p>
+                <p className="font-eyebrow text-gold-soft mb-6">{t("tours.included")}</p>
                 <h2 className="font-display text-4xl md:text-5xl leading-[1.05] tracking-tight">
-                  Every detail, <span className="italic text-gold-soft">composed in advance.</span>
+                  {t("tours.everyDetail1")} <span className="italic text-gold-soft">{t("tours.everyDetail2")}</span>
                 </h2>
               </Reveal>
             </div>
             <div className="md:col-span-6 md:col-start-7 flex items-end">
               <Reveal variant="up" delay={0.2}>
                 <p className="text-cream/75 text-lg leading-relaxed">
-                  The price of every Unzip Africa journey includes everything below — and countless
-                  details we manage silently, so you can simply arrive.
+                  {t("tours.includesBody")}
                 </p>
               </Reveal>
             </div>
@@ -283,10 +283,10 @@ export function ToursPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-12 border-t border-cream/15 pt-12">
             {[
-              { title: "Private Guiding", body: "Your own dedicated guide, vehicle, and tracker from arrival to departure. Never shared." },
-              { title: "Charter Flights", body: "All inter-camp flights by private Cessna Caravan, piloted by our own aviation team." },
-              { title: "All Lodging & Meals", body: "Every night in luxury lodges or private mobile camps. Every meal, every drink, every sundowner." },
-              { title: "Conservation Fees", body: "All park fees, conservation contributions, and community levies — 7% of every journey." },
+              { title: t("tours.includedTitle1"), body: t("tours.includedBody1") },
+              { title: t("tours.includedTitle2"), body: t("tours.includedBody2") },
+              { title: t("tours.includedTitle3"), body: t("tours.includedBody3") },
+              { title: t("tours.includedTitle4"), body: t("tours.includedBody4") },
             ].map((item, idx) => (
               <Reveal key={item.title} variant="up" delay={idx * 0.1}>
                 <h3 className="font-display text-2xl text-gold-soft mb-3">{item.title}</h3>
@@ -301,24 +301,24 @@ export function ToursPage() {
       <section className="py-32 md:py-48 px-6 md:px-10">
         <div className="mx-auto max-w-[1100px] text-center">
           <Reveal variant="up">
-            <p className="font-eyebrow text-gold mb-8">Inspired?</p>
+            <p className="font-eyebrow text-gold mb-8">{t("tours.inspired")}</p>
             <h2 className="font-display text-5xl md:text-7xl lg:text-8xl leading-[0.95] text-charcoal tracking-tight" style={{ fontFamily: "var(--font-cormorant), serif" }}>
-              Let us compose
+              {t("tours.composeLine1")}
               <br />
-              <span className="italic text-forest">your journey.</span>
+              <span className="italic text-forest">{t("tours.composeLine2")}</span>
             </h2>
             <p className="text-lg text-charcoal/70 max-w-xl mx-auto mt-10 leading-relaxed">
-              Tell us which journey speaks to you — or describe one we have not yet imagined.
+              {t("tours.composeBody")}
             </p>
             <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-5">
               <button onClick={() => navigate("contact")} className="btn-luxury btn-luxury-gold">
-                Contact
+                {t("cta.contact")}
               </button>
               <button
                 onClick={() => navigate("accommodation")}
                 className="link-underline text-charcoal/70"
               >
-                View Accommodation
+                {t("tours.viewAccommodation")}
               </button>
             </div>
           </Reveal>
@@ -380,25 +380,26 @@ function FilterSidebar({
   durationMin: number;
   durationMax: number;
 }) {
+  const { t } = useLang();
   return (
     <div className="bg-alabaster border border-border p-6" style={sharp}>
       <div className="flex items-center justify-between mb-6 pb-4 border-b border-border">
-        <p className="font-display text-xl text-charcoal tracking-tight" style={{ fontFamily: "var(--font-cormorant), serif" }}>Filter By</p>
+        <p className="font-display text-xl text-charcoal tracking-tight" style={{ fontFamily: "var(--font-cormorant), serif" }}>{t("common.filterBy")}</p>
         {activeCount > 0 && (
           <button onClick={clearFilters} className="text-xs text-charcoal/50 hover:text-gold transition-colors underline">
-            Clear ({activeCount})
+            {t("common.clearCount", { count: activeCount })}
           </button>
         )}
       </div>
 
       <div className="space-y-6">
-        <FilterSection title="Destination">
+        <FilterSection title={t("common.destination")}>
           {destinationsList.map((d) => (
             <FilterCheckbox key={d} label={d} checked={filters.destinations.includes(d)} onChange={() => toggleArrayFilter("destinations", d)} />
           ))}
         </FilterSection>
 
-        <FilterSection title="Price (per person)">
+        <FilterSection title={t("common.pricePerPerson")}>
           <div className="px-1">
             <input
               type="range"
@@ -416,7 +417,7 @@ function FilterSidebar({
           </div>
         </FilterSection>
 
-        <FilterSection title="Duration">
+        <FilterSection title={t("common.durationLabel")}>
           <div className="px-1">
             <input
               type="range"
@@ -428,31 +429,31 @@ function FilterSidebar({
               className="w-full accent-forest"
             />
             <div className="flex justify-between text-xs text-charcoal/60 mt-2">
-              <span>{durationMin} days</span>
-              <span className="font-medium text-charcoal">up to {filters.durationMax} days</span>
+              <span>{durationMin} {t("common.daysLower")}</span>
+              <span className="font-medium text-charcoal">{t("common.upToDays", { count: filters.durationMax })}</span>
             </div>
           </div>
         </FilterSection>
 
-        <FilterSection title="Activities">
+        <FilterSection title={t("common.activities")}>
           {activitiesList.map((a) => (
             <FilterCheckbox key={a} label={a} checked={filters.activities.includes(a)} onChange={() => toggleArrayFilter("activities", a)} />
           ))}
         </FilterSection>
 
-        <FilterSection title="Trip Types">
-          {tripTypesList.map((t) => (
-            <FilterCheckbox key={t} label={t} checked={filters.tripTypes.includes(t)} onChange={() => toggleArrayFilter("tripTypes", t)} />
+        <FilterSection title={t("common.tripTypes")}>
+          {tripTypesList.map((tp) => (
+            <FilterCheckbox key={tp} label={tp} checked={filters.tripTypes.includes(tp)} onChange={() => toggleArrayFilter("tripTypes", tp)} />
           ))}
         </FilterSection>
 
-        <FilterSection title="Accommodation Level">
+        <FilterSection title={t("common.accommodationLevel")}>
           {accommodationLevelsList.map((l) => (
             <FilterCheckbox key={l} label={l} checked={filters.accommodationLevels.includes(l)} onChange={() => toggleArrayFilter("accommodationLevels", l)} />
           ))}
         </FilterSection>
 
-        <FilterSection title="National Parks">
+        <FilterSection title={t("common.nationalParks")}>
           {nationalParksList.map((p) => (
             <FilterCheckbox key={p} label={p} checked={filters.nationalParks.includes(p)} onChange={() => toggleArrayFilter("nationalParks", p)} />
           ))}
@@ -529,6 +530,7 @@ function MobileFilterToggle({
   durationMax: number;
 }) {
   const [open, setOpen] = useState(false);
+  const { t } = useLang();
 
   useEffect(() => {
     if (open) {
@@ -545,10 +547,10 @@ function MobileFilterToggle({
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="mr-2">
             <path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z" />
           </svg>
-          Filters {activeCount > 0 && `(${activeCount})`}
+          {activeCount > 0 ? t("common.filtersCount", { count: activeCount }) : t("common.filters")}
         </button>
         {activeCount > 0 && (
-          <button onClick={clearFilters} className="text-xs text-charcoal/60 hover:text-gold underline">Clear all</button>
+          <button onClick={clearFilters} className="text-xs text-charcoal/60 hover:text-gold underline">{t("common.clearAll")}</button>
         )}
       </div>
 
@@ -556,8 +558,8 @@ function MobileFilterToggle({
         <div className="fixed inset-0 z-[60] bg-charcoal/70 backdrop-blur-sm flex">
           <div className="bg-canvas w-full max-w-md h-full overflow-y-auto p-6 ml-auto modal-scroll" style={{ overflowY: "auto", flex: "1 1 0%", minHeight: 0 }}>
             <div className="flex items-center justify-between mb-6 pb-4 border-b border-border">
-              <p className="font-display text-2xl text-charcoal" style={{ fontFamily: "var(--font-cormorant), serif" }}>Filters</p>
-              <button onClick={() => setOpen(false)} aria-label="Close filters" className="text-charcoal/50 hover:text-charcoal">
+              <p className="font-display text-2xl text-charcoal" style={{ fontFamily: "var(--font-cormorant), serif" }}>{t("common.filters")}</p>
+              <button onClick={() => setOpen(false)} aria-label={t("common.close")} className="text-charcoal/50 hover:text-charcoal">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                   <path d="M18 6 6 18M6 6l12 12" />
                 </svg>
@@ -579,7 +581,7 @@ function MobileFilterToggle({
               durationMin={durationMin}
               durationMax={durationMax}
             />
-            <button onClick={() => setOpen(false)} className="btn-luxury btn-luxury-gold w-full mt-6">Show Results</button>
+            <button onClick={() => setOpen(false)} className="btn-luxury btn-luxury-gold w-full mt-6">{t("common.showResults")}</button>
           </div>
         </div>
       )}
@@ -589,6 +591,7 @@ function MobileFilterToggle({
 
 /* ===================== Tour Card ===================== */
 function TourCard({ tour, onViewDetails, onBookNow }: { tour: TourPackage; onViewDetails: () => void; onBookNow: () => void }) {
+  const { t } = useLang();
   return (
     <article className="bg-alabaster border border-border/60 overflow-hidden flex flex-col group card-luxury" style={sharp}>
       {/* Image */}
@@ -596,12 +599,12 @@ function TourCard({ tour, onViewDetails, onBookNow }: { tour: TourPackage; onVie
         <img src={tour.image} alt={tour.name} className="w-full h-full object-cover img-luxury" />
         {tour.featured && (
           <div className="absolute top-3 left-3 bg-gold text-charcoal px-3 py-1 text-[0.6rem] font-medium tracking-[0.15em] uppercase" style={sharp}>
-            Featured
+            {t("common.featured")}
           </div>
         )}
         {tour.priceOriginal && (
           <div className="absolute top-3 right-3 bg-forest text-cream px-3 py-1 text-[0.6rem] font-medium tracking-[0.15em] uppercase" style={sharp}>
-            {Math.round((1 - tour.priceFrom / tour.priceOriginal) * 100)}% Off
+            {Math.round((1 - tour.priceFrom / tour.priceOriginal) * 100)}% {t("common.off")}
           </div>
         )}
       </div>
@@ -620,11 +623,11 @@ function TourCard({ tour, onViewDetails, onBookNow }: { tour: TourPackage; onVie
         <div className="space-y-1.5 mb-4 text-xs text-charcoal/60">
           <div className="flex items-center gap-2">
             <Clock className="w-3 h-3" />
-            <span>{tour.durationDays} Days · {tour.durationNights} Nights</span>
+            <span>{tour.durationDays} {t("common.days")} · {tour.durationNights} {t("common.nights")}</span>
           </div>
           <div className="flex items-center gap-2">
             <Users className="w-3 h-3" />
-            <span>Min age {tour.minAge}+</span>
+            <span>{t("common.minAge")} {tour.minAge}+</span>
           </div>
           <div className="flex items-center gap-2">
             <MapPin className="w-3 h-3" />
@@ -649,7 +652,7 @@ function TourCard({ tour, onViewDetails, onBookNow }: { tour: TourPackage; onVie
               <p className="font-display text-2xl md:text-3xl text-forest tracking-tight" style={{ fontFamily: "var(--font-cormorant), serif" }}>
                 ${tour.priceFrom.toLocaleString()}
               </p>
-              <p className="text-[0.65rem] text-charcoal/50 tracking-wide">per person</p>
+              <p className="text-[0.65rem] text-charcoal/50 tracking-wide">{t("common.perPerson")}</p>
             </div>
           </div>
           <div className="flex gap-2">
@@ -658,14 +661,14 @@ function TourCard({ tour, onViewDetails, onBookNow }: { tour: TourPackage; onVie
               className="flex-1 border border-charcoal text-charcoal py-2.5 text-[0.65rem] font-medium tracking-[0.2em] uppercase hover:bg-charcoal hover:text-cream transition-all"
               style={sharp}
             >
-              Details
+              {t("common.details")}
             </button>
             <button
               onClick={onBookNow}
               className="flex-1 bg-forest text-cream py-2.5 text-[0.65rem] font-medium tracking-[0.2em] uppercase hover:bg-forest-deep transition-colors"
               style={sharp}
             >
-              Book Now
+              {t("common.bookNow")}
             </button>
           </div>
         </div>

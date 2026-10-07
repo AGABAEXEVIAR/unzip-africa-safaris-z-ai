@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { Reveal } from "@/components/luxury/Reveal";
 import ScrollReveal from "@/components/luxury/ScrollReveal";
 import { useRouter } from "@/lib/router";
+import { useLang } from "@/lib/language";
 import { useScheduledTrips } from "@/lib/store";
 import { Calendar, Clock, Users } from "lucide-react";
 
@@ -13,6 +14,7 @@ const sharp = { borderRadius: 0 } as const;
 export function ScheduledTripsPage() {
   const scheduledTrips = useScheduledTrips();
   const { navigate, navigateToScheduledTrip } = useRouter();
+  const { t } = useLang();
 
   const heroRef = useRef<HTMLDivElement>(null);
 
@@ -138,7 +140,7 @@ export function ScheduledTripsPage() {
             transition={{ duration: 1.2, delay: 0.4 }}
             className="font-eyebrow text-gold-soft mb-8 tracking-[0.4em]"
           >
-            Fixed-Date Departures
+            {t("scheduled.eyebrow")}
           </motion.p>
           <motion.h1
             initial={{ opacity: 0, y: 40 }}
@@ -147,7 +149,7 @@ export function ScheduledTripsPage() {
             className="font-display text-cream text-[2.8rem] sm:text-[4rem] md:text-[5.5rem] lg:text-[6.5rem] leading-[0.95] tracking-tight max-w-[90%]"
             style={{ fontFamily: "var(--font-cormorant), serif", fontWeight: 300 }}
           >
-            Scheduled Trips
+            {t("scheduled.title")}
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 30 }}
@@ -155,8 +157,7 @@ export function ScheduledTripsPage() {
             transition={{ duration: 1.4, delay: 1.1 }}
             className="text-cream/75 text-lg max-w-2xl mt-8 leading-relaxed"
           >
-            Join a small-group departure with set dates — the same craft, the same care, simply shared
-            with a handful of like-minded travellers.
+            {t("scheduled.subtitle")}
           </motion.p>
         </div>
       </section>
@@ -205,22 +206,22 @@ export function ScheduledTripsPage() {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-6 border-b border-border">
                 <div>
                   <p className="font-display text-2xl md:text-3xl text-charcoal tracking-tight" style={{ fontFamily: "var(--font-cormorant), serif" }}>
-                    {filteredTrips.length} {filteredTrips.length === 1 ? "departure" : "departures"} found
+                    {filteredTrips.length} {filteredTrips.length === 1 ? t("scheduled.departureFound") : t("scheduled.departuresFound")}
                   </p>
-                  <p className="text-sm text-charcoal/55 mt-1">Small-group safaris with fixed dates</p>
+                  <p className="text-sm text-charcoal/55 mt-1">{t("scheduled.smallGroup")}</p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <label className="font-eyebrow text-charcoal/50">Sort by</label>
+                  <label className="font-eyebrow text-charcoal/50">{t("common.sortBy")}</label>
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
                     className="bg-transparent border border-border px-4 py-2 text-sm text-charcoal focus:outline-none focus:border-forest transition-colors"
                     style={{ borderRadius: 0 }}
                   >
-                    <option value="recommended">Recommended</option>
-                    <option value="price-low">Price: Low to High</option>
-                    <option value="price-high">Price: High to Low</option>
-                    <option value="duration">Duration: Longest First</option>
+                    <option value="recommended">{t("common.recommended")}</option>
+                    <option value="price-low">{t("common.priceLow")}</option>
+                    <option value="price-high">{t("common.priceHigh")}</option>
+                    <option value="duration">{t("common.duration")}</option>
                   </select>
                 </div>
               </div>
@@ -232,10 +233,10 @@ export function ScheduledTripsPage() {
                     className="font-display text-3xl text-charcoal/60 mb-4"
                     style={{ fontFamily: "var(--font-cormorant), serif" }}
                   >
-                    No departures match your filters.
+                    {t("scheduled.noResults")}
                   </p>
                   <button onClick={clearFilters} className="btn-luxury btn-luxury-gold mt-4">
-                    Clear All Filters
+                    {t("common.clearAllFilters")}
                   </button>
                 </div>
               ) : (
@@ -260,17 +261,16 @@ export function ScheduledTripsPage() {
           <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-12">
             <div className="md:col-span-5">
               <Reveal variant="up">
-                <p className="font-eyebrow text-gold-soft mb-6">What&apos;s Included</p>
+                <p className="font-eyebrow text-gold-soft mb-6">{t("tours.included")}</p>
                 <h2 className="font-display text-4xl md:text-5xl leading-[1.05] tracking-tight" style={{ fontFamily: "var(--font-cormorant), serif" }}>
-                  Every detail, <span className="italic text-gold-soft">composed in advance.</span>
+                  {t("tours.everyDetail1")} <span className="italic text-gold-soft">{t("tours.everyDetail2")}</span>
                 </h2>
               </Reveal>
             </div>
             <div className="md:col-span-6 md:col-start-7 flex items-end">
               <Reveal variant="up" delay={0.2}>
                 <p className="text-cream/75 text-lg leading-relaxed">
-                  The price of every Unzip Africa scheduled departure includes everything below — and
-                  countless details we manage silently, so you can simply arrive.
+                  {t("scheduled.includesBody")}
                 </p>
               </Reveal>
             </div>
@@ -279,20 +279,20 @@ export function ScheduledTripsPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-12 border-t border-cream/15 pt-12">
             {[
               {
-                title: "Expert Guiding",
-                body: "A dedicated lead guide and tracker for the group, with a private 4x4 vehicle never shared with strangers outside your departure.",
+                title: t("scheduled.includedTitle1"),
+                body: t("scheduled.includedBody1"),
               },
               {
-                title: "Charter Flights",
-                body: "All inter-camp flights by private Cessna Caravan, piloted by our own aviation team where the itinerary requires it.",
+                title: t("scheduled.includedTitle2"),
+                body: t("scheduled.includedBody2"),
               },
               {
-                title: "All Lodging & Meals",
-                body: "Every night in luxury lodges or private mobile camps. Every meal, every drink, every sundowner — included.",
+                title: t("scheduled.includedTitle3"),
+                body: t("scheduled.includedBody3"),
               },
               {
-                title: "Conservation Fees",
-                body: "All park fees, conservation contributions, and community levies — 7% of every journey goes back to the wild.",
+                title: t("scheduled.includedTitle4"),
+                body: t("scheduled.includedBody4"),
               },
             ].map((item, idx) => (
               <Reveal key={item.title} variant="up" delay={idx * 0.1}>
@@ -313,28 +313,27 @@ export function ScheduledTripsPage() {
       <section className="py-32 md:py-48 px-6 md:px-10">
         <div className="mx-auto max-w-[1100px] text-center">
           <Reveal variant="up">
-            <p className="font-eyebrow text-gold mb-8">Inspired?</p>
+            <p className="font-eyebrow text-gold mb-8">{t("tours.inspired")}</p>
             <h2
               className="font-display text-5xl md:text-7xl lg:text-8xl leading-[0.95] text-charcoal tracking-tight"
               style={{ fontFamily: "var(--font-cormorant), serif" }}
             >
-              Let us compose
+              {t("tours.composeLine1")}
               <br />
-              <span className="italic text-forest">your journey.</span>
+              <span className="italic text-forest">{t("tours.composeLine2")}</span>
             </h2>
             <p className="text-lg text-charcoal/70 max-w-xl mx-auto mt-10 leading-relaxed">
-              Prefer a private departure on your own dates? Tell us which journey speaks to you — or
-              describe one we have not yet imagined.
+              {t("scheduled.composeBody")}
             </p>
             <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-5">
               <button onClick={() => navigate("contact")} className="btn-luxury btn-luxury-gold">
-                Contact
+                {t("cta.contact")}
               </button>
               <button
                 onClick={() => navigate("tours")}
                 className="link-underline text-charcoal/70"
               >
-                View All Tours
+                {t("scheduled.viewAllTours")}
               </button>
             </div>
           </Reveal>
@@ -377,24 +376,25 @@ function FilterSidebar({
   durationMin: number;
   durationMax: number;
 }) {
+  const { t } = useLang();
   return (
     <div className="bg-alabaster border border-border p-6" style={sharp}>
       <div className="flex items-center justify-between mb-6 pb-4 border-b border-border">
         <p className="font-display text-xl text-charcoal tracking-tight" style={{ fontFamily: "var(--font-cormorant), serif" }}>
-          Filter By
+          {t("common.filterBy")}
         </p>
         {activeCount > 0 && (
           <button
             onClick={clearFilters}
             className="text-xs text-charcoal/50 hover:text-gold transition-colors underline"
           >
-            Clear ({activeCount})
+            {t("common.clearCount", { count: activeCount })}
           </button>
         )}
       </div>
 
       <div className="space-y-6">
-        <FilterSection title="Destination">
+        <FilterSection title={t("common.destination")}>
           {destinationsList.map((d) => (
             <FilterCheckbox
               key={d}
@@ -405,7 +405,7 @@ function FilterSidebar({
           ))}
         </FilterSection>
 
-        <FilterSection title="Price (per person)">
+        <FilterSection title={t("common.pricePerPerson")}>
           <div className="px-1">
             <input
               type="range"
@@ -425,7 +425,7 @@ function FilterSidebar({
           </div>
         </FilterSection>
 
-        <FilterSection title="Duration">
+        <FilterSection title={t("common.durationLabel")}>
           <div className="px-1">
             <input
               type="range"
@@ -437,13 +437,13 @@ function FilterSidebar({
               className="w-full accent-forest"
             />
             <div className="flex justify-between text-xs text-charcoal/60 mt-2">
-              <span>{durationMin} days</span>
-              <span className="font-medium text-charcoal">up to {filters.durationMax} days</span>
+              <span>{durationMin} {t("common.daysLower")}</span>
+              <span className="font-medium text-charcoal">{t("common.upToDays", { count: filters.durationMax })}</span>
             </div>
           </div>
         </FilterSection>
 
-        <FilterSection title="Trip Type">
+        <FilterSection title={t("common.tripType")}>
           {tripTypesList.map((tp) => (
             <FilterCheckbox
               key={tp}
@@ -548,6 +548,7 @@ function MobileFilterToggle({
   durationMax: number;
 }) {
   const [open, setOpen] = useState(false);
+  const { t } = useLang();
 
   useEffect(() => {
     if (open) {
@@ -572,14 +573,14 @@ function MobileFilterToggle({
           >
             <path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z" />
           </svg>
-          Filters {activeCount > 0 && `(${activeCount})`}
+          {activeCount > 0 ? t("common.filtersCount", { count: activeCount }) : t("common.filters")}
         </button>
         {activeCount > 0 && (
           <button
             onClick={clearFilters}
             className="text-xs text-charcoal/60 hover:text-gold underline"
           >
-            Clear all
+            {t("common.clearAll")}
           </button>
         )}
       </div>
@@ -595,11 +596,11 @@ function MobileFilterToggle({
                 className="font-display text-2xl text-charcoal"
                 style={{ fontFamily: "var(--font-cormorant), serif" }}
               >
-                Filters
+                {t("common.filters")}
               </p>
               <button
                 onClick={() => setOpen(false)}
-                aria-label="Close filters"
+                aria-label={t("common.close")}
                 className="text-charcoal/50 hover:text-charcoal"
               >
                 <svg
@@ -628,7 +629,7 @@ function MobileFilterToggle({
               durationMax={durationMax}
             />
             <button onClick={() => setOpen(false)} className="btn-luxury btn-luxury-gold w-full mt-6">
-              Show Results
+              {t("common.showResults")}
             </button>
           </div>
         </div>
@@ -645,6 +646,7 @@ function ScheduledTripCard({
   trip: import("@/lib/content").ScheduledTrip;
   onExplore: () => void;
 }) {
+  const { t } = useLang();
   const discount = trip.priceOriginal
     ? Math.round((1 - trip.priceFrom / trip.priceOriginal) * 100)
     : 0;
@@ -665,7 +667,7 @@ function ScheduledTripCard({
           style={sharp}
         >
           <Calendar className="w-3 h-3" />
-          Departs {formatDate(trip.startDate)}
+          {t("scheduled.departs")} {formatDate(trip.startDate)}
         </div>
         {/* Discount badge */}
         {discount > 0 && (
@@ -673,7 +675,7 @@ function ScheduledTripCard({
             className="absolute top-3 right-3 bg-gold text-charcoal text-[0.6rem] font-medium tracking-[0.15em] uppercase px-3 py-1.5"
             style={sharp}
           >
-            {discount}% Off
+            {discount}% {t("common.off")}
           </div>
         )}
         {/* Urgency — Only N spots */}
@@ -682,7 +684,7 @@ function ScheduledTripCard({
             className="absolute bottom-3 right-3 bg-forest text-cream text-[0.6rem] font-medium tracking-[0.15em] uppercase px-3 py-1.5"
             style={sharp}
           >
-            Only {trip.spotsLeft} spots
+            {t("scheduled.onlySpots", { count: trip.spotsLeft })}
           </div>
         )}
       </div>
@@ -701,7 +703,7 @@ function ScheduledTripCard({
         <div className="space-y-1.5 mb-4 text-xs text-charcoal/60">
           <div className="flex items-center gap-2">
             <Clock className="w-3 h-3" />
-            <span>{trip.durationDays} Days</span>
+            <span>{trip.durationDays} {t("common.days")}</span>
           </div>
           <div className="flex items-center gap-2">
             <Users className="w-3 h-3" />
@@ -729,7 +731,7 @@ function ScheduledTripCard({
               >
                 ${trip.priceFrom.toLocaleString()}
               </p>
-              <p className="text-[0.65rem] text-charcoal/50 tracking-wide">per person</p>
+              <p className="text-[0.65rem] text-charcoal/50 tracking-wide">{t("common.perPerson")}</p>
             </div>
           </div>
           <button
@@ -740,7 +742,7 @@ function ScheduledTripCard({
             className="w-full bg-forest text-cream py-2.5 text-[0.65rem] font-medium tracking-[0.2em] uppercase hover:bg-forest-deep transition-colors"
             style={sharp}
           >
-            Explore
+            {t("common.explore")}
           </button>
         </div>
       </div>
