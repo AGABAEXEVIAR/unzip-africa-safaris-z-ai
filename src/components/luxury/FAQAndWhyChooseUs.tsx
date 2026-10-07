@@ -299,7 +299,7 @@ export function FounderMessageSection() {
 /* ===================== Scheduled Trips Section ===================== */
 export function ScheduledTripsSection() {
   const trips = useScheduledTrips();
-  const { navigateToScheduledTrip } = useRouter();
+  const { navigateToScheduledTrip, navigate } = useRouter();
 
   // Show the 3 most recently created trips (admin prepends new ones to the array)
   const upcoming = trips.slice(0, 3);
@@ -377,6 +377,19 @@ export function ScheduledTripsSection() {
               </article>
             </Reveal>
           ))}
+        </div>
+
+        {/* View All Scheduled Trips button */}
+        <div className="text-center mt-12 md:mt-16">
+          <button
+            onClick={() => navigate("scheduled-trips")}
+            className="btn-luxury"
+          >
+            View Scheduled Trips
+            <svg className="ml-2" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
         </div>
       </div>
     </section>
