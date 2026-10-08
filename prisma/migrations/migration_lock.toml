@@ -1,0 +1,3 @@
+# Prisma migration lock file
+
+provider = "mysql"
