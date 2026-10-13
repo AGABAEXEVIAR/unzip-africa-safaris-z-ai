@@ -75,7 +75,6 @@ const tabsWrapperStyle = {
 } as const;
 const tabsWrapperClass = "flex-1 min-h-0 overflow-hidden flex flex-col";
 
-const SESSION_KEY = "unzip_africa_admin_session";
 const SETTINGS_KEY = "unzip_africa_settings";
 
 const ACCOMMODATION_LEVELS = [
@@ -564,18 +563,28 @@ function LoginGate({
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (username === "admin" && password === "unzip2025") {
-      try {
-        window.sessionStorage.setItem(SESSION_KEY, "1");
-      } catch {
-        /* ignore */
+    setError("");
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        onSuccess();
+      } else {
+        setError(data.error || "Login failed");
       }
-      onSuccess();
-    } else {
-      setError("Invalid username or password");
+    } catch {
+      setError("Network error — please try again");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -721,10 +730,11 @@ function LoginGate({
               )}
               <button
                 type="submit"
-                className="w-full h-11 bg-forest text-cream font-medium uppercase tracking-[0.2em] text-sm hover:bg-forest-deep transition-colors"
+                disabled={submitting}
+                className="w-full h-11 bg-forest text-cream font-medium uppercase tracking-[0.2em] text-sm hover:bg-forest-deep transition-colors disabled:opacity-50"
                 style={sharp}
               >
-                Sign In
+                {submitting ? "Signing in…" : "Sign In"}
               </button>
               <button
                 type="button"
@@ -4488,15 +4498,31 @@ function BlogFormDialog({
  * ============================================================ */
 export function AdminPage() {
   const { navigate } = useRouter();
-  const [authed, setAuthed] = useState(() => {
-    if (typeof window === "undefined") return false;
-    try {
-      return window.sessionStorage.getItem(SESSION_KEY) === "1";
-    } catch {
-      return false;
-    }
-  });
+  const [authed, setAuthed] = useState(false);
+  const [checkingAuth, setCheckingAuth] = useState(true);
   const [section, setSection] = useState<AdminSection>("dashboard");
+
+  // On mount, check if the server-side JWT cookie is valid
+  useEffect(() => {
+    fetch("/api/admin/session")
+      .then((res) => res.json())
+      .then((data) => {
+        setAuthed(data.authed === true);
+        setCheckingAuth(false);
+      })
+      .catch(() => {
+        setAuthed(false);
+        setCheckingAuth(false);
+      });
+  }, []);
+
+  if (checkingAuth) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-forest-deep">
+        <div className="text-cream/60 text-sm font-eyebrow tracking-[0.3em]">CHECKING SESSION…</div>
+      </div>
+    );
+  }
 
   if (!authed) {
     return (
@@ -4507,14 +4533,13 @@ export function AdminPage() {
     );
   }
 
-  const handleSignOut = () => {
+  const handleSignOut = async () => {
     try {
-      window.sessionStorage.removeItem(SESSION_KEY);
+      await fetch("/api/admin/logout", { method: "POST" });
     } catch {
       /* ignore */
     }
     setAuthed(false);
-    navigate("home");
   };
 
   return (

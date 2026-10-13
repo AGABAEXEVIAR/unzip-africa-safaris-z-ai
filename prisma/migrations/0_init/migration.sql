@@ -4,7 +4,7 @@ CREATE TABLE `User` (
     `email` VARCHAR(191) NOT NULL,
     `name` VARCHAR(191) NULL,
     `password` VARCHAR(191) NOT NULL,
-    `role` ENUM('ADMIN', 'EDITOR') NOT NULL DEFAULT 'ADMIN',
+    `role` VARCHAR(191) NOT NULL DEFAULT 'ADMIN',
     `createdAt` TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
     `updatedAt` TIMESTAMP(0) NOT NULL,
 
@@ -40,8 +40,6 @@ CREATE TABLE `TourPackage` (
 
     INDEX `TourPackage_destination_idx`(`destination`),
     INDEX `TourPackage_featured_idx`(`featured`),
-    INDEX `TourPackage_tripType_idx`(`tripType`),
-    INDEX `TourPackage_accommodationLevel_idx`(`accommodationLevel`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -100,7 +98,6 @@ CREATE TABLE `ScheduledTrip` (
 
     INDEX `ScheduledTrip_destination_idx`(`destination`),
     INDEX `ScheduledTrip_startDate_idx`(`startDate`),
-    INDEX `ScheduledTrip_accommodationLevel_idx`(`accommodationLevel`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -184,14 +181,13 @@ CREATE TABLE `BlogPost` (
     INDEX `BlogPost_published_idx`(`published`),
     INDEX `BlogPost_featured_idx`(`featured`),
     INDEX `BlogPost_category_idx`(`category`),
-    INDEX `BlogPost_publishedDate_idx`(`publishedDate`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `Booking` (
     `id` VARCHAR(191) NOT NULL,
-    `type` ENUM('TOUR', 'SCHEDULED_TRIP') NOT NULL,
+    `type` VARCHAR(191) NOT NULL,
     `tourId` VARCHAR(191) NULL,
     `scheduledTripId` VARCHAR(191) NULL,
     `tripName` VARCHAR(191) NOT NULL,
@@ -206,7 +202,7 @@ CREATE TABLE `Booking` (
     `customerEmail` VARCHAR(191) NOT NULL,
     `customerPhone` VARCHAR(191) NOT NULL,
     `notes` TEXT NULL,
-    `status` ENUM('PENDING', 'CONFIRMED', 'CANCELLED') NOT NULL DEFAULT 'PENDING',
+    `status` VARCHAR(191) NOT NULL DEFAULT 'PENDING',
     `createdAt` TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
     `updatedAt` TIMESTAMP(0) NOT NULL,
 
@@ -214,7 +210,6 @@ CREATE TABLE `Booking` (
     INDEX `Booking_scheduledTripId_idx`(`scheduledTripId`),
     INDEX `Booking_status_idx`(`status`),
     INDEX `Booking_customerEmail_idx`(`customerEmail`),
-    INDEX `Booking_createdAt_idx`(`createdAt`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -229,22 +224,21 @@ CREATE TABLE `QuoteRequest` (
     `destinations` JSON NULL,
     `budget` VARCHAR(191) NULL,
     `message` TEXT NOT NULL,
-    `status` ENUM('NEW', 'CONTACTED', 'WON', 'LOST') NOT NULL DEFAULT 'NEW',
+    `status` VARCHAR(191) NOT NULL DEFAULT 'NEW',
     `createdAt` TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
     `updatedAt` TIMESTAMP(0) NOT NULL,
 
     INDEX `QuoteRequest_status_idx`(`status`),
     INDEX `QuoteRequest_email_idx`(`email`),
-    INDEX `QuoteRequest_createdAt_idx`(`createdAt`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `Settings` (
     `id` INTEGER NOT NULL DEFAULT 1,
-    `companyName` VARCHAR(191) NOT NULL,
+    `companyName` VARCHAR(191) NOT NULL DEFAULT 'Unzip Africa Safaris',
     `tagline` VARCHAR(191) NULL,
-    `email` VARCHAR(191) NOT NULL,
+    `email` VARCHAR(191) NOT NULL DEFAULT 'hello@unzipafrica.com',
     `phone` VARCHAR(191) NULL,
     `logoUrl` TEXT NULL,
     `facebook` TEXT NULL,
