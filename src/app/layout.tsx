@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Cormorant_Garamond, Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
+import { Providers } from "./providers";
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
@@ -65,7 +66,7 @@ export default function RootLayout({
         suppressHydrationWarning
         className={`${cormorant.variable} ${inter.variable} font-sans antialiased bg-canvas text-charcoal overflow-x-hidden`}
       >
-        {children}
+        <Providers>{children}</Providers>
         <Toaster />
       </body>
     </html>

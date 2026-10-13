@@ -1,6 +1,7 @@
 "use client";
 
-import { createContext, useContext, useState, useCallback, ReactNode } from "react";
+import { createContext, useContext, useCallback, useEffect, ReactNode } from "react";
+import { useRouter as useNextRouter, usePathname, useSearchParams } from "next/navigation";
 
 export type PageId =
   | "home"
@@ -17,6 +18,41 @@ export type PageId =
   | "accommodation-detail"
   | "scheduled-trip-detail"
   | "admin";
+
+// Map PageId → URL path
+const PAGE_TO_PATH: Partial<Record<PageId, string>> = {
+  home: "/",
+  about: "/company",
+  company: "/company",
+  tours: "/tours",
+  "scheduled-trips": "/scheduled-trips",
+  destinations: "/destinations",
+  accommodation: "/accommodation",
+  contact: "/contact",
+  blog: "/blog",
+  "blog-detail": "/blog-detail",
+  "tour-detail": "/tour-detail",
+  "accommodation-detail": "/accommodation-detail",
+  "scheduled-trip-detail": "/scheduled-trip-detail",
+  admin: "/admin",
+};
+
+// Map URL path → PageId
+const PATH_TO_PAGE: Record<string, PageId> = {
+  "/": "home",
+  "/company": "company",
+  "/tours": "tours",
+  "/scheduled-trips": "scheduled-trips",
+  "/destinations": "destinations",
+  "/accommodation": "accommodation",
+  "/contact": "contact",
+  "/blog": "blog",
+  "/blog-detail": "blog-detail",
+  "/tour-detail": "tour-detail",
+  "/accommodation-detail": "accommodation-detail",
+  "/scheduled-trip-detail": "scheduled-trip-detail",
+  "/admin": "admin",
+};
 
 type RouterContextValue = {
   page: PageId;
@@ -42,55 +78,53 @@ export function useRouter() {
 }
 
 export function RouterProvider({ children }: { children: ReactNode }) {
-  const [page, setPage] = useState<PageId>("home");
-  const [destinationCountry, setDestinationCountry] = useState<string | null>(null);
-  const [selectedTourId, setSelectedTourId] = useState<string | null>(null);
-  const [selectedAccommodationId, setSelectedAccommodationId] = useState<string | null>(null);
-  const [selectedScheduledTripId, setSelectedScheduledTripId] = useState<string | null>(null);
-  const [selectedBlogPostId, setSelectedBlogPostId] = useState<string | null>(null);
+  const router = useNextRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
-  const scrollToTop = useCallback(() => {
+  // Derive page from URL pathname
+  const page: PageId = (pathname && PATH_TO_PAGE[pathname]) || "home";
+
+  // Derive IDs from URL search params
+  const destinationCountry = searchParams.get("country");
+  const selectedTourId = searchParams.get("id");
+  const selectedAccommodationId = searchParams.get("id");
+  const selectedScheduledTripId = searchParams.get("id");
+  const selectedBlogPostId = searchParams.get("id");
+
+  // Scroll to top on pathname change
+  useEffect(() => {
     if (typeof window !== "undefined") {
       window.scrollTo({ top: 0, behavior: "auto" });
       const lenis = (window as unknown as { __lenis?: { scrollTo: (target: number, opts?: unknown) => void } }).__lenis;
       lenis?.scrollTo(0, { immediate: true });
     }
-  }, []);
+  }, [pathname]);
 
   const navigate = useCallback((next: PageId) => {
-    setPage(next);
-    scrollToTop();
-  }, [scrollToTop]);
+    const path = PAGE_TO_PATH[next] || "/";
+    router.push(path);
+  }, [router]);
 
   const navigateToDestination = useCallback((country: string) => {
-    setDestinationCountry(country);
-    setPage("destinations");
-    scrollToTop();
-  }, [scrollToTop]);
+    router.push(`/destinations?country=${encodeURIComponent(country)}`);
+  }, [router]);
 
   const navigateToTour = useCallback((id: string) => {
-    setSelectedTourId(id);
-    setPage("tour-detail");
-    scrollToTop();
-  }, [scrollToTop]);
+    router.push(`/tour-detail?id=${encodeURIComponent(id)}`);
+  }, [router]);
 
   const navigateToAccommodation = useCallback((id: string) => {
-    setSelectedAccommodationId(id);
-    setPage("accommodation-detail");
-    scrollToTop();
-  }, [scrollToTop]);
+    router.push(`/accommodation-detail?id=${encodeURIComponent(id)}`);
+  }, [router]);
 
   const navigateToScheduledTrip = useCallback((id: string) => {
-    setSelectedScheduledTripId(id);
-    setPage("scheduled-trip-detail");
-    scrollToTop();
-  }, [scrollToTop]);
+    router.push(`/scheduled-trip-detail?id=${encodeURIComponent(id)}`);
+  }, [router]);
 
   const navigateToBlogPost = useCallback((id: string) => {
-    setSelectedBlogPostId(id);
-    setPage("blog-detail");
-    scrollToTop();
-  }, [scrollToTop]);
+    router.push(`/blog-detail?id=${encodeURIComponent(id)}`);
+  }, [router]);
 
   return (
     <RouterContext.Provider
