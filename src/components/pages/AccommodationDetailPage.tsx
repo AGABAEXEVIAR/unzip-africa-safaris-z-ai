@@ -110,7 +110,6 @@ export function AccommodationDetailPage() {
           <div className="md:col-span-4">
             <Reveal variant="up">
               <p className="font-eyebrow text-gold mb-6">{t("accommodationDetail.overview")}</p>
-              <p className="font-label text-charcoal/60">{acc.pricePerNight}</p>
             </Reveal>
           </div>
           <div className="md:col-span-8">

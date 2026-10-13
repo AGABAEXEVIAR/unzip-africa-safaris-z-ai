@@ -490,8 +490,7 @@ export function TourDetailPage() {
                       <p className="text-sm text-charcoal/70 leading-relaxed line-clamp-2 mb-4 flex-1">
                         {acc.description}
                       </p>
-                      <div className="flex items-center justify-between pt-3 border-t border-charcoal/10">
-                        <span className="font-label text-charcoal/60">{acc.pricePerNight}</span>
+                      <div className="flex items-center justify-end pt-3 border-t border-charcoal/10">
                         <span className="font-eyebrow text-gold flex items-center gap-1.5">
                           {t("tourDetail.viewLodge")}
                           <ArrowRight className="w-3 h-3" />

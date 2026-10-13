@@ -1895,12 +1895,12 @@ function AccommodationsSection() {
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-cream border-b border-charcoal/10">
-                {["Property", "Location", "Type", "Price/Night", "Actions"].map(
+                {["Property", "Location", "Type", "Actions"].map(
                   (h, i) => (
                     <th
                       key={h}
                       className={`px-4 py-3 font-medium uppercase tracking-wider text-[11px] text-muted-foreground ${
-                        i === 4 ? "text-right" : "text-left"
+                        i === 3 ? "text-right" : "text-left"
                       }`}
                     >
                       {h}
@@ -1934,9 +1934,6 @@ function AccommodationsSection() {
                   </td>
                   <td className="px-4 py-3 text-charcoal/70">{a.location}</td>
                   <td className="px-4 py-3 text-charcoal/70">{a.type}</td>
-                  <td className="px-4 py-3 text-charcoal/70">
-                    {a.pricePerNight}
-                  </td>
                   <td className="px-4 py-3 text-right">
                     <div className="inline-flex gap-1">
                       <IconBtn
@@ -2048,13 +2045,6 @@ function AccommodationFormModal({
                   </option>
                 ))}
               </Select>
-            </Field>
-            <Field label="Price Per Night (label)">
-              <TextInput
-                value={form.pricePerNight}
-                onChange={(e) => update("pricePerNight", e.target.value)}
-                placeholder="From $4,800"
-              />
             </Field>
             <div className="md:col-span-2">
               <Field label="Description">

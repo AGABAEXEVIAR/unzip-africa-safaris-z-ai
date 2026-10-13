@@ -478,7 +478,7 @@ const translations: Record<Lang, Record<string, string>> = {
     "featured.featuredLine1": "Featured",
     "featured.featuredLine2": "journeys.",
     "featured.subtitle": "A small selection of our most-loved private safaris, designed to be adapted around you. Each one is a starting point — never a fixed package.",
-    "featured.viewAll": "View Featured Trips",
+    "featured.viewAll": "View More Trips",
     // ===================== Booking modal =====================
     "booking.tourReservation": "Tour Reservation",
     "booking.scheduledTripReservation": "Scheduled Trip Reservation",
@@ -988,7 +988,7 @@ const translations: Record<Lang, Record<string, string>> = {
     "featured.featuredLine1": "Empfohlene",
     "featured.featuredLine2": "Reisen.",
     "featured.subtitle": "Eine kleine Auswahl unserer beliebtesten privaten Safaris, gestaltet, um Sie anzupassen. Jede ist ein Ausgangspunkt — niemals ein festes Paket.",
-    "featured.viewAll": "Empfohlene Reisen ansehen",
+    "featured.viewAll": "Weitere Reisen ansehen",
     // ===================== Booking modal =====================
     "booking.tourReservation": "Tour-Reservierung",
     "booking.scheduledTripReservation": "Reservierung geplante Reise",
@@ -1497,7 +1497,7 @@ const translations: Record<Lang, Record<string, string>> = {
     "featured.featuredLine1": "Voyages",
     "featured.featuredLine2": "en vedette.",
     "featured.subtitle": "Une petite sélection de nos safaris privés les plus appréciés, conçus pour être adaptés autour de vous. Chacun est un point de départ — jamais un package fixe.",
-    "featured.viewAll": "Voir les voyages en vedette",
+    "featured.viewAll": "Voir plus de voyages",
     // ===================== Booking modal =====================
     "booking.tourReservation": "Réservation de circuit",
     "booking.scheduledTripReservation": "Réservation de voyage programmé",
@@ -2006,7 +2006,7 @@ const translations: Record<Lang, Record<string, string>> = {
     "featured.featuredLine1": "精选",
     "featured.featuredLine2": "旅程。",
     "featured.subtitle": "我们最爱的私人游猎精选，旨在围绕您调整。每一项都是起点 —— 绝非固定套餐。",
-    "featured.viewAll": "查看精选旅程",
+    "featured.viewAll": "查看更多旅程",
     // ===================== Booking modal =====================
     "booking.tourReservation": "行程预订",
     "booking.scheduledTripReservation": "定期旅行预订",

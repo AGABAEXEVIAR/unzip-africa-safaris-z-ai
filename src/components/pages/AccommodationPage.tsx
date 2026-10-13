@@ -144,8 +144,7 @@ export function AccommodationPage() {
                         {acc.description}
                       </p>
                     )}
-                    <div className="flex items-center justify-between pt-3 border-t border-cream/20">
-                      <span className="font-label text-cream/60">{acc.pricePerNight}</span>
+                    <div className="flex items-center justify-end pt-3 border-t border-cream/20">
                       <span className="font-eyebrow text-cream/60 group-hover:text-gold-soft transition-colors">
                         {t("accommodation.view")}
                       </span>
