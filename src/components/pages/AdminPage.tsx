@@ -12,6 +12,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import { useRouter } from "@/lib/router";
+import { useLang } from "@/lib/language";
 import {
   useAccommodations,
   useBookings,
@@ -4489,25 +4490,71 @@ function BlogFormDialog({
 /* ============================================================
  * Content Section — manage Founder message, FAQ, Safari Cars
  * ============================================================ */
+// Default values matching what's shown on the homepage (English translations)
+const DEFAULT_FOUNDER_IMAGE = "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=1200&q=80";
+const DEFAULT_SAFARI_CAR_IMAGES = [
+  "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/29d296b5dde8.jpg",
+  "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/8a1330843fc4.jpg",
+  "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/47d9868387d3.jpg",
+  "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/8821fb17b3de.jpg",
+];
+
 function ContentSection() {
+  const { t } = useLang();
   const [activeTab, setActiveTab] = useState<"founder" | "faq" | "safariCars">("founder");
   const [founder, setFounder] = useState({ image: "", message: "", name: "" });
   const [faq, setFaq] = useState<Array<{ question: string; answer: string }>>([]);
-  const [safariCars, setSafariCars] = useState({ body: "", images: [""], });
+  const [safariCars, setSafariCars] = useState({ body: "", images: [""] });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
-  // Load current content overrides
+  // Load current content overrides — pre-populate with homepage defaults
+  // so the admin sees the current content, not empty fields
   useEffect(() => {
+    const defaultFounder = {
+      image: DEFAULT_FOUNDER_IMAGE,
+      message: t("founder.quote"),
+      name: t("founder.name"),
+    };
+    const defaultFaq = [
+      { question: t("faq.q1"), answer: t("faq.a1") },
+      { question: t("faq.q2"), answer: t("faq.a2") },
+      { question: t("faq.q3"), answer: t("faq.a3") },
+      { question: t("faq.q4"), answer: t("faq.a4") },
+    ];
+    const defaultSafariCars = {
+      body: t("safariCars.body"),
+      images: [...DEFAULT_SAFARI_CAR_IMAGES],
+    };
+
     fetch("/api/content")
       .then((r) => r.json())
       .then((data) => {
-        if (data.founder) setFounder({ image: data.founder.image || "", message: data.founder.message || "", name: data.founder.name || "" });
-        if (data.faq && Array.isArray(data.faq)) setFaq(data.faq);
-        if (data.safariCars) setSafariCars({ body: data.safariCars.body || "", images: data.safariCars.images || [""] });
+        // Use overrides if set by admin, otherwise use homepage defaults
+        const f = data.founder || {};
+        setFounder({
+          image: f.image || defaultFounder.image,
+          message: f.message || defaultFounder.message,
+          name: f.name || defaultFounder.name,
+        });
+        setFaq(data.faq && Array.isArray(data.faq) && data.faq.length > 0
+          ? data.faq
+          : defaultFaq
+        );
+        const sc = data.safariCars || {};
+        setSafariCars({
+          body: sc.body || defaultSafariCars.body,
+          images: (sc.images && sc.images.length > 0) ? sc.images : defaultSafariCars.images,
+        });
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch(() => {
+        // API failed — still pre-populate with defaults so admin can see/edit
+        setFounder(defaultFounder);
+        setFaq(defaultFaq);
+        setSafariCars(defaultSafariCars);
+        setLoading(false);
+      });
   }, []);
 
   const handleSave = async () => {
