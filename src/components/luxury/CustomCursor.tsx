@@ -10,6 +10,14 @@ export function CustomCursor() {
   const [isHovering, setIsHovering] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [labelVisible, setLabelVisible] = useState(false);
+  // Only render the cursor divs on the client (after mount) — not during SSR.
+  // This eliminates the hydration mismatch where the browser extension
+  // (BIS) adds bis_size attributes to the cursor divs between server render
+  // and client hydration. The cursor is a progressive enhancement that
+  // doesn't need to be in the SSR HTML at all.
+  const [mounted, setMounted] = useState(false);
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => setMounted(true), []);
 
   useEffect(() => {
     // Disable on touch devices
@@ -103,18 +111,24 @@ export function CustomCursor() {
     };
   }, []);
 
+  // Don't render cursor divs during SSR — they appear after client mount only.
+  // This eliminates the hydration mismatch on cursor elements.
+  if (!mounted) return null;
+
   return (
     <>
-      <div ref={dotRef} className="cursor-dot" aria-hidden />
+      <div ref={dotRef} className="cursor-dot" aria-hidden suppressHydrationWarning />
       <div
         ref={ringRef}
         className={`cursor-ring ${isHovering ? "is-hovering" : ""} ${isDragging ? "is-dragging" : ""}`}
         aria-hidden
+        suppressHydrationWarning
       />
       <div
         ref={labelRef}
         className={`cursor-label ${labelVisible ? "is-visible" : ""}`}
         aria-hidden
+        suppressHydrationWarning
       >
         {label}
       </div>
