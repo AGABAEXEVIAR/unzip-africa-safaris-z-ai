@@ -47,6 +47,7 @@ import {
   ChevronUp,
   Compass,
   Eye,
+  FileText,
   LayoutDashboard,
   LogOut,
   Mail,
@@ -109,6 +110,7 @@ type AdminSection =
   | "scheduled-trips"
   | "destinations"
   | "blog"
+  | "content"
   | "quotes"
   | "bookings"
   | "scheduled-trip-bookings"
@@ -762,6 +764,7 @@ const NAV_ITEMS: { id: AdminSection; label: string; icon: React.ComponentType<{ 
   { id: "scheduled-trips", label: "Scheduled Trips", icon: Calendar },
   { id: "destinations", label: "Destinations", icon: MapPin },
   { id: "blog", label: "Blog Posts", icon: BookOpen },
+  { id: "content", label: "Content", icon: FileText },
   { id: "quotes", label: "Quote Requests", icon: Mail },
   { id: "bookings", label: "Tour Bookings", icon: CalendarCheck },
   { id: "scheduled-trip-bookings", label: "Scheduled Trip Bookings", icon: Calendar },
@@ -4494,6 +4497,138 @@ function BlogFormDialog({
 }
 
 /* ============================================================
+ * Content Section — manage Founder message, FAQ, Safari Cars
+ * ============================================================ */
+function ContentSection() {
+  const [activeTab, setActiveTab] = useState<"founder" | "faq" | "safariCars">("founder");
+  const [founder, setFounder] = useState({ image: "", message: "", name: "" });
+  const [faq, setFaq] = useState<Array<{ question: string; answer: string }>>([]);
+  const [safariCars, setSafariCars] = useState({ body: "", images: [""], });
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+
+  // Load current content overrides
+  useEffect(() => {
+    fetch("/api/content")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.founder) setFounder({ image: data.founder.image || "", message: data.founder.message || "", name: data.founder.name || "" });
+        if (data.faq && Array.isArray(data.faq)) setFaq(data.faq);
+        if (data.safariCars) setSafariCars({ body: data.safariCars.body || "", images: data.safariCars.images || [""] });
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      const payload: Record<string, unknown> = {};
+      if (founder.image || founder.message || founder.name) payload.founder = founder;
+      if (faq.length > 0) payload.faq = faq.filter((f) => f.question.trim() || f.answer.trim());
+      if (safariCars.body || safariCars.images.filter(Boolean).length > 0) {
+        payload.safariCars = { body: safariCars.body, images: safariCars.images.filter(Boolean) };
+      }
+      const res = await fetch("/api/content", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (res.ok) {
+        toast.success("Content saved — changes are live");
+      } else {
+        toast.error("Failed to save content");
+      }
+    } catch {
+      toast.error("Network error");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) return <div className="text-center py-20 text-charcoal/50">Loading content…</div>;
+
+  const tabs = [
+    { id: "founder" as const, label: "Founder Message" },
+    { id: "faq" as const, label: "FAQ" },
+    { id: "safariCars" as const, label: "Safari Cars" },
+  ];
+
+  return (
+    <div className="space-y-6">
+      <SectionHeader
+        eyebrow="CONTENT"
+        title="Homepage Content"
+        action={<SaveButton onClick={handleSave} label={saving ? "Saving…" : "Save All"} />}
+      />
+
+      {/* Tabs */}
+      <div className="flex gap-1 border-b border-charcoal/10">
+        {tabs.map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={`px-4 py-2.5 text-[11px] uppercase tracking-wider border-b-2 transition-colors ${activeTab === tab.id ? "border-gold text-charcoal" : "border-transparent text-charcoal/50 hover:text-charcoal"}`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Founder tab */}
+      {activeTab === "founder" && (
+        <Panel className="p-5 space-y-4">
+          <Field label="Founder Name" hint="Appears under the portrait image">
+            <TextInput value={founder.name} onChange={(e) => setFounder({ ...founder, name: e.target.value })} placeholder="Agaba Exeviar" />
+          </Field>
+          <Field label="Founder Image URL" hint="Portrait photo — use a tall image (4:5 aspect ratio)">
+            <TextInput value={founder.image} onChange={(e) => setFounder({ ...founder, image: e.target.value })} placeholder="https://..." />
+            {founder.image && <div className="mt-2 w-32 h-40 overflow-hidden border border-charcoal/10" style={sharp}><Img src={founder.image} alt="Founder" className="w-full h-full object-cover" /></div>}
+          </Field>
+          <Field label="Founder Message" hint="The quote shown to the right of the portrait">
+            <TextArea rows={6} value={founder.message} onChange={(e) => setFounder({ ...founder, message: e.target.value })} placeholder="Africa is not a destination you simply visit..." />
+          </Field>
+        </Panel>
+      )}
+
+      {/* FAQ tab */}
+      {activeTab === "faq" && (
+        <Panel className="p-5 space-y-4">
+          <p className="text-sm text-muted-foreground mb-2">Manage your Frequently Asked Questions. Leave empty to use the default translation-key FAQs.</p>
+          {faq.map((item, idx) => (
+            <div key={idx} className="grid md:grid-cols-[1fr_2fr_auto] gap-2 items-start p-3 border border-charcoal/10" style={sharp}>
+              <TextInput value={item.question} onChange={(e) => { const next = [...faq]; next[idx] = { ...next[idx], question: e.target.value }; setFaq(next); }} placeholder="Question" />
+              <TextArea rows={2} value={item.answer} onChange={(e) => { const next = [...faq]; next[idx] = { ...next[idx], answer: e.target.value }; setFaq(next); }} placeholder="Answer" />
+              <IconBtn icon={Trash2} label="Delete" onClick={() => setFaq(faq.filter((_, i) => i !== idx))} danger />
+            </div>
+          ))}
+          <PrimaryButton label="Add FAQ Item" icon={Plus} onClick={() => setFaq([...faq, { question: "", answer: "" }])} />
+        </Panel>
+      )}
+
+      {/* Safari Cars tab */}
+      {activeTab === "safariCars" && (
+        <Panel className="p-5 space-y-4">
+          <Field label="Safari Cars Body Text" hint="The paragraph describing your safari vehicles">
+            <TextArea rows={5} value={safariCars.body} onChange={(e) => setSafariCars({ ...safariCars, body: e.target.value })} placeholder="At Unzip Africa, every safari is designed for comfort..." />
+          </Field>
+          <Field label="Car Images" hint="Paste image URLs — these appear in the swipeable image stack on the homepage">
+            {safariCars.images.map((url, idx) => (
+              <div key={idx} className="flex gap-2 items-center mb-2">
+                <TextInput value={url} onChange={(e) => { const next = [...safariCars.images]; next[idx] = e.target.value; setSafariCars({ ...safariCars, images: next }); }} placeholder="https://..." className="flex-1" />
+                {url && <div className="w-12 h-12 overflow-hidden border border-charcoal/10 flex-shrink-0" style={sharp}><Img src={url} alt={`Car ${idx + 1}`} className="w-full h-full object-cover" /></div>}
+                <IconBtn icon={Trash2} label="Remove" onClick={() => setSafariCars({ ...safariCars, images: safariCars.images.filter((_, i) => i !== idx) })} danger />
+              </div>
+            ))}
+          </Field>
+          <PrimaryButton label="Add Image URL" icon={Plus} onClick={() => setSafariCars({ ...safariCars, images: [...safariCars.images, ""] })} />
+        </Panel>
+      )}
+    </div>
+  );
+}
+
+/* ============================================================
  * Root — AdminPage
  * ============================================================ */
 export function AdminPage() {
@@ -4560,6 +4695,7 @@ export function AdminPage() {
           {section === "scheduled-trips" && <ScheduledTripsSection />}
           {section === "destinations" && <DestinationsSection />}
           {section === "blog" && <BlogSection />}
+          {section === "content" && <ContentSection />}
           {section === "quotes" && <QuotesSection />}
           {section === "bookings" && <BookingsSection filterType="tour" title="Tour Bookings" />}
           {section === "scheduled-trip-bookings" && <BookingsSection filterType="scheduled-trip" title="Scheduled Trip Bookings" />}

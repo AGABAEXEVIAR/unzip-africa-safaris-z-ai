@@ -226,9 +226,6 @@ function HorizontalDestinations() {
                 <p className="text-cream/70 text-sm leading-relaxed max-w-md mb-5 line-clamp-3 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
                   {dest.description}
                 </p>
-                <div className="flex items-center justify-between pt-4 border-t border-cream/20">
-                  <span className="font-label text-cream/70">{dest.days}</span>
-                </div>
               </div>
 
               {/* Hover border */}

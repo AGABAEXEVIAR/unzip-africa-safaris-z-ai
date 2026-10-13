@@ -256,5 +256,6 @@ model Settings {
   whatsappMessage  String?  @db.Text
   copyright        String?
   developedBy      String?
+  contentOverrides Json?    // Admin-managed content: { founder: {image, message, name}, faq: [{q,a}], safariCars: {body, images:[]} }
   updatedAt        DateTime @updatedAt @db.Timestamp(0)
 }

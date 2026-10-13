@@ -8,6 +8,7 @@ import ScrollReveal from "@/components/luxury/ScrollReveal";
 import { useRouter } from "@/lib/router";
 import { useLang } from "@/lib/language";
 import { useScheduledTrips } from "@/lib/store";
+import { useContentOverrides } from "@/lib/useContentOverrides";
 
 const sharp = { borderRadius: 0 } as const;
 
@@ -33,6 +34,13 @@ const whyChooseUsKeys = [
 export function FAQSection() {
   const [openIdx, setOpenIdx] = useState<number | null>(0);
   const { t } = useLang();
+  const overrides = useContentOverrides();
+
+  // Use admin-managed FAQ items if available, otherwise use translation keys
+  const adminFaq = overrides?.faq;
+  const faqItems = adminFaq && adminFaq.length > 0
+    ? adminFaq.map((item) => ({ question: item.question, answer: item.answer }))
+    : faqKeys.map((item) => ({ question: t(item.qKey), answer: t(item.aKey) }));
 
   return (
     <section className="py-16 md:py-24 px-6 md:px-10 bg-alabaster">
@@ -68,7 +76,7 @@ export function FAQSection() {
           {/* Right — accordion */}
           <div className="md:col-span-7">
             <div className="border-t border-border">
-              {faqKeys.map((faq, idx) => {
+              {faqItems.map((faq, idx) => {
                 const isOpen = openIdx === idx;
                 return (
                   <div key={idx} className="border-b border-border">
@@ -78,7 +86,7 @@ export function FAQSection() {
                       aria-expanded={isOpen}
                     >
                       <span className={`font-display text-xl md:text-2xl tracking-tight transition-colors duration-500 ${isOpen ? "text-forest" : "text-charcoal group-hover:text-forest"}`}>
-                        {t(faq.qKey)}
+                        {faq.question}
                       </span>
                       <span className={`flex-shrink-0 w-8 h-8 flex items-center justify-center transition-all duration-500 ${isOpen ? "rotate-45 bg-gold text-charcoal" : "border border-charcoal/30 text-charcoal/60 group-hover:border-charcoal"}`}>
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -94,7 +102,7 @@ export function FAQSection() {
                       }}
                     >
                       <p className="text-charcoal/75 leading-relaxed pb-6 pr-12">
-                        {t(faq.aKey)}
+                        {faq.answer}
                       </p>
                     </div>
                   </div>
@@ -206,6 +214,13 @@ function ReasonIcon({ name }: { name: string }) {
 /* ===================== Founder Message Section (two columns) ===================== */
 export function FounderMessageSection() {
   const { t } = useLang();
+  const overrides = useContentOverrides();
+  const founder = overrides?.founder;
+
+  const founderImage = founder?.image || "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=1200&q=80";
+  const founderMessage = founder?.message || t("founder.quote");
+  const founderName = founder?.name || t("founder.name");
+
   return (
     <section className="py-16 md:py-24 px-6 md:px-10 bg-forest-deep text-cream relative overflow-hidden">
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
@@ -224,15 +239,15 @@ export function FounderMessageSection() {
           <Reveal variant="left">
             <div className="relative aspect-[4/5] overflow-hidden bg-charcoal" style={sharp}>
               <img
-                src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=1200&q=80"
-                alt={t("founder.name")}
+                src={founderImage}
+                alt={founderName}
                 className="absolute inset-0 w-full h-full object-cover"
               />
               <div className="absolute inset-3 border border-cream/15 pointer-events-none" />
               <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-charcoal/90 to-transparent">
                 <p className="font-eyebrow text-gold-soft mb-1">{t("founder.label")}</p>
                 <p className="font-display text-2xl text-cream tracking-tight" style={{ fontFamily: "var(--font-cormorant), serif" }}>
-                  {t("founder.name")}
+                  {founderName}
                 </p>
               </div>
             </div>
@@ -251,7 +266,7 @@ export function FounderMessageSection() {
             baseOpacity={0.1}
             blurStrength={5}
           >
-            {t("founder.quote")}
+            {founderMessage}
           </ScrollReveal>
           <Reveal variant="up" delay={0.3}>
             <p className="font-label text-gold-soft">{t("founder.attribution")}</p>
@@ -453,6 +468,14 @@ const safariCarImages = [
 
 export function SafariCarsSection() {
   const { t } = useLang();
+  const overrides = useContentOverrides();
+  const safariCarsOverride = overrides?.safariCars;
+
+  const carImages = safariCarsOverride?.images && safariCarsOverride.images.length > 0
+    ? safariCarsOverride.images
+    : safariCarImages;
+  const bodyText = safariCarsOverride?.body || t("safariCars.body");
+
   return (
     <section className="py-16 md:py-24 px-6 md:px-10 bg-canvas">
       <div className="mx-auto max-w-[1400px]">
@@ -474,7 +497,7 @@ export function SafariCarsSection() {
             </ScrollReveal>
             <Reveal variant="up" delay={0.2}>
               <p className="text-base md:text-lg text-charcoal/70 leading-relaxed mb-8">
-                {t("safariCars.body")}
+                {bodyText}
               </p>
             </Reveal>
 
@@ -500,7 +523,7 @@ export function SafariCarsSection() {
 
           {/* Right — Image Stack Swipe Effect */}
           <Reveal variant="right" delay={0.2}>
-            <SafariCarImageStack images={safariCarImages} />
+            <SafariCarImageStack images={carImages} />
           </Reveal>
 
         </div>
