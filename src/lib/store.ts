@@ -63,9 +63,6 @@ export type QuoteRequest = {
 /* ============================================================
  * Module-level state
  * ============================================================ */
-const BOOKINGS_KEY = "unzip_africa_bookings";
-const QUOTES_KEY = "unzip_africa_quotes";
-
 type State = {
   tours: TourPackage[];
   accommodations: Accommodation[];
@@ -88,26 +85,92 @@ let state: State = {
   quotes: [],
 };
 
-// Hydrate bookings + quotes from localStorage (client only)
-if (typeof window !== "undefined") {
+const SERVER_SNAPSHOT: State = {
+  tours: [...seedTours],
+  accommodations: [...seedAccommodations],
+  scheduledTrips: [...seedScheduledTrips],
+  testimonials: [...seedTestimonials],
+  destinations: [...seedDestinations],
+  blogPosts: [...seedBlogPosts],
+  bookings: [],
+  quotes: [],
+};
+
+/* ============================================================
+ * API helper — persists records to the Hostinger MySQL database
+ * via the generic CRUD API at /api/crud
+ * ============================================================ */
+
+// Map store keys to API ?type= query params
+const API_TYPE_MAP: Record<string, string> = {
+  tours: "tours",
+  accommodations: "accommodations",
+  scheduledTrips: "scheduled-trips",
+  destinations: "destinations",
+  testimonials: "testimonials",
+  blogPosts: "blog-posts",
+  bookings: "bookings",
+  quotes: "quotes",
+};
+
+// Fetch all records of a type from the database — replaces seed data
+// if the DB has data; falls back to seed data if DB is empty or API fails.
+async function syncFromDatabase(key: keyof State, type: string) {
   try {
-    const rawB = window.localStorage.getItem(BOOKINGS_KEY);
-    if (rawB) {
-      const parsed: Booking[] = JSON.parse(rawB);
-      if (Array.isArray(parsed)) state.bookings = parsed;
+    const res = await fetch(`/api/crud?type=${type}`, { cache: "no-store" });
+    if (!res.ok) return;
+    const data = await res.json();
+    if (Array.isArray(data) && data.length > 0) {
+      state = { ...state, [key]: data };
+      emit();
     }
   } catch {
-    // ignore
+    // API unavailable (e.g. during SSR or first deploy before migration)
+    // Keep using seed data — graceful degradation
   }
-  try {
-    const rawQ = window.localStorage.getItem(QUOTES_KEY);
-    if (rawQ) {
-      const parsed: QuoteRequest[] = JSON.parse(rawQ);
-      if (Array.isArray(parsed)) state.quotes = parsed;
-    }
-  } catch {
-    // ignore
-  }
+}
+
+// Persist a create to the database (fire-and-forget with optimistic revert)
+function apiCreate(type: string, record: unknown, revertKey: keyof State, recordId: string) {
+  fetch(`/api/crud?type=${type}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(record),
+  })
+    .then((r) => r.ok ? r.json() : null)
+    .then((saved) => {
+      if (saved && saved.id && saved.id !== recordId) {
+        // Replace optimistic ID with DB-generated ID
+        const arr = state[revertKey] as unknown[];
+        const updated = arr.map((item: any) =>
+          item.id === recordId ? { ...item, id: saved.id } : item
+        );
+        state = { ...state, [revertKey]: updated };
+        emit();
+      }
+    })
+    .catch(() => {
+      // Revert on failure — remove the optimistic record
+      const arr = state[revertKey] as unknown[];
+      state = { ...state, [revertKey]: arr.filter((item: any) => item.id !== recordId) };
+      emit();
+    });
+}
+
+// Persist an update to the database
+function apiUpdate(type: string, id: string, patch: unknown) {
+  fetch(`/api/crud/${id}?type=${type}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(patch),
+  }).catch(() => { /* silent — optimistic update stays in UI */ });
+}
+
+// Persist a delete to the database
+function apiDelete(type: string, id: string) {
+  fetch(`/api/crud/${id}?type=${type}`, {
+    method: "DELETE",
+  }).catch(() => { /* silent — optimistic delete stays in UI */ });
 }
 
 /* ============================================================
@@ -128,109 +191,38 @@ function getSnapshot(): State {
   return state;
 }
 
-// For SSR — return a stable constant reference.
-// Computing this once at module load (instead of building a fresh object on every call)
-// avoids the "result of getServerSnapshot should be cached to avoid an infinite loop"
-// warning from useSyncExternalStore, which fires when getServerSnapshot returns a new
-// object reference each call.
-const SERVER_SNAPSHOT: State = {
-  tours: [...seedTours],
-  accommodations: [...seedAccommodations],
-  scheduledTrips: [...seedScheduledTrips],
-  testimonials: [...seedTestimonials],
-  destinations: [...seedDestinations],
-  blogPosts: [...seedBlogPosts],
-  bookings: [],
-  quotes: [],
-};
-
 function getServerSnapshot(): State {
   return SERVER_SNAPSHOT;
 }
 
 /* ============================================================
- * Helper to persist + emit
+ * Client-side initialization — sync with database on mount
  * ============================================================ */
-function persistBookings() {
-  if (typeof window === "undefined") return;
-  try {
-    window.localStorage.setItem(BOOKINGS_KEY, JSON.stringify(state.bookings));
-  } catch {
-    // ignore
-  }
-}
-
-function persistQuotes() {
-  if (typeof window === "undefined") return;
-  try {
-    window.localStorage.setItem(QUOTES_KEY, JSON.stringify(state.quotes));
-  } catch {
-    // ignore
+if (typeof window !== "undefined") {
+  // Sync all entity types from the database (replaces seed data if DB has data)
+  const syncEntries: Array<{ key: keyof State; type: string }> = [
+    { key: "tours", type: "tours" },
+    { key: "accommodations", type: "accommodations" },
+    { key: "scheduledTrips", type: "scheduled-trips" },
+    { key: "destinations", type: "destinations" },
+    { key: "testimonials", type: "testimonials" },
+    { key: "blogPosts", type: "blog-posts" },
+    { key: "bookings", type: "bookings" },
+    { key: "quotes", type: "quotes" },
+  ];
+  for (const { key, type } of syncEntries) {
+    syncFromDatabase(key, type);
   }
 }
 
 /* ============================================================
- * Public store API
+ * Public store API — each CRUD method updates local state
+ * (optimistic) AND persists to the database via the API
  * ============================================================ */
 export const store = {
   subscribe,
   getSnapshot,
   getServerSnapshot,
-
-  /* Bookings */
-  setBookings(bookings: Booking[]) {
-    state = { ...state, bookings };
-    persistBookings();
-    emit();
-  },
-  addBooking(booking: Booking) {
-    state = { ...state, bookings: [booking, ...state.bookings] };
-    persistBookings();
-    emit();
-  },
-  updateBooking(id: string, patch: Partial<Booking>) {
-    state = {
-      ...state,
-      bookings: state.bookings.map((b) => (b.id === id ? { ...b, ...patch } : b)),
-    };
-    persistBookings();
-    emit();
-  },
-  deleteBooking(id: string) {
-    state = { ...state, bookings: state.bookings.filter((b) => b.id !== id) };
-    persistBookings();
-    emit();
-  },
-  clearBookings() {
-    state = { ...state, bookings: [] };
-    persistBookings();
-    emit();
-  },
-
-  /* Quotes */
-  setQuotes(quotes: QuoteRequest[]) {
-    state = { ...state, quotes };
-    persistQuotes();
-    emit();
-  },
-  addQuote(quote: QuoteRequest) {
-    state = { ...state, quotes: [quote, ...state.quotes] };
-    persistQuotes();
-    emit();
-  },
-  updateQuote(id: string, patch: Partial<QuoteRequest>) {
-    state = {
-      ...state,
-      quotes: state.quotes.map((q) => (q.id === id ? { ...q, ...patch } : q)),
-    };
-    persistQuotes();
-    emit();
-  },
-  deleteQuote(id: string) {
-    state = { ...state, quotes: state.quotes.filter((q) => q.id !== id) };
-    persistQuotes();
-    emit();
-  },
 
   /* Tours */
   setTours(tours: TourPackage[]) {
@@ -240,17 +232,17 @@ export const store = {
   addTour(tour: TourPackage) {
     state = { ...state, tours: [tour, ...state.tours] };
     emit();
+    apiCreate("tours", tour, "tours", tour.id);
   },
   updateTour(id: string, patch: Partial<TourPackage>) {
-    state = {
-      ...state,
-      tours: state.tours.map((t) => (t.id === id ? { ...t, ...patch } : t)),
-    };
+    state = { ...state, tours: state.tours.map((t) => (t.id === id ? { ...t, ...patch } : t)) };
     emit();
+    apiUpdate("tours", id, patch);
   },
   deleteTour(id: string) {
     state = { ...state, tours: state.tours.filter((t) => t.id !== id) };
     emit();
+    apiDelete("tours", id);
   },
 
   /* Scheduled Trips */
@@ -261,19 +253,17 @@ export const store = {
   addScheduledTrip(trip: ScheduledTrip) {
     state = { ...state, scheduledTrips: [trip, ...state.scheduledTrips] };
     emit();
+    apiCreate("scheduled-trips", trip, "scheduledTrips", trip.id);
   },
   updateScheduledTrip(id: string, patch: Partial<ScheduledTrip>) {
-    state = {
-      ...state,
-      scheduledTrips: state.scheduledTrips.map((t) =>
-        t.id === id ? { ...t, ...patch } : t
-      ),
-    };
+    state = { ...state, scheduledTrips: state.scheduledTrips.map((t) => (t.id === id ? { ...t, ...patch } : t)) };
     emit();
+    apiUpdate("scheduled-trips", id, patch);
   },
   deleteScheduledTrip(id: string) {
     state = { ...state, scheduledTrips: state.scheduledTrips.filter((t) => t.id !== id) };
     emit();
+    apiDelete("scheduled-trips", id);
   },
 
   /* Accommodations */
@@ -284,19 +274,17 @@ export const store = {
   addAccommodation(acc: Accommodation) {
     state = { ...state, accommodations: [acc, ...state.accommodations] };
     emit();
+    apiCreate("accommodations", acc, "accommodations", acc.id);
   },
   updateAccommodation(id: string, patch: Partial<Accommodation>) {
-    state = {
-      ...state,
-      accommodations: state.accommodations.map((a) =>
-        a.id === id ? { ...a, ...patch } : a
-      ),
-    };
+    state = { ...state, accommodations: state.accommodations.map((a) => (a.id === id ? { ...a, ...patch } : a)) };
     emit();
+    apiUpdate("accommodations", id, patch);
   },
   deleteAccommodation(id: string) {
     state = { ...state, accommodations: state.accommodations.filter((a) => a.id !== id) };
     emit();
+    apiDelete("accommodations", id);
   },
 
   /* Testimonials */
@@ -307,19 +295,17 @@ export const store = {
   addTestimonial(t: Testimonial) {
     state = { ...state, testimonials: [t, ...state.testimonials] };
     emit();
+    apiCreate("testimonials", t, "testimonials", t.id);
   },
   updateTestimonial(id: string, patch: Partial<Testimonial>) {
-    state = {
-      ...state,
-      testimonials: state.testimonials.map((t) =>
-        t.id === id ? { ...t, ...patch } : t
-      ),
-    };
+    state = { ...state, testimonials: state.testimonials.map((t) => (t.id === id ? { ...t, ...patch } : t)) };
     emit();
+    apiUpdate("testimonials", id, patch);
   },
   deleteTestimonial(id: string) {
     state = { ...state, testimonials: state.testimonials.filter((t) => t.id !== id) };
     emit();
+    apiDelete("testimonials", id);
   },
 
   /* Destinations */
@@ -330,19 +316,17 @@ export const store = {
   addDestination(d: Destination) {
     state = { ...state, destinations: [d, ...state.destinations] };
     emit();
+    apiCreate("destinations", d, "destinations", d.id);
   },
   updateDestination(id: string, patch: Partial<Destination>) {
-    state = {
-      ...state,
-      destinations: state.destinations.map((d) =>
-        d.id === id ? { ...d, ...patch } : d
-      ),
-    };
+    state = { ...state, destinations: state.destinations.map((d) => (d.id === id ? { ...d, ...patch } : d)) };
     emit();
+    apiUpdate("destinations", id, patch);
   },
   deleteDestination(id: string) {
     state = { ...state, destinations: state.destinations.filter((d) => d.id !== id) };
     emit();
+    apiDelete("destinations", id);
   },
 
   /* Blog Posts */
@@ -353,33 +337,70 @@ export const store = {
   addBlogPost(post: BlogPost) {
     state = { ...state, blogPosts: [post, ...state.blogPosts] };
     emit();
+    apiCreate("blog-posts", post, "blogPosts", post.id);
   },
   updateBlogPost(id: string, patch: Partial<BlogPost>) {
-    state = {
-      ...state,
-      blogPosts: state.blogPosts.map((p) =>
-        p.id === id ? { ...p, ...patch } : p
-      ),
-    };
+    state = { ...state, blogPosts: state.blogPosts.map((p) => (p.id === id ? { ...p, ...patch } : p)) };
     emit();
+    apiUpdate("blog-posts", id, patch);
   },
   deleteBlogPost(id: string) {
     state = { ...state, blogPosts: state.blogPosts.filter((p) => p.id !== id) };
     emit();
+    apiDelete("blog-posts", id);
+  },
+
+  /* Bookings */
+  setBookings(bookings: Booking[]) {
+    state = { ...state, bookings };
+    emit();
+  },
+  addBooking(booking: Booking) {
+    state = { ...state, bookings: [booking, ...state.bookings] };
+    emit();
+    apiCreate("bookings", booking, "bookings", booking.id);
+  },
+  updateBooking(id: string, patch: Partial<Booking>) {
+    state = { ...state, bookings: state.bookings.map((b) => (b.id === id ? { ...b, ...patch } : b)) };
+    emit();
+    apiUpdate("bookings", id, patch);
+  },
+  deleteBooking(id: string) {
+    state = { ...state, bookings: state.bookings.filter((b) => b.id !== id) };
+    emit();
+    apiDelete("bookings", id);
+  },
+  clearBookings() {
+    state = { ...state, bookings: [] };
+    emit();
+  },
+
+  /* Quotes */
+  setQuotes(quotes: QuoteRequest[]) {
+    state = { ...state, quotes };
+    emit();
+  },
+  addQuote(quote: QuoteRequest) {
+    state = { ...state, quotes: [quote, ...state.quotes] };
+    emit();
+    apiCreate("quotes", quote, "quotes", quote.id);
+  },
+  updateQuote(id: string, patch: Partial<QuoteRequest>) {
+    state = { ...state, quotes: state.quotes.map((q) => (q.id === id ? { ...q, ...patch } : q)) };
+    emit();
+    apiUpdate("quotes", id, patch);
+  },
+  deleteQuote(id: string) {
+    state = { ...state, quotes: state.quotes.filter((q) => q.id !== id) };
+    emit();
+    apiDelete("quotes", id);
   },
 };
 
 /* ============================================================
- * Hooks
+ * Hooks — unchanged from original (useSyncExternalStore pattern)
  * ============================================================ */
 function useStore<T>(selector: (s: State) => T): T {
-  // Memoize the snapshot getters so they don't change identity every render.
-  // Without this, useSyncExternalStore sees a new function reference each render
-  // and re-subscribes / re-reads, which triggers "result of getServerSnapshot
-  // should be cached to avoid an infinite loop" warnings.
-  // The selector itself is in the dep array — callers typically pass inline
-  // arrows, but selector(s) returns a stable slice of the state object so the
-  // result is referentially stable across renders as long as state didn't change.
   const getClientSnapshot = useCallback(() => selector(getSnapshot()), [selector]);
   const getServerSnap = useCallback(() => selector(getServerSnapshot()), [selector]);
   return useSyncExternalStore(subscribe, getClientSnapshot, getServerSnap);
