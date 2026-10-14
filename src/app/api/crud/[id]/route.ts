@@ -1,65 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
-import { db } from "@/lib/db";
+import { query as dbQuery, execute } from "@/lib/db-sql";
+import { ENTITIES, getEntityDef, tick, toSqlValue, fromSqlRow } from "@/lib/entities";
 
 // =====================================================================
 // Generic CRUD [id] API — update + delete by ID
-// =====================================================================
-// PUT    /api/crud/[id]?type=tours   → update a tour (auth required)
-// DELETE /api/crud/[id]?type=tours   → delete a tour (auth required)
+// ---------------------------------------------------------------------
+// PUT    /api/crud/[id]?type=tours   → update a tour (admin auth)
+// DELETE /api/crud/[id]?type=tours   → delete a tour (admin auth)
 // =====================================================================
 
 const COOKIE_NAME = "admin_session";
-
-function getModel(type: string) {
-  const models: Record<string, ReturnType<typeof getAccessor>> = {
-    tours: db.tourPackage,
-    accommodations: db.accommodation,
-    "scheduled-trips": db.scheduledTrip,
-    destinations: db.destination,
-    testimonials: db.testimonial,
-    "blog-posts": db.blogPost,
-    bookings: db.booking,
-    quotes: db.quoteRequest,
-  };
-  return models[type];
-}
-type getAccessor = typeof db.tourPackage;
-
-function serialize(record: unknown): unknown {
-  if (record === null || record === undefined) return record;
-  if (Array.isArray(record)) return record.map(serialize);
-  if (typeof record === "object") {
-    const obj = record as Record<string, unknown>;
-    const result: Record<string, unknown> = {};
-    for (const [key, value] of Object.entries(obj)) {
-      if (key.startsWith("_")) continue;
-      if (value && typeof value === "object" && "toNumber" in (value as any)) {
-        result[key] = Number(value);
-      } else if (value instanceof Date) {
-        result[key] = value.toISOString();
-      } else if (value && typeof value === "object") {
-        result[key] = serialize(value);
-      } else {
-        result[key] = value;
-      }
-    }
-    return result;
-  }
-  return record;
-}
-
-function deserialize(data: Record<string, unknown>): Record<string, unknown> {
-  const result: Record<string, unknown> = {};
-  for (const [key, value] of Object.entries(data)) {
-    if (typeof value === "string" && ["startDate", "endDate", "publishedDate", "date"].includes(key)) {
-      result[key] = new Date(value);
-    } else {
-      result[key] = value;
-    }
-  }
-  return result;
-}
 
 async function verifyAuth(request: NextRequest): Promise<boolean> {
   const secret = process.env.NEXTAUTH_SECRET;
@@ -74,7 +25,9 @@ async function verifyAuth(request: NextRequest): Promise<boolean> {
   }
 }
 
-// PUT — update a record by ID (auth required)
+// =====================================================================
+// PUT — update a record by ID (admin auth)
+// =====================================================================
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -89,23 +42,82 @@ export async function PUT(
   if (!type) {
     return NextResponse.json({ error: "Missing ?type= parameter" }, { status: 400 });
   }
-  const model = getModel(type);
-  if (!model) {
+  if (!ENTITIES[type]) {
     return NextResponse.json({ error: `Unknown type: ${type}` }, { status: 400 });
   }
+  const def = getEntityDef(type);
 
   try {
-    const body = await request.json();
-    const data = deserialize(body);
-    const record = await model.update({ where: { id }, data });
-    return NextResponse.json(serialize(record));
+    const body = (await request.json()) as Record<string, unknown>;
+
+    // Build dynamic UPDATE statement. Only update fields that are present
+    // in the body — PATCH-style partial update.
+    const setClauses: string[] = [];
+    const vals: unknown[] = [];
+
+    for (const col of def.columns) {
+      if (body[col] === undefined) continue;
+      const isJson = def.jsonColumns.includes(col);
+      setClauses.push(`${tick(col)} = ?`);
+      vals.push(toSqlValue(body[col], isJson));
+    }
+
+    // Inline children — stringify objects/arrays on write.
+    if (def.inlineChildren) {
+      for (const child of def.inlineChildren) {
+        if (body[child.field] === undefined) continue;
+        const v = body[child.field];
+        setClauses.push(`${tick(child.column)} = ?`);
+        if (v === null) {
+          vals.push(null);
+        } else if (typeof v === "string") {
+          vals.push(v);
+        } else {
+          vals.push(JSON.stringify(v));
+        }
+      }
+    }
+
+    if (setClauses.length === 0) {
+      // Nothing to update — return existing row.
+      const rows = await dbQuery(
+        `SELECT * FROM ${tick(def.table)} WHERE ${tick("id")} = ? LIMIT 1`,
+        [id]
+      );
+      if (rows.length === 0) {
+        return NextResponse.json({ error: "Record not found" }, { status: 404 });
+      }
+      return NextResponse.json(fromSqlRow(rows[0], def));
+    }
+
+    // updatedAt = NOW() (auto-update column)
+    setClauses.push(`${tick("updatedAt")} = NOW()`);
+
+    vals.push(id);
+    const sql = `UPDATE ${tick(def.table)} SET ${setClauses.join(", ")} WHERE ${tick("id")} = ?`;
+    await execute(sql, vals);
+
+    const rows = await dbQuery(
+      `SELECT * FROM ${tick(def.table)} WHERE ${tick("id")} = ? LIMIT 1`,
+      [id]
+    );
+    if (rows.length === 0) {
+      return NextResponse.json({ error: "Record not found after update" }, { status: 404 });
+    }
+    return NextResponse.json(fromSqlRow(rows[0], def));
   } catch (error) {
-    console.error(`[crud PUT] type=${type} id=${id}:`, error);
-    return NextResponse.json({ error: "Failed to update record" }, { status: 500 });
+    const e = error as Error;
+    console.error(`[crud PUT] type=${type} id=${id}:`, e);
+    return NextResponse.json(
+      { error: "Failed to update record", message: e.message },
+      { status: 500 }
+    );
   }
 }
 
-// DELETE — delete a record by ID (auth required)
+// =====================================================================
+// DELETE — delete a record by ID (admin auth)
+// =====================================================================
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -120,16 +132,23 @@ export async function DELETE(
   if (!type) {
     return NextResponse.json({ error: "Missing ?type= parameter" }, { status: 400 });
   }
-  const model = getModel(type);
-  if (!model) {
+  if (!ENTITIES[type]) {
     return NextResponse.json({ error: `Unknown type: ${type}` }, { status: 400 });
   }
+  const def = getEntityDef(type);
 
   try {
-    await model.delete({ where: { id } });
-    return NextResponse.json({ success: true });
+    await execute(
+      `DELETE FROM ${tick(def.table)} WHERE ${tick("id")} = ?`,
+      [id]
+    );
+    return NextResponse.json({ success: true, id });
   } catch (error) {
-    console.error(`[crud DELETE] type=${type} id=${id}:`, error);
-    return NextResponse.json({ error: "Failed to delete record" }, { status: 500 });
+    const e = error as Error;
+    console.error(`[crud DELETE] type=${type} id=${id}:`, e);
+    return NextResponse.json(
+      { error: "Failed to delete record", message: e.message },
+      { status: 500 }
+    );
   }
 }
