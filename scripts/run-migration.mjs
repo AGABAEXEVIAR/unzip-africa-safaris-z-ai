@@ -19,13 +19,13 @@ const sqlRaw = readFileSync(sqlPath, "utf8");
 // Parse DATABASE_URL — required.
 const url = process.env.DATABASE_URL;
 if (!url) {
-  console.error("❌ DATABASE_URL environment variable is required.");
+  console.error("DATABASE_URL environment variable is required.");
   process.exit(1);
 }
 
 const m = url.match(/^mysql:\/\/([^:]+):([^@]*)@([^:/?#]+)(?::(\d+))?\/([^?#]+)/);
 if (!m) {
-  console.error("❌ DATABASE_URL is not a valid mysql:// URL.");
+  console.error("DATABASE_URL is not a valid mysql:// URL.");
   process.exit(1);
 }
 
@@ -58,19 +58,19 @@ let failed = 0;
 for (const stmt of statements) {
   try {
     await conn.query(stmt);
-    // Print a short preview of the statement for log readability.
     const preview = stmt.replace(/\s+/g, " ").slice(0, 80);
-    console.log(`  ✅ ${preview}`);
+    console.log(`  OK  ${preview}`);
     ok++;
   } catch (err) {
-    const e = err as Error;
+    const e = err;
+    const msg = (e && e.message) ? e.message : String(e);
     // "Duplicate column" is expected when re-running — ignore.
-    if (e.message.includes("Duplicate column") || e.message.includes("column already exists")) {
+    if (msg.includes("Duplicate column") || msg.includes("column already exists")) {
       const preview = stmt.replace(/\s+/g, " ").slice(0, 80);
-      console.log(`  ⏭️  (already exists) ${preview}`);
+      console.log(`  skip (already exists): ${preview}`);
       ok++;
     } else {
-      console.error(`  ❌ ${e.message}`);
+      console.error(`  FAIL ${msg}`);
       console.error(`     SQL: ${stmt.slice(0, 200)}`);
       failed++;
     }
