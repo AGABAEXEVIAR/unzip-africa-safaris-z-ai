@@ -539,6 +539,11 @@ function SafariCarImageStack({ images }: { images: string[] }) {
   const [swipeDir, setSwipeDir] = useState<"left" | "right" | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
 
+  // Sync stack when the images prop changes (e.g. after admin updates content via dashboard)
+  useEffect(() => {
+    setStack(images);
+  }, [images]);
+
   // Swipe the top image to the back — it goes behind, next image shows
   const swipeNext = (dir: "left" | "right") => {
     if (isAnimating || stack.length <= 1) return;

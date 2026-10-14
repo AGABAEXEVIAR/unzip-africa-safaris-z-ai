@@ -13,6 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import { useRouter } from "@/lib/router";
 import { useLang } from "@/lib/language";
+import { refreshContentOverrides } from "@/lib/useContentOverrides";
 import {
   useAccommodations,
   useBookings,
@@ -4570,6 +4571,8 @@ function ContentSection() {
       });
       if (res.ok) {
         toast.success("Content saved — changes are live");
+        // Clear the content overrides cache so the homepage re-fetches the new data
+        refreshContentOverrides();
       } else {
         toast.error("Failed to save content");
       }
