@@ -137,7 +137,7 @@ async function syncFromDatabase(key: keyof State, type: string) {
   }
 }
 
-// Persist a create to the database (fire-and-forget with optimistic revert)
+// Persist a create to the database (fire-and-forget — keeps optimistic update on failure)
 function apiCreate(type: string, record: unknown, revertKey: keyof State, recordId: string) {
   fetch(`/api/crud?type=${type}`, {
     method: "POST",
@@ -155,12 +155,16 @@ function apiCreate(type: string, record: unknown, revertKey: keyof State, record
         state = { ...state, [revertKey]: updated };
         emit();
       }
+      // If saved is null (API returned error), keep the optimistic record
+      // in local state — it'll be visible in the current session even if
+      // the database isn't reachable. The resyncStore MERGE logic preserves
+      // local-only items (items whose IDs aren't in the DB) on page navigation.
     })
     .catch(() => {
-      // Revert on failure — remove the optimistic record
-      const arr = state[revertKey] as unknown[];
-      state = { ...state, [revertKey]: arr.filter((item: any) => item.id !== recordId) };
-      emit();
+      // API failed — DO NOT revert the optimistic update.
+      // Keep the record in local state so the user can still see it.
+      // The record will be visible in the current session and survives
+      // page navigation via the syncFromDatabase MERGE logic.
     });
 }
 
