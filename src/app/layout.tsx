@@ -20,7 +20,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://unzipafrica.com"),
+  metadataBase: new URL("https://lightseagreen-deer-995252.hostingersite.com"),
   title: "Unzip Africa Safaris — Bespoke Safaris That Transform Your Soul",
   description:
     "Unzip Africa Safaris crafts private, $50,000+ bespoke safaris across East and Southern Africa. Gorilla trekking, Serengeti migrations, Okavango Delta — designed in silence, delivered in wonder.",
