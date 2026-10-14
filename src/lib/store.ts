@@ -85,6 +85,47 @@ let state: State = {
   quotes: [],
 };
 
+// On page refresh, the JS module re-initializes and `state` resets to seed
+// data. To preserve the admin's changes across refreshes, we persist the
+// full state to localStorage on every emit() and restore it on module load.
+const STORAGE_KEY = "unzip_africa_store";
+
+function loadFromStorage(): Partial<State> | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
+function saveToStorage() {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch {
+    // localStorage might be full or unavailable — ignore
+  }
+}
+
+// Restore from localStorage on module load (overrides seed data)
+const stored = loadFromStorage();
+if (stored) {
+  state = {
+    tours: stored.tours ?? [...seedTours],
+    accommodations: stored.accommodations ?? [...seedAccommodations],
+    scheduledTrips: stored.scheduledTrips ?? [...seedScheduledTrips],
+    testimonials: stored.testimonials ?? [...seedTestimonials],
+    destinations: stored.destinations ?? [...seedDestinations],
+    blogPosts: stored.blogPosts ?? [...seedBlogPosts],
+    bookings: stored.bookings ?? [],
+    quotes: stored.quotes ?? [],
+  };
+}
+
 const SERVER_SNAPSHOT: State = {
   tours: [...seedTours],
   accommodations: [...seedAccommodations],
@@ -190,6 +231,7 @@ function apiDelete(type: string, id: string) {
 const listeners = new Set<() => void>();
 
 function emit() {
+  saveToStorage();
   listeners.forEach((l) => l());
 }
 
