@@ -17,6 +17,7 @@ import { HeroCarousel } from "@/components/luxury/HeroCarousel";
 import { BookingModal } from "@/components/luxury/BookingModal";
 import { useRouter } from "@/lib/router";
 import { useLang } from "@/lib/language";
+import { buildMapEmbedUrl } from "@/lib/mapUtils";
 import { useTours, useAccommodations } from "@/lib/store";
 import type { TourPackage } from "@/lib/content";
 
@@ -526,9 +527,7 @@ export function TourDetailPage() {
             >
               <iframe
                 title={`Map of ${tour.destination}`}
-                src={`https://www.google.com/maps?q=${encodeURIComponent(
-                  `${tour.nationalPark}, ${tour.destination}`
-                )}&output=embed`}
+                src={buildMapEmbedUrl(tour.mapEmbed, `${tour.nationalPark}, ${tour.destination}`)}
                 className="absolute inset-0 w-full h-full"
                 style={{ border: 0 }}
                 loading="lazy"

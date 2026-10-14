@@ -55,6 +55,7 @@ export type TourPackage = {
   featured?: boolean;
   minAge: number;
   accommodationIds: string[];
+  mapEmbed?: string;
 };
 
 export type Accommodation = {
@@ -88,6 +89,7 @@ export type ScheduledTrip = {
   spotsLeft: number;
   accommodationLevel: string;
   stops?: { day: string; title: string; description: string; image: string }[];
+  mapEmbed?: string;
 };
 
 export type Testimonial = {

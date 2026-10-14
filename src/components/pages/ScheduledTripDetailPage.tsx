@@ -17,6 +17,7 @@ import { HeroCarousel } from "@/components/luxury/HeroCarousel";
 import { BookingModal } from "@/components/luxury/BookingModal";
 import { useRouter } from "@/lib/router";
 import { useLang } from "@/lib/language";
+import { buildMapEmbedUrl } from "@/lib/mapUtils";
 import { useScheduledTrips, useTours, useAccommodations } from "@/lib/store";
 import type { ScheduledTrip } from "@/lib/content";
 
@@ -536,9 +537,7 @@ export function ScheduledTripDetailPage() {
             >
               <iframe
                 title={`Map of ${trip.destination}`}
-                src={`https://www.google.com/maps?q=${encodeURIComponent(
-                  `${trip.destination} ${dateRange}`
-                )}&output=embed`}
+                src={buildMapEmbedUrl(trip.mapEmbed, `${trip.destination} ${dateRange}`)}
                 className="absolute inset-0 w-full h-full"
                 style={{ border: 0 }}
                 loading="lazy"

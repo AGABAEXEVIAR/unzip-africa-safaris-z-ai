@@ -183,6 +183,7 @@ type ScheduledTripFormState = {
   inclusions: string;
   exclusions: string;
   stops: DayItem[];
+  mapEmbed: string;
 };
 
 type DestinationFormState = {
@@ -2121,6 +2122,7 @@ function emptyTripForm(): ScheduledTripFormState {
     inclusions: "",
     exclusions: "",
     stops: [],
+    mapEmbed: "",
   };
 }
 
@@ -2143,6 +2145,7 @@ function tripToForm(t: ScheduledTrip): ScheduledTripFormState {
     inclusions: joinLines(t.inclusions),
     exclusions: joinLines(t.exclusions),
     stops: (t.stops ?? []).map((s) => ({ ...s })),
+    mapEmbed: t.mapEmbed ?? "",
   };
 }
 
@@ -2179,6 +2182,7 @@ function formToTrip(
     inclusions: splitLines(form.inclusions),
     exclusions: splitLines(form.exclusions),
     stops: form.stops,
+    mapEmbed: form.mapEmbed.trim() || undefined,
   };
 }
 
@@ -2450,6 +2454,7 @@ function ScheduledTripFormModal({
               { id: "itinerary", label: "Itinerary" },
               { id: "inclusions", label: "Included/Excluded" },
               { id: "images", label: "Images" },
+              { id: "map", label: "Map" },
             ].map((t) => (
               <TabsTrigger
                 key={t.id}
@@ -2720,6 +2725,25 @@ function ScheduledTripFormModal({
                   ))}
                 </div>
               )}
+            </TabsContent>
+            <TabsContent value="map" className="mt-0 space-y-4">
+              <Field label="Google Maps Embed URL" hint="Paste the full iframe src URL from Google Maps → Share → Embed a map. Leave empty to auto-generate from destination.">
+                <TextInput
+                  value={form.mapEmbed}
+                  onChange={(e) => update("mapEmbed", e.target.value)}
+                  placeholder="https://www.google.com/maps/embed?pb=..."
+                />
+                {form.mapEmbed && (
+                  <div className="mt-2 w-full aspect-video overflow-hidden border border-charcoal/10" style={sharp}>
+                    <iframe
+                      src={form.mapEmbed.includes("embed") ? form.mapEmbed : `${form.mapEmbed}${form.mapEmbed.includes("?") ? "&" : "?"}output=embed`}
+                      className="w-full h-full"
+                      style={{ border: 0 }}
+                      loading="lazy"
+                    />
+                  </div>
+                )}
+              </Field>
             </TabsContent>
           </div>
         </Tabs>
