@@ -1116,10 +1116,10 @@ function ToursSection() {
 
   const handleSave = (data: TourPackage) => {
     if (editing === "new") {
-      store.setTours([data, ...tours]);
+      store.addTour(data);
       toast.success("Tour created");
     } else {
-      store.setTours(tours.map((t) => (t.id === data.id ? data : t)));
+      store.updateTour(data.id, data);
       toast.success("Tour updated");
     }
     setEditing(null);
@@ -1127,7 +1127,7 @@ function ToursSection() {
 
   const handleDelete = (id: string) => {
     if (!confirm("Delete this tour? This cannot be undone.")) return;
-    store.setTours(tours.filter((t) => t.id !== id));
+    store.deleteTour(id);
     toast.success("Tour deleted");
   };
 
@@ -1861,12 +1861,10 @@ function AccommodationsSection() {
 
   const handleSave = (data: Accommodation) => {
     if (editing === "new") {
-      store.setAccommodations([data, ...accommodations]);
+      store.addAccommodation(data);
       toast.success("Accommodation created");
     } else {
-      store.setAccommodations(
-        accommodations.map((a) => (a.id === data.id ? data : a))
-      );
+      store.updateAccommodation(data.id, data);
       toast.success("Accommodation updated");
     }
     setEditing(null);
@@ -1874,7 +1872,7 @@ function AccommodationsSection() {
 
   const handleDelete = (id: string) => {
     if (!confirm("Delete this accommodation?")) return;
-    store.setAccommodations(accommodations.filter((a) => a.id !== id));
+    store.deleteAccommodation(id);
     toast.success("Accommodation deleted");
   };
 
@@ -2190,12 +2188,10 @@ function ScheduledTripsSection() {
 
   const handleSave = (data: ScheduledTrip) => {
     if (editing === "new") {
-      store.setScheduledTrips([data, ...trips]);
+      store.addScheduledTrip(data);
       toast.success("Scheduled trip created");
     } else {
-      store.setScheduledTrips(
-        trips.map((t) => (t.id === data.id ? data : t))
-      );
+      store.updateScheduledTrip(data.id, data);
       toast.success("Scheduled trip updated");
     }
     setEditing(null);
@@ -2203,7 +2199,7 @@ function ScheduledTripsSection() {
 
   const handleDelete = (id: string) => {
     if (!confirm("Delete this scheduled trip?")) return;
-    store.setScheduledTrips(trips.filter((t) => t.id !== id));
+    store.deleteScheduledTrip(id);
     toast.success("Scheduled trip deleted");
   };
 
@@ -2792,12 +2788,10 @@ function DestinationsSection() {
 
   const handleSave = (data: Destination) => {
     if (editing === "new") {
-      store.setDestinations([data, ...destinations]);
+      store.addDestination(data);
       toast.success("Destination created");
     } else {
-      store.setDestinations(
-        destinations.map((d) => (d.id === data.id ? data : d))
-      );
+      store.updateDestination(data.id, data);
       toast.success("Destination updated");
     }
     setEditing(null);
@@ -2805,7 +2799,7 @@ function DestinationsSection() {
 
   const handleDelete = (id: string) => {
     if (!confirm("Delete this destination?")) return;
-    store.setDestinations(destinations.filter((d) => d.id !== id));
+    store.deleteDestination(id);
     toast.success("Destination deleted");
   };
 
@@ -3589,12 +3583,10 @@ function TestimonialsSection() {
 
   const handleSave = (data: Testimonial) => {
     if (editing === "new") {
-      store.setTestimonials([data, ...testimonials]);
+      store.addTestimonial(data);
       toast.success("Testimonial created");
     } else {
-      store.setTestimonials(
-        testimonials.map((t) => (t.id === data.id ? data : t))
-      );
+      store.updateTestimonial(data.id, data);
       toast.success("Testimonial updated");
     }
     setEditing(null);
@@ -3602,7 +3594,7 @@ function TestimonialsSection() {
 
   const handleDelete = (id: string) => {
     if (!confirm("Delete this testimonial?")) return;
-    store.setTestimonials(testimonials.filter((t) => t.id !== id));
+    store.deleteTestimonial(id);
     toast.success("Testimonial deleted");
   };
 
@@ -4127,10 +4119,10 @@ function BlogSection() {
 
   const handleSave = (data: BlogPost) => {
     if (editing === "new") {
-      store.setBlogPosts([data, ...posts]);
+      store.addBlogPost(data);
       toast.success("Blog post created");
     } else {
-      store.setBlogPosts(posts.map((p) => (p.id === data.id ? data : p)));
+      store.updateBlogPost(data.id, data);
       toast.success("Blog post updated");
     }
     setEditing(null);
@@ -4138,7 +4130,7 @@ function BlogSection() {
 
   const handleDelete = (id: string) => {
     if (!confirm("Delete this blog post?")) return;
-    store.setBlogPosts(posts.filter((p) => p.id !== id));
+    store.deleteBlogPost(id);
     toast.success("Blog post deleted");
   };
 
