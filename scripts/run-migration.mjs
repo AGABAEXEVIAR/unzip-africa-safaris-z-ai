@@ -44,12 +44,19 @@ const conn = await mysql.createConnection({
   multipleStatements: true,
 });
 
-// Split on semicolons followed by newline (the end of each statement)
-// — naive but the SQL file is hand-written and well-formed.
-const statements = sqlRaw
-  .split(/;\s*\n/)
+// Step 1: strip ALL line-comments (lines starting with --) BEFORE splitting.
+// This avoids the bug where a statement preceded by a comment line gets
+// filtered out by the "startsWith --" check.
+const noComments = sqlRaw
+  .split("\n")
+  .filter((line) => !line.trim().startsWith("--"))
+  .join("\n");
+
+// Step 2: split on ";" — each chunk is one statement.
+const statements = noComments
+  .split(";")
   .map((s) => s.trim())
-  .filter((s) => s.length > 0 && !s.startsWith("--"));
+  .filter((s) => s.length > 0);
 
 console.log(`Running ${statements.length} migration statements...`);
 
@@ -58,20 +65,20 @@ let failed = 0;
 for (const stmt of statements) {
   try {
     await conn.query(stmt);
-    const preview = stmt.replace(/\s+/g, " ").slice(0, 80);
-    console.log(`  OK  ${preview}`);
+    const preview = stmt.replace(/\s+/g, " ").slice(0, 100);
+    console.log(`  OK   ${preview}`);
     ok++;
   } catch (err) {
     const e = err;
     const msg = (e && e.message) ? e.message : String(e);
     // "Duplicate column" is expected when re-running — ignore.
-    if (msg.includes("Duplicate column") || msg.includes("column already exists")) {
-      const preview = stmt.replace(/\s+/g, " ").slice(0, 80);
+    if (msg.includes("Duplicate column") || msg.includes("has duplicate column") || msg.toLowerCase().includes("already exists")) {
+      const preview = stmt.replace(/\s+/g, " ").slice(0, 100);
       console.log(`  skip (already exists): ${preview}`);
       ok++;
     } else {
       console.error(`  FAIL ${msg}`);
-      console.error(`     SQL: ${stmt.slice(0, 200)}`);
+      console.error(`        SQL: ${stmt.replace(/\s+/g, " ").slice(0, 200)}`);
       failed++;
     }
   }
