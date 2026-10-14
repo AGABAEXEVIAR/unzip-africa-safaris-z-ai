@@ -113,15 +113,22 @@ const API_TYPE_MAP: Record<string, string> = {
   quotes: "quotes",
 };
 
-// Fetch all records of a type from the database — replaces seed data
-// if the DB has data; falls back to seed data if DB is empty or API fails.
+// Fetch all records of a type from the database — MERGES with local state
+// so admin's optimistic updates (that might not be in the DB yet) are kept.
 async function syncFromDatabase(key: keyof State, type: string) {
   try {
     const res = await fetch(`/api/crud?type=${type}`, { cache: "no-store" });
     if (!res.ok) return;
     const data = await res.json();
     if (Array.isArray(data) && data.length > 0) {
-      state = { ...state, [key]: data };
+      // MERGE: DB items take precedence (updated versions), but local-only
+      // items (from optimistic updates that haven't persisted to DB yet)
+      // are preserved so the admin's changes aren't lost on page navigation.
+      const localItems = state[key] as Array<{ id: string }>;
+      const dbIds = new Set(data.map((d: { id: string }) => d.id));
+      const localOnlyItems = localItems.filter((item: { id: string }) => !dbIds.has(item.id));
+      const merged = [...data, ...localOnlyItems];
+      state = { ...state, [key]: merged };
       emit();
     }
   } catch {
@@ -198,19 +205,31 @@ function getServerSnapshot(): State {
 /* ============================================================
  * Client-side initialization — sync with database on mount
  * ============================================================ */
+const SYNC_ENTRIES: Array<{ key: keyof State; type: string }> = [
+  { key: "tours", type: "tours" },
+  { key: "accommodations", type: "accommodations" },
+  { key: "scheduledTrips", type: "scheduled-trips" },
+  { key: "destinations", type: "destinations" },
+  { key: "testimonials", type: "testimonials" },
+  { key: "blogPosts", type: "blog-posts" },
+  { key: "bookings", type: "bookings" },
+  { key: "quotes", type: "quotes" },
+];
+
+// Re-sync all entity types from the database.
+// MERGES with local state — admin's optimistic updates are preserved.
+// Call this on route changes so the homepage shows the latest DB data
+// after the admin creates/edits/deletes content.
+export function resyncStore() {
+  if (typeof window === "undefined") return;
+  for (const { key, type } of SYNC_ENTRIES) {
+    syncFromDatabase(key, type);
+  }
+}
+
 if (typeof window !== "undefined") {
-  // Sync all entity types from the database (replaces seed data if DB has data)
-  const syncEntries: Array<{ key: keyof State; type: string }> = [
-    { key: "tours", type: "tours" },
-    { key: "accommodations", type: "accommodations" },
-    { key: "scheduledTrips", type: "scheduled-trips" },
-    { key: "destinations", type: "destinations" },
-    { key: "testimonials", type: "testimonials" },
-    { key: "blogPosts", type: "blog-posts" },
-    { key: "bookings", type: "bookings" },
-    { key: "quotes", type: "quotes" },
-  ];
-  for (const { key, type } of syncEntries) {
+  // Initial sync on module load
+  for (const { key, type } of SYNC_ENTRIES) {
     syncFromDatabase(key, type);
   }
 }

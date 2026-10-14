@@ -1,7 +1,9 @@
 "use client";
 
+import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "@/lib/router";
+import { resyncStore } from "@/lib/store";
 import { ScrollProgress } from "@/components/luxury/ScrollProgress";
 import { Navigation } from "@/components/luxury/Navigation";
 import { Footer } from "@/components/luxury/Footer";
@@ -25,6 +27,14 @@ export function PageContent() {
   const { page } = useRouter();
 
   const isAdmin = page === "admin";
+
+  // Re-sync store from database on every route change.
+  // This ensures the homepage shows the latest data after the admin
+  // creates/edits/deletes content (testimonials, tours, blog posts, etc.).
+  // The sync MERGES with local state — optimistic updates are preserved.
+  useEffect(() => {
+    resyncStore();
+  }, [page]);
 
   const pages: Record<string, React.ReactNode> = {
     home: <HomePage />,
