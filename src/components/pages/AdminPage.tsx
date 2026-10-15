@@ -50,6 +50,7 @@ import {
   Compass,
   Eye,
   FileText,
+  Globe,
   LayoutDashboard,
   LogOut,
   Mail,
@@ -111,6 +112,7 @@ type AdminSection =
   | "accommodations"
   | "scheduled-trips"
   | "destinations"
+  | "countries"
   | "blog"
   | "content"
   | "quotes"
@@ -765,7 +767,8 @@ const NAV_ITEMS: { id: AdminSection; label: string; icon: React.ComponentType<{ 
   { id: "tours", label: "Tours", icon: Compass },
   { id: "accommodations", label: "Accommodations", icon: Building2 },
   { id: "scheduled-trips", label: "Scheduled Trips", icon: Calendar },
-  { id: "destinations", label: "Countries", icon: MapPin },
+  { id: "destinations", label: "Safari Parks", icon: MapPin },
+  { id: "countries", label: "Countries", icon: Globe },
   { id: "blog", label: "Blog Posts", icon: BookOpen },
   { id: "content", label: "Content", icon: FileText },
   { id: "bookings", label: "Tour Bookings", icon: CalendarCheck },
@@ -953,7 +956,7 @@ function DashboardSection({
               onClick={() => onNavigate("scheduled-trips")}
             />
             <QuickAction
-              label="Add Country"
+              label="Add Safari Park"
               icon={Plus}
               onClick={() => onNavigate("destinations")}
             />
@@ -2807,7 +2810,7 @@ function DestinationsSection() {
   const handleSave = (data: Destination) => {
     if (editing === "new") {
       store.addDestination(data);
-      toast.success("Country created");
+      toast.success("Safari Park created");
     } else {
       store.updateDestination(data.id, data);
       toast.success("Destination updated");
@@ -2825,10 +2828,10 @@ function DestinationsSection() {
     <div className="space-y-6">
       <SectionHeader
         eyebrow="MANAGE"
-        title="Countries"
+        title="Safari Parks"
         action={
           <PrimaryButton
-            label="Add Country"
+            label="Add Safari Park"
             icon={Plus}
             onClick={() => setEditing("new")}
           />
@@ -2902,6 +2905,160 @@ function DestinationsSection() {
           onClose={() => setEditing(null)}
           onSave={handleSave}
         />
+      )}
+    </div>
+  );
+}
+
+/* ============================================================
+ * Countries Section — manages the "Explore Our Signature
+ * Destinations" section on the homepage.
+ * ============================================================
+ * Shows each destination (country) with inline-editable fields:
+ * country name, park name, tagline, description, image URL,
+ * imagePortrait URL. Changes are saved to the DB via
+ * store.updateDestination and reflect on the homepage immediately
+ * (the homepage fetches from /api/crud?type=destinations).
+ * ============================================================ */
+function CountriesSection() {
+  const destinations = useDestinations();
+  const [editing, setEditing] = useState<string | null>(null);
+  const [draft, setDraft] = useState<Record<string, string>>({});
+
+  const startEdit = (d: Destination) => {
+    setEditing(d.id);
+    setDraft({
+      country: d.country,
+      name: d.name,
+      tagline: d.tagline,
+      description: d.description,
+      image: d.image,
+      imagePortrait: d.imagePortrait,
+    });
+  };
+
+  const cancelEdit = () => {
+    setEditing(null);
+    setDraft({});
+  };
+
+  const saveEdit = (id: string) => {
+    store.updateDestination(id, draft);
+    toast.success("Country updated");
+    cancelEdit();
+  };
+
+  const field = (key: string) => ({
+    value: draft[key] ?? "",
+    onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+      setDraft((prev) => ({ ...prev, [key]: e.target.value })),
+  });
+
+  const inputClass =
+    "w-full px-3 py-2 bg-alabaster border border-charcoal/15 text-sm focus:outline-none focus:border-gold";
+  const labelClass =
+    "text-[10px] uppercase tracking-wider text-gold mb-1 block";
+
+  return (
+    <div className="space-y-6">
+      <SectionHeader eyebrow="HOMEPAGE" title="Countries" />
+
+      <div className="bg-alabaster/50 border border-charcoal/10 p-4 text-sm text-muted-foreground" style={{ borderRadius: 0 }}>
+        <strong className="text-charcoal">Manage "Explore Our Signature Destinations"</strong>
+        <p className="mt-1">
+          Changes here update the destination cards on the homepage. Edit the
+          country name, park name, description, or image URLs — then click Save.
+          The homepage reflects changes immediately after a hard-refresh.
+        </p>
+      </div>
+
+      {destinations.length === 0 ? (
+        <div className="text-center py-12 text-muted-foreground">
+          <p>No countries yet. Add destinations from the Safari Parks tab first.</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {destinations.map((d) => (
+            <div key={d.id} className="bg-alabaster border border-charcoal/10 overflow-hidden" style={{ borderRadius: 0 }}>
+              {/* Image preview */}
+              <div className="relative aspect-[3/2] overflow-hidden bg-charcoal/10">
+                {d.image ? (
+                  <img src={d.image} alt={d.name} className="absolute inset-0 w-full h-full object-cover" />
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center text-muted-foreground text-sm">No image</div>
+                )}
+                <div className="absolute top-2 right-2">
+                  <span className="px-2 py-0.5 text-[10px] uppercase tracking-wider text-cream bg-charcoal/70" style={{ borderRadius: 0 }}>
+                    {d.country}
+                  </span>
+                </div>
+              </div>
+
+              {/* Edit / display */}
+              <div className="p-4">
+                {editing === d.id ? (
+                  <div className="space-y-3">
+                    <div>
+                      <label className={labelClass}>Country Name</label>
+                      <input {...field("country")} className={inputClass} />
+                    </div>
+                    <div>
+                      <label className={labelClass}>Park / Destination Name</label>
+                      <input {...field("name")} className={inputClass} />
+                    </div>
+                    <div>
+                      <label className={labelClass}>Tagline</label>
+                      <input {...field("tagline")} className={inputClass} />
+                    </div>
+                    <div>
+                      <label className={labelClass}>Description</label>
+                      <textarea {...field("description")} rows={3} className={inputClass} />
+                    </div>
+                    <div>
+                      <label className={labelClass}>Image URL</label>
+                      <input {...field("image")} className={inputClass} placeholder="https://res.cloudinary.com/..." />
+                    </div>
+                    <div>
+                      <label className={labelClass}>Image Portrait URL</label>
+                      <input {...field("imagePortrait")} className={inputClass} placeholder="https://res.cloudinary.com/..." />
+                    </div>
+                    <div className="flex gap-2 pt-2">
+                      <button
+                        onClick={() => saveEdit(d.id)}
+                        className="px-4 py-2 bg-gold text-charcoal text-sm font-medium hover:bg-gold/90 flex items-center gap-1.5"
+                        style={{ borderRadius: 0 }}
+                      >
+                        <Save className="w-3.5 h-3.5" /> Save
+                      </button>
+                      <button
+                        onClick={cancelEdit}
+                        className="px-4 py-2 bg-cream border border-charcoal/15 text-charcoal text-sm hover:bg-alabaster"
+                        style={{ borderRadius: 0 }}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <h3 className="text-lg mb-0.5" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+                      {d.name}
+                    </h3>
+                    <p className="text-xs text-gold uppercase tracking-wider mb-2">{d.tagline}</p>
+                    <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{d.description}</p>
+                    <button
+                      onClick={() => startEdit(d)}
+                      className="px-3 py-1.5 bg-charcoal text-cream text-xs font-medium hover:bg-charcoal/90 flex items-center gap-1.5"
+                      style={{ borderRadius: 0 }}
+                    >
+                      <Pencil className="w-3 h-3" /> Edit Country
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );
@@ -4735,6 +4892,7 @@ export function AdminPage() {
           {section === "accommodations" && <AccommodationsSection />}
           {section === "scheduled-trips" && <ScheduledTripsSection />}
           {section === "destinations" && <DestinationsSection />}
+          {section === "countries" && <CountriesSection />}
           {section === "blog" && <BlogSection />}
           {section === "content" && <ContentSection />}
           {section === "bookings" && <BookingsSection filterType="tour" title="Tour Bookings" />}
