@@ -18,39 +18,36 @@ import {
 import { FeaturedTrips } from "@/components/luxury/FeaturedTrips";
 import { useRouter } from "@/lib/router";
 import { useLang } from "@/lib/language";
-import { destinations as seedDestinations } from "@/lib/content";
+import { destinations } from "@/lib/content";
 
 export function HomePage() {
   const { navigate } = useRouter();
   const { t } = useLang();
-  // Start with seed data (matches SSR HTML → no hydration error).
-  // After mount, fetch from DB + NORMALIZE all fields to match seed shape.
-  // This prevents "client-side exception" caused by null/undefined fields
-  // (e.g., DB has gameParks: null, seed has gameParks: [...]).
-  const [destinations, setDestinations] = useState(seedDestinations);
+
+  // After mount, fetch from DB and DIRECTLY update the DOM (no React state change
+  // → no re-render → no crash). This is the safest way to sync DB data to the
+  // homepage without triggering "client-side exception" errors.
   useEffect(() => {
     fetch("/api/crud?type=destinations", { cache: "no-store" })
       .then((res) => (res.ok ? res.json() : []))
       .then((data) => {
         if (!Array.isArray(data) || data.length === 0) return;
-        // NORMALIZE: ensure every field matches the seed data shape
-        const normalized = data.map((d: any) => ({
-          id: d.id || "",
-          name: d.name || "",
-          country: d.country || d.name || "",
-          tagline: d.tagline || "",
-          description: d.description || "",
-          image: d.image || "",
-          imagePortrait: d.imagePortrait || d.image || "",
-          days: d.days || "",
-          price: d.price || "",
-          gameParks: Array.isArray(d.gameParks) ? d.gameParks : [],
-        }));
-        if (normalized.length > 0) {
-          setDestinations(normalized);
-        }
+        // For each destination from the DB, find the matching card in the DOM
+        // (by data-dest-id) and update its image + text directly.
+        data.forEach((d: any) => {
+          const card = document.querySelector(`[data-dest-id="${d.id}"]`);
+          if (!card) return;
+          const img = card.querySelector("img");
+          if (img && d.imagePortrait) { img.src = d.imagePortrait; img.alt = d.name || ""; }
+          const nameEl = card.querySelector("[data-dest-name]");
+          if (nameEl && d.name) nameEl.textContent = d.name;
+          const taglineEl = card.querySelector("[data-dest-tagline]");
+          if (taglineEl && d.tagline) taglineEl.textContent = d.tagline;
+          const countryEl = card.querySelector("[data-dest-country]");
+          if (countryEl && d.country) countryEl.textContent = d.country;
+        });
       })
-      .catch(() => { /* keep seed data on error — graceful fallback */ });
+      .catch(() => {});
   }, []);
 
   return (
@@ -223,6 +220,7 @@ function HorizontalDestinations() {
           {destinations.map((dest, idx) => (
             <article
               key={dest.id}
+              data-dest-id={dest.id}
               data-cursor="view"
               onClick={() => navigate("tours")}
               className="group relative flex-shrink-0 w-[80vw] sm:w-[55vw] md:w-[42vw] lg:w-[34vw] aspect-[3/4] overflow-hidden cursor-pointer"
@@ -241,15 +239,15 @@ function HorizontalDestinations() {
 
               {/* Country tag */}
               <div className="absolute top-6 right-6">
-                <span className="font-eyebrow text-cream/80 bg-charcoal/30 backdrop-blur-sm px-3 py-2">
+                <span className="font-eyebrow text-cream/80 bg-charcoal/30 backdrop-blur-sm px-3 py-2" data-dest-country>
                   {dest.country}
                 </span>
               </div>
 
               {/* Bottom content */}
               <div className="absolute bottom-0 left-0 right-0 p-8 md:p-10">
-                <p className="font-eyebrow text-gold-soft mb-3">{dest.tagline}</p>
-                <h3 className="font-display text-4xl md:text-5xl text-cream tracking-tight mb-3">
+                <p className="font-eyebrow text-gold-soft mb-3" data-dest-tagline>{dest.tagline}</p>
+                <h3 className="font-display text-4xl md:text-5xl text-cream tracking-tight mb-3" data-dest-name>
                   {dest.name}
                 </h3>
                 <p className="text-cream/70 text-sm leading-relaxed max-w-md mb-5 line-clamp-3 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
