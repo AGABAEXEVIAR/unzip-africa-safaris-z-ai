@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "@/lib/router";
 import { useLang } from "@/lib/language";
 import { destinations as seedDestinations } from "@/lib/content";
-import { useDestinations } from "@/lib/store";
+import { useCountries } from "@/lib/store";
 
 const sharp = { borderRadius: 0 } as const;
 
@@ -16,7 +16,7 @@ export function CountryScrollStack() {
   // → matches server HTML → no hydration crash). After mount, switches
   // to store data (which has DB data from the Countries admin tab).
   const [mounted, setMounted] = useState(false);
-  const dbDestinations = useDestinations();
+  const dbDestinations = useCountries();
 
   useEffect(() => {
     setMounted(true);
@@ -24,9 +24,9 @@ export function CountryScrollStack() {
 
   // Use DB data after mount (has admin's changes). Before mount, use
   // seed data (matches SSR → no hydration error).
-  // Filter to show ONLY country entries (type === 'country' or missing type = country).
+  // The countries table only contains country entries — no filter needed.
   const destinations = mounted && dbDestinations.length > 0
-    ? dbDestinations.filter((d: any) => d.type !== 'park')
+    ? dbDestinations
     : seedDestinations;
 
   // Duplicate the list so the marquee can loop seamlessly — when the track

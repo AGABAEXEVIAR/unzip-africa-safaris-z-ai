@@ -82,13 +82,29 @@ export const ENTITIES: Record<string, EntityDef> = {
 
   destinations: {
     table: "Destination",
-    columns: ["name", "country", "tagline", "description", "image", "imagePortrait", "days", "price", "type"],
+    columns: ["name", "country", "tagline", "description", "image", "imagePortrait", "days", "price"],
     jsonColumns: [],
     inlineChildren: [],
     autoOnInsert: ["createdAt", "updatedAt"],
     autoOnUpdate: ["updatedAt"],
-    // type field: 'country' for the 4 country entries, 'park' for game park entries.
-    // This lets the frontend filter countries vs parks cleanly without hardcoding IDs.
+  },
+
+  countries: {
+    table: "Country",
+    columns: ["name", "tagline", "description", "image", "imagePortrait"],
+    jsonColumns: [],
+    inlineChildren: [],
+    autoOnInsert: ["createdAt", "updatedAt"],
+    autoOnUpdate: ["updatedAt"],
+  },
+
+  parks: {
+    table: "Park",
+    columns: ["name", "country", "tagline", "description", "image", "imagePortrait", "days", "price"],
+    jsonColumns: [],
+    inlineChildren: [],
+    autoOnInsert: ["createdAt", "updatedAt"],
+    autoOnUpdate: ["updatedAt"],
   },
 
   testimonials: {

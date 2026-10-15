@@ -19,7 +19,7 @@ import { FeaturedTrips } from "@/components/luxury/FeaturedTrips";
 import { useRouter } from "@/lib/router";
 import { useLang } from "@/lib/language";
 import { destinations as seedDestinations } from "@/lib/content";
-import { useDestinations } from "@/lib/store";
+import { useParks } from "@/lib/store";
 
 export function HomePage() {
   const { navigate } = useRouter();
@@ -147,7 +147,7 @@ function HorizontalGameParks() {
   // → matches server HTML → no hydration crash). After mount, switches
   // to store data (which has DB data from the Safari Parks admin tab).
   const [mounted, setMounted] = useState(false);
-  const allDestinations = useDestinations();
+  const allDestinations = useParks();
 
   useEffect(() => {
     setMounted(true);
@@ -167,10 +167,10 @@ function HorizontalGameParks() {
   }, []);
 
   // Use DB data after mount (has admin's changes from Safari Parks tab).
-  // Filter to show ONLY park entries (type === 'park').
+  // The parks table only contains park entries — no filter needed.
   // Before mount, use seed data (matches SSR → no hydration error).
   const destinations = mounted && allDestinations.length > 0
-    ? allDestinations.filter((d: any) => d.type === 'park')
+    ? allDestinations
     : seedGameParks;
 
   const { scrollYProgress } = useScroll({

@@ -18,6 +18,8 @@ import {
   useAccommodations,
   useBookings,
   useDestinations,
+  useCountries,
+  useParks,
   useQuotes,
   useScheduledTrips,
   useTestimonials,
@@ -2804,17 +2806,17 @@ function formToDest(
 }
 
 function DestinationsSection() {
-  const allDestinations = useDestinations();
-  // Show only PARK entries (type === 'park') — countries are managed by the Countries tab
-  const destinations = allDestinations.filter((d: any) => d.type === 'park');
+  const allDestinations = useParks();
+  // The parks table only contains park entries — no filter needed.
+  const destinations = allDestinations;
   const [editing, setEditing] = useState<Destination | "new" | null>(null);
 
   const handleSave = (data: Destination) => {
     if (editing === "new") {
-      store.addDestination({ ...data, type: "park" } as any);
+      store.addPark(data as any);
       toast.success("Safari Park created");
     } else {
-      store.updateDestination(data.id, data);
+      store.updatePark(data.id, data);
       toast.success("Destination updated");
     }
     setEditing(null);
@@ -2822,7 +2824,7 @@ function DestinationsSection() {
 
   const handleDelete = (id: string) => {
     if (!confirm("Delete this destination?")) return;
-    store.deleteDestination(id);
+    store.deletePark(id);
     toast.success("Destination deleted");
   };
 
@@ -2922,12 +2924,12 @@ function DestinationsSection() {
  * - Changes reflect on the homepage carousel after hard-refresh
  * ============================================================ */
 function CountriesSection() {
-  const destinations = useDestinations();
+  const destinations = useCountries();
   const [editing, setEditing] = useState<Destination | "new" | null>(null);
   const [draft, setDraft] = useState<Record<string, string>>({});
 
-  // Show only COUNTRY entries (type !== 'park') — parks are managed by the Safari Parks tab
-  const countries = destinations.filter((d: any) => d.type !== 'park');
+  // The countries table only contains country entries — no filter needed.
+  const countries = destinations;
 
   const startEdit = (d: Destination) => {
     setEditing(d.id);
@@ -2964,10 +2966,10 @@ function CountriesSection() {
         price: "",
         type: "country",
       };
-      store.addDestination(newCountry as any);
+      store.addCountry(newCountry as any);
       toast.success("Country created");
     } else {
-      store.updateDestination(id, draft);
+      store.updateCountry(id, draft);
       toast.success("Country updated");
     }
     cancelEdit();
@@ -2975,7 +2977,7 @@ function CountriesSection() {
 
   const handleDelete = (id: string) => {
     if (!confirm("Delete this country? This cannot be undone.")) return;
-    store.deleteDestination(id);
+    store.deleteCountry(id);
     toast.success("Country deleted");
   };
 

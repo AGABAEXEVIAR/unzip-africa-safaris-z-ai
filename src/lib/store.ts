@@ -7,6 +7,7 @@ import {
   scheduledTrips as seedScheduledTrips,
   testimonials as seedTestimonials,
   destinations as seedDestinations,
+  parks as seedParks,
   blogPosts as seedBlogPosts,
   type TourPackage,
   type Accommodation,
@@ -69,6 +70,8 @@ type State = {
   scheduledTrips: ScheduledTrip[];
   testimonials: Testimonial[];
   destinations: Destination[];
+  countries: Destination[];
+  parks: Destination[];
   blogPosts: BlogPost[];
   bookings: Booking[];
   quotes: QuoteRequest[];
@@ -80,6 +83,8 @@ let state: State = {
   scheduledTrips: [...seedScheduledTrips],
   testimonials: [...seedTestimonials],
   destinations: [...seedDestinations],
+  countries: [...seedDestinations],
+  parks: [...seedParks],
   blogPosts: [...seedBlogPosts],
   bookings: [],
   quotes: [],
@@ -120,6 +125,8 @@ if (stored) {
     scheduledTrips: stored.scheduledTrips ?? [...seedScheduledTrips],
     testimonials: stored.testimonials ?? [...seedTestimonials],
     destinations: stored.destinations ?? [...seedDestinations],
+    countries: stored.countries ?? [...seedDestinations],
+    parks: stored.parks ?? [...seedParks],
     blogPosts: stored.blogPosts ?? [...seedBlogPosts],
     bookings: stored.bookings ?? [],
     quotes: stored.quotes ?? [],
@@ -132,6 +139,8 @@ const SERVER_SNAPSHOT: State = {
   scheduledTrips: [...seedScheduledTrips],
   testimonials: [...seedTestimonials],
   destinations: [...seedDestinations],
+  countries: [...seedDestinations],
+  parks: [...seedParks],
   blogPosts: [...seedBlogPosts],
   bookings: [],
   quotes: [],
@@ -148,6 +157,8 @@ const API_TYPE_MAP: Record<string, string> = {
   accommodations: "accommodations",
   scheduledTrips: "scheduled-trips",
   destinations: "destinations",
+  countries: "countries",
+  parks: "parks",
   testimonials: "testimonials",
   blogPosts: "blog-posts",
   bookings: "bookings",
@@ -256,6 +267,8 @@ const SYNC_ENTRIES: Array<{ key: keyof State; type: string }> = [
   { key: "accommodations", type: "accommodations" },
   { key: "scheduledTrips", type: "scheduled-trips" },
   { key: "destinations", type: "destinations" },
+  { key: "countries", type: "countries" },
+  { key: "parks", type: "parks" },
   { key: "testimonials", type: "testimonials" },
   { key: "blogPosts", type: "blog-posts" },
   { key: "bookings", type: "bookings" },
@@ -394,6 +407,18 @@ export const store = {
     apiDelete("destinations", id);
   },
 
+  /* Countries */
+  setCountries(countries: Destination[]) { state = { ...state, countries }; emit(); },
+  addCountry(country: Destination) { state = { ...state, countries: [country, ...state.countries] }; emit(); apiCreate("countries", country, "countries", country.id); },
+  updateCountry(id: string, patch: Partial<Destination>) { state = { ...state, countries: state.countries.map((c) => (c.id === id ? { ...c, ...patch } : c)) }; emit(); apiUpdate("countries", id, patch); },
+  deleteCountry(id: string) { state = { ...state, countries: state.countries.filter((c) => c.id !== id) }; emit(); apiDelete("countries", id); },
+
+  /* Parks */
+  setParks(parks: Destination[]) { state = { ...state, parks }; emit(); },
+  addPark(park: Destination) { state = { ...state, parks: [park, ...state.parks] }; emit(); apiCreate("parks", park, "parks", park.id); },
+  updatePark(id: string, patch: Partial<Destination>) { state = { ...state, parks: state.parks.map((p) => (p.id === id ? { ...p, ...patch } : p)) }; emit(); apiUpdate("parks", id, patch); },
+  deletePark(id: string) { state = { ...state, parks: state.parks.filter((p) => p.id !== id) }; emit(); apiDelete("parks", id); },
+
   /* Blog Posts */
   setBlogPosts(posts: BlogPost[]) {
     state = { ...state, blogPosts: posts };
@@ -485,6 +510,12 @@ export function useTestimonials(): Testimonial[] {
 }
 export function useDestinations(): Destination[] {
   return useStore((s) => s.destinations);
+}
+export function useCountries(): Destination[] {
+  return useStore((s) => s.countries);
+}
+export function useParks(): Destination[] {
+  return useStore((s) => s.parks);
 }
 export function useBlogPosts(): BlogPost[] {
   return useStore((s) => s.blogPosts);
