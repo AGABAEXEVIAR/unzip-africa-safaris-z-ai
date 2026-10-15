@@ -2880,9 +2880,9 @@ function DestinationsSection() {
                 </div>
               </div>
               <div className="p-5">
-                <p className="text-[10px] uppercase tracking-wider text-gold mb-1">
+                <span className="inline-block text-[10px] uppercase tracking-wider text-gold mb-2 px-2 py-0.5 border border-gold/30 bg-gold/5" style={{ borderRadius: 0 }}>
                   {d.country}
-                </p>
+                </span>
                 <h3
                   className="text-xl mb-1"
                   style={{ fontFamily: "var(--font-cormorant), serif" }}
@@ -2890,10 +2890,6 @@ function DestinationsSection() {
                   {d.name}
                 </h3>
                 <p className="text-sm text-muted-foreground mb-3">{d.tagline}</p>
-                <div className="flex items-center justify-between text-xs text-charcoal/70">
-                  <span>{d.days}</span>
-                  <span className="font-medium">{d.price}</span>
-                </div>
               </div>
             </div>
           ))}
