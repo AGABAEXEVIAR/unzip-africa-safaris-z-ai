@@ -124,7 +124,7 @@ export const destinations: Destination[] = [
     id: "serengeti",
     name: "Tanzania",
     country: "Tanzania",
-    tagline: "The Great Migration",
+    tagline: "Land of Kilimanjaro, Serengeti and Zanzibar",
     description:
       "Witness two million wildebeest thundering across endless golden plains — a primal, deafening tide of life that has reshaped this land for ten thousand years. We position you ahead of the herd, in private mobile camps that move with the migration.",
     image:
@@ -143,7 +143,7 @@ export const destinations: Destination[] = [
     id: "bwindi",
     name: "Uganda",
     country: "Uganda",
-    tagline: "Pearl of Africa",
+    tagline: "The Pearl of Africa",
     description:
       "A mist-shrouded primeval forest where half the world's mountain gorillas live. After a measured trek through ancient undergrowth, you sit in silent reverence seven meters from a silverback — a moment that reorders everything you thought you knew about wildness.",
     image:
@@ -162,7 +162,7 @@ export const destinations: Destination[] = [
     id: "maasai-mara",
     name: "Kenya",
     country: "Kenya",
-    tagline: "Big Cat Country",
+    tagline: "Visit Magical Kenya",
     description:
       "The northern extension of the Serengeti ecosystem — and the densest concentration of big cats on earth. Our private conservancies grant you off-road access, night drives, and walking safaris impossible inside the main reserve.",
     image:

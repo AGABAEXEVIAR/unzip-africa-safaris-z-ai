@@ -18,11 +18,32 @@ import {
 import { FeaturedTrips } from "@/components/luxury/FeaturedTrips";
 import { useRouter } from "@/lib/router";
 import { useLang } from "@/lib/language";
-import { destinations } from "@/lib/content";
+import { destinations as seedDestinations } from "@/lib/content";
+
+// IDs of the 4 country entries (managed by the Countries admin tab)
+const COUNTRY_IDS = ["serengeti", "bwindi", "maasai-mara", "virunga"];
 
 export function HomePage() {
   const { navigate } = useRouter();
   const { t } = useLang();
+  // Start with seed data (matches SSR → no hydration error).
+  // After mount, fetch from DB so Countries tab changes reflect on the homepage.
+  const [destinations, setDestinations] = useState(seedDestinations);
+  useEffect(() => {
+    fetch("/api/crud?type=destinations", { cache: "no-store" })
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data) => {
+        if (!Array.isArray(data) || data.length === 0) return;
+        // Filter to only the 4 country entries
+        const countries = data.filter((d: any) =>
+          COUNTRY_IDS.includes(d.id) && d.imagePortrait && d.name
+        );
+        if (countries.length > 0) {
+          setDestinations(countries);
+        }
+      })
+      .catch(() => { /* keep seed data on error */ });
+  }, []);
 
   return (
     <div className="page-enter">
