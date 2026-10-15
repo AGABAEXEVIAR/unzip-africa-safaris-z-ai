@@ -768,7 +768,6 @@ const NAV_ITEMS: { id: AdminSection; label: string; icon: React.ComponentType<{ 
   { id: "destinations", label: "Destinations", icon: MapPin },
   { id: "blog", label: "Blog Posts", icon: BookOpen },
   { id: "content", label: "Content", icon: FileText },
-  { id: "quotes", label: "Quote Requests", icon: Mail },
   { id: "bookings", label: "Tour Bookings", icon: CalendarCheck },
   { id: "scheduled-trip-bookings", label: "Scheduled Trip Bookings", icon: Calendar },
   { id: "testimonials", label: "Testimonials", icon: Quote },
@@ -967,11 +966,6 @@ function DashboardSection({
               label="Add Testimonial"
               icon={Plus}
               onClick={() => onNavigate("testimonials")}
-            />
-            <QuickAction
-              label="View Quotes"
-              icon={Mail}
-              onClick={() => onNavigate("quotes")}
             />
           </div>
         </Panel>
@@ -4747,7 +4741,6 @@ export function AdminPage() {
           {section === "destinations" && <DestinationsSection />}
           {section === "blog" && <BlogSection />}
           {section === "content" && <ContentSection />}
-          {section === "quotes" && <QuotesSection />}
           {section === "bookings" && <BookingsSection filterType="tour" title="Tour Bookings" />}
           {section === "scheduled-trip-bookings" && <BookingsSection filterType="scheduled-trip" title="Scheduled Trip Bookings" />}
           {section === "testimonials" && <TestimonialsSection />}
