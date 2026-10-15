@@ -18,37 +18,12 @@ import {
 import { FeaturedTrips } from "@/components/luxury/FeaturedTrips";
 import { useRouter } from "@/lib/router";
 import { useLang } from "@/lib/language";
-import { destinations } from "@/lib/content";
+import { destinations as seedDestinations } from "@/lib/content";
+import { useDestinations } from "@/lib/store";
 
 export function HomePage() {
   const { navigate } = useRouter();
   const { t } = useLang();
-
-  // After mount, fetch from DB and DIRECTLY update the DOM (no React state change
-  // → no re-render → no crash). This is the safest way to sync DB data to the
-  // homepage without triggering "client-side exception" errors.
-  useEffect(() => {
-    fetch("/api/crud?type=destinations", { cache: "no-store" })
-      .then((res) => (res.ok ? res.json() : []))
-      .then((data) => {
-        if (!Array.isArray(data) || data.length === 0) return;
-        // For each destination from the DB, find the matching card in the DOM
-        // (by data-dest-id) and update its image + text directly.
-        data.forEach((d: any) => {
-          const card = document.querySelector(`[data-dest-id="${d.id}"]`);
-          if (!card) return;
-          const img = card.querySelector("img");
-          if (img && d.imagePortrait) { img.src = d.imagePortrait; img.alt = d.name || ""; }
-          const nameEl = card.querySelector("[data-dest-name]");
-          if (nameEl && d.name) nameEl.textContent = d.name;
-          const taglineEl = card.querySelector("[data-dest-tagline]");
-          if (taglineEl && d.tagline) taglineEl.textContent = d.tagline;
-          const countryEl = card.querySelector("[data-dest-country]");
-          if (countryEl && d.country) countryEl.textContent = d.country;
-        });
-      })
-      .catch(() => {});
-  }, []);
 
   return (
     <div className="page-enter">
@@ -152,8 +127,14 @@ function HorizontalDestinations() {
   const trackRef = useRef<HTMLDivElement>(null);
   const [trackWidth, setTrackWidth] = useState(0);
   const [viewportH, setViewportH] = useState(800);
+  // mounted flag: false during SSR + first client render (uses seed data
+  // → matches server HTML → no hydration crash). After mount, switches
+  // to store data (which has DB data from the Countries admin tab).
+  const [mounted, setMounted] = useState(false);
+  const dbDestinations = useDestinations();
 
   useEffect(() => {
+    setMounted(true);
     const measure = () => {
       if (trackRef.current) {
         setTrackWidth(Math.max(0, trackRef.current.scrollWidth - window.innerWidth));
@@ -168,6 +149,12 @@ function HorizontalDestinations() {
       window.removeEventListener("resize", measure);
     };
   }, []);
+
+  // Use DB data after mount (has admin's changes). Before mount, use
+  // seed data (matches SSR → no hydration error).
+  const destinations = mounted && dbDestinations.length > 0
+    ? dbDestinations
+    : seedDestinations;
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
