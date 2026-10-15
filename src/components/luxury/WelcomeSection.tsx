@@ -18,7 +18,7 @@ export function WelcomeSection() {
             <Reveal variant="left">
               <div className="relative aspect-[4/5] overflow-hidden bg-bone group card-zoom">
                 <img
-                  src="https://sfile.chatglm.cn/images-ppt/e9781ad7f905.jpg"
+                  src="https://res.cloudinary.com/emz7hwx1/image/upload/v1791650341/DSC_1267.jpg"
                   alt="Safari landscape with acacia trees at golden hour"
                   className="absolute inset-0 w-full h-full object-cover img-luxury"
                 />
