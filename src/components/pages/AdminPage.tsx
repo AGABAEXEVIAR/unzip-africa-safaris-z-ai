@@ -765,7 +765,7 @@ const NAV_ITEMS: { id: AdminSection; label: string; icon: React.ComponentType<{ 
   { id: "tours", label: "Tours", icon: Compass },
   { id: "accommodations", label: "Accommodations", icon: Building2 },
   { id: "scheduled-trips", label: "Scheduled Trips", icon: Calendar },
-  { id: "destinations", label: "Destinations", icon: MapPin },
+  { id: "destinations", label: "Safari Parks", icon: MapPin },
   { id: "blog", label: "Blog Posts", icon: BookOpen },
   { id: "content", label: "Content", icon: FileText },
   { id: "bookings", label: "Tour Bookings", icon: CalendarCheck },

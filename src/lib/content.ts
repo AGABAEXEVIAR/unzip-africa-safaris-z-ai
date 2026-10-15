@@ -159,18 +159,18 @@ export const destinations: Destination[] = [
     ],
   },
   {
-    id: "okavango",
-    name: "Okavango Delta",
-    country: "Botswana",
-    tagline: "The Inland Oasis",
+    id: "ngorongoro",
+    name: "Ngorongoro Crater",
+    country: "Tanzania",
+    tagline: "The Garden of Eden",
     description:
-      "An immense river that never reaches the sea — instead, it spills into the Kalahari, creating a watery Eden of crystal channels, papyrus islands, and silent mokoro passages. Here, you glide past elephant herds half-submerged in lilac water.",
+      "A collapsed volcano caldera teeming with wildlife — the densest concentration of predators in Africa. Eight miles across, 2,000 feet deep, and home to 25,000 large animals in a natural amphitheatre of staggering abundance.",
     image:
-      "https://images.unsplash.com/photo-1505761671935-60b3a7427bad?auto=format&fit=crop&w=1600&q=80",
+      "https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=1600&q=80",
     imagePortrait:
-      "https://images.unsplash.com/photo-1505761671935-60b3a7427bad?auto=format&fit=crop&w=900&q=80",
-    days: "9 Days",
-    price: "From $54,200",
+      "https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=900&q=80",
+    days: "6 Days",
+    price: "From $36,500",
   },
   {
     id: "maasai-mara",
@@ -187,18 +187,18 @@ export const destinations: Destination[] = [
     price: "From $42,800",
   },
   {
-    id: "namib",
-    name: "Sossusvlei",
-    country: "Namibia",
-    tagline: "The Living Desert",
+    id: "murchison",
+    name: "Murchison Falls National Park",
+    country: "Uganda",
+    tagline: "The Nile's Thunder",
     description:
-      "Iron-red dunes rising a thousand feet from a clay pan white as bone — the oldest desert on earth, sculpted by wind for eighty million years. At dawn we climb Big Daddy in silence, then descend into Dead Vlei, where 900-year-old camel thorn trees stand petrified against orange sand.",
+      "The Nile explodes through a 7-meter gorge — Uganda's largest park with buffalo, giraffe, and lion. Above the falls, the river spreads wide and lazy through palm-studded savannah; below, it churns through a narrow cleft in the rift valley wall.",
     image:
-      "https://sfile.chatglm.cn/images-ppt/84ed8813798e.jpg",
+      "https://images.unsplash.com/photo-1547036967-23d11aacaee0?auto=format&fit=crop&w=1600&q=80",
     imagePortrait:
-      "https://sfile.chatglm.cn/images-ppt/4dd444015d49.jpg",
-    days: "8 Days",
-    price: "From $46,900",
+      "https://images.unsplash.com/photo-1547036967-23d11aacaee0?auto=format&fit=crop&w=900&q=80",
+    days: "7 Days",
+    price: "From $34,200",
   },
   {
     id: "virunga",
