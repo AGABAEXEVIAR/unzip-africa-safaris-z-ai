@@ -2917,19 +2917,18 @@ function DestinationsSection() {
  * Countries Section — manages the "Explore Our Signature
  * Destinations" carousel on the homepage.
  * ============================================================
- * Shows 4 countries (Tanzania, Uganda, Kenya, Rwanda) from the
- * static content.ts seed data. Edits to country name, tagline,
- * and image URLs are saved to the DB AND update content.ts.
+ * Shows ALL country entries from the DB. Admin can:
+ * - Edit existing countries (name, tagline, image, imagePortrait)
+ * - Add new countries (via "Add Country" button)
+ * - Changes reflect on the homepage carousel after hard-refresh
  * ============================================================ */
 function CountriesSection() {
   const destinations = useDestinations();
-  const [editing, setEditing] = useState<string | null>(null);
+  const [editing, setEditing] = useState<Destination | "new" | null>(null);
   const [draft, setDraft] = useState<Record<string, string>>({});
 
-  // Filter to show only the 4 country entries (by matching known country IDs)
-  const countries = destinations.filter(d =>
-    ["serengeti", "bwindi", "maasai-mara", "virunga"].includes(d.id)
-  );
+  // Show all destinations (no filter — admin can add unlimited countries)
+  const countries = destinations;
 
   const startEdit = (d: Destination) => {
     setEditing(d.id);
@@ -2937,10 +2936,14 @@ function CountriesSection() {
       country: d.country,
       name: d.name,
       tagline: d.tagline,
-      description: d.description,
       image: d.image,
       imagePortrait: d.imagePortrait,
     });
+  };
+
+  const startNew = () => {
+    setEditing("new");
+    setDraft({ country: "", name: "", tagline: "", image: "", imagePortrait: "" });
   };
 
   const cancelEdit = () => {
@@ -2949,8 +2952,25 @@ function CountriesSection() {
   };
 
   const saveEdit = (id: string) => {
-    store.updateDestination(id, draft);
-    toast.success("Country updated");
+    if (editing === "new") {
+      const newCountry = {
+        id: generateId("country"),
+        name: draft.name || "New Country",
+        country: draft.country || draft.name || "New Country",
+        tagline: draft.tagline || "",
+        description: "",
+        image: draft.image || "",
+        imagePortrait: draft.imagePortrait || draft.image || "",
+        days: "",
+        price: "",
+        gameParks: [],
+      };
+      store.addDestination(newCountry as any);
+      toast.success("Country created");
+    } else {
+      store.updateDestination(id, draft);
+      toast.success("Country updated");
+    }
     cancelEdit();
   };
 
@@ -2967,7 +2987,19 @@ function CountriesSection() {
 
   return (
     <div className="space-y-6">
-      <SectionHeader eyebrow="HOMEPAGE" title="Countries" />
+      <SectionHeader
+        eyebrow="HOMEPAGE"
+        title="Countries"
+        action={
+          <button
+            onClick={startNew}
+            className="px-4 py-2 bg-gold text-charcoal text-sm font-medium hover:bg-gold/90 flex items-center gap-1.5"
+            style={{ borderRadius: 0 }}
+          >
+            <Plus className="w-3.5 h-3.5" /> Add Country
+          </button>
+        }
+      />
 
       <div className="bg-alabaster/50 border border-charcoal/10 p-4 text-sm text-muted-foreground" style={{ borderRadius: 0 }}>
         <strong className="text-charcoal">Manage "Explore Our Signature Destinations"</strong>
@@ -2978,12 +3010,54 @@ function CountriesSection() {
         </p>
       </div>
 
-      {countries.length === 0 ? (
+      {countries.length === 0 && editing !== "new" ? (
         <div className="text-center py-12 text-muted-foreground">
-          <p>No countries found. Make sure the 4 country destinations are in the database.</p>
+          <p>No countries yet. Click "Add Country" to create your first one.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* New country form (when editing === "new") */}
+          {editing === "new" && (
+            <div className="bg-alabaster border border-gold/30 overflow-hidden" style={{ borderRadius: 0 }}>
+              <div className="p-4">
+                <h3 className="text-lg mb-3 text-gold" style={{ fontFamily: "var(--font-cormorant), serif" }}>New Country</h3>
+                <div className="space-y-3">
+                  <div>
+                    <label className={labelClass}>Country Name</label>
+                    <input {...field("name")} className={inputClass} placeholder="e.g., Ethiopia" />
+                  </div>
+                  <div>
+                    <label className={labelClass}>Tagline</label>
+                    <input {...field("tagline")} className={inputClass} placeholder="e.g., The Cradle of Humanity" />
+                  </div>
+                  <div>
+                    <label className={labelClass}>Image URL</label>
+                    <input {...field("image")} className={inputClass} placeholder="https://res.cloudinary.com/..." />
+                  </div>
+                  <div>
+                    <label className={labelClass}>Image Portrait URL</label>
+                    <input {...field("imagePortrait")} className={inputClass} placeholder="https://res.cloudinary.com/..." />
+                  </div>
+                  <div className="flex gap-2 pt-2">
+                    <button
+                      onClick={() => saveEdit("new")}
+                      className="px-4 py-2 bg-gold text-charcoal text-sm font-medium hover:bg-gold/90 flex items-center gap-1.5"
+                      style={{ borderRadius: 0 }}
+                    >
+                      <Save className="w-3.5 h-3.5" /> Create Country
+                    </button>
+                    <button
+                      onClick={cancelEdit}
+                      className="px-4 py-2 bg-cream border border-charcoal/15 text-charcoal text-sm hover:bg-alabaster"
+                      style={{ borderRadius: 0 }}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
           {countries.map((d) => (
             <div key={d.id} className="bg-alabaster border border-charcoal/10 overflow-hidden" style={{ borderRadius: 0 }}>
               {/* Image preview */}

@@ -20,9 +20,6 @@ import { useRouter } from "@/lib/router";
 import { useLang } from "@/lib/language";
 import { destinations as seedDestinations } from "@/lib/content";
 
-// IDs of the 4 country entries (managed by the Countries admin tab)
-const COUNTRY_IDS = ["serengeti", "bwindi", "maasai-mara", "virunga"];
-
 export function HomePage() {
   const { navigate } = useRouter();
   const { t } = useLang();
@@ -34,12 +31,10 @@ export function HomePage() {
       .then((res) => (res.ok ? res.json() : []))
       .then((data) => {
         if (!Array.isArray(data) || data.length === 0) return;
-        // Filter to only the 4 country entries
-        const countries = data.filter((d: any) =>
-          COUNTRY_IDS.includes(d.id) && d.imagePortrait && d.name
-        );
-        if (countries.length > 0) {
-          setDestinations(countries);
+        // Validate each entry has the required fields before using
+        const valid = data.filter((d: any) => d.id && d.name && d.imagePortrait);
+        if (valid.length > 0) {
+          setDestinations(valid);
         }
       })
       .catch(() => { /* keep seed data on error */ });
