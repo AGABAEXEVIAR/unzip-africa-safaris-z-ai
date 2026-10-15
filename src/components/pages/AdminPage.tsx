@@ -2806,7 +2806,7 @@ function formToDest(
 function DestinationsSection() {
   const allDestinations = useDestinations();
   // Exclude the 4 country entries (managed by the Countries tab) — show only parks
-  const COUNTRY_IDS = ["serengeti", "bwindi", "maasai-mara", "virunga"];
+  const COUNTRY_IDS = ["tanzania", "uganda", "kenya", "rwanda"];
   const destinations = allDestinations.filter(d => !COUNTRY_IDS.includes(d.id));
   const [editing, setEditing] = useState<Destination | "new" | null>(null);
 

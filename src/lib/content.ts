@@ -121,7 +121,7 @@ export type BlogPost = {
 
 export const destinations: Destination[] = [
   {
-    id: "serengeti",
+    id: "tanzania",
     name: "Tanzania",
     country: "Tanzania",
     tagline: "Land of Kilimanjaro, Serengeti and Zanzibar",
@@ -140,7 +140,7 @@ export const destinations: Destination[] = [
     ],
   },
   {
-    id: "bwindi",
+    id: "uganda",
     name: "Uganda",
     country: "Uganda",
     tagline: "The Pearl of Africa",
@@ -159,7 +159,7 @@ export const destinations: Destination[] = [
     ],
   },
   {
-    id: "maasai-mara",
+    id: "kenya",
     name: "Kenya",
     country: "Kenya",
     tagline: "Visit Magical Kenya",
@@ -173,7 +173,7 @@ export const destinations: Destination[] = [
     price: "From $42,800",
   },
   {
-    id: "virunga",
+    id: "rwanda",
     name: "Rwanda",
     country: "Rwanda",
     tagline: "Land of a Thousand Hills",
