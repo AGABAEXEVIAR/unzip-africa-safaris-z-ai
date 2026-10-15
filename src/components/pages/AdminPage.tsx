@@ -3003,16 +3003,8 @@ function CountriesSection() {
                       <input {...field("country")} className={inputClass} />
                     </div>
                     <div>
-                      <label className={labelClass}>Park / Destination Name</label>
-                      <input {...field("name")} className={inputClass} />
-                    </div>
-                    <div>
                       <label className={labelClass}>Tagline</label>
                       <input {...field("tagline")} className={inputClass} />
-                    </div>
-                    <div>
-                      <label className={labelClass}>Description</label>
-                      <textarea {...field("description")} rows={3} className={inputClass} />
                     </div>
                     <div>
                       <label className={labelClass}>Image URL</label>
@@ -3042,16 +3034,15 @@ function CountriesSection() {
                 ) : (
                   <div>
                     <h3 className="text-lg mb-0.5" style={{ fontFamily: "var(--font-cormorant), serif" }}>
-                      {d.name}
+                      {d.country}
                     </h3>
                     <p className="text-xs text-gold uppercase tracking-wider mb-2">{d.tagline}</p>
-                    <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{d.description}</p>
                     <button
                       onClick={() => startEdit(d)}
                       className="px-3 py-1.5 bg-charcoal text-cream text-xs font-medium hover:bg-charcoal/90 flex items-center gap-1.5"
                       style={{ borderRadius: 0 }}
                     >
-                      <Pencil className="w-3 h-3" /> Edit Country
+                      <Pencil className="w-3 h-3" /> Edit
                     </button>
                   </div>
                 )}
