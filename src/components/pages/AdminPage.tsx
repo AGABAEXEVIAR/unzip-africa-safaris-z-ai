@@ -953,7 +953,7 @@ function DashboardSection({
               onClick={() => onNavigate("scheduled-trips")}
             />
             <QuickAction
-              label="Add Destination"
+              label="Add Safari Park"
               icon={Plus}
               onClick={() => onNavigate("destinations")}
             />
@@ -2807,7 +2807,7 @@ function DestinationsSection() {
   const handleSave = (data: Destination) => {
     if (editing === "new") {
       store.addDestination(data);
-      toast.success("Destination created");
+      toast.success("Safari Park created");
     } else {
       store.updateDestination(data.id, data);
       toast.success("Destination updated");
@@ -2825,10 +2825,10 @@ function DestinationsSection() {
     <div className="space-y-6">
       <SectionHeader
         eyebrow="MANAGE"
-        title="Destinations"
+        title="Safari Parks"
         action={
           <PrimaryButton
-            label="Add Destination"
+            label="Add Safari Park"
             icon={Plus}
             onClick={() => setEditing("new")}
           />
