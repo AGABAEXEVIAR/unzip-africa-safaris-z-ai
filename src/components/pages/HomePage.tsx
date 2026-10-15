@@ -18,27 +18,11 @@ import {
 import { FeaturedTrips } from "@/components/luxury/FeaturedTrips";
 import { useRouter } from "@/lib/router";
 import { useLang } from "@/lib/language";
-import { destinations as seedDestinations } from "@/lib/content";
+import { destinations } from "@/lib/content";
 
 export function HomePage() {
   const { navigate } = useRouter();
   const { t } = useLang();
-  // Start with seed data (matches SSR → no hydration error).
-  // After mount, fetch from DB so Countries tab changes reflect on the homepage.
-  const [destinations, setDestinations] = useState(seedDestinations);
-  useEffect(() => {
-    fetch("/api/crud?type=destinations", { cache: "no-store" })
-      .then((res) => (res.ok ? res.json() : []))
-      .then((data) => {
-        if (!Array.isArray(data) || data.length === 0) return;
-        // Validate each entry has the required fields before using
-        const valid = data.filter((d: any) => d.id && d.name && d.imagePortrait);
-        if (valid.length > 0) {
-          setDestinations(valid);
-        }
-      })
-      .catch(() => { /* keep seed data on error */ });
-  }, []);
 
   return (
     <div className="page-enter">
