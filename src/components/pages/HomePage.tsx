@@ -133,9 +133,10 @@ const seedGameParks = [
   { id: "park-virunga", name: "Virunga National Park", tagline: "In the Mist", imagePortrait: "https://res.cloudinary.com/emz7hwx1/image/upload/v1792008496/Virunga.jpg", country: "Rwanda" },
 ];
 
-// Country IDs — these are excluded from the game parks section
-// (they're managed by the Countries tab, not Safari Parks tab)
-const COUNTRY_IDS = ["tanzania", "uganda", "kenya", "rwanda"];
+// Country IDs are no longer hardcoded — the `type` field in the DB
+// distinguishes 'country' entries from 'park' entries.
+// CountryScrollStack shows type !== 'park' (countries).
+// HorizontalGameParks shows type === 'park' (parks).
 
 function HorizontalGameParks() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -166,10 +167,10 @@ function HorizontalGameParks() {
   }, []);
 
   // Use DB data after mount (has admin's changes from Safari Parks tab).
-  // Filter to show ONLY park entries (exclude the 4 country entries).
+  // Filter to show ONLY park entries (type === 'park').
   // Before mount, use seed data (matches SSR → no hydration error).
   const destinations = mounted && allDestinations.length > 0
-    ? allDestinations.filter(d => !COUNTRY_IDS.includes(d.id))
+    ? allDestinations.filter((d: any) => d.type === 'park')
     : seedGameParks;
 
   const { scrollYProgress } = useScroll({

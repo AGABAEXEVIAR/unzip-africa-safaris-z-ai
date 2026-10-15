@@ -82,11 +82,13 @@ export const ENTITIES: Record<string, EntityDef> = {
 
   destinations: {
     table: "Destination",
-    columns: ["name", "country", "tagline", "description", "image", "imagePortrait", "days", "price"],
+    columns: ["name", "country", "tagline", "description", "image", "imagePortrait", "days", "price", "type"],
     jsonColumns: [],
     inlineChildren: [],
     autoOnInsert: ["createdAt", "updatedAt"],
     autoOnUpdate: ["updatedAt"],
+    // type field: 'country' for the 4 country entries, 'park' for game park entries.
+    // This lets the frontend filter countries vs parks cleanly without hardcoding IDs.
   },
 
   testimonials: {

@@ -2805,14 +2805,13 @@ function formToDest(
 
 function DestinationsSection() {
   const allDestinations = useDestinations();
-  // Exclude the 4 country entries (managed by the Countries tab) — show only parks
-  const COUNTRY_IDS = ["tanzania", "uganda", "kenya", "rwanda"];
-  const destinations = allDestinations.filter(d => !COUNTRY_IDS.includes(d.id));
+  // Show only PARK entries (type === 'park') — countries are managed by the Countries tab
+  const destinations = allDestinations.filter((d: any) => d.type === 'park');
   const [editing, setEditing] = useState<Destination | "new" | null>(null);
 
   const handleSave = (data: Destination) => {
     if (editing === "new") {
-      store.addDestination(data);
+      store.addDestination({ ...data, type: "park" } as any);
       toast.success("Safari Park created");
     } else {
       store.updateDestination(data.id, data);
@@ -2927,8 +2926,8 @@ function CountriesSection() {
   const [editing, setEditing] = useState<Destination | "new" | null>(null);
   const [draft, setDraft] = useState<Record<string, string>>({});
 
-  // Show all destinations (no filter — admin can add unlimited countries)
-  const countries = destinations;
+  // Show only COUNTRY entries (type !== 'park') — parks are managed by the Safari Parks tab
+  const countries = destinations.filter((d: any) => d.type !== 'park');
 
   const startEdit = (d: Destination) => {
     setEditing(d.id);
@@ -2963,6 +2962,7 @@ function CountriesSection() {
         imagePortrait: draft.imagePortrait || draft.image || "",
         days: "",
         price: "",
+        type: "country",
       };
       store.addDestination(newCountry as any);
       toast.success("Country created");

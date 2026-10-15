@@ -24,8 +24,9 @@ export function CountryScrollStack() {
 
   // Use DB data after mount (has admin's changes). Before mount, use
   // seed data (matches SSR → no hydration error).
+  // Filter to show ONLY country entries (type === 'country' or missing type = country).
   const destinations = mounted && dbDestinations.length > 0
-    ? dbDestinations
+    ? dbDestinations.filter((d: any) => d.type !== 'park')
     : seedDestinations;
 
   // Duplicate the list so the marquee can loop seamlessly — when the track
