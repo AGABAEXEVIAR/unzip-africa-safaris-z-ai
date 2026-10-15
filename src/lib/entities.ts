@@ -24,6 +24,9 @@ export type EntityDef = {
   autoOnInsert?: string[];
   // Columns that should auto-update on every write (updatedAt = CURRENT_TIMESTAMP).
   autoOnUpdate?: string[];
+  // Column to ORDER BY in GET /api/crud?type=... — defaults to "createdAt".
+  // Some tables (e.g. Testimonial) don't have createdAt — they use "date" instead.
+  orderColumn?: string;
 };
 
 // Master registry. Keyed by the ?type= query param value.
@@ -53,9 +56,9 @@ export const ENTITIES: Record<string, EntityDef> = {
 
   accommodations: {
     table: "Accommodation",
-    columns: ["name", "location", "type", "description", "image", "features", "pricePerNight"],
+    columns: ["name", "location", "type", "description", "image", "galleryImages", "features", "pricePerNight"],
     jsonColumns: ["galleryImages", "features"],
-    inlineChildren: [{ field: "pricePerNight", column: "pricePerNight" }],
+    inlineChildren: [],
     autoOnInsert: ["createdAt", "updatedAt"],
     autoOnUpdate: ["updatedAt"],
   },
@@ -64,7 +67,7 @@ export const ENTITIES: Record<string, EntityDef> = {
     table: "ScheduledTrip",
     columns: [
       "name", "destination", "startDate", "endDate", "durationDays",
-      "priceFrom", "priceOriginal", "image", "description",
+      "priceFrom", "priceOriginal", "image", "galleryImages", "description",
       "highlights", "inclusions", "exclusions", "groupSize",
       "spotsLeft", "accommodationLevel",
     ],
@@ -81,7 +84,7 @@ export const ENTITIES: Record<string, EntityDef> = {
     table: "Destination",
     columns: ["name", "country", "tagline", "description", "image", "imagePortrait", "days", "price"],
     jsonColumns: [],
-    inlineChildren: [{ field: "gameParks", column: "gameParks" }],
+    inlineChildren: [],
     autoOnInsert: ["createdAt", "updatedAt"],
     autoOnUpdate: ["updatedAt"],
   },
@@ -92,6 +95,7 @@ export const ENTITIES: Record<string, EntityDef> = {
     jsonColumns: [],
     autoOnInsert: [],
     autoOnUpdate: [],
+    orderColumn: "date",
   },
 
   "blog-posts": {
@@ -159,9 +163,24 @@ export function toSqlValue(value: unknown, isJsonColumn: boolean): unknown {
   return value;
 }
 
+// Helper — safely convert a Date to ISO string, returning null if invalid.
+function safeToISOString(v: unknown): string | null {
+  if (v instanceof Date) {
+    try {
+      const iso = v.toISOString();
+      return iso;
+    } catch {
+      // Date is invalid (e.g., "0000-00-00 00:00:00" from MySQL)
+      return null;
+    }
+  }
+  if (typeof v === "string") return v;
+  return null;
+}
+
 // Map a row returned by mysql2 → a JSON-safe object the API can return.
 // - JSON columns are parsed (or returned as-is if mysql2 already parsed)
-// - Dates are converted to ISO strings
+// - Dates are converted to ISO strings (with invalid Date protection)
 // - Buffer/Decimal are converted to numbers
 export function fromSqlRow(row: Record<string, unknown>, def: EntityDef): Record<string, unknown> {
   const out: Record<string, unknown> = {};
@@ -182,7 +201,7 @@ export function fromSqlRow(row: Record<string, unknown>, def: EntityDef): Record
         out[col] = v;
       }
     } else if (v instanceof Date) {
-      out[col] = v.toISOString();
+      out[col] = safeToISOString(v);
     } else if (Buffer.isBuffer(v)) {
       // DECIMAL sometimes comes back as a Buffer/string; coerce to number.
       const n = Number(v.toString("utf8"));
@@ -210,18 +229,19 @@ export function fromSqlRow(row: Record<string, unknown>, def: EntityDef): Record
       } else if (typeof v === "string") {
         try { out[child.field] = JSON.parse(v); } catch { out[child.field] = v; }
       } else if (v instanceof Date) {
-        out[child.field] = v.toISOString();
+        out[child.field] = safeToISOString(v);
       } else {
         out[child.field] = v;
       }
     }
   }
 
-  // createdAt / updatedAt → ISO strings
+  // createdAt / updatedAt → ISO strings (with invalid Date protection)
   for (const ts of ["createdAt", "updatedAt"]) {
     const v = row[ts];
-    if (v instanceof Date) out[ts] = v.toISOString();
-    else if (typeof v === "string") out[ts] = v;
+    if (v !== undefined && v !== null) {
+      out[ts] = safeToISOString(v);
+    }
   }
 
   return out;

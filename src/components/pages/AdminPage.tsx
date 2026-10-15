@@ -2963,7 +2963,6 @@ function CountriesSection() {
         imagePortrait: draft.imagePortrait || draft.image || "",
         days: "",
         price: "",
-        gameParks: [],
       };
       store.addDestination(newCountry as any);
       toast.success("Country created");
@@ -2972,6 +2971,12 @@ function CountriesSection() {
       toast.success("Country updated");
     }
     cancelEdit();
+  };
+
+  const handleDelete = (id: string) => {
+    if (!confirm("Delete this country? This cannot be undone.")) return;
+    store.deleteDestination(id);
+    toast.success("Country deleted");
   };
 
   const field = (key: string) => ({
@@ -3117,13 +3122,22 @@ function CountriesSection() {
                       {d.country}
                     </h3>
                     <p className="text-xs text-gold uppercase tracking-wider mb-2">{d.tagline}</p>
-                    <button
-                      onClick={() => startEdit(d)}
-                      className="px-3 py-1.5 bg-charcoal text-cream text-xs font-medium hover:bg-charcoal/90 flex items-center gap-1.5"
-                      style={{ borderRadius: 0 }}
-                    >
-                      <Pencil className="w-3 h-3" /> Edit
-                    </button>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => startEdit(d)}
+                        className="px-3 py-1.5 bg-charcoal text-cream text-xs font-medium hover:bg-charcoal/90 flex items-center gap-1.5"
+                        style={{ borderRadius: 0 }}
+                      >
+                        <Pencil className="w-3 h-3" /> Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(d.id)}
+                        className="px-3 py-1.5 bg-red-600 text-cream text-xs font-medium hover:bg-red-700 flex items-center gap-1.5"
+                        style={{ borderRadius: 0 }}
+                      >
+                        <Trash2 className="w-3 h-3" /> Delete
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
