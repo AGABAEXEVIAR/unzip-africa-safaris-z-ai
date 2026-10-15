@@ -122,7 +122,7 @@ export type BlogPost = {
 export const destinations: Destination[] = [
   {
     id: "serengeti",
-    name: "Serengeti",
+    name: "Tanzania",
     country: "Tanzania",
     tagline: "The Great Migration",
     description:
@@ -141,9 +141,9 @@ export const destinations: Destination[] = [
   },
   {
     id: "bwindi",
-    name: "Bwindi Impenetrable Forest",
+    name: "Uganda",
     country: "Uganda",
-    tagline: "Gorilla Encounters",
+    tagline: "Pearl of Africa",
     description:
       "A mist-shrouded primeval forest where half the world's mountain gorillas live. After a measured trek through ancient undergrowth, you sit in silent reverence seven meters from a silverback — a moment that reorders everything you thought you knew about wildness.",
     image:
@@ -159,22 +159,8 @@ export const destinations: Destination[] = [
     ],
   },
   {
-    id: "ngorongoro",
-    name: "Ngorongoro Crater",
-    country: "Tanzania",
-    tagline: "The Garden of Eden",
-    description:
-      "A collapsed volcano caldera teeming with wildlife — the densest concentration of predators in Africa. Eight miles across, 2,000 feet deep, and home to 25,000 large animals in a natural amphitheatre of staggering abundance.",
-    image:
-      "https://res.cloudinary.com/emz7hwx1/image/upload/v1792008491/Ngorongoro.jpg",
-    imagePortrait:
-      "https://res.cloudinary.com/emz7hwx1/image/upload/v1792008491/Ngorongoro.jpg",
-    days: "6 Days",
-    price: "From $36,500",
-  },
-  {
     id: "maasai-mara",
-    name: "Maasai Mara",
+    name: "Kenya",
     country: "Kenya",
     tagline: "Big Cat Country",
     description:
@@ -187,24 +173,10 @@ export const destinations: Destination[] = [
     price: "From $42,800",
   },
   {
-    id: "murchison",
-    name: "Murchison Falls National Park",
-    country: "Uganda",
-    tagline: "The Nile's Thunder",
-    description:
-      "The Nile explodes through a 7-meter gorge — Uganda's largest park with buffalo, giraffe, and lion. Above the falls, the river spreads wide and lazy through palm-studded savannah; below, it churns through a narrow cleft in the rift valley wall.",
-    image:
-      "https://res.cloudinary.com/emz7hwx1/image/upload/v1792008480/Murchison.jpg",
-    imagePortrait:
-      "https://res.cloudinary.com/emz7hwx1/image/upload/v1792008480/Murchison.jpg",
-    days: "7 Days",
-    price: "From $34,200",
-  },
-  {
     id: "virunga",
-    name: "Virunga Volcanoes",
+    name: "Rwanda",
     country: "Rwanda",
-    tagline: "In the Mist",
+    tagline: "Land of a Thousand Hills",
     description:
       "Five volcanic peaks shrouded in bamboo and Hagenia forest, where Dian Fossey lived and died among the gorillas. The trek is steep, the air thin, the reward transcendental — you sit among a family of twenty, infants tumbling around you, the silverback watching with unhurried eyes.",
     image:
