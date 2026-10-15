@@ -2804,7 +2804,10 @@ function formToDest(
 }
 
 function DestinationsSection() {
-  const destinations = useDestinations();
+  const allDestinations = useDestinations();
+  // Exclude the 4 country entries (managed by the Countries tab) — show only parks
+  const COUNTRY_IDS = ["serengeti", "bwindi", "maasai-mara", "virunga"];
+  const destinations = allDestinations.filter(d => !COUNTRY_IDS.includes(d.id));
   const [editing, setEditing] = useState<Destination | "new" | null>(null);
 
   const handleSave = (data: Destination) => {
@@ -2912,18 +2915,21 @@ function DestinationsSection() {
 
 /* ============================================================
  * Countries Section — manages the "Explore Our Signature
- * Destinations" section on the homepage.
+ * Destinations" carousel on the homepage.
  * ============================================================
- * Shows each destination (country) with inline-editable fields:
- * country name, park name, tagline, description, image URL,
- * imagePortrait URL. Changes are saved to the DB via
- * store.updateDestination and reflect on the homepage immediately
- * (the homepage fetches from /api/crud?type=destinations).
+ * Shows 4 countries (Tanzania, Uganda, Kenya, Rwanda) from the
+ * static content.ts seed data. Edits to country name, tagline,
+ * and image URLs are saved to the DB AND update content.ts.
  * ============================================================ */
 function CountriesSection() {
   const destinations = useDestinations();
   const [editing, setEditing] = useState<string | null>(null);
   const [draft, setDraft] = useState<Record<string, string>>({});
+
+  // Filter to show only the 4 country entries (by matching known country IDs)
+  const countries = destinations.filter(d =>
+    ["serengeti", "bwindi", "maasai-mara", "virunga"].includes(d.id)
+  );
 
   const startEdit = (d: Destination) => {
     setEditing(d.id);
@@ -2972,13 +2978,13 @@ function CountriesSection() {
         </p>
       </div>
 
-      {destinations.length === 0 ? (
+      {countries.length === 0 ? (
         <div className="text-center py-12 text-muted-foreground">
-          <p>No countries yet. Add destinations from the Safari Parks tab first.</p>
+          <p>No countries found. Make sure the 4 country destinations are in the database.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {destinations.map((d) => (
+          {countries.map((d) => (
             <div key={d.id} className="bg-alabaster border border-charcoal/10 overflow-hidden" style={{ borderRadius: 0 }}>
               {/* Image preview */}
               <div className="relative aspect-[3/2] overflow-hidden bg-charcoal/10">
