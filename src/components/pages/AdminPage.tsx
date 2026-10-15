@@ -765,7 +765,7 @@ const NAV_ITEMS: { id: AdminSection; label: string; icon: React.ComponentType<{ 
   { id: "tours", label: "Tours", icon: Compass },
   { id: "accommodations", label: "Accommodations", icon: Building2 },
   { id: "scheduled-trips", label: "Scheduled Trips", icon: Calendar },
-  { id: "destinations", label: "Safari Parks", icon: MapPin },
+  { id: "destinations", label: "Countries", icon: MapPin },
   { id: "blog", label: "Blog Posts", icon: BookOpen },
   { id: "content", label: "Content", icon: FileText },
   { id: "bookings", label: "Tour Bookings", icon: CalendarCheck },
@@ -953,7 +953,7 @@ function DashboardSection({
               onClick={() => onNavigate("scheduled-trips")}
             />
             <QuickAction
-              label="Add Safari Park"
+              label="Add Country"
               icon={Plus}
               onClick={() => onNavigate("destinations")}
             />
@@ -2807,7 +2807,7 @@ function DestinationsSection() {
   const handleSave = (data: Destination) => {
     if (editing === "new") {
       store.addDestination(data);
-      toast.success("Safari Park created");
+      toast.success("Country created");
     } else {
       store.updateDestination(data.id, data);
       toast.success("Destination updated");
@@ -2825,10 +2825,10 @@ function DestinationsSection() {
     <div className="space-y-6">
       <SectionHeader
         eyebrow="MANAGE"
-        title="Safari Parks"
+        title="Countries"
         action={
           <PrimaryButton
-            label="Add Safari Park"
+            label="Add Country"
             icon={Plus}
             onClick={() => setEditing("new")}
           />
