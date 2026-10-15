@@ -6,7 +6,7 @@ import { Reveal } from "@/components/luxury/Reveal";
 import ScrollReveal from "@/components/luxury/ScrollReveal";
 import SafariHero from "@/components/luxury/SafariHero";
 import { WelcomeSection } from "@/components/luxury/WelcomeSection";
-import { SafariScrollStack } from "@/components/luxury/SafariScrollStack";
+import { CountryScrollStack } from "@/components/luxury/CountryScrollStack";
 import { LuxuryTestimonials } from "@/components/luxury/LuxuryTestimonials";
 import {
   FAQSection,
@@ -36,8 +36,8 @@ export function HomePage() {
       {/* ====================== SCHEDULED TRIPS ====================== */}
       <ScheduledTripsSection />
 
-      {/* ====================== DESTINATIONS (Signature Destinations grid) ====================== */}
-      <SafariScrollStack />
+      {/* ====================== COUNTRIES — "Explore Our Signature Destinations" carousel (after Scheduled Trips) ====================== */}
+      <CountryScrollStack />
 
       {/* ====================== FEATURED TRIPS ====================== */}
       <FeaturedTrips />
@@ -57,8 +57,8 @@ export function HomePage() {
       {/* ====================== FAQ ====================== */}
       <FAQSection />
 
-      {/* ====================== OUR TOP SAFARI PARKS (Horizontal Filmstrip) ====================== */}
-      <HorizontalDestinations />
+      {/* ====================== GAME PARKS — "Our top safari parks" horizontal filmstrip (after FAQ) ====================== */}
+      <HorizontalGameParks />
 
       {/* ====================== FINAL CTA — The wild is waiting ====================== */}
       <section className="py-16 md:py-24 px-6 md:px-10 bg-bone/50">
@@ -121,8 +121,8 @@ export function HomePage() {
   );
 }
 
-/* ===================== Horizontal Destinations Filmstrip ===================== */
-function HorizontalDestinations() {
+/* ===================== Game Parks — Horizontal Filmstrip ("Our top safari parks") ===================== */
+function HorizontalGameParks() {
   const sectionRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const [trackWidth, setTrackWidth] = useState(0);

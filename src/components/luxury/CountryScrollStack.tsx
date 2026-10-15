@@ -8,7 +8,7 @@ import { useDestinations } from "@/lib/store";
 
 const sharp = { borderRadius: 0 } as const;
 
-export function SafariScrollStack() {
+export function CountryScrollStack() {
   const { navigateToDestination } = useRouter();
   const { t } = useLang();
 
