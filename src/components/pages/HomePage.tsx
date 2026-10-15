@@ -130,6 +130,7 @@ const seedGameParks = [
   { id: "park-ngorongoro", name: "Ngorongoro", tagline: "The Garden of Eden", imagePortrait: "https://res.cloudinary.com/emz7hwx1/image/upload/v1792008491/Ngorongoro.jpg", country: "Tanzania" },
   { id: "park-masai-mara", name: "Masai Mara", tagline: "Big Cat Country", imagePortrait: "https://res.cloudinary.com/emz7hwx1/image/upload/v1792008497/Masai_Mara.jpg", country: "Kenya" },
   { id: "park-murchison", name: "Murchison Falls", tagline: "The Nile's Thunder", imagePortrait: "https://res.cloudinary.com/emz7hwx1/image/upload/v1792008480/Murchison.jpg", country: "Uganda" },
+  { id: "park-virunga", name: "Virunga National Park", tagline: "In the Mist", imagePortrait: "https://res.cloudinary.com/emz7hwx1/image/upload/v1792008496/Virunga.jpg", country: "Rwanda" },
 ];
 
 // Country IDs — these are excluded from the game parks section
