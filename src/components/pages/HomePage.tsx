@@ -18,11 +18,40 @@ import {
 import { FeaturedTrips } from "@/components/luxury/FeaturedTrips";
 import { useRouter } from "@/lib/router";
 import { useLang } from "@/lib/language";
-import { destinations } from "@/lib/content";
+import { destinations as seedDestinations } from "@/lib/content";
 
 export function HomePage() {
   const { navigate } = useRouter();
   const { t } = useLang();
+  // Start with seed data (matches SSR HTML → no hydration error).
+  // After mount, fetch from DB + NORMALIZE all fields to match seed shape.
+  // This prevents "client-side exception" caused by null/undefined fields
+  // (e.g., DB has gameParks: null, seed has gameParks: [...]).
+  const [destinations, setDestinations] = useState(seedDestinations);
+  useEffect(() => {
+    fetch("/api/crud?type=destinations", { cache: "no-store" })
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data) => {
+        if (!Array.isArray(data) || data.length === 0) return;
+        // NORMALIZE: ensure every field matches the seed data shape
+        const normalized = data.map((d: any) => ({
+          id: d.id || "",
+          name: d.name || "",
+          country: d.country || d.name || "",
+          tagline: d.tagline || "",
+          description: d.description || "",
+          image: d.image || "",
+          imagePortrait: d.imagePortrait || d.image || "",
+          days: d.days || "",
+          price: d.price || "",
+          gameParks: Array.isArray(d.gameParks) ? d.gameParks : [],
+        }));
+        if (normalized.length > 0) {
+          setDestinations(normalized);
+        }
+      })
+      .catch(() => { /* keep seed data on error — graceful fallback */ });
+  }, []);
 
   return (
     <div className="page-enter">
