@@ -128,9 +128,9 @@ export const destinations: Destination[] = [
     description:
       "Witness two million wildebeest thundering across endless golden plains — a primal, deafening tide of life that has reshaped this land for ten thousand years. We position you ahead of the herd, in private mobile camps that move with the migration.",
     image:
-      "https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?auto=format&fit=crop&w=1600&q=80",
+      "https://res.cloudinary.com/emz7hwx1/image/upload/v1792005676/Tanzania.jpg",
     imagePortrait:
-      "https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?auto=format&fit=crop&w=900&q=80",
+      "https://res.cloudinary.com/emz7hwx1/image/upload/v1792005676/Tanzania.jpg",
     days: "8 Days",
     price: "From $48,500",
     gameParks: [
@@ -147,9 +147,9 @@ export const destinations: Destination[] = [
     description:
       "A mist-shrouded primeval forest where half the world's mountain gorillas live. After a measured trek through ancient undergrowth, you sit in silent reverence seven meters from a silverback — a moment that reorders everything you thought you knew about wildness.",
     image:
-      "https://images.unsplash.com/photo-1549366021-9f761d450615?auto=format&fit=crop&w=1600&q=80",
+      "https://res.cloudinary.com/emz7hwx1/image/upload/v1792005671/Uganda.jpg",
     imagePortrait:
-      "https://images.unsplash.com/photo-1549366021-9f761d450615?auto=format&fit=crop&w=900&q=80",
+      "https://res.cloudinary.com/emz7hwx1/image/upload/v1792005671/Uganda.jpg",
     days: "6 Days",
     price: "From $32,000",
     gameParks: [
@@ -180,9 +180,9 @@ export const destinations: Destination[] = [
     description:
       "The northern extension of the Serengeti ecosystem — and the densest concentration of big cats on earth. Our private conservancies grant you off-road access, night drives, and walking safaris impossible inside the main reserve.",
     image:
-      "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1600&q=80",
+      "https://res.cloudinary.com/emz7hwx1/image/upload/v1792005667/Kenya.jpg",
     imagePortrait:
-      "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=900&q=80",
+      "https://res.cloudinary.com/emz7hwx1/image/upload/v1792005667/Kenya.jpg",
     days: "7 Days",
     price: "From $42,800",
   },
@@ -208,9 +208,9 @@ export const destinations: Destination[] = [
     description:
       "Five volcanic peaks shrouded in bamboo and Hagenia forest, where Dian Fossey lived and died among the gorillas. The trek is steep, the air thin, the reward transcendental — you sit among a family of twenty, infants tumbling around you, the silverback watching with unhurried eyes.",
     image:
-      "https://sfile.chatglm.cn/images-ppt/f2522b36c1bf.jpg",
+      "https://res.cloudinary.com/emz7hwx1/image/upload/v1792005645/Rwanda.jpg",
     imagePortrait:
-      "https://sfile.chatglm.cn/images-ppt/55f6eb85ac39.jpg",
+      "https://res.cloudinary.com/emz7hwx1/image/upload/v1792005645/Rwanda.jpg",
     days: "5 Days",
     price: "From $38,500",
   },
@@ -354,7 +354,7 @@ export const tourPackages: TourPackage[] = [
       "Golden monkey trek in the bamboo zone",
     ],
     image:
-      "https://images.unsplash.com/photo-1549366021-9f761d450615?auto=format&fit=crop&w=1600&q=80",
+      "https://res.cloudinary.com/emz7hwx1/image/upload/v1792005671/Uganda.jpg",
     destination: "Uganda",
     activities: ["Gorilla Trekking", "Chimp Trekking", "Walking Safaris", "Cultural Tours"],
     tripType: "Luxury Safaris",
@@ -563,7 +563,7 @@ export const tourPackages: TourPackage[] = [
       "Hot air balloon flight at dawn",
     ],
     image:
-      "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1600&q=80",
+      "https://res.cloudinary.com/emz7hwx1/image/upload/v1792005667/Kenya.jpg",
     destination: "Kenya",
     activities: ["Game Drives", "Walking Safaris", "Hot Air Balloon", "Photography"],
     tripType: "Luxury Safaris",
@@ -935,7 +935,7 @@ export const tourPackages: TourPackage[] = [
       "Chimp trek in Budongo Forest",
     ],
     image:
-      "https://images.unsplash.com/photo-1549366021-9f761d450615?auto=format&fit=crop&w=1600&q=80",
+      "https://res.cloudinary.com/emz7hwx1/image/upload/v1792005671/Uganda.jpg",
     destination: "Uganda",
     activities: ["Gorilla Trekking", "Game Drives", "Walking Safaris", "Birding Tours"],
     tripType: "Budget Safaris",
@@ -995,7 +995,7 @@ export const tourPackages: TourPackage[] = [
       "Stone Town cultural tour",
     ],
     image:
-      "https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?auto=format&fit=crop&w=1600&q=80",
+      "https://res.cloudinary.com/emz7hwx1/image/upload/v1792005676/Tanzania.jpg",
     destination: "Tanzania",
     activities: ["Game Drives", "Cultural Tours", "Birding Tours", "Photography"],
     tripType: "Family Safaris",
@@ -1555,7 +1555,7 @@ export const blogPosts: BlogPost[] = [
       "There is no road into the heart of the Delta. There is only a six-seater Cessna, a low-altitude glide, and the moment the world reorganises itself into water and islands.",
     body:
       "You can drive into the Okavango's outer edge. You cannot drive into its heart. To reach the private concessions of the inner Delta — the places where the elephant densities are highest, where the wild dog den sites are protected, where the night drives are permitted — you must fly.\n\nThe flight itself is the first safari of the journey. A Cessna 206, six passengers, no co-pilot, the pilot doubling as narrator. You climb out of Maun, the desert town that frames the Delta's southern edge, and within three minutes the brown Kalahari gives way to something else: water. Lagoons. Channels. Hippo paths visible as dark tracings through the papyrus. Elephant herds casting small, dark shadows on the floodplain. From 800 feet, a hippo looks like a half-submerged suitcase.\n\nThe landing strip is a dirt ribbon cleared of grass. Sometimes giraffe scatter as the wheels touch. There will be a vehicle waiting — your guide, your first cold towel, your first gin and tonic if it's late afternoon. Within ten minutes of landing, you are in the bush.\n\nWe have clients who ask if we can shorten the flight, as if it were a commute. The answer is no. The flight is the threshold. You cross it, and the world you came from recedes.",
-    coverImage: "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1600&q=80",
+    coverImage: "https://res.cloudinary.com/emz7hwx1/image/upload/v1792005667/Kenya.jpg",
     author: "Agaba Exeviar",
     authorRole: "Founder & Lead Guide, Unzip Africa Safaris",
     authorAvatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80",
