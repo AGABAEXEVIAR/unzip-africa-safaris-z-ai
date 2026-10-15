@@ -122,19 +122,53 @@ export function HomePage() {
 }
 
 /* ===================== Game Parks — Horizontal Filmstrip ("Our top safari parks") ===================== */
+// 5 safari parks with Cloudinary images — managed separately from countries.
+// These are park-level destinations (Serengeti, Bwindi, etc.), NOT countries.
+const gameParks = [
+  {
+    id: "park-serengeti",
+    name: "Serengeti",
+    tagline: "The Great Migration",
+    imagePortrait: "https://res.cloudinary.com/emz7hwx1/image/upload/v1792008485/Serengeti.jpg",
+    country: "Tanzania",
+  },
+  {
+    id: "park-bwindi",
+    name: "Bwindi",
+    tagline: "Gorilla Encounters",
+    imagePortrait: "https://res.cloudinary.com/emz7hwx1/image/upload/v1792008489/Bwindi.jpg",
+    country: "Uganda",
+  },
+  {
+    id: "park-ngorongoro",
+    name: "Ngorongoro",
+    tagline: "The Garden of Eden",
+    imagePortrait: "https://res.cloudinary.com/emz7hwx1/image/upload/v1792008491/Ngorongoro.jpg",
+    country: "Tanzania",
+  },
+  {
+    id: "park-masai-mara",
+    name: "Masai Mara",
+    tagline: "Big Cat Country",
+    imagePortrait: "https://res.cloudinary.com/emz7hwx1/image/upload/v1792008497/Masai_Mara.jpg",
+    country: "Kenya",
+  },
+  {
+    id: "park-murchison",
+    name: "Murchison Falls",
+    tagline: "The Nile's Thunder",
+    imagePortrait: "https://res.cloudinary.com/emz7hwx1/image/upload/v1792008480/Murchison.jpg",
+    country: "Uganda",
+  },
+];
+
 function HorizontalGameParks() {
   const sectionRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const [trackWidth, setTrackWidth] = useState(0);
   const [viewportH, setViewportH] = useState(800);
-  // mounted flag: false during SSR + first client render (uses seed data
-  // → matches server HTML → no hydration crash). After mount, switches
-  // to store data (which has DB data from the Countries admin tab).
-  const [mounted, setMounted] = useState(false);
-  const dbDestinations = useDestinations();
 
   useEffect(() => {
-    setMounted(true);
     const measure = () => {
       if (trackRef.current) {
         setTrackWidth(Math.max(0, trackRef.current.scrollWidth - window.innerWidth));
@@ -149,12 +183,6 @@ function HorizontalGameParks() {
       window.removeEventListener("resize", measure);
     };
   }, []);
-
-  // Use DB data after mount (has admin's changes). Before mount, use
-  // seed data (matches SSR → no hydration error).
-  const destinations = mounted && dbDestinations.length > 0
-    ? dbDestinations
-    : seedDestinations;
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -204,7 +232,7 @@ function HorizontalGameParks() {
             style={{ x }}
             className="flex gap-6 md:gap-10 px-6 md:px-10 will-change-transform"
           >
-          {destinations.map((dest, idx) => (
+          {gameParks.map((dest, idx) => (
             <article
               key={dest.id}
               data-dest-id={dest.id}
