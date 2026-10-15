@@ -166,9 +166,9 @@ export const destinations: Destination[] = [
     description:
       "A collapsed volcano caldera teeming with wildlife — the densest concentration of predators in Africa. Eight miles across, 2,000 feet deep, and home to 25,000 large animals in a natural amphitheatre of staggering abundance.",
     image:
-      "https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=1600&q=80",
+      "https://res.cloudinary.com/emz7hwx1/image/upload/v1792008491/Ngorongoro.jpg",
     imagePortrait:
-      "https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=900&q=80",
+      "https://res.cloudinary.com/emz7hwx1/image/upload/v1792008491/Ngorongoro.jpg",
     days: "6 Days",
     price: "From $36,500",
   },
@@ -194,9 +194,9 @@ export const destinations: Destination[] = [
     description:
       "The Nile explodes through a 7-meter gorge — Uganda's largest park with buffalo, giraffe, and lion. Above the falls, the river spreads wide and lazy through palm-studded savannah; below, it churns through a narrow cleft in the rift valley wall.",
     image:
-      "https://images.unsplash.com/photo-1547036967-23d11aacaee0?auto=format&fit=crop&w=1600&q=80",
+      "https://res.cloudinary.com/emz7hwx1/image/upload/v1792008480/Murchison.jpg",
     imagePortrait:
-      "https://images.unsplash.com/photo-1547036967-23d11aacaee0?auto=format&fit=crop&w=900&q=80",
+      "https://res.cloudinary.com/emz7hwx1/image/upload/v1792008480/Murchison.jpg",
     days: "7 Days",
     price: "From $34,200",
   },
