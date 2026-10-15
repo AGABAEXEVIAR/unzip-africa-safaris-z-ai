@@ -18,12 +18,11 @@ import {
 import { FeaturedTrips } from "@/components/luxury/FeaturedTrips";
 import { useRouter } from "@/lib/router";
 import { useLang } from "@/lib/language";
-import { useDestinations } from "@/lib/store";
+import { destinations } from "@/lib/content";
 
 export function HomePage() {
   const { navigate } = useRouter();
   const { t } = useLang();
-  const destinations = useDestinations();
 
   return (
     <div className="page-enter">
