@@ -18,24 +18,11 @@ import {
 import { FeaturedTrips } from "@/components/luxury/FeaturedTrips";
 import { useRouter } from "@/lib/router";
 import { useLang } from "@/lib/language";
-import { destinations as seedDestinations } from "@/lib/content";
+import { destinations } from "@/lib/content";
 
 export function HomePage() {
   const { navigate } = useRouter();
   const { t } = useLang();
-  // Start with seed data (matches SSR HTML → no hydration error).
-  // After mount, fetch from DB so admin dashboard changes reflect immediately.
-  const [destinations, setDestinations] = useState(seedDestinations);
-  useEffect(() => {
-    fetch("/api/crud?type=destinations", { cache: "no-store" })
-      .then((res) => (res.ok ? res.json() : []))
-      .then((data) => {
-        if (Array.isArray(data) && data.length > 0) {
-          setDestinations(data);
-        }
-      })
-      .catch(() => {});
-  }, []);
 
   return (
     <div className="page-enter">
