@@ -849,6 +849,9 @@ function DashboardSection({
   const accommodations = useAccommodations();
   const scheduledTrips = useScheduledTrips();
   const destinations = useDestinations();
+  const countries = useCountries();
+  const parks = useParks();
+  const blogPosts = useBlogPosts();
   const bookings = useBookings();
   const testimonials = useTestimonials();
 
@@ -861,7 +864,9 @@ function DashboardSection({
     { label: "Tours", value: tours.length, section: "tours", icon: Compass },
     { label: "Accommodations", value: accommodations.length, section: "accommodations", icon: Building2 },
     { label: "Scheduled Trips", value: scheduledTrips.length, section: "scheduled-trips", icon: Calendar },
-    { label: "Destinations", value: destinations.length, section: "destinations", icon: MapPin },
+    { label: "Countries", value: countries.length, section: "countries", icon: Globe },
+    { label: "Safari Parks", value: parks.length, section: "destinations", icon: MapPin },
+    { label: "Blog Posts", value: blogPosts.length, section: "blog", icon: BookOpen },
     { label: "Tour Bookings", value: bookings.filter(b => b.type === "tour").length, section: "bookings", icon: CalendarCheck },
     { label: "Scheduled Bookings", value: bookings.filter(b => b.type === "scheduled-trip").length, section: "scheduled-trip-bookings", icon: Calendar },
     { label: "Testimonials", value: testimonials.length, section: "testimonials", icon: Quote },
@@ -873,7 +878,8 @@ function DashboardSection({
     <div className="space-y-8">
       <SectionHeader eyebrow="OVERVIEW" title="Dashboard" />
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+      {/* Stats cards */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
         {stats.map((s) => (
           <button
             key={s.label}
@@ -893,6 +899,104 @@ function DashboardSection({
             </p>
           </button>
         ))}
+      </div>
+
+      {/* Charts row */}
+      <div className="grid md:grid-cols-3 gap-6">
+        {/* Bar chart — content counts */}
+        <Panel className="p-6">
+          <h2 className="text-lg mb-4" style={{ fontFamily: "var(--font-cormorant), serif" }}>Content Overview</h2>
+          <div className="space-y-3">
+            {[
+              { label: "Tours", value: tours.length, color: "bg-gold" },
+              { label: "Accommodations", value: accommodations.length, color: "bg-forest" },
+              { label: "Countries", value: countries.length, color: "bg-charcoal" },
+              { label: "Parks", value: parks.length, color: "bg-gold/60" },
+              { label: "Blog Posts", value: blogPosts.length, color: "bg-forest/60" },
+              { label: "Testimonials", value: testimonials.length, color: "bg-charcoal/60" },
+            ].map((item) => {
+              const max = Math.max(tours.length, accommodations.length, countries.length, parks.length, blogPosts.length, testimonials.length, 1);
+              const pct = Math.round((item.value / max) * 100);
+              return (
+                <div key={item.label}>
+                  <div className="flex justify-between text-xs mb-1">
+                    <span className="text-muted-foreground">{item.label}</span>
+                    <span className="font-medium">{item.value}</span>
+                  </div>
+                  <div className="h-6 bg-cream/50 overflow-hidden" style={{ borderRadius: 0 }}>
+                    <div className={`h-full ${item.color} transition-all duration-500`} style={{ width: `${Math.max(pct, 5)}%` }} />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </Panel>
+
+        {/* Pie chart — booking types */}
+        <Panel className="p-6">
+          <h2 className="text-lg mb-4" style={{ fontFamily: "var(--font-cormorant), serif" }}>Booking Types</h2>
+          {(() => {
+            const tourBookings = bookings.filter(b => b.type === "tour").length;
+            const tripBookings = bookings.filter(b => b.type === "scheduled-trip").length;
+            const total = tourBookings + tripBookings;
+            if (total === 0) return <p className="text-sm text-muted-foreground py-6 text-center">No bookings yet.</p>;
+            const tourPct = Math.round((tourBookings / total) * 100);
+            const tripPct = 100 - tourPct;
+            return (
+              <div className="flex flex-col items-center gap-4">
+                <div className="relative w-32 h-32">
+                  <div className="absolute inset-0" style={{ borderRadius: "50%", background: `conic-gradient(#C9A55C 0% ${tourPct}%, #2D4A3E ${tourPct}% 100%)` }} />
+                  <div className="absolute inset-4 bg-alabaster" style={{ borderRadius: "50%" }} />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className="text-2xl" style={{ fontFamily: "var(--font-cormorant), serif" }}>{total}</span>
+                  </div>
+                </div>
+                <div className="flex gap-4 text-xs">
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-3 h-3 bg-gold" />
+                    <span>Tour ({tourBookings})</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-3 h-3 bg-forest" />
+                    <span>Trip ({tripBookings})</span>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+        </Panel>
+
+        {/* Line chart — bookings by status */}
+        <Panel className="p-6">
+          <h2 className="text-lg mb-4" style={{ fontFamily: "var(--font-cormorant), serif" }}>Bookings by Status</h2>
+          {(() => {
+            const pending = bookings.filter(b => b.status === "pending").length;
+            const confirmed = bookings.filter(b => b.status === "confirmed").length;
+            const cancelled = bookings.filter(b => b.status === "cancelled").length;
+            const statuses = [
+              { label: "Pending", value: pending, color: "#C9A55C" },
+              { label: "Confirmed", value: confirmed, color: "#2D4A3E" },
+              { label: "Cancelled", value: cancelled, color: "#8B2D2D" },
+            ];
+            const maxVal = Math.max(pending, confirmed, cancelled, 1);
+            return (
+              <div className="flex items-end justify-around h-32 gap-4">
+                {statuses.map((s) => (
+                  <div key={s.label} className="flex flex-col items-center gap-2 flex-1">
+                    <span className="text-sm font-medium">{s.value}</span>
+                    <div className="w-full flex items-end justify-center" style={{ height: "80px" }}>
+                      <div
+                        className="w-12 transition-all duration-500"
+                        style={{ height: `${Math.max((s.value / maxVal) * 80, 4)}px`, background: s.color }}
+                      />
+                    </div>
+                    <span className="text-[10px] uppercase tracking-wider text-muted-foreground">{s.label}</span>
+                  </div>
+                ))}
+              </div>
+            );
+          })()}
+        </Panel>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
