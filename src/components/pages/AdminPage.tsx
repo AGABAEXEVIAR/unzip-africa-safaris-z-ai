@@ -793,14 +793,17 @@ function Sidebar({
       className="w-60 bg-forest-deep text-cream flex-shrink-0 flex flex-col"
       style={sharp}
     >
-      <div className="p-6 border-b border-cream/10">
-        <p
-          className="text-2xl tracking-tight"
-          style={{ fontFamily: "var(--font-cormorant), serif" }}
-        >
-          Unzip Africa
-        </p>
-        <p className="font-eyebrow text-gold-soft mt-1">Admin Panel</p>
+      <div className="p-6 border-b border-cream/10 flex items-center gap-3">
+        <img src="/logo.png" alt="Unzip Africa" className="h-10 w-auto object-contain" />
+        <div>
+          <p
+            className="text-2xl tracking-tight"
+            style={{ fontFamily: "var(--font-cormorant), serif" }}
+          >
+            Unzip Africa
+          </p>
+          <p className="font-eyebrow text-gold-soft mt-0.5">Admin Panel</p>
+        </div>
       </div>
       <nav className="flex-1 py-4">
         {NAV_ITEMS.map((item) => {
