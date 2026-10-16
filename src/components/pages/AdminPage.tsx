@@ -602,7 +602,7 @@ function LoginGate({
       {/* ============ LEFT — Safari game park image ============ */}
       <div className="relative hidden lg:block overflow-hidden bg-forest-deep">
         <img
-          src="https://res.cloudinary.com/emz7hwx1/image/upload/v1792005667/Kenya.jpg"
+          src="https://res.cloudinary.com/emz7hwx1/image/upload/v1792005671/Uganda.jpg"
           alt="Safari game park landscape with acacia trees at golden hour"
           className="absolute inset-0 w-full h-full object-cover"
           loading="eager"
