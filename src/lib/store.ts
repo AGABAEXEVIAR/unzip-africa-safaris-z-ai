@@ -175,27 +175,25 @@ const API_TYPE_MAP: Record<string, string> = {
   quotes: "quotes",
 };
 
-// Fetch all records of a type from the database — MERGES with local state
-// so admin's optimistic updates (that might not be in the DB yet) are kept.
+// Fetch all records of a type from the database — REPLACES local state.
+// The DB is the source of truth. If another admin deletes a record, it's
+// removed from local state too. This ensures all admin sessions stay in sync.
 async function syncFromDatabase(key: keyof State, type: string) {
   try {
     const res = await fetch(`/api/crud?type=${type}`, { cache: "no-store" });
     if (!res.ok) return;
     const data = await res.json();
-    if (Array.isArray(data) && data.length > 0) {
-      // MERGE: DB items take precedence (updated versions), but local-only
-      // items (from optimistic updates that haven't persisted to DB yet)
-      // are preserved so the admin's changes aren't lost on page navigation.
-      const localItems = state[key] as Array<{ id: string }>;
-      const dbIds = new Set(data.map((d: { id: string }) => d.id));
-      const localOnlyItems = localItems.filter((item: { id: string }) => !dbIds.has(item.id));
-      const merged = [...data, ...localOnlyItems];
-      state = { ...state, [key]: merged };
+    if (Array.isArray(data)) {
+      // REPLACE: DB data is the source of truth (no merge with local items).
+      // This means:
+      // - If Admin A deletes a tour → DB doesn't have it → removed from Admin B too
+      // - If Admin A creates a tour → DB has it → appears in Admin B too
+      // - If Admin A edits a tour → DB has the updated version → Admin B sees it
+      state = { ...state, [key]: data };
       emit();
     }
   } catch {
-    // API unavailable (e.g. during SSR or first deploy before migration)
-    // Keep using seed data — graceful degradation
+    // API unavailable — keep using existing local data (graceful fallback)
   }
 }
 
@@ -288,9 +286,9 @@ const SYNC_ENTRIES: Array<{ key: keyof State; type: string }> = [
 ];
 
 // Re-sync all entity types from the database.
-// MERGES with local state — admin's optimistic updates are preserved.
-// Call this on route changes so the homepage shows the latest DB data
-// after the admin creates/edits/deletes content.
+// REPLACES local state with DB data — the DB is the source of truth.
+// Call this on route changes AND periodically so multiple admin sessions
+// stay in sync (if Admin A deletes a tour, Admin B sees the deletion too).
 export function resyncStore() {
   if (typeof window === "undefined") return;
   for (const { key, type } of SYNC_ENTRIES) {
@@ -303,6 +301,13 @@ if (typeof window !== "undefined") {
   for (const { key, type } of SYNC_ENTRIES) {
     syncFromDatabase(key, type);
   }
+  // Auto-refresh every 30 seconds — picks up changes made by other admins
+  // (creates, edits, deletes) in real-time without manual page refresh.
+  setInterval(() => {
+    for (const { key, type } of SYNC_ENTRIES) {
+      syncFromDatabase(key, type);
+    }
+  }, 30000);
 }
 
 /* ============================================================
