@@ -397,19 +397,34 @@ export function TourDetailPage() {
               {t("tourDetail.partOfJourney")}
             </ScrollReveal>
             <ul className="space-y-4">
-              {INCLUSION_KEYS.map((key, idx) => (
-                <Reveal key={idx} variant="up" delay={idx * 0.05}>
-                  <li className="flex items-start gap-3 text-charcoal/80">
-                    <span
-                      className="w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5"
-                      style={{ ...sharp, background: "rgba(168, 139, 92, 0.15)" }}
-                    >
-                      <Check className="w-3.5 h-3.5 text-gold" />
-                    </span>
-                    <span className="leading-relaxed flex-1">{t(key)}</span>
-                  </li>
-                </Reveal>
-              ))}
+              {(tour as any).inclusions && (tour as any).inclusions.length > 0
+                ? (tour as any).inclusions.map((inc: string, idx: number) => (
+                    <Reveal key={idx} variant="up" delay={idx * 0.05}>
+                      <li className="flex items-start gap-3 text-charcoal/80">
+                        <span
+                          className="w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5"
+                          style={{ ...sharp, background: "rgba(168, 139, 92, 0.15)" }}
+                        >
+                          <Check className="w-3.5 h-3.5 text-gold" />
+                        </span>
+                        <span className="leading-relaxed flex-1">{inc}</span>
+                      </li>
+                    </Reveal>
+                  ))
+                : INCLUSION_KEYS.map((key, idx) => (
+                    <Reveal key={idx} variant="up" delay={idx * 0.05}>
+                      <li className="flex items-start gap-3 text-charcoal/80">
+                        <span
+                          className="w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5"
+                          style={{ ...sharp, background: "rgba(168, 139, 92, 0.15)" }}
+                        >
+                          <Check className="w-3.5 h-3.5 text-gold" />
+                        </span>
+                        <span className="leading-relaxed flex-1">{t(key)}</span>
+                      </li>
+                    </Reveal>
+                  ))
+              }
             </ul>
           </div>
 
@@ -428,19 +443,34 @@ export function TourDetailPage() {
               {t("tourDetail.forYouToArrange")}
             </ScrollReveal>
             <ul className="space-y-4">
-              {EXCLUSION_KEYS.map((key, idx) => (
-                <Reveal key={idx} variant="up" delay={idx * 0.05}>
-                  <li className="flex items-start gap-3 text-charcoal/60">
-                    <span
-                      className="w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5 border border-charcoal/20"
-                      style={sharp}
-                    >
-                      <X className="w-3.5 h-3.5 text-charcoal/40" />
-                    </span>
-                    <span className="leading-relaxed flex-1">{t(key)}</span>
-                  </li>
-                </Reveal>
-              ))}
+              {(tour as any).exclusions && (tour as any).exclusions.length > 0
+                ? (tour as any).exclusions.map((exc: string, idx: number) => (
+                    <Reveal key={idx} variant="up" delay={idx * 0.05}>
+                      <li className="flex items-start gap-3 text-charcoal/60">
+                        <span
+                          className="w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5 border border-charcoal/20"
+                          style={sharp}
+                        >
+                          <X className="w-3.5 h-3.5 text-charcoal/40" />
+                        </span>
+                        <span className="leading-relaxed flex-1">{exc}</span>
+                      </li>
+                    </Reveal>
+                  ))
+                : EXCLUSION_KEYS.map((key, idx) => (
+                    <Reveal key={idx} variant="up" delay={idx * 0.05}>
+                      <li className="flex items-start gap-3 text-charcoal/60">
+                        <span
+                          className="w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5 border border-charcoal/20"
+                          style={sharp}
+                        >
+                          <X className="w-3.5 h-3.5 text-charcoal/40" />
+                        </span>
+                        <span className="leading-relaxed flex-1">{t(key)}</span>
+                      </li>
+                    </Reveal>
+                  ))
+              }
             </ul>
           </div>
         </div>
