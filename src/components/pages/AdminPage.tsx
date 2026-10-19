@@ -790,6 +790,17 @@ function Sidebar({
   onNavigate: (s: AdminSection) => void;
   onSignOut: () => void;
 }) {
+  // Count unread items for notification badges
+  const tourBookings = useTourBookings();
+  const scheduledTripBookings = useScheduledTripBookings();
+  const formInquiries = useFormInquiries();
+
+  const unreadCounts: Record<string, number> = {
+    bookings: tourBookings.filter((b) => b.status === "pending").length,
+    "scheduled-trip-bookings": scheduledTripBookings.filter((b) => b.status === "pending").length,
+    "form-inquiries": formInquiries.filter((q) => q.status === "new").length,
+  };
+
   return (
     <aside
       className="w-60 bg-forest-deep text-cream flex-shrink-0 flex flex-col"
@@ -810,6 +821,7 @@ function Sidebar({
       <nav className="flex-1 py-4">
         {NAV_ITEMS.map((item) => {
           const active = section === item.id;
+          const unread = unreadCounts[item.id] || 0;
           return (
             <button
               key={item.id}
@@ -822,6 +834,11 @@ function Sidebar({
             >
               <item.icon className="w-4 h-4" />
               <span>{item.label}</span>
+              {unread > 0 && (
+                <span className="ml-auto min-w-5 h-5 px-1.5 flex items-center justify-center text-[10px] font-bold text-cream bg-red-600" style={{ borderRadius: 999 }}>
+                  {unread}
+                </span>
+              )}
             </button>
           );
         })}
