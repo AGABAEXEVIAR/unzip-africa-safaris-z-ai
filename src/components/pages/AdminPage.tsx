@@ -95,12 +95,9 @@ const ACCOMMODATION_LEVELS = [
   "Mobile Bush Camp",
 ];
 const ACCOMMODATION_TYPES = [
-  "Lodge",
-  "Tented Camp",
-  "Forest Lodge",
-  "Desert Lodge",
-  "Wilderness Lodge",
-  "Mobile Bush Camp",
+  "Mid-range",
+  "Luxury",
+  "Ultra-luxury",
 ];
 const TRIP_TYPES = [
   "Luxury Safaris",
