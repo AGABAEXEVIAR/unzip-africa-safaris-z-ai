@@ -390,9 +390,11 @@ export function ScheduledTripDetailPage() {
       )}
 
       {/* ====================== 5. WHAT'S INCLUDED / EXCLUDED ====================== */}
+      {(trip.inclusions?.length > 0 || trip.exclusions?.length > 0) && (
       <section className="bg-[#EFE9DF] py-16 md:py-24 px-6 md:px-10">
         <div className="mx-auto max-w-[1400px] grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20">
           {/* Included */}
+          {trip.inclusions?.length > 0 && (
           <div>
             <Reveal variant="up">
               <p className="font-eyebrow text-gold mb-6">{t("tourDetail.included")}</p>
@@ -422,8 +424,10 @@ export function ScheduledTripDetailPage() {
               ))}
             </ul>
           </div>
+          )}
 
           {/* Excluded */}
+          {trip.exclusions?.length > 0 && (
           <div>
             <Reveal variant="up">
               <p className="font-eyebrow text-charcoal/40 mb-6">{t("tourDetail.excluded")}</p>
@@ -453,8 +457,10 @@ export function ScheduledTripDetailPage() {
               ))}
             </ul>
           </div>
+          )}
         </div>
       </section>
+      )}
 
       {/* ====================== 6. WHERE YOU'LL STAY ====================== */}
       {stays.length > 0 && (
