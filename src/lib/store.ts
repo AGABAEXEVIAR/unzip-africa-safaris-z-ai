@@ -77,6 +77,7 @@ type State = {
   tourBookings: Booking[];
   scheduledTripBookings: Booking[];
   quotes: QuoteRequest[];
+  formInquiries: QuoteRequest[];
 };
 
 let state: State = {
@@ -92,6 +93,7 @@ let state: State = {
   tourBookings: [],
   scheduledTripBookings: [],
   quotes: [],
+  formInquiries: [],
 };
 
 // On page refresh, the JS module re-initializes and `state` resets to seed
@@ -136,6 +138,7 @@ if (stored) {
     tourBookings: stored.tourBookings ?? [],
     scheduledTripBookings: stored.scheduledTripBookings ?? [],
     quotes: stored.quotes ?? [],
+    formInquiries: stored.formInquiries ?? [],
   };
 }
 
@@ -152,6 +155,7 @@ const SERVER_SNAPSHOT: State = {
   tourBookings: [],
   scheduledTripBookings: [],
   quotes: [],
+  formInquiries: [],
 };
 
 /* ============================================================
@@ -173,6 +177,7 @@ const API_TYPE_MAP: Record<string, string> = {
   tourBookings: "tour-bookings",
   scheduledTripBookings: "scheduled-trip-bookings",
   quotes: "quotes",
+  formInquiries: "form-inquiries",
 };
 
 // Track IDs of items being POSTed to the DB (optimistic creates).
@@ -294,6 +299,7 @@ const SYNC_ENTRIES: Array<{ key: keyof State; type: string }> = [
   { key: "tourBookings", type: "tour-bookings" },
   { key: "scheduledTripBookings", type: "scheduled-trip-bookings" },
   { key: "quotes", type: "quotes" },
+  { key: "formInquiries", type: "form-inquiries" },
 ];
 
 // Re-sync all entity types from the database.
@@ -547,6 +553,12 @@ export const store = {
     emit();
     apiDelete("quotes", id);
   },
+
+  /* Form Inquiries */
+  setFormInquiries(formInquiries: QuoteRequest[]) { state = { ...state, formInquiries }; emit(); },
+  addFormInquiry(inquiry: QuoteRequest) { state = { ...state, formInquiries: [inquiry, ...state.formInquiries] }; emit(); apiCreate("form-inquiries", inquiry, "formInquiries", inquiry.id); },
+  updateFormInquiry(id: string, patch: Partial<QuoteRequest>) { state = { ...state, formInquiries: state.formInquiries.map((q) => (q.id === id ? { ...q, ...patch } : q)) }; emit(); apiUpdate("form-inquiries", id, patch); },
+  deleteFormInquiry(id: string) { state = { ...state, formInquiries: state.formInquiries.filter((q) => q.id !== id) }; emit(); apiDelete("form-inquiries", id); },
 };
 
 /* ============================================================
@@ -593,6 +605,9 @@ export function useScheduledTripBookings(): Booking[] {
 }
 export function useQuotes(): QuoteRequest[] {
   return useStore((s) => s.quotes);
+}
+export function useFormInquiries(): QuoteRequest[] {
+  return useStore((s) => s.formInquiries);
 }
 
 /* ============================================================

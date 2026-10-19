@@ -7,6 +7,14 @@ import ScrollReveal from "@/components/luxury/ScrollReveal";
 import { useRouter } from "@/lib/router";
 import { useLang } from "@/lib/language";
 import { toast } from "sonner";
+import { store, generateId } from "@/lib/store";
+
+const sharp = { borderRadius: 0 } as const;
+
+const DESTINATIONS = ["Uganda", "Kenya", "Tanzania", "Rwanda"];
+const DURATIONS = ["3–5 days", "7–10 days", "12–14 days", "14+ days"];
+const INTERESTS = ["Gorilla Trekking", "Great Migration", "Big Cats", "Walking Safaris", "Photography", "Stargazing", "Cultural Immersion", "Birding"];
+const BUDGETS = ["$25k – $50k", "$50k – $100k", "$100k – $250k", "$250k +"];
 
 export function ContactPage() {
   const { navigate } = useRouter();
@@ -20,48 +28,64 @@ export function ContactPage() {
   const heroY = useTransform(scrollYProgress, [0, 1], ["0%", "35%"]);
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
 
+  const [step, setStep] = useState(1);
+  const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
+    destinations: [] as string[],
+    duration: "",
+    interests: [] as string[],
+    budget: "",
     name: "",
     email: "",
     phone: "",
     travelers: "2",
     dates: "",
-    destinations: [] as string[],
-    budget: "$25,000 – $50,000",
     message: "",
   });
-  const [submitting, setSubmitting] = useState(false);
+
+  const toggleDestination = (d: string) => {
+    setForm((f) => ({ ...f, destinations: f.destinations.includes(d) ? f.destinations.filter((x) => x !== d) : [...f.destinations, d] }));
+  };
+  const toggleInterest = (i: string) => {
+    setForm((f) => ({ ...f, interests: f.interests.includes(i) ? f.interests.filter((x) => x !== i) : [...f.interests, i] }));
+  };
+
+  const canProceedStep1 = form.destinations.length > 0 && form.duration;
+  const canProceedStep2 = form.interests.length > 0 && form.budget;
+  const canSubmit = form.name.trim() && form.email.trim();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.name || !form.email) {
-      toast.error(t("contact.errorRequired"));
+    if (!canSubmit) {
+      toast.error("Please fill in your name and email");
       return;
     }
     setSubmitting(true);
-    // Simulate API call
-    await new Promise((r) => setTimeout(r, 1200));
+    const inquiry = {
+      id: generateId("inquiry"),
+      name: form.name,
+      email: form.email,
+      phone: form.phone,
+      travelers: form.travelers,
+      dates: form.dates,
+      destinations: form.destinations,
+      budget: form.budget,
+      message: form.message,
+      status: "new" as const,
+      createdAt: new Date().toISOString(),
+    };
+    store.addFormInquiry(inquiry as any);
+    // Also POST directly to the API for reliability
+    fetch("/api/crud?type=form-inquiries", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...inquiry, interests: form.interests, duration: form.duration }),
+    }).catch(() => {});
+    await new Promise((r) => setTimeout(r, 800));
     setSubmitting(false);
-    toast.success(t("contact.success"));
-    setForm({
-      name: "",
-      email: "",
-      phone: "",
-      travelers: "2",
-      dates: "",
-      destinations: [],
-      budget: "$25,000 – $50,000",
-      message: "",
-    });
-  };
-
-  const toggleDestination = (d: string) => {
-    setForm((f) => ({
-      ...f,
-      destinations: f.destinations.includes(d)
-        ? f.destinations.filter((x) => x !== d)
-        : [...f.destinations, d],
-    }));
+    toast.success("Your request has been sent. A specialist will reply within 24 hours.");
+    setForm({ destinations: [], duration: "", interests: [], budget: "", name: "", email: "", phone: "", travelers: "2", dates: "", message: "" });
+    setStep(1);
   };
 
   return (
@@ -70,7 +94,7 @@ export function ContactPage() {
       <section ref={heroRef} className="relative h-[75vh] min-h-[550px] overflow-hidden bg-charcoal grain">
         <motion.div style={{ y: heroY, scale: heroScale }} className="absolute inset-0 will-change-transform">
           <img
-            src="https://images.unsplash.com/photo-1568084680786-a84f91d1153c?auto=format&fit=crop&w=2400&q=85"
+            src="https://res.cloudinary.com/emz7hwx1/image/upload/v1792005671/Uganda.jpg"
             alt="Volcanic peaks shrouded in mist"
             className="w-full h-full object-cover"
           />
@@ -105,130 +129,144 @@ export function ContactPage() {
         </div>
       </section>
 
-      {/* ====================== CONTACT FORM + INFO ====================== */}
-      <section className="py-24 md:py-32 px-6 md:px-10">
-        <div className="mx-auto max-w-[1400px] grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-20">
-          {/* Left — Info */}
-          <div className="md:col-span-4">
-            <Reveal variant="up">
-              <p className="font-eyebrow text-gold mb-6">{t("contact.directLines")}</p>
-            </Reveal>
-            <ScrollReveal
-              as="h2"
-              containerClassName="font-display text-4xl md:text-5xl text-charcoal leading-[1.05] tracking-tight mb-10 block"
-              textClassName="block"
-              baseOpacity={0.1}
-              blurStrength={5}
-            >
-              {t("contact.reachUs")} <span className="italic text-forest">{t("contact.anywhere")}</span>
-            </ScrollReveal>
-
-            <Reveal variant="up" delay={0.1}>
-              <div className="space-y-6">
-                {/* Numbers */}
-                <div className="border-t border-border pt-5">
-                  <p className="font-eyebrow text-charcoal/40 mb-3">{t("contact.numbers")}</p>
-                  <div className="space-y-2">
-                    <p className="font-display text-xl text-charcoal">{t("contact.germany")} <span className="text-charcoal/70">+49 179 9372309</span></p>
-                    <p className="font-display text-xl text-charcoal">{t("contact.uganda")} <span className="text-charcoal/70">+256 706 761092</span></p>
-                  </div>
+      {/* ====================== MULTI-STEP FORM ====================== */}
+      <section className="py-16 md:py-24 px-6 md:px-10">
+        <div className="mx-auto max-w-3xl">
+          {/* Step indicator */}
+          <div className="flex items-center justify-center gap-2 mb-12">
+            {[1, 2, 3].map((s) => (
+              <div key={s} className="flex items-center gap-2">
+                <div
+                  className={`w-10 h-10 flex items-center justify-center font-display text-sm transition-all duration-500 ${step >= s ? "bg-gold text-charcoal" : "bg-cream text-charcoal/40"}`}
+                  style={sharp}
+                >
+                  0{s}
                 </div>
-                {/* Email */}
-                <div className="border-t border-border pt-5">
-                  <p className="font-eyebrow text-charcoal/40 mb-3">{t("contact.emailLabel")}</p>
-                  <div className="space-y-2">
-                    <p className="text-lg text-charcoal">
-                      <a href="mailto:info@unzipafrica.com" className="hover:text-gold transition-colors">info@unzipafrica.com</a>
-                    </p>
-                    <p className="text-lg text-charcoal">
-                      <a href="mailto:booking@unzipafrica.com" className="hover:text-gold transition-colors">booking@unzipafrica.com</a>
-                    </p>
-                  </div>
-                </div>
-                {/* Business Hours */}
-                <div className="border-t border-border pt-5">
-                  <p className="font-eyebrow text-charcoal/40 mb-3">{t("contact.businessHours")}</p>
-                  <div className="space-y-1 text-sm text-charcoal/70">
-                    <p>{t("contact.monFri")} <span className="text-charcoal">{t("contact.monFriHours")}</span></p>
-                    <p>{t("contact.saturday")} <span className="text-charcoal">{t("contact.satHours")}</span></p>
-                    <p>{t("contact.sunday")} <span className="text-charcoal">{t("contact.closed")}</span></p>
-                  </div>
-                </div>
+                {s < 3 && <div className={`w-12 h-px transition-all duration-500 ${step > s ? "bg-gold" : "bg-charcoal/15"}`} />}
               </div>
-            </Reveal>
+            ))}
           </div>
 
-          {/* Right — Form */}
-          <div className="md:col-span-8">
-            <Reveal variant="up">
-              <form onSubmit={handleSubmit} className="space-y-8">
-                {/* Full Names */}
-                <div>
-                  <label className="font-eyebrow text-charcoal/40 block mb-2">{t("contact.fullName")}</label>
-                  <input
-                    type="text"
-                    value={form.name}
-                    onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    required
-                    className="w-full bg-transparent border-b border-border py-2 text-charcoal focus:outline-none focus:border-forest transition-colors"
-                  />
+          <form onSubmit={handleSubmit} className="space-y-8">
+            {/* STEP 1: Destinations + Duration */}
+            {step === 1 && (
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-8">
+                <div className="text-center mb-8">
+                  <p className="font-eyebrow text-gold mb-2">Step 01</p>
+                  <h2 className="font-display text-3xl md:text-4xl text-charcoal" style={{ fontFamily: "var(--font-cormorant), serif" }}>Where shall we go?</h2>
+                  <p className="text-sm text-charcoal/60 mt-2">Select all destinations that call to you.</p>
                 </div>
-
-                {/* Email */}
-                <div>
-                  <label className="font-eyebrow text-charcoal/40 block mb-2">{t("contact.email")}</label>
-                  <input
-                    type="email"
-                    value={form.email}
-                    onChange={(e) => setForm({ ...form, email: e.target.value })}
-                    required
-                    className="w-full bg-transparent border-b border-border py-2 text-charcoal focus:outline-none focus:border-forest transition-colors"
-                  />
+                <div className="grid grid-cols-2 gap-3">
+                  {DESTINATIONS.map((d) => (
+                    <button key={d} type="button" onClick={() => toggleDestination(d)}
+                      className={`p-4 border transition-all duration-300 ${form.destinations.includes(d) ? "border-gold bg-gold/5" : "border-charcoal/15 hover:border-charcoal/30"}`}
+                      style={sharp}>
+                      <span className={`font-display text-lg ${form.destinations.includes(d) ? "text-gold" : "text-charcoal"}`} style={{ fontFamily: "var(--font-cormorant), serif" }}>{d}</span>
+                    </button>
+                  ))}
                 </div>
-
-                {/* Phone Number */}
                 <div>
-                  <label className="font-eyebrow text-charcoal/40 block mb-2">{t("contact.phone")}</label>
-                  <input
-                    type="tel"
-                    value={form.phone}
-                    onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                    placeholder={t("contact.phonePlaceholder")}
-                    className="w-full bg-transparent border-b border-border py-2 text-charcoal placeholder:text-charcoal/30 focus:outline-none focus:border-forest transition-colors"
-                  />
+                  <p className="font-eyebrow text-charcoal/40 mb-3">Duration</p>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                    {DURATIONS.map((d) => (
+                      <button key={d} type="button" onClick={() => setForm((f) => ({ ...f, duration: f.duration === d ? "" : d }))}
+                        className={`p-3 border text-sm transition-all ${form.duration === d ? "border-gold bg-gold/5 text-gold" : "border-charcoal/15 text-charcoal/70 hover:border-charcoal/30"}`}
+                        style={sharp}>{d}</button>
+                    ))}
+                  </div>
                 </div>
-
-                {/* Description */}
-                <div>
-                  <label className="font-eyebrow text-charcoal/40 block mb-2">{t("contact.description")}</label>
-                  <textarea
-                    value={form.message}
-                    onChange={(e) => setForm({ ...form, message: e.target.value })}
-                    rows={5}
-                    placeholder={t("contact.dreamPlaceholder")}
-                    className="w-full bg-transparent border-b border-border py-2 text-charcoal placeholder:text-charcoal/30 focus:outline-none focus:border-forest transition-colors duration-500 resize-none"
-                  />
-                </div>
-
-                <div className="pt-4">
-                  <button
-                    type="submit"
-                    disabled={submitting}
-                    className="w-full inline-flex items-center justify-center gap-3 px-6 py-3.5 text-xs font-medium tracking-[0.25em] uppercase transition-all duration-500 hover:opacity-85 active:scale-[0.97]"
-                    style={{
-                      borderRadius: 0,
-                      border: "1px solid var(--gold)",
-                      background: "var(--gold)",
-                      color: "var(--charcoal)",
-                      fontFamily: "var(--font-inter), sans-serif",
-                    }}
-                  >
-                    {submitting ? t("contact.sending") : t("contact.sendInquiry")}
+                <div className="flex justify-end pt-4">
+                  <button type="button" disabled={!canProceedStep1} onClick={() => setStep(2)}
+                    className="px-8 py-3 text-xs font-medium tracking-[0.25em] uppercase transition-all disabled:opacity-30 disabled:cursor-not-allowed hover:opacity-85"
+                    style={{ ...sharp, background: "var(--gold)", color: "var(--charcoal)" }}>
+                    Next Step →
                   </button>
                 </div>
-              </form>
-            </Reveal>
-          </div>
+              </motion.div>
+            )}
+
+            {/* STEP 2: Interests + Budget */}
+            {step === 2 && (
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-8">
+                <div className="text-center mb-8">
+                  <p className="font-eyebrow text-gold mb-2">Step 02</p>
+                  <h2 className="font-display text-3xl md:text-4xl text-charcoal" style={{ fontFamily: "var(--font-cormorant), serif" }}>What moves you?</h2>
+                  <p className="text-sm text-charcoal/60 mt-2">The experiences that draw you to Africa.</p>
+                </div>
+                <div className="flex flex-wrap gap-2 justify-center">
+                  {INTERESTS.map((i) => (
+                    <button key={i} type="button" onClick={() => toggleInterest(i)}
+                      className={`px-4 py-2 border text-sm transition-all ${form.interests.includes(i) ? "border-gold bg-gold/5 text-gold" : "border-charcoal/15 text-charcoal/70 hover:border-charcoal/30"}`}
+                      style={sharp}>{i}</button>
+                  ))}
+                </div>
+                <div>
+                  <p className="font-eyebrow text-charcoal/40 mb-3 text-center">Investment (per person)</p>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                    {BUDGETS.map((b) => (
+                      <button key={b} type="button" onClick={() => setForm((f) => ({ ...f, budget: f.budget === b ? "" : b }))}
+                        className={`p-3 border text-sm transition-all ${form.budget === b ? "border-gold bg-gold/5 text-gold" : "border-charcoal/15 text-charcoal/70 hover:border-charcoal/30"}`}
+                        style={sharp}>{b}</button>
+                    ))}
+                  </div>
+                </div>
+                <div className="flex justify-between pt-4">
+                  <button type="button" onClick={() => setStep(1)} className="px-6 py-3 text-xs font-medium tracking-[0.25em] uppercase text-charcoal/60 hover:text-charcoal transition-colors">← Back</button>
+                  <button type="button" disabled={!canProceedStep2} onClick={() => setStep(3)}
+                    className="px-8 py-3 text-xs font-medium tracking-[0.25em] uppercase transition-all disabled:opacity-30 disabled:cursor-not-allowed hover:opacity-85"
+                    style={{ ...sharp, background: "var(--gold)", color: "var(--charcoal)" }}>
+                    Next Step →
+                  </button>
+                </div>
+              </motion.div>
+            )}
+
+            {/* STEP 3: Personal Info */}
+            {step === 3 && (
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-6">
+                <div className="text-center mb-8">
+                  <p className="font-eyebrow text-gold mb-2">Step 03</p>
+                  <h2 className="font-display text-3xl md:text-4xl text-charcoal" style={{ fontFamily: "var(--font-cormorant), serif" }}>Where do we send the reply?</h2>
+                  <p className="text-sm text-charcoal/60 mt-2">A specialist will reply within 24 hours.</p>
+                </div>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="font-eyebrow text-charcoal/40 block mb-2">Full Name *</label>
+                    <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required className="w-full bg-transparent border-b border-border py-2 text-charcoal focus:outline-none focus:border-forest transition-colors" />
+                  </div>
+                  <div>
+                    <label className="font-eyebrow text-charcoal/40 block mb-2">Email *</label>
+                    <input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required className="w-full bg-transparent border-b border-border py-2 text-charcoal focus:outline-none focus:border-forest transition-colors" />
+                  </div>
+                  <div>
+                    <label className="font-eyebrow text-charcoal/40 block mb-2">Phone</label>
+                    <input type="tel" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="w-full bg-transparent border-b border-border py-2 text-charcoal focus:outline-none focus:border-forest transition-colors" />
+                  </div>
+                  <div>
+                    <label className="font-eyebrow text-charcoal/40 block mb-2">Number of Travelers</label>
+                    <input type="number" value={form.travelers} onChange={(e) => setForm({ ...form, travelers: e.target.value })} min="1" className="w-full bg-transparent border-b border-border py-2 text-charcoal focus:outline-none focus:border-forest transition-colors" />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="font-eyebrow text-charcoal/40 block mb-2">Approximate Dates</label>
+                    <input type="text" value={form.dates} onChange={(e) => setForm({ ...form, dates: e.target.value })} placeholder="e.g., September 2025" className="w-full bg-transparent border-b border-border py-2 text-charcoal placeholder:text-charcoal/30 focus:outline-none focus:border-forest transition-colors" />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="font-eyebrow text-charcoal/40 block mb-2">Anything else?</label>
+                    <textarea value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} rows={4} placeholder="Dietary needs, mobility, anniversaries, dreams..." className="w-full bg-transparent border-b border-border py-2 text-charcoal placeholder:text-charcoal/30 focus:outline-none focus:border-forest transition-colors resize-none" />
+                  </div>
+                </div>
+                <div className="flex justify-between pt-4">
+                  <button type="button" onClick={() => setStep(2)} className="px-6 py-3 text-xs font-medium tracking-[0.25em] uppercase text-charcoal/60 hover:text-charcoal transition-colors">← Back</button>
+                  <button type="submit" disabled={!canSubmit || submitting}
+                    className="px-8 py-3 text-xs font-medium tracking-[0.25em] uppercase transition-all disabled:opacity-30 disabled:cursor-not-allowed hover:opacity-85"
+                    style={{ ...sharp, background: "var(--gold)", color: "var(--charcoal)" }}>
+                    {submitting ? "Sending..." : "Submit Request"}
+                  </button>
+                </div>
+                <p className="text-center text-xs text-charcoal/40 mt-4">By sending, you agree to our privacy policy. We never share your details.</p>
+              </motion.div>
+            )}
+          </form>
         </div>
       </section>
 

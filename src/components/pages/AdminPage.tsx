@@ -23,6 +23,7 @@ import {
   useCountries,
   useParks,
   useQuotes,
+  useFormInquiries,
   useScheduledTrips,
   useTestimonials,
   useTours,
@@ -120,6 +121,7 @@ type AdminSection =
   | "blog"
   | "content"
   | "quotes"
+  | "form-inquiries"
   | "bookings"
   | "scheduled-trip-bookings"
   | "testimonials"
@@ -778,6 +780,7 @@ const NAV_ITEMS: { id: AdminSection; label: string; icon: React.ComponentType<{ 
   { id: "bookings", label: "Tour Bookings", icon: CalendarCheck },
   { id: "scheduled-trip-bookings", label: "Scheduled Trip Bookings", icon: Calendar },
   { id: "testimonials", label: "Testimonials", icon: Quote },
+  { id: "form-inquiries", label: "Form Inquiries", icon: Mail },
   { id: "settings", label: "Settings", icon: SettingsIcon },
 ];
 
@@ -4199,6 +4202,106 @@ function TestimonialFormModal({
 }
 
 /* ============================================================
+ * Form Inquiries
+ * ============================================================ */
+function FormInquiriesSection() {
+  const inquiries = useFormInquiries();
+  const [viewing, setViewing] = useState<QuoteRequest | null>(null);
+
+  const handleStatusChange = (id: string, status: QuoteRequest["status"]) => {
+    store.updateFormInquiry(id, { status });
+    toast.success("Status updated");
+    if (viewing && viewing.id === id) setViewing({ ...viewing, status });
+  };
+
+  const handleDelete = (id: string) => {
+    if (!confirm("Delete this inquiry?")) return;
+    store.deleteFormInquiry(id);
+    toast.success("Inquiry deleted");
+    setViewing(null);
+  };
+
+  return (
+    <div className="space-y-6">
+      <SectionHeader eyebrow="INBOX" title="Form Inquiries" />
+      {inquiries.length === 0 ? (
+        <Panel>
+          <EmptyState title="No inquiries yet" message="When visitors submit the contact form, their inquiries will appear here." />
+        </Panel>
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* List */}
+          <div className="space-y-3">
+            {inquiries.map((q) => (
+              <button key={q.id} onClick={() => setViewing(q)} className="w-full text-left bg-alabaster border border-charcoal/10 p-4 hover:border-gold/50 transition-all" style={sharp}>
+                <div className="flex justify-between items-start mb-2">
+                  <div>
+                    <p className="font-medium text-charcoal">{q.name}</p>
+                    <p className="text-xs text-muted-foreground">{q.email}</p>
+                  </div>
+                  <QuoteStatusBadge status={q.status} />
+                </div>
+                <div className="flex flex-wrap gap-1.5 mt-2">
+                  {(q as any).destinations?.map((d: string) => (
+                    <span key={d} className="text-[10px] px-2 py-0.5 bg-forest/10 text-forest">{d}</span>
+                  ))}
+                </div>
+                <p className="text-xs text-muted-foreground mt-2">{(q as any).dates || "No dates specified"} · {(q as any).travelers || "?"} travelers · {q.budget || "No budget"}</p>
+              </button>
+            ))}
+          </div>
+          {/* Detail */}
+          {viewing && (
+            <Panel className="p-6">
+              <div className="flex justify-between items-start mb-4">
+                <h2 className="text-xl" style={{ fontFamily: "var(--font-cormorant), serif" }}>{viewing.name}</h2>
+                <button onClick={() => setViewing(null)} className="text-muted-foreground hover:text-charcoal text-sm">Close</button>
+              </div>
+              <div className="space-y-3 text-sm">
+                <div><span className="text-muted-foreground">Email:</span> {viewing.email}</div>
+                <div><span className="text-muted-foreground">Phone:</span> {viewing.phone || "—"}</div>
+                <div><span className="text-muted-foreground">Travelers:</span> {(viewing as any).travelers || "—"}</div>
+                <div><span className="text-muted-foreground">Dates:</span> {(viewing as any).dates || "—"}</div>
+                <div><span className="text-muted-foreground">Budget:</span> {viewing.budget || "—"}</div>
+                <div>
+                  <span className="text-muted-foreground">Destinations:</span>
+                  <div className="flex flex-wrap gap-1.5 mt-1">
+                    {(viewing as any).destinations?.map((d: string) => (
+                      <span key={d} className="text-[10px] px-2 py-0.5 bg-forest/10 text-forest">{d}</span>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <span className="text-muted-foreground">Interests:</span>
+                  <div className="flex flex-wrap gap-1.5 mt-1">
+                    {(viewing as any).interests?.map((i: string) => (
+                      <span key={i} className="text-[10px] px-2 py-0.5 bg-gold/10 text-gold">{i}</span>
+                    ))}
+                  </div>
+                </div>
+                {(viewing as any).message && (
+                  <div><span className="text-muted-foreground">Message:</span><p className="mt-1 text-charcoal/80">{(viewing as any).message}</p></div>
+                )}
+              </div>
+              <div className="flex gap-2 mt-6">
+                <select value={viewing.status} onChange={(e) => handleStatusChange(viewing.id, e.target.value as QuoteRequest["status"])} className="px-3 py-2 border border-charcoal/15 bg-alabaster text-sm" style={sharp}>
+                  <option value="new">New</option>
+                  <option value="in-review">In Review</option>
+                  <option value="closed">Closed</option>
+                </select>
+                <button onClick={() => handleDelete(viewing.id)} className="px-4 py-2 bg-red-600 text-cream text-sm hover:bg-red-700 flex items-center gap-1.5" style={sharp}>
+                  <Trash2 className="w-3.5 h-3.5" /> Delete
+                </button>
+              </div>
+            </Panel>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ============================================================
  * Settings
  * ============================================================ */
 function SettingsSection() {
@@ -5104,6 +5207,7 @@ export function AdminPage() {
           {section === "bookings" && <BookingsSection filterType="tour" title="Tour Bookings" />}
           {section === "scheduled-trip-bookings" && <BookingsSection filterType="scheduled-trip" title="Scheduled Trip Bookings" />}
           {section === "testimonials" && <TestimonialsSection />}
+          {section === "form-inquiries" && <FormInquiriesSection />}
           {section === "settings" && <SettingsSection />}
         </div>
       </main>

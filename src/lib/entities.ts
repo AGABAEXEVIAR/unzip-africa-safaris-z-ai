@@ -174,6 +174,14 @@ export const ENTITIES: Record<string, EntityDef> = {
     autoOnInsert: ["createdAt", "updatedAt"],
     autoOnUpdate: ["updatedAt"],
   },
+
+  "form-inquiries": {
+    table: "FormInquiry",
+    columns: ["name", "email", "phone", "travelers", "dates", "destinations", "interests", "budget", "message", "status"],
+    jsonColumns: ["destinations", "interests"],
+    autoOnInsert: ["createdAt", "updatedAt"],
+    autoOnUpdate: ["updatedAt"],
+  },
 };
 
 // Helper — get a def or throw.
