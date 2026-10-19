@@ -873,6 +873,7 @@ function DashboardSection({
   const blogPosts = useBlogPosts();
   const tourBookings = useTourBookings();
   const scheduledTripBookings = useScheduledTripBookings();
+  const formInquiries = useFormInquiries();
   const bookings = [...tourBookings, ...scheduledTripBookings];
   const testimonials = useTestimonials();
 
@@ -890,6 +891,7 @@ function DashboardSection({
     { label: "Blog Posts", value: blogPosts.length, section: "blog", icon: BookOpen },
     { label: "Tour Bookings", value: tourBookings.length, section: "bookings", icon: CalendarCheck },
     { label: "Scheduled Bookings", value: scheduledTripBookings.length, section: "scheduled-trip-bookings", icon: Calendar },
+    { label: "Form Inquiries", value: formInquiries.length, section: "form-inquiries", icon: Mail },
     { label: "Testimonials", value: testimonials.length, section: "testimonials", icon: Quote },
   ];
 
