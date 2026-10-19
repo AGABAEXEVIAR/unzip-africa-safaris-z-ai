@@ -13,8 +13,8 @@ const sharp = { borderRadius: 0 } as const;
 
 const DESTINATIONS = ["Uganda", "Kenya", "Tanzania", "Rwanda"];
 const DURATIONS = ["3–5 days", "7–10 days", "12–14 days", "14+ days"];
-const INTERESTS = ["Gorilla Trekking", "Great Migration", "Big Cats", "Walking Safaris", "Photography", "Stargazing", "Cultural Immersion", "Birding"];
-const BUDGETS = ["$25k – $50k", "$50k – $100k", "$100k – $250k", "$250k +"];
+const INTERESTS = ["Gorilla Trekking", "Chimpanzee", "The Great Migration", "Photography", "Birding", "Mountaineering", "Culture", "Charity", "Internship", "Honeymoon", "Family Getaway", "I can't decide, Help!"];
+const BUDGETS = ["$2,000 – $3,500", "$3,500 – $5,000", "$5,000 – $7,000", "$7,000 – $10,000", "$10,000+"];
 
 export function ContactPage() {
   const { navigate } = useRouter();
@@ -201,7 +201,7 @@ export function ContactPage() {
                   ))}
                 </div>
                 <div>
-                  <p className="font-eyebrow text-charcoal/40 mb-3 text-center">Investment (per person)</p>
+                  <p className="font-eyebrow text-charcoal/40 mb-3 text-center">Estimated budget</p>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                     {BUDGETS.map((b) => (
                       <button key={b} type="button" onClick={() => setForm((f) => ({ ...f, budget: f.budget === b ? "" : b }))}
