@@ -85,6 +85,8 @@ export function ContactPage() {
     await new Promise((r) => setTimeout(r, 800));
     setSubmitting(false);
     setShowSuccess(true);
+    // Scroll to top so the popup is immediately visible
+    window.scrollTo({ top: 0, behavior: "smooth" });
     setForm({ destinations: [], duration: "", interests: [], budget: "", name: "", email: "", phone: "", travelers: "2", dates: "", message: "" });
     setStep(1);
   };
