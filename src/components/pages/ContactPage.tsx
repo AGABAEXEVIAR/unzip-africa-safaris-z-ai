@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Reveal } from "@/components/luxury/Reveal";
 import ScrollReveal from "@/components/luxury/ScrollReveal";
@@ -31,6 +32,7 @@ export function ContactPage() {
   const [step, setStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const lenis = typeof window !== "undefined" ? (window as any).__lenis : null;
   const [form, setForm] = useState({
     destinations: [] as string[],
     duration: "",
@@ -84,9 +86,11 @@ export function ContactPage() {
     }).catch(() => {});
     await new Promise((r) => setTimeout(r, 800));
     setSubmitting(false);
+    // Instant scroll to top (not smooth) + stop Lenis if running
+    if (lenis?.stop) lenis.stop();
+    window.scrollTo(0, 0);
+    document.body.style.overflow = "hidden";
     setShowSuccess(true);
-    // Scroll to top so the popup is immediately visible
-    window.scrollTo({ top: 0, behavior: "smooth" });
     setForm({ destinations: [], duration: "", interests: [], budget: "", name: "", email: "", phone: "", travelers: "2", dates: "", message: "" });
     setStep(1);
   };
@@ -383,14 +387,12 @@ export function ContactPage() {
         </div>
       </section>
 
-      {/* ====================== SUCCESS POPUP ====================== */}
-      {showSuccess && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[90] bg-charcoal/80 backdrop-blur-md flex items-center justify-center p-6"
-          onClick={() => setShowSuccess(false)}
+      {/* ====================== SUCCESS POPUP (portal to document.body — bypasses parent transforms) ====================== */}
+      {showSuccess && typeof document !== "undefined" && createPortal(
+        <div
+          className="fixed inset-0 z-[200] bg-charcoal/80 backdrop-blur-md flex items-center justify-center p-6"
+          onClick={() => { setShowSuccess(false); document.body.style.overflow = ""; if (lenis?.start) lenis.start(); }}
+          style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0 }}
         >
           <motion.div
             initial={{ opacity: 0, y: 40, scale: 0.95 }}
@@ -415,14 +417,15 @@ export function ContactPage() {
               Thank you for reaching out to Unzip Africa Safaris. One of our travel specialists will review your request and reply within 24 hours.
             </p>
             <button
-              onClick={() => setShowSuccess(false)}
+              onClick={() => { setShowSuccess(false); document.body.style.overflow = ""; if (lenis?.start) lenis.start(); }}
               className="px-8 py-3 text-xs font-medium tracking-[0.25em] uppercase transition-all hover:opacity-85"
               style={{ ...sharp, background: "var(--gold)", color: "var(--charcoal)" }}
             >
               Close
             </button>
           </motion.div>
-        </motion.div>
+        </div>,
+        document.body
       )}
     </div>
   );
