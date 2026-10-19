@@ -18,17 +18,9 @@ export function FeaturedTrips() {
   const { navigateToTour, navigate } = useRouter();
   const { t } = useLang();
 
-  // Duplicate the array when there are 3 or fewer featured trips so the
-  // carousel can actually scroll + loop. With only 3 cards visible per
-  // viewport at 33.333% width each, all 3 fit in one viewport and there's
-  // nothing to scroll to. Duplicating to 6 cards means there's always
-  // another card to scroll to, and with loop: true the rotation wraps
-  // around seamlessly — pressing Next shifts everything left by 1 card
-  // and the leftmost card wraps to the right end (the duplicate takes
-  // its place). After 3 clicks you're visually back to the start.
-  const carouselItems = featured.length > 0 && featured.length <= 3
-    ? [...featured, ...featured]
-    : featured;
+  // Use featured trips directly — no duplication.
+  // Each featured trip appears exactly once in the carousel.
+  const carouselItems = featured;
 
   const [emblaRef, emblaApi] = useEmblaCarousel(
     {
