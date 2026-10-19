@@ -175,21 +175,29 @@ const API_TYPE_MAP: Record<string, string> = {
   quotes: "quotes",
 };
 
-// Fetch all records of a type from the database — REPLACES local state.
-// The DB is the source of truth. If another admin deletes a record, it's
-// removed from local state too. This ensures all admin sessions stay in sync.
+// Track IDs of items being POSTed to the DB (optimistic creates).
+// These are preserved during syncFromDatabase so they don't get wiped
+// before the POST completes.
+const pendingCreates = new Set<string>();
+
+// Fetch all records of a type from the database.
+// The DB is the source of truth — REPLACES local state with DB data.
+// EXCEPTION: items in `pendingCreates` (just POSTed, response not yet
+// received) are preserved so the user doesn't see their new tour
+// disappear during the 30-second auto-refresh.
 async function syncFromDatabase(key: keyof State, type: string) {
   try {
     const res = await fetch(`/api/crud?type=${type}`, { cache: "no-store" });
     if (!res.ok) return;
     const data = await res.json();
     if (Array.isArray(data)) {
-      // REPLACE: DB data is the source of truth (no merge with local items).
-      // This means:
-      // - If Admin A deletes a tour → DB doesn't have it → removed from Admin B too
-      // - If Admin A creates a tour → DB has it → appears in Admin B too
-      // - If Admin A edits a tour → DB has the updated version → Admin B sees it
-      state = { ...state, [key]: data };
+      // Keep optimistic items (just created, POST in flight)
+      const localItems = state[key] as Array<{ id: string }>;
+      const optimisticItems = localItems.filter((item: { id: string }) =>
+        pendingCreates.has(item.id)
+      );
+      // DB data is the source of truth + optimistic items preserved
+      state = { ...state, [key]: [...data, ...optimisticItems] };
       emit();
     }
   } catch {
@@ -199,6 +207,8 @@ async function syncFromDatabase(key: keyof State, type: string) {
 
 // Persist a create to the database (fire-and-forget — keeps optimistic update on failure)
 function apiCreate(type: string, record: unknown, revertKey: keyof State, recordId: string) {
+  // Track this ID as a pending create so syncFromDatabase doesn't remove it
+  pendingCreates.add(recordId);
   fetch(`/api/crud?type=${type}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -206,25 +216,26 @@ function apiCreate(type: string, record: unknown, revertKey: keyof State, record
   })
     .then((r) => r.ok ? r.json() : null)
     .then((saved) => {
+      // POST completed — remove from pending so future syncs can manage it
+      pendingCreates.delete(recordId);
       if (saved && saved.id && saved.id !== recordId) {
         // Replace optimistic ID with DB-generated ID
+        pendingCreates.delete(recordId);
+        pendingCreates.add(saved.id);
         const arr = state[revertKey] as unknown[];
         const updated = arr.map((item: any) =>
           item.id === recordId ? { ...item, id: saved.id } : item
         );
         state = { ...state, [revertKey]: updated };
         emit();
+        // Give the ID change a moment to settle before removing from pending
+        setTimeout(() => pendingCreates.delete(saved.id), 5000);
       }
-      // If saved is null (API returned error), keep the optimistic record
-      // in local state — it'll be visible in the current session even if
-      // the database isn't reachable. The resyncStore MERGE logic preserves
-      // local-only items (items whose IDs aren't in the DB) on page navigation.
     })
     .catch(() => {
-      // API failed — DO NOT revert the optimistic update.
-      // Keep the record in local state so the user can still see it.
-      // The record will be visible in the current session and survives
-      // page navigation via the syncFromDatabase MERGE logic.
+      // API failed — remove from pending after 60 seconds so it gets
+      // cleaned up by the next sync (the item won't be in the DB)
+      setTimeout(() => pendingCreates.delete(recordId), 60000);
     });
 }
 
