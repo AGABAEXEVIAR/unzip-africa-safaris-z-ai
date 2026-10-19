@@ -30,6 +30,7 @@ export function ContactPage() {
 
   const [step, setStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
   const [form, setForm] = useState({
     destinations: [] as string[],
     duration: "",
@@ -83,7 +84,7 @@ export function ContactPage() {
     }).catch(() => {});
     await new Promise((r) => setTimeout(r, 800));
     setSubmitting(false);
-    toast.success("Your request has been sent. A specialist will reply within 24 hours.");
+    setShowSuccess(true);
     setForm({ destinations: [], duration: "", interests: [], budget: "", name: "", email: "", phone: "", travelers: "2", dates: "", message: "" });
     setStep(1);
   };
@@ -379,6 +380,48 @@ export function ContactPage() {
           </Reveal>
         </div>
       </section>
+
+      {/* ====================== SUCCESS POPUP ====================== */}
+      {showSuccess && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[90] bg-charcoal/80 backdrop-blur-md flex items-center justify-center p-6"
+          onClick={() => setShowSuccess(false)}
+        >
+          <motion.div
+            initial={{ opacity: 0, y: 40, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            onClick={(e) => e.stopPropagation()}
+            className="bg-canvas max-w-md w-full p-8 md:p-12 text-center"
+            style={sharp}
+          >
+            {/* Checkmark icon */}
+            <div className="w-16 h-16 mx-auto mb-6 flex items-center justify-center" style={{ ...sharp, background: "var(--gold)" }}>
+              <svg className="w-8 h-8 text-charcoal" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+
+            <p className="font-eyebrow text-gold mb-3">Delivered</p>
+            <h3 className="font-display text-3xl md:text-4xl text-charcoal mb-4" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+              Your request has been sent
+            </h3>
+            <p className="text-sm text-charcoal/70 leading-relaxed mb-8">
+              Thank you for reaching out to Unzip Africa Safaris. One of our travel specialists will review your request and reply within 24 hours.
+            </p>
+            <button
+              onClick={() => setShowSuccess(false)}
+              className="px-8 py-3 text-xs font-medium tracking-[0.25em] uppercase transition-all hover:opacity-85"
+              style={{ ...sharp, background: "var(--gold)", color: "var(--charcoal)" }}
+            >
+              Close
+            </button>
+          </motion.div>
+        </motion.div>
+      )}
     </div>
   );
 }
