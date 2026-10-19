@@ -146,7 +146,11 @@ export function BookingModal(props: BookingModalProps) {
       createdAt: new Date().toISOString(),
       notes: form.notes || undefined,
     };
-    store.addBooking(booking);
+    if (tripType === "tour") {
+      store.addTourBooking(booking);
+    } else {
+      store.addScheduledTripBooking(booking);
+    }
     setConfirmed(booking);
     toast.success(t("booking.successToast"));
   };

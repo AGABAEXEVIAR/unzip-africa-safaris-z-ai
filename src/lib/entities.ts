@@ -141,6 +141,32 @@ export const ENTITIES: Record<string, EntityDef> = {
     autoOnUpdate: ["updatedAt"],
   },
 
+  "tour-bookings": {
+    table: "TourBooking",
+    columns: [
+      "tourId", "tripName", "destination",
+      "duration", "pricePerPerson", "numTravellers",
+      "totalPrice", "customerName", "customerEmail", "customerPhone",
+      "notes", "status",
+    ],
+    jsonColumns: [],
+    autoOnInsert: ["createdAt", "updatedAt"],
+    autoOnUpdate: ["updatedAt"],
+  },
+
+  "scheduled-trip-bookings": {
+    table: "ScheduledTripBooking",
+    columns: [
+      "scheduledTripId", "tripName", "destination",
+      "startDate", "endDate", "duration", "pricePerPerson", "numTravellers",
+      "totalPrice", "customerName", "customerEmail", "customerPhone",
+      "notes", "status",
+    ],
+    jsonColumns: [],
+    autoOnInsert: ["createdAt", "updatedAt"],
+    autoOnUpdate: ["updatedAt"],
+  },
+
   quotes: {
     table: "QuoteRequest",
     columns: ["name", "email", "phone", "travelers", "dates", "destinations", "budget", "message", "status"],

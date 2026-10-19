@@ -17,6 +17,8 @@ import { refreshContentOverrides } from "@/lib/useContentOverrides";
 import {
   useAccommodations,
   useBookings,
+  useTourBookings,
+  useScheduledTripBookings,
   useDestinations,
   useCountries,
   useParks,
@@ -852,7 +854,9 @@ function DashboardSection({
   const countries = useCountries();
   const parks = useParks();
   const blogPosts = useBlogPosts();
-  const bookings = useBookings();
+  const tourBookings = useTourBookings();
+  const scheduledTripBookings = useScheduledTripBookings();
+  const bookings = [...tourBookings, ...scheduledTripBookings];
   const testimonials = useTestimonials();
 
   const stats: {
@@ -3574,8 +3578,8 @@ function Detail({
  * Bookings
  * ============================================================ */
 function BookingsSection({ filterType, title }: { filterType: "tour" | "scheduled-trip"; title: string }) {
-  const allBookings = useBookings();
-  const bookings = allBookings.filter((b) => b.type === filterType);
+  const allBookings = filterType === "tour" ? useTourBookings() : useScheduledTripBookings();
+  const bookings = allBookings;
   const [viewing, setViewing] = useState<Booking | null>(null);
 
   // Re-sync from localStorage on mount in case other tabs wrote data
@@ -3594,13 +3598,21 @@ function BookingsSection({ filterType, title }: { filterType: "tour" | "schedule
   }, []);
 
   const handleStatusChange = (id: string, status: BookingStatus) => {
-    store.updateBooking(id, { status });
+    if (filterType === "tour") {
+      store.updateTourBooking(id, { status });
+    } else {
+      store.updateScheduledTripBooking(id, { status });
+    }
     toast.success(`Marked as ${status}`);
   };
 
   const handleDelete = (id: string) => {
     if (!confirm("Delete this booking?")) return;
-    store.deleteBooking(id);
+    if (filterType === "tour") {
+      store.deleteTourBooking(id);
+    } else {
+      store.deleteScheduledTripBooking(id);
+    }
     toast.success("Booking deleted");
     setViewing(null);
   };

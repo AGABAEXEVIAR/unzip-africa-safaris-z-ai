@@ -74,6 +74,8 @@ type State = {
   parks: Destination[];
   blogPosts: BlogPost[];
   bookings: Booking[];
+  tourBookings: Booking[];
+  scheduledTripBookings: Booking[];
   quotes: QuoteRequest[];
 };
 
@@ -87,6 +89,8 @@ let state: State = {
   parks: [...seedParks],
   blogPosts: [...seedBlogPosts],
   bookings: [],
+  tourBookings: [],
+  scheduledTripBookings: [],
   quotes: [],
 };
 
@@ -129,6 +133,8 @@ if (stored) {
     parks: stored.parks ?? [...seedParks],
     blogPosts: stored.blogPosts ?? [...seedBlogPosts],
     bookings: stored.bookings ?? [],
+    tourBookings: stored.tourBookings ?? [],
+    scheduledTripBookings: stored.scheduledTripBookings ?? [],
     quotes: stored.quotes ?? [],
   };
 }
@@ -143,6 +149,8 @@ const SERVER_SNAPSHOT: State = {
   parks: [...seedParks],
   blogPosts: [...seedBlogPosts],
   bookings: [],
+  tourBookings: [],
+  scheduledTripBookings: [],
   quotes: [],
 };
 
@@ -162,6 +170,8 @@ const API_TYPE_MAP: Record<string, string> = {
   testimonials: "testimonials",
   blogPosts: "blog-posts",
   bookings: "bookings",
+  tourBookings: "tour-bookings",
+  scheduledTripBookings: "scheduled-trip-bookings",
   quotes: "quotes",
 };
 
@@ -272,6 +282,8 @@ const SYNC_ENTRIES: Array<{ key: keyof State; type: string }> = [
   { key: "testimonials", type: "testimonials" },
   { key: "blogPosts", type: "blog-posts" },
   { key: "bookings", type: "bookings" },
+  { key: "tourBookings", type: "tour-bookings" },
+  { key: "scheduledTripBookings", type: "scheduled-trip-bookings" },
   { key: "quotes", type: "quotes" },
 ];
 
@@ -465,6 +477,40 @@ export const store = {
     emit();
   },
 
+  /* Tour Bookings */
+  addTourBooking(booking: Booking) {
+    state = { ...state, tourBookings: [booking, ...state.tourBookings] };
+    emit();
+    apiCreate("tour-bookings", { ...booking, tourId: booking.tripId, type: "tour" }, "tourBookings", booking.id);
+  },
+  updateTourBooking(id: string, patch: Partial<Booking>) {
+    state = { ...state, tourBookings: state.tourBookings.map((b) => (b.id === id ? { ...b, ...patch } : b)) };
+    emit();
+    apiUpdate("tour-bookings", id, patch);
+  },
+  deleteTourBooking(id: string) {
+    state = { ...state, tourBookings: state.tourBookings.filter((b) => b.id !== id) };
+    emit();
+    apiDelete("tour-bookings", id);
+  },
+
+  /* Scheduled Trip Bookings */
+  addScheduledTripBooking(booking: Booking) {
+    state = { ...state, scheduledTripBookings: [booking, ...state.scheduledTripBookings] };
+    emit();
+    apiCreate("scheduled-trip-bookings", { ...booking, scheduledTripId: booking.tripId, type: "scheduled-trip" }, "scheduledTripBookings", booking.id);
+  },
+  updateScheduledTripBooking(id: string, patch: Partial<Booking>) {
+    state = { ...state, scheduledTripBookings: state.scheduledTripBookings.map((b) => (b.id === id ? { ...b, ...patch } : b)) };
+    emit();
+    apiUpdate("scheduled-trip-bookings", id, patch);
+  },
+  deleteScheduledTripBooking(id: string) {
+    state = { ...state, scheduledTripBookings: state.scheduledTripBookings.filter((b) => b.id !== id) };
+    emit();
+    apiDelete("scheduled-trip-bookings", id);
+  },
+
   /* Quotes */
   setQuotes(quotes: QuoteRequest[]) {
     state = { ...state, quotes };
@@ -522,6 +568,12 @@ export function useBlogPosts(): BlogPost[] {
 }
 export function useBookings(): Booking[] {
   return useStore((s) => s.bookings);
+}
+export function useTourBookings(): Booking[] {
+  return useStore((s) => s.tourBookings);
+}
+export function useScheduledTripBookings(): Booking[] {
+  return useStore((s) => s.scheduledTripBookings);
 }
 export function useQuotes(): QuoteRequest[] {
   return useStore((s) => s.quotes);
