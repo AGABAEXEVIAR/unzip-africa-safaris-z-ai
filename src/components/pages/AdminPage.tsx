@@ -888,8 +888,8 @@ function DashboardSection({
     { label: "Countries", value: countries.length, section: "countries", icon: Globe },
     { label: "Safari Parks", value: parks.length, section: "destinations", icon: MapPin },
     { label: "Blog Posts", value: blogPosts.length, section: "blog", icon: BookOpen },
-    { label: "Tour Bookings", value: bookings.filter(b => b.type === "tour").length, section: "bookings", icon: CalendarCheck },
-    { label: "Scheduled Bookings", value: bookings.filter(b => b.type === "scheduled-trip").length, section: "scheduled-trip-bookings", icon: Calendar },
+    { label: "Tour Bookings", value: tourBookings.length, section: "bookings", icon: CalendarCheck },
+    { label: "Scheduled Bookings", value: scheduledTripBookings.length, section: "scheduled-trip-bookings", icon: Calendar },
     { label: "Testimonials", value: testimonials.length, section: "testimonials", icon: Quote },
   ];
 
@@ -957,11 +957,11 @@ function DashboardSection({
         <Panel className="p-6">
           <h2 className="text-lg mb-4" style={{ fontFamily: "var(--font-cormorant), serif" }}>Booking Types</h2>
           {(() => {
-            const tourBookings = bookings.filter(b => b.type === "tour").length;
-            const tripBookings = bookings.filter(b => b.type === "scheduled-trip").length;
-            const total = tourBookings + tripBookings;
+            const tBookings = tourBookings.length;
+            const sBookings = scheduledTripBookings.length;
+            const total = tBookings + sBookings;
             if (total === 0) return <p className="text-sm text-muted-foreground py-6 text-center">No bookings yet.</p>;
-            const tourPct = Math.round((tourBookings / total) * 100);
+            const tourPct = Math.round((tBookings / total) * 100);
             const tripPct = 100 - tourPct;
             return (
               <div className="flex flex-col items-center gap-4">
@@ -975,11 +975,11 @@ function DashboardSection({
                 <div className="flex gap-4 text-xs">
                   <div className="flex items-center gap-1.5">
                     <div className="w-3 h-3 bg-gold" />
-                    <span>Tour ({tourBookings})</span>
+                    <span>Tour ({tBookings})</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <div className="w-3 h-3 bg-forest" />
-                    <span>Trip ({tripBookings})</span>
+                    <span>Trip ({sBookings})</span>
                   </div>
                 </div>
               </div>
