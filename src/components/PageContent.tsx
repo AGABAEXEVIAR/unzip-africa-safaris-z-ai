@@ -22,6 +22,8 @@ import { AccommodationDetailPage } from "@/components/pages/AccommodationDetailP
 import { BlogPage } from "@/components/pages/BlogPage";
 import { BlogDetailPage } from "@/components/pages/BlogDetailPage";
 import { AdminPage } from "@/components/pages/AdminPage";
+import { PrivacyPage } from "@/components/pages/PrivacyPage";
+import { TermsPage } from "@/components/pages/TermsPage";
 
 export function PageContent() {
   const { page } = useRouter();
@@ -51,6 +53,8 @@ export function PageContent() {
     "accommodation-detail": <AccommodationDetailPage />,
     "scheduled-trip-detail": <ScheduledTripDetailPage />,
     admin: <AdminPage />,
+    privacy: <PrivacyPage />,
+    terms: <TermsPage />,
   };
 
   return (

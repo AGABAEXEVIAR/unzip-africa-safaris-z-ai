@@ -17,7 +17,9 @@ export type PageId =
   | "tour-detail"
   | "accommodation-detail"
   | "scheduled-trip-detail"
-  | "admin";
+  | "admin"
+  | "privacy"
+  | "terms";
 
 // Map PageId → URL path
 const PAGE_TO_PATH: Partial<Record<PageId, string>> = {
@@ -35,6 +37,8 @@ const PAGE_TO_PATH: Partial<Record<PageId, string>> = {
   "accommodation-detail": "/accommodation-detail",
   "scheduled-trip-detail": "/scheduled-trip-detail",
   admin: "/admin",
+  privacy: "/privacy",
+  terms: "/terms",
 };
 
 // Map URL path → PageId
@@ -52,6 +56,8 @@ const PATH_TO_PAGE: Record<string, PageId> = {
   "/accommodation-detail": "accommodation-detail",
   "/scheduled-trip-detail": "scheduled-trip-detail",
   "/admin": "admin",
+  "/privacy": "privacy",
+  "/terms": "terms",
 };
 
 type RouterContextValue = {

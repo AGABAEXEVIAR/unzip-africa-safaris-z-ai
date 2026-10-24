@@ -110,8 +110,8 @@ export function Footer() {
             © {new Date().getFullYear()} Unzip Africa Safaris Ltd. {t("footer.rights")}
           </p>
           <div className="flex flex-wrap gap-6 text-xs text-cream/40 items-center">
-            <span>{t("footer.privacy")}</span>
-            <span>{t("footer.terms")}</span>
+            <button onClick={() => navigate("privacy")} className="hover:text-gold-soft transition-colors">Privacy Policy</button>
+            <button onClick={() => navigate("terms")} className="hover:text-gold-soft transition-colors">Terms of Service</button>
             <button
               onClick={() => navigate("admin")}
               className="text-gold-soft hover:text-gold transition-colors underline"
