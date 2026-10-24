@@ -37,7 +37,7 @@ export function Footer() {
               style={{ filter: "brightness(0) invert(1)" }}
             />
             <p className="text-sm text-cream/60 leading-relaxed max-w-xs">
-              {t("footer.aboutText")}
+              We curate bespoke safari experiences across East and Southern Africa, connecting travellers with extraordinary wildlife, breathtaking landscapes, authentic cultures, and exceptional luxury stays. Discover Africa, your way, with journeys crafted around you.
             </p>
           </div>
 
@@ -66,10 +66,9 @@ export function Footer() {
           <div>
             <p className="font-eyebrow text-cream/40 mb-5">{t("footer.offices")}</p>
             <ul className="space-y-3 text-sm text-cream/70">
-              <li>{t("footer.office1")}</li>
-              <li>{t("footer.office2")}</li>
-              <li>{t("footer.office3")}</li>
-              <li>{t("footer.office4")}</li>
+              <li>Jinja, Uganda</li>
+              <li>Nairobi, Kenya</li>
+              <li>Arusha, Tanzania</li>
             </ul>
           </div>
 
@@ -77,7 +76,7 @@ export function Footer() {
             <p className="font-eyebrow text-cream/40 mb-5">{t("footer.inquiries")}</p>
             <ul className="space-y-2 text-sm text-cream/70">
               <li className="text-cream/50 text-xs uppercase tracking-wider mb-1">{t("footer.numbers")}</li>
-              <li>{t("footer.germanyNumber")}</li>
+              <li>Kenya: +105539265</li>
               <li>{t("footer.ugandaNumber")}</li>
               <li className="text-cream/50 text-xs uppercase tracking-wider mt-3 mb-1">{t("footer.emailLabel")}</li>
               <li>
