@@ -293,12 +293,11 @@ export function ContactPage() {
             {t("contact.bootsLine1")} <span className="italic text-forest">{t("contact.bootsLine2")}</span>
           </ScrollReveal>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
             {[
-              { city: "Arusha", country: "Tanzania", role: t("contact.hq"), address: "196 Njiro Road, Arusha" },
-              { city: "Kampala", country: "Uganda", role: t("contact.ugandaOps"), address: "Kampala Road, Kampala" },
-              { city: "Nairobi", country: "Kenya", role: t("contact.kenyaOps"), address: "Westlands, Nairobi" },
-              { city: "Windhoek", country: "Namibia", role: t("contact.desertCoast"), address: "8 Avocadia Street, Windhoek" },
+              { city: "Jinja", country: "Uganda", role: "Operations", address: "Plot 5 Main St, Jinja" },
+              { city: "Nairobi", country: "Kenya", role: "Kenya Operations", address: "Westlands, Nairobi" },
+              { city: "Arusha", country: "Tanzania", role: "Tanzania Operations", address: "196 Njiro Road, Arusha" },
             ].map((office, idx) => (
               <Reveal key={office.city} variant="up" delay={idx * 0.1}>
                 <div className="border-t border-border pt-6">
@@ -326,14 +325,14 @@ export function ContactPage() {
             baseOpacity={0.1}
             blurStrength={5}
           >
-            {t("contact.our")} <span className="italic text-forest">{t("contact.kampalaOffice")}</span>
+            Our <span className="italic text-forest">Jinja Office</span>
           </ScrollReveal>
           <Reveal variant="up" delay={0.2}>
             <div className="relative w-full overflow-hidden border border-border shadow-lg" style={{ paddingBottom: "40%", minHeight: "300px" }}>
               <iframe
                 className="absolute inset-0 w-full h-full"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31909.396!2d32.5589!3d0.3476!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x177dbb6f3d2bf747%3A0x6d2f3c3f3f3f3f3f!2sKampala%2C%20Uganda!5e0!3m2!1sen!2sug!4v1700000000000"
-                title="Unzip Africa Safaris — Kampala, Uganda Office Location"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.795!2d33.2046!3d0.4345!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1778b1f3c3f3f3f3%3A0x1234567890abcdef!2sThe%20Innovation%20Village%20-%20Jinja!5e0!3m2!1sen!2sug!4v1700000000000"
+                title="Unzip Africa Safaris — The Innovation Village, Jinja, Uganda"
                 style={{ border: 0 }}
                 allowFullScreen
                 loading="lazy"
@@ -348,7 +347,7 @@ export function ContactPage() {
       <section className="py-32 md:py-40 px-6 md:px-10 bg-forest text-cream">
         <div className="mx-auto max-w-[1100px] text-center">
           <Reveal variant="up">
-            <p className="font-eyebrow text-gold-soft mb-8">{t("contact.preferToTalk")}</p>
+            <p className="font-eyebrow text-gold-soft mb-8">Prefer to Talk?</p>
           </Reveal>
           <ScrollReveal
             as="h2"
@@ -357,24 +356,24 @@ export function ContactPage() {
             baseOpacity={0.1}
             blurStrength={6}
           >
-            {t("contact.callDirectly")} <span className="italic text-gold-soft">{t("contact.humanAnswers")}</span>
+            Call us directly. <span className="italic text-gold-soft">A human answers.</span>
           </ScrollReveal>
           <Reveal variant="up" delay={0.2}>
             <p className="text-lg text-cream/70 max-w-xl mx-auto mt-10 leading-relaxed">
-              {t("contact.noMenus")}
+              No menus, no queues, no hold music. One of our specialists picks up before the third ring.
             </p>
             <div className="mt-12 space-y-2">
-              <a
-                href="tel:+491799372309"
-                className="font-display text-3xl md:text-5xl text-cream hover:text-gold-soft transition-colors duration-500 tracking-tight block"
-              >
-                {t("contact.germany")}: +49 179 9372309
-              </a>
               <a
                 href="tel:+256706761092"
                 className="font-display text-3xl md:text-5xl text-cream hover:text-gold-soft transition-colors duration-500 tracking-tight block"
               >
-                {t("contact.uganda")}: +256 706 761092
+                Uganda: +256 706 761092
+              </a>
+              <a
+                href="tel:+105539265"
+                className="font-display text-3xl md:text-5xl text-cream hover:text-gold-soft transition-colors duration-500 tracking-tight block"
+              >
+                Kenya: +105539265
               </a>
             </div>
             <button
