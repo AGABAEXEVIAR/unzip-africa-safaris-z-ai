@@ -28,7 +28,7 @@ export function LuxuryTestimonials() {
   return (
     <section className="bg-canvas py-16 md:py-24 overflow-hidden">
       <div className="px-6 md:px-10 max-w-[1600px] mx-auto mb-8 md:mb-12">
-        <div className="max-w-3xl text-center md:text-left mx-auto md:mx-0">
+        <div className="max-w-3xl text-center mx-auto">
           <Reveal variant="up">
             <p className="font-eyebrow text-gold mb-3 md:mb-4">{t("testimonials.eyebrow")}</p>
           </Reveal>
