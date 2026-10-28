@@ -331,7 +331,7 @@ export function ContactPage() {
             <div className="relative w-full overflow-hidden border border-border shadow-lg" style={{ paddingBottom: "40%", minHeight: "300px" }}>
               <iframe
                 className="absolute inset-0 w-full h-full"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.795!2d33.2046!3d0.4345!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1778b1f3c3f3f3f3%3A0x1234567890abcdef!2sThe%20Innovation%20Village%20-%20Jinja!5e0!3m2!1sen!2sug!4v1700000000000"
+                src="https://maps.google.com/maps?q=The+Innovation+Village+Jinja+Uganda&z=17&output=embed"
                 title="Unzip Africa Safaris — The Innovation Village, Jinja, Uganda"
                 style={{ border: 0 }}
                 allowFullScreen
