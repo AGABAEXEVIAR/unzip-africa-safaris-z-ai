@@ -127,7 +127,7 @@ export function ToursPage() {
       <section ref={heroRef} className="relative h-[60vh] min-h-[500px] overflow-hidden bg-charcoal grain">
         <motion.div style={{ y: heroY, scale: heroScale }} className="absolute inset-0 will-change-transform">
           <img
-            src="https://images.unsplash.com/photo-1542202229-7d93c33f5d07?auto=format&fit=crop&w=2400&q=85"
+            src="https://res.cloudinary.com/emz7hwx1/image/upload/v1792689269/mara_and_balloons_1920x10801.jpg"
             alt="Wildebeest migration crossing a river"
             className="w-full h-full object-cover"
           />

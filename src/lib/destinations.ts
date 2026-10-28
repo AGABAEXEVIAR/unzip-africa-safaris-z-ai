@@ -66,7 +66,7 @@ export const destinations: Record<string, Destination> = {
     country: "Kenya",
     tagline: "The Soul of Safari",
     subtitle: "Where Iconic Africa Comes to Life",
-    heroImage: "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=2400&q=85",
+    heroImage: "https://res.cloudinary.com/emz7hwx1/image/upload/v1792437644/DSC_4686.jpg",
     intro: {
       eyebrow: "KENYA",
       title: "The Soul of Safari",
@@ -179,7 +179,7 @@ export const destinations: Record<string, Destination> = {
     country: "Uganda",
     tagline: "The Pearl of Africa",
     subtitle: "Where Wild Africa Feels Personal",
-    heroImage: "https://sfile.chatglm.cn/images-ppt/f2522b36c1bf.jpg",
+    heroImage: "https://res.cloudinary.com/emz7hwx1/image/upload/v1792437644/DSC_4686.jpg",
     intro: {
       eyebrow: "UGANDA",
       title: "The Pearl of Africa",
@@ -284,7 +284,7 @@ export const destinations: Record<string, Destination> = {
     country: "Tanzania",
     tagline: "The Wild, Unfiltered",
     subtitle: "Where Africa Feels Infinite",
-    heroImage: "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
+    heroImage: "https://res.cloudinary.com/emz7hwx1/image/upload/v1792437644/DSC_4686.jpg",
     intro: {
       eyebrow: "TANZANIA",
       title: "The Wild, Unfiltered",
@@ -385,7 +385,7 @@ export const destinations: Record<string, Destination> = {
     country: "Rwanda",
     tagline: "The Land of a Thousand Hills",
     subtitle: "Intimate. Extraordinary. Unforgettable.",
-    heroImage: "https://sfile.chatglm.cn/images-ppt/09d7d51041e7.jpg",
+    heroImage: "https://res.cloudinary.com/emz7hwx1/image/upload/v1793186840/c4bab5838bf2faba19f6378bc83c81b6c719b56a-2560x1438.avif",
     intro: {
       eyebrow: "RWANDA",
       title: "The Land of a Thousand Hills",

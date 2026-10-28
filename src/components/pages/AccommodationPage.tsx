@@ -39,7 +39,7 @@ export function AccommodationPage() {
       <section ref={heroRef} className="relative h-[85vh] min-h-[600px] overflow-hidden bg-charcoal grain">
         <motion.div style={{ y: heroY, scale: heroScale }} className="absolute inset-0 will-change-transform">
           <img
-            src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=2400&q=85"
+            src="https://res.cloudinary.com/emz7hwx1/image/upload/v1792666791/Tortilis_Camp_-_activities_-_bush_breakfast_c_Silverless-1.jpg"
             alt="Luxury safari lodge overlooking the wilderness"
             className="w-full h-full object-cover"
           />

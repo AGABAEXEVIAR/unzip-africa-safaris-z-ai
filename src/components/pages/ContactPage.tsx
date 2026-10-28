@@ -101,7 +101,7 @@ export function ContactPage() {
       <section ref={heroRef} className="relative h-[75vh] min-h-[550px] overflow-hidden bg-charcoal grain">
         <motion.div style={{ y: heroY, scale: heroScale }} className="absolute inset-0 will-change-transform">
           <img
-            src="https://res.cloudinary.com/emz7hwx1/image/upload/v1792005671/Uganda.jpg"
+            src="https://res.cloudinary.com/emz7hwx1/image/upload/v1792437644/DSC_4686.jpg"
             alt="Volcanic peaks shrouded in mist"
             className="w-full h-full object-cover"
           />

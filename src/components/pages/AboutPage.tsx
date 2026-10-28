@@ -27,7 +27,7 @@ export function AboutPage() {
       >
         <motion.div style={{ y: heroY, scale: heroScale }} className="absolute inset-0 will-change-transform">
           <img
-            src="https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg"
+            src="https://res.cloudinary.com/emz7hwx1/image/upload/v1792652247/Oleserai_Kogatende_Activities_Bush_Walk.jpg"
             alt="African savanna at dusk"
             className="w-full h-full object-cover"
           />

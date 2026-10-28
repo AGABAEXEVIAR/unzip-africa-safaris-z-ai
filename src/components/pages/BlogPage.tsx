@@ -34,7 +34,7 @@ export function BlogPage() {
       <section ref={heroRef} className="relative h-[65vh] min-h-[480px] overflow-hidden bg-charcoal grain">
         <motion.div style={{ y: heroY, scale: heroScale }} className="absolute inset-0 will-change-transform">
           <img
-            src={featured?.coverImage ?? "https://sfile.chatglm.cn/images-ppt/e9781ad7f905.jpg"}
+            src={featured?.coverImage ?? "https://res.cloudinary.com/emz7hwx1/image/upload/v1792666812/HeroShotSolomunGuide.jpg"}
             alt={featured?.title ?? "Safari landscape"}
             className="w-full h-full object-cover"
           />

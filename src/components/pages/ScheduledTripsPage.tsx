@@ -126,7 +126,7 @@ export function ScheduledTripsPage() {
       <section ref={heroRef} className="relative h-[60vh] min-h-[500px] overflow-hidden bg-charcoal grain">
         <motion.div style={{ y: heroY, scale: heroScale }} className="absolute inset-0 will-change-transform">
           <img
-            src="https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg"
+            src="https://res.cloudinary.com/emz7hwx1/image/upload/v1793187115/Viva_Prom_2026-110.jpg"
             alt="Wildebeest migration crossing a river"
             className="w-full h-full object-cover"
           />
