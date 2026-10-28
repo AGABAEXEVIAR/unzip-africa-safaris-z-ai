@@ -121,7 +121,6 @@ type AdminSection =
   | "form-inquiries"
   | "bookings"
   | "scheduled-trip-bookings"
-  | "testimonials"
   | "settings";
 
 type DayItem = { day: string; title: string; description: string; image: string };
@@ -776,7 +775,8 @@ const NAV_ITEMS: { id: AdminSection; label: string; icon: React.ComponentType<{ 
   { id: "content", label: "Content", icon: FileText },
   { id: "bookings", label: "Tour Bookings", icon: CalendarCheck },
   { id: "scheduled-trip-bookings", label: "Scheduled Trip Bookings", icon: Calendar },
-  { id: "testimonials", label: "Testimonials", icon: Quote },
+  // Testimonials removed — now using TripAdvisor Elfsight widget
+  // { id: "testimonials", label: "Testimonials", icon: Quote },
   { id: "form-inquiries", label: "Form Inquiries", icon: Mail },
   { id: "settings", label: "Settings", icon: SettingsIcon },
 ];
@@ -875,7 +875,6 @@ function DashboardSection({
   const scheduledTripBookings = useScheduledTripBookings();
   const formInquiries = useFormInquiries();
   const bookings = [...tourBookings, ...scheduledTripBookings];
-  const testimonials = useTestimonials();
 
   const stats: {
     label: string;
@@ -892,7 +891,6 @@ function DashboardSection({
     { label: "Tour Bookings", value: tourBookings.length, section: "bookings", icon: CalendarCheck },
     { label: "Scheduled Bookings", value: scheduledTripBookings.length, section: "scheduled-trip-bookings", icon: Calendar },
     { label: "Form Inquiries", value: formInquiries.length, section: "form-inquiries", icon: Mail },
-    { label: "Testimonials", value: testimonials.length, section: "testimonials", icon: Quote },
   ];
 
   const recentBookings = bookings.slice(0, 5);
@@ -936,9 +934,8 @@ function DashboardSection({
               { label: "Countries", value: countries.length, color: "bg-charcoal" },
               { label: "Parks", value: parks.length, color: "bg-gold/60" },
               { label: "Blog Posts", value: blogPosts.length, color: "bg-forest/60" },
-              { label: "Testimonials", value: testimonials.length, color: "bg-charcoal/60" },
             ].map((item) => {
-              const max = Math.max(tours.length, accommodations.length, countries.length, parks.length, blogPosts.length, testimonials.length, 1);
+              const max = Math.max(tours.length, accommodations.length, countries.length, parks.length, blogPosts.length, 1);
               const pct = Math.round((item.value / max) * 100);
               return (
                 <div key={item.label}>
@@ -1096,11 +1093,6 @@ function DashboardSection({
               label="New Blog Post"
               icon={Plus}
               onClick={() => onNavigate("blog")}
-            />
-            <QuickAction
-              label="Add Testimonial"
-              icon={Plus}
-              onClick={() => onNavigate("testimonials")}
             />
           </div>
         </Panel>
@@ -5222,7 +5214,6 @@ export function AdminPage() {
           {section === "content" && <ContentSection />}
           {section === "bookings" && <BookingsSection filterType="tour" title="Tour Bookings" />}
           {section === "scheduled-trip-bookings" && <BookingsSection filterType="scheduled-trip" title="Scheduled Trip Bookings" />}
-          {section === "testimonials" && <TestimonialsSection />}
           {section === "form-inquiries" && <FormInquiriesSection />}
           {section === "settings" && <SettingsSection />}
         </div>
