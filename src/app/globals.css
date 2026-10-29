@@ -1116,25 +1116,38 @@ button:hover .whatsapp-icon-wiggle {
  * blog editor modal. When the user clicks the link icon, the
  * link form ends up hidden below the modal — unusable.
  *
- * Fix: bump every Radix popper portal spawned from anywhere in
- * the admin dashboard to z-index 100 so it sits above the
- * Dialog modal (z-50) and is fully interactive.
+ * ROOT CAUSE (verified by inspecting MDXEditor source):
+ * MDXEditor's EditorRootElement component creates a popup
+ * container div appended to document.body, with class
+ * "mdxeditor-popup-container" + a hashed CSS-module class
+ * "_popupContainer_xxx". The hashed class sets:
+ *   position: relative; z-index: 2;
+ * That z-index: 2 LOSES to the shadcn Dialog modal's z-50, so
+ * the entire popup container (with the link dialog inside) is
+ * hidden BEHIND the modal.
+ *
+ * FIX: bump the stable .mdxeditor-popup-container class to
+ * z-index: 100 (above the modal's z-50). Also bump every
+ * [data-radix-popper-content-wrapper] for good measure.
  * ============================================================ */
+
+/* THE actual fix — target the popup container that MDXEditor
+   appends to document.body. The class name "mdxeditor-popup-container"
+   is stable (added verbatim in MDXEditor.js source). */
+.mdxeditor-popup-container {
+  z-index: 100 !important;
+}
+
+/* Belt-and-suspenders — bump every Radix popper portal too. */
 [data-radix-popper-content-wrapper] {
   z-index: 100 !important;
 }
-/* Also bump the inner popover content itself — Radix sets inline
-   z-index on some inner elements which can override the wrapper. */
 [data-radix-popper-content-wrapper] > * {
   z-index: 100 !important;
 }
+
 /* MDXEditor-specific link/image dialog content — make sure these
    float above everything else in the admin. */
-.prose-editor ~ [data-radix-popper-content-wrapper],
-.prose-editor + [data-radix-popper-content-wrapper] {
-  z-index: 100 !important;
-}
-/* MDXEditor dialog content (used for the image upload modal etc.) */
 [class*="linkDialogPopoverContent"],
 [class*="dialogContent"],
 [class*="largeDialogContent"] {
