@@ -199,6 +199,7 @@ export function tick(name: string): string {
 // Map a JavaScript value to a MySQL-compatible value for INSERT/UPDATE.
 // - undefined → null (so MySQL uses DEFAULT)
 // - arrays / objects → JSON.stringify (for JSON columns)
+// - date-like strings (ISO 8601 or YYYY-MM-DD) → JS Date for DATETIME cols
 // - everything else passes through
 export function toSqlValue(value: unknown, isJsonColumn: boolean): unknown {
   if (value === undefined) return null;
@@ -211,6 +212,22 @@ export function toSqlValue(value: unknown, isJsonColumn: boolean): unknown {
   }
   // Booleans → 0/1 (MySQL BOOLEAN is TINYINT(1))
   if (typeof value === "boolean") return value ? 1 : 0;
+  // Date objects → leave as-is, mysql2 will serialize correctly
+  if (value instanceof Date) return value;
+  // String values that match a strict ISO date pattern → convert to a JS
+  // Date so mysql2 uses its DATETIME serialization (avoids "2026-09-12"
+  // being rejected by strict SQL mode or being interpreted as a TIME value).
+  // We only match strict patterns to avoid turning arbitrary strings like
+  // "5 days" into bogus Dates.
+  if (typeof value === "string" && value.length > 0) {
+    // YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss(.sss)?Z?
+    if (/^\d{4}-\d{2}-\d{2}(?:[T ]\d{2}:\d{2}(:\d{2}(\.\d+)?)?Z?)?$/.test(value)) {
+      const d = new Date(value);
+      if (!Number.isNaN(d.getTime())) {
+        return d;
+      }
+    }
+  }
   // Numbers/strings pass through.
   return value;
 }

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Cormorant_Garamond, Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
+import { Toaster as SonnerToaster } from "sonner";
 import { Providers } from "./providers";
 
 const cormorant = Cormorant_Garamond({
@@ -68,6 +69,16 @@ export default function RootLayout({
       >
         <Providers>{children}</Providers>
         <Toaster />
+        <SonnerToaster
+          position="bottom-right"
+          toastOptions={{
+            style: {
+              background: "var(--popover, #1a1a1a)",
+              color: "var(--popover-foreground, #f4efe6)",
+              border: "1px solid var(--border, #3a3a3a)",
+            },
+          }}
+        />
       </body>
     </html>
   );

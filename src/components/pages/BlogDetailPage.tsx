@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import ReactMarkdown from "react-markdown";
 import { Reveal } from "@/components/luxury/Reveal";
 import { useRouter } from "@/lib/router";
 import { useLang } from "@/lib/language";
@@ -43,7 +44,6 @@ export function BlogDetailPage() {
     );
   }
 
-  const bodyParagraphs = post.body.split(/\n\n+/).filter(Boolean);
   const others = all.filter((p) => p.published && p.id !== post.id).slice(0, 3);
   // Prev/next within published posts (loop)
   const published = all.filter((p) => p.published);
@@ -86,10 +86,10 @@ export function BlogDetailPage() {
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1.4, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="font-display text-cream text-[2rem] sm:text-[3rem] md:text-[4rem] lg:text-[4.5rem] leading-[1] tracking-tight mb-6 max-w-[92%]"
+              className="font-display text-cream text-[2rem] sm:text-[3rem] md:text-[4rem] lg:text-[4.5rem] leading-[1] tracking-tight mb-6 max-w-[92%] markdown-inline-title"
               style={{ fontFamily: "var(--font-cormorant), serif", fontWeight: 300 }}
             >
-              {post.title}
+              <ReactMarkdown>{post.title}</ReactMarkdown>
             </motion.h1>
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -121,24 +121,26 @@ export function BlogDetailPage() {
         <div className="mx-auto max-w-3xl">
           {/* Excerpt as a drop-cap lead */}
           <Reveal variant="up">
-            <p
-              className="font-display text-xl md:text-2xl leading-relaxed text-charcoal mb-10 first-letter:font-display first-letter:text-6xl first-letter:font-bold first-letter:mr-3 first-letter:float-left first-letter:leading-[0.85] first-letter:text-forest"
+            <div
+              className="font-display text-xl md:text-2xl leading-relaxed text-charcoal mb-10 [&>p:first-child:first-letter]:font-display [&>p:first-child:first-letter]:text-6xl [&>p:first-child:first-letter]:font-bold [&>p:first-child:first-letter]:mr-3 [&>p:first-child:first-letter]:float-left [&>p:first-child:first-letter]:leading-[0.85] [&>p:first-child:first-letter]:text-forest markdown-body"
               style={{ fontFamily: "var(--font-cormorant), serif" }}
             >
-              {post.excerpt}
-            </p>
+              <ReactMarkdown>{post.excerpt}</ReactMarkdown>
+            </div>
           </Reveal>
 
-          {bodyParagraphs.length === 0 ? (
-            <p className="text-charcoal/60 italic">{t("blog.emptyBody")}</p>
+          {/* Body — rendered as Markdown so headings, lists, links, bold,
+              italic, blockquotes, code blocks, and images all render
+              correctly. Falls back gracefully to paragraphs if the post
+              body is plain text (legacy posts). */}
+          {post.body && post.body.trim().length > 0 ? (
+            <Reveal variant="up" delay={0.05}>
+              <div className="markdown-body text-base md:text-lg">
+                <ReactMarkdown>{post.body}</ReactMarkdown>
+              </div>
+            </Reveal>
           ) : (
-            bodyParagraphs.map((para, i) => (
-              <Reveal key={i} variant="up" delay={Math.min(i * 0.05, 0.2)}>
-                <p className="text-base md:text-lg text-charcoal/85 leading-relaxed mb-6">
-                  {para}
-                </p>
-              </Reveal>
-            ))
+            <p className="text-charcoal/60 italic">{t("blog.emptyBody")}</p>
           )}
 
           {/* Tags */}
@@ -197,10 +199,10 @@ export function BlogDetailPage() {
               {t("blog.prevArticle")}
             </span>
             <span
-              className="font-display text-xl md:text-2xl text-cream group-hover:text-gold-soft transition-colors leading-tight"
+              className="font-display text-xl md:text-2xl text-cream group-hover:text-gold-soft transition-colors leading-tight markdown-inline-title"
               style={{ fontFamily: "var(--font-cormorant), serif" }}
             >
-              {prev?.title}
+              <ReactMarkdown>{prev?.title ?? ""}</ReactMarkdown>
             </span>
           </button>
           <button
@@ -213,10 +215,10 @@ export function BlogDetailPage() {
               <ArrowRight className="w-3 h-3" />
             </span>
             <span
-              className="font-display text-xl md:text-2xl text-cream group-hover:text-gold-soft transition-colors leading-tight"
+              className="font-display text-xl md:text-2xl text-cream group-hover:text-gold-soft transition-colors leading-tight markdown-inline-title"
               style={{ fontFamily: "var(--font-cormorant), serif" }}
             >
-              {next?.title}
+              <ReactMarkdown>{next?.title ?? ""}</ReactMarkdown>
             </span>
           </button>
         </div>
@@ -254,10 +256,10 @@ export function BlogDetailPage() {
                         {formatDate(p.publishedDate)} · {p.readTimeMins} {t("blog.minRead")}
                       </p>
                       <h3
-                        className="font-display text-xl md:text-2xl text-charcoal tracking-tight mb-3 leading-[1.1] group-hover:text-forest transition-colors"
+                        className="font-display text-xl md:text-2xl text-charcoal tracking-tight mb-3 leading-[1.1] group-hover:text-forest transition-colors markdown-inline-title"
                         style={{ fontFamily: "var(--font-cormorant), serif" }}
                       >
-                        {p.title}
+                        <ReactMarkdown>{p.title}</ReactMarkdown>
                       </h3>
                       <p className="text-sm text-charcoal/70 leading-relaxed line-clamp-2 flex-1">
                         {p.excerpt}

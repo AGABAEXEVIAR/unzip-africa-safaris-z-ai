@@ -210,16 +210,62 @@ async function syncFromDatabase(key: keyof State, type: string) {
   }
 }
 
-// Persist a create to the database (fire-and-forget — keeps optimistic update on failure)
+// Normalize date fields before sending to the API.
+// MySQL TIMESTAMP columns expect either an ISO datetime string or a JS Date
+// object — bare "2026-09-12" can cause silent failures depending on the
+// driver/timezone settings. Convert to a full ISO datetime string.
+function normalizeDatesForApi(record: unknown): unknown {
+  if (!record || typeof record !== "object") return record;
+  const out: Record<string, unknown> = { ...(record as Record<string, unknown>) };
+  // BlogPost.publishedDate — store as ISO datetime
+  if (typeof out.publishedDate === "string") {
+    const d = new Date(out.publishedDate);
+    if (!Number.isNaN(d.getTime())) {
+      out.publishedDate = d.toISOString();
+    }
+  }
+  // Booking date columns (startDate, endDate) — also ISO datetime
+  if (typeof out.startDate === "string" && out.startDate.length > 0) {
+    const d = new Date(out.startDate);
+    if (!Number.isNaN(d.getTime())) {
+      out.startDate = d.toISOString();
+    }
+  }
+  if (typeof out.endDate === "string" && out.endDate.length > 0) {
+    const d = new Date(out.endDate);
+    if (!Number.isNaN(d.getTime())) {
+      out.endDate = d.toISOString();
+    }
+  }
+  return out;
+}
+
+// Persist a create to the database.
+// On failure, surfaces an error toast so the admin knows the save didn't go
+// through — instead of silently swallowing the failure (which previously
+// caused the "Save Changes button doesn't publish anything" bug).
 function apiCreate(type: string, record: unknown, revertKey: keyof State, recordId: string) {
   // Track this ID as a pending create so syncFromDatabase doesn't remove it
   pendingCreates.add(recordId);
+  const payload = normalizeDatesForApi(record);
   fetch(`/api/crud?type=${type}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(record),
+    body: JSON.stringify(payload),
   })
-    .then((r) => r.ok ? r.json() : null)
+    .then(async (r) => {
+      if (!r.ok) {
+        // Surface server error to the user — no more silent failures.
+        let msg = `HTTP ${r.status}`;
+        try {
+          const errBody = await r.json();
+          if (errBody?.message) msg = errBody.message;
+          else if (errBody?.error) msg = errBody.error;
+        } catch { /* not JSON */ }
+        throw new Error(msg);
+      }
+      return r.json();
+    })
     .then((saved) => {
       // POST completed — remove from pending so future syncs can manage it
       pendingCreates.delete(recordId);
@@ -237,27 +283,89 @@ function apiCreate(type: string, record: unknown, revertKey: keyof State, record
         setTimeout(() => pendingCreates.delete(saved.id), 5000);
       }
     })
-    .catch(() => {
+    .catch((err: unknown) => {
+      // API failed — surface a clear error to the admin instead of the
+      // previous silent swallow. The optimistic update is reverted so the
+      // dashboard doesn't lie about the state of the database.
+      const msg = err instanceof Error ? err.message : String(err);
+      // Avoid hard-crashing if the toast lib isn't loaded yet (SSR).
+      try {
+        // Lazy import to keep this module SSR-safe.
+        import("sonner").then(({ toast }) => {
+          toast.error(`Failed to save ${type}: ${msg}`);
+        }).catch(() => {});
+      } catch { /* ignore */ }
+      // Revert the optimistic item so the user sees the save truly failed.
+      const arr = state[revertKey] as Array<{ id: string }> | undefined;
+      if (Array.isArray(arr)) {
+        const reverted = arr.filter((item) => item.id !== recordId);
+        state = { ...state, [revertKey]: reverted };
+        emit();
+      }
       // API failed — remove from pending after 60 seconds so it gets
       // cleaned up by the next sync (the item won't be in the DB)
       setTimeout(() => pendingCreates.delete(recordId), 60000);
     });
 }
 
-// Persist an update to the database
+// Persist an update to the database.
+// Surfaces errors via toast so the admin knows the PUT failed.
 function apiUpdate(type: string, id: string, patch: unknown) {
+  const payload = normalizeDatesForApi(patch);
   fetch(`/api/crud/${id}?type=${type}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(patch),
-  }).catch(() => { /* silent — optimistic update stays in UI */ });
+    body: JSON.stringify(payload),
+  })
+    .then(async (r) => {
+      if (!r.ok) {
+        let msg = `HTTP ${r.status}`;
+        try {
+          const errBody = await r.json();
+          if (errBody?.message) msg = errBody.message;
+          else if (errBody?.error) msg = errBody.error;
+        } catch { /* not JSON */ }
+        throw new Error(msg);
+      }
+      return r.json();
+    })
+    .then(() => { /* update persisted — local state already has the new values */ })
+    .catch((err: unknown) => {
+      const msg = err instanceof Error ? err.message : String(err);
+      try {
+        import("sonner").then(({ toast }) => {
+          toast.error(`Failed to update ${type}: ${msg}`);
+        }).catch(() => {});
+      } catch { /* ignore */ }
+    });
 }
 
 // Persist a delete to the database
 function apiDelete(type: string, id: string) {
   fetch(`/api/crud/${id}?type=${type}`, {
     method: "DELETE",
-  }).catch(() => { /* silent — optimistic delete stays in UI */ });
+  })
+    .then(async (r) => {
+      if (!r.ok) {
+        let msg = `HTTP ${r.status}`;
+        try {
+          const errBody = await r.json();
+          if (errBody?.message) msg = errBody.message;
+          else if (errBody?.error) msg = errBody.error;
+        } catch { /* not JSON */ }
+        throw new Error(msg);
+      }
+      return r.json();
+    })
+    .then(() => { /* delete persisted */ })
+    .catch((err: unknown) => {
+      const msg = err instanceof Error ? err.message : String(err);
+      try {
+        import("sonner").then(({ toast }) => {
+          toast.error(`Failed to delete ${type}: ${msg}`);
+        }).catch(() => {});
+      } catch { /* ignore */ }
+    });
 }
 
 /* ============================================================

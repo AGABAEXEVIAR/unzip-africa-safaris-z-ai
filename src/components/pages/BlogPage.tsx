@@ -8,6 +8,7 @@ import { useRouter } from "@/lib/router";
 import { useLang } from "@/lib/language";
 import { useBlogPosts } from "@/lib/store";
 import type { BlogPost } from "@/lib/content";
+import ReactMarkdown from "react-markdown";
 
 const sharp = { borderRadius: 0 } as const;
 
@@ -99,10 +100,10 @@ export function BlogPage() {
                     {formatDate(featured.publishedDate)} · {featured.readTimeMins} {t("blog.minRead")}
                   </p>
                   <h2
-                    className="font-display text-3xl md:text-4xl lg:text-5xl text-charcoal tracking-tight leading-[1.05] mb-4 group-hover:text-forest transition-colors duration-500"
+                    className="font-display text-3xl md:text-4xl lg:text-5xl text-charcoal tracking-tight leading-[1.05] mb-4 group-hover:text-forest transition-colors duration-500 markdown-inline-title"
                     style={{ fontFamily: "var(--font-cormorant), serif" }}
                   >
-                    {featured.title}
+                    <ReactMarkdown>{featured.title}</ReactMarkdown>
                   </h2>
                   <p className="text-charcoal/70 leading-relaxed text-base md:text-lg mb-6 line-clamp-4">
                     {featured.excerpt}
@@ -199,10 +200,10 @@ function BlogCard({ post, onOpen }: { post: BlogPost; onOpen: () => void }) {
           {formatDate(post.publishedDate)} · {post.readTimeMins} {t("blog.minRead")}
         </p>
         <h3
-          className="font-display text-2xl md:text-3xl text-charcoal tracking-tight mb-3 leading-[1.1] group-hover:text-forest transition-colors duration-500"
+          className="font-display text-2xl md:text-3xl text-charcoal tracking-tight mb-3 leading-[1.1] group-hover:text-forest transition-colors duration-500 markdown-inline-title"
           style={{ fontFamily: "var(--font-cormorant), serif" }}
         >
-          {post.title}
+          <ReactMarkdown>{post.title}</ReactMarkdown>
         </h3>
         <p className="text-sm text-charcoal/70 leading-relaxed line-clamp-3 mb-5 flex-1">
           {post.excerpt}

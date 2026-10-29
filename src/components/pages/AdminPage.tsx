@@ -68,7 +68,12 @@ import {
   Settings as SettingsIcon,
   Star,
   Trash2,
+  Bold,
+  Italic,
+  Underline,
 } from "lucide-react";
+import { MarkdownEditor } from "@/components/ui/markdown-editor";
+import ReactMarkdown from "react-markdown";
 
 /* ============================================================
  * Constants & helpers
@@ -86,13 +91,12 @@ const tabsWrapperClass = "flex-1 min-h-0 overflow-hidden flex flex-col";
 
 const SETTINGS_KEY = "unzip_africa_settings";
 
+// Three canonical accommodation tiers offered by Unzip Africa Safaris.
+// Used by both the Tours tab and Scheduled Trip tab in the admin dashboard.
 const ACCOMMODATION_LEVELS = [
-  "Luxury Lodges",
-  "Luxury Tented Camp",
-  "Forest Lodge",
-  "Desert Lodge",
-  "Wilderness Lodge",
-  "Mobile Bush Camp",
+  "Mid-range",
+  "Luxury",
+  "Ultra-luxury",
 ];
 const ACCOMMODATION_TYPES = [
   "Mid-range",
@@ -4715,8 +4719,8 @@ function BlogSection() {
                           )}
                         </div>
                         <div className="min-w-0">
-                          <p className="font-medium text-charcoal truncate max-w-[260px]">
-                            {p.title}
+                          <p className="font-medium text-charcoal truncate max-w-[260px] markdown-inline-title">
+                            <ReactMarkdown>{p.title}</ReactMarkdown>
                           </p>
                           <p className="text-xs text-charcoal/55 truncate max-w-[260px]">
                             {p.excerpt}
@@ -4812,6 +4816,34 @@ function BlogFormDialog({
     value: BlogFormState[K]
   ) => setForm((f) => ({ ...f, [key]: value }));
 
+  // Wrap the title input's current selection in **markdown** emphasis markers.
+  // Supports `**bold**`, `*italic*`, and `__underline__` (rendered as bold
+  // in our markdown body — but accepted by react-markdown). Since the
+  // standard Markdown spec has no underline, we use `**bold**` for the
+  // "underline" toolbar button as well, with a tooltip explaining it.
+  const wrapSelection = (marker: string) => {
+    const el = document.getElementById("blog-title-input") as HTMLInputElement | null;
+    if (!el) {
+      // Fallback — append marker at end of text
+      update("title", `${form.title}${marker}${marker}`);
+      return;
+    }
+    const start = el.selectionStart ?? form.title.length;
+    const end = el.selectionEnd ?? form.title.length;
+    const before = form.title.slice(0, start);
+    const sel = form.title.slice(start, end) || "text";
+    const after = form.title.slice(end);
+    const next = `${before}${marker}${sel}${marker}${after}`;
+    update("title", next);
+    // Restore selection to wrapped content
+    requestAnimationFrame(() => {
+      try {
+        el.focus();
+        el.setSelectionRange(start + marker.length, start + marker.length + sel.length);
+      } catch { /* ignore */ }
+    });
+  };
+
   const handleSubmit = () => {
     if (!form.title.trim()) {
       toast.error("Title is required");
@@ -4849,12 +4881,45 @@ function BlogFormDialog({
         <div className="modal-scroll p-5" style={modalScrollStyle}>
           <div className="grid md:grid-cols-2 gap-4">
             <div className="md:col-span-2">
-              <Field label="Title *">
-                <TextInput
+              <Field label="Title *" hint="Markdown supported — use **bold** or *italic* in the title; select text and click a button below.">
+                <input
+                  id="blog-title-input"
+                  type="text"
                   value={form.title}
                   onChange={(e) => update("title", e.target.value)}
                   placeholder="Gorilla Trekking in Rwanda: A Quiet Conversation with the Wild"
+                  className="markdown-inline-input"
+                  style={sharp}
                 />
+                <div className="markdown-inline-toolbar" role="toolbar" aria-label="Title text formatting">
+                  <button
+                    type="button"
+                    title="Bold"
+                    onClick={() => wrapSelection("**")}
+                  >
+                    <Bold className="w-3 h-3" />
+                  </button>
+                  <button
+                    type="button"
+                    title="Italic"
+                    onClick={() => wrapSelection("*")}
+                  >
+                    <Italic className="w-3 h-3" />
+                  </button>
+                  <button
+                    type="button"
+                    title="Underline (renders as bold in Markdown)"
+                    onClick={() => wrapSelection("**")}
+                  >
+                    <Underline className="w-3 h-3" />
+                  </button>
+                  <span className="ml-2 self-center text-[10px] tracking-wider uppercase text-charcoal/40">
+                    Preview:
+                  </span>
+                  <span className="markdown-inline-title self-center text-sm text-charcoal">
+                    <ReactMarkdown>{form.title || "Your title preview"}</ReactMarkdown>
+                  </span>
+                </div>
               </Field>
             </div>
             <div className="md:col-span-2">
@@ -4936,12 +5001,12 @@ function BlogFormDialog({
               </Field>
             </div>
             <div className="md:col-span-2">
-              <Field label="Body *" hint="Plain text. Use a blank line between paragraphs.">
-                <TextArea
-                  rows={10}
-                  value={form.body}
-                  onChange={(e) => update("body", e.target.value)}
+              <Field label="Body *" hint="Full Markdown editor — use the toolbar to bold, italicize, add headings, lists, links, quotes, code blocks, or thematic breaks.">
+                <MarkdownEditor
+                  markdown={form.body}
+                  onChange={(md) => update("body", md)}
                   placeholder="The first paragraph of your article…"
+                  onError={(payload) => console.error("[markdown-editor]", payload)}
                 />
               </Field>
             </div>

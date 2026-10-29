@@ -1,19 +1,23 @@
 // =====================================================================
-// Migration runner — adds missing columns to the production MySQL DB.
+// Migration runner — runs a .sql file against the production MySQL DB.
 // ---------------------------------------------------------------------
 // Usage:
-//   DATABASE_URL='mysql://user:pass@host:port/db' node scripts/run-migration.mjs
+//   DATABASE_URL='mysql://user:pass@host:port/db' node scripts/run-migration.mjs [path/to/file.sql]
 //
+// Defaults to scripts/migrate-add-columns.sql when no argument is supplied.
 // Idempotent — uses IF NOT EXISTS on every ALTER so it can be re-run.
 // =====================================================================
 
 import mysql from "mysql2/promise";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { dirname, join } from "node:path";
+import { dirname, join, resolve } from "node:path";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const sqlPath = join(__dirname, "migrate-add-columns.sql");
+const sqlPathArg = process.argv[2];
+const sqlPath = sqlPathArg
+  ? resolve(process.cwd(), sqlPathArg)
+  : join(__dirname, "migrate-add-columns.sql");
 const sqlRaw = readFileSync(sqlPath, "utf8");
 
 // Parse DATABASE_URL — required.
@@ -34,6 +38,7 @@ const user = decodeURIComponent(userRaw);
 const password = decodeURIComponent(passRaw);
 
 console.log(`Connecting to ${user}@${host}:${port || 3306}/${db} ...`);
+console.log(`Running SQL file: ${sqlPath}`);
 
 const conn = await mysql.createConnection({
   host,
