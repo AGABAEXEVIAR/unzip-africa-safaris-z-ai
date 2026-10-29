@@ -120,14 +120,21 @@ export function BookingModal(props: BookingModalProps) {
     };
   })();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name || !form.email || !form.phone || form.travellers < 1) {
       toast.error(t("booking.errorRequired"));
       return;
     }
+    setSubmitting(true);
 
-    const booking: Booking = {
+    // Build the optimistic booking object — used for the success receipt
+    // even if the network request is slow or fails. The server returns the
+    // AUTHORITATIVE booking (with a real reference id) which we then use to
+    // replace the optimistic one.
+    const optimistic: Booking = {
       id: generateId("booking"),
       type: tripType,
       tripId: trip.id,
@@ -146,13 +153,101 @@ export function BookingModal(props: BookingModalProps) {
       createdAt: new Date().toISOString(),
       notes: form.notes || undefined,
     };
-    if (tripType === "tour") {
-      store.addTourBooking(booking);
-    } else {
-      store.addScheduledTripBooking(booking);
+
+    // Public endpoint — no admin auth required. The server re-reads the
+    // tour/trip from the DB for authoritative pricing and saves the record
+    // to MySQL, then triggers the two Resend emails (business notification
+    // + customer confirmation) server-side.
+    const endpoint =
+      tripType === "tour"
+        ? "/api/public/tour-booking"
+        : "/api/public/scheduled-trip-booking";
+
+    const payload =
+      tripType === "tour"
+        ? {
+            tourId: trip.id,
+            tripName: tripInfo.name,
+            destination: tripInfo.destination,
+            duration: tripInfo.duration,
+            pricePerPerson,
+            numTravellers: form.travellers,
+            totalPrice,
+            customerName: form.name,
+            customerEmail: form.email,
+            customerPhone: form.phone,
+            notes: form.notes || undefined,
+          }
+        : {
+            scheduledTripId: trip.id,
+            tripName: tripInfo.name,
+            destination: tripInfo.destination,
+            startDate: tripInfo.startDate,
+            endDate: tripInfo.endDate,
+            duration: tripInfo.duration,
+            pricePerPerson,
+            numTravellers: form.travellers,
+            totalPrice,
+            customerName: form.name,
+            customerEmail: form.email,
+            customerPhone: form.phone,
+            notes: form.notes || undefined,
+          };
+
+    try {
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok || !data.ok) {
+        const msg =
+          (data && data.error) ||
+          (res.status === 429
+            ? "Too many attempts. Please wait a few minutes and try again."
+            : res.status === 409
+            ? "This trip is fully booked for the dates you selected."
+            : "We couldn't submit your booking. Please try again or contact us at info@unzipafrica.com.");
+        toast.error(msg);
+        setSubmitting(false);
+        return;
+      }
+
+      // Authoritative booking from the server — has the real reference id.
+      const saved = data.booking as Booking;
+      // Ensure required fields are present (server may not return all of
+      // the optimistic fields).
+      const confirmedBooking: Booking = {
+        ...optimistic,
+        ...saved,
+        // Always keep these from server if present:
+        id: saved?.id || optimistic.id,
+        status: saved?.status || optimistic.status,
+        totalPrice: saved?.totalPrice ?? optimistic.totalPrice,
+        pricePerPerson: saved?.pricePerPerson ?? optimistic.pricePerPerson,
+      };
+
+      // Also push into the local store so admin dashboard shows it
+      // immediately (the auto-sync will pick it up from DB within 30s
+      // anyway, but this gives instant feedback).
+      if (tripType === "tour") {
+        store.addTourBooking(confirmedBooking);
+      } else {
+        store.addScheduledTripBooking(confirmedBooking);
+      }
+
+      setConfirmed(confirmedBooking);
+      toast.success(t("booking.successToast"));
+    } catch (err) {
+      console.error("[booking] submission failed:", err);
+      toast.error(
+        "Network error — please check your connection and try again, or email us at info@unzipafrica.com.",
+      );
+    } finally {
+      setSubmitting(false);
     }
-    setConfirmed(booking);
-    toast.success(t("booking.successToast"));
   };
 
   // Render via portal to document.body — bypasses any parent transforms
@@ -342,9 +437,10 @@ export function BookingModal(props: BookingModalProps) {
 
                   <button
                     type="submit"
-                    className="btn-luxury btn-luxury-gold w-full mt-2"
+                    disabled={submitting}
+                    className="btn-luxury btn-luxury-gold w-full mt-2 disabled:opacity-60 disabled:cursor-not-allowed"
                   >
-                    {t("booking.confirm")}
+                    {submitting ? "Submitting…" : t("booking.confirm")}
                   </button>
                   <p className="text-xs text-charcoal/50 text-center">
                     {t("booking.disclaimer")}

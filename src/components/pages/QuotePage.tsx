@@ -6,6 +6,7 @@ import { Reveal } from "@/components/luxury/Reveal";
 import ScrollReveal from "@/components/luxury/ScrollReveal";
 import { useRouter } from "@/lib/router";
 import { toast } from "sonner";
+import { store, generateId } from "@/lib/store";
 
 export function QuotePage() {
   const { navigate } = useRouter();
@@ -39,23 +40,85 @@ export function QuotePage() {
       return;
     }
     setSubmitting(true);
-    // Simulate API call
-    await new Promise((r) => setTimeout(r, 1500));
-    setSubmitting(false);
-    toast.success("Your request has reached us. A specialist will reply within 24 hours.");
-    setForm({
-      name: "",
-      email: "",
-      phone: "",
-      travelers: "2",
-      dates: "",
-      destinations: [],
-      budget: "$50,000 – $100,000",
-      duration: "7–10 days",
-      interests: [],
-      notes: "",
-    });
-    setTimeout(() => navigate("home"), 2000);
+
+    // Call the public inquiry endpoint — same one ContactPage uses.
+    // The form's `notes` field becomes the inquiry `message`; if notes
+    // are empty, we synthesize a message from the other fields so the
+    // server's required-message validation passes.
+    const message =
+      form.notes && form.notes.trim().length > 0
+        ? form.notes.trim()
+        : `Quote request: ${form.destinations.length > 0 ? form.destinations.join(", ") : "(no specific destination)"} — ${form.duration} — budget ${form.budget} — ${form.travelers} travellers — preferred dates: ${form.dates || "(flexible)"}`;
+
+    try {
+      const res = await fetch("/api/public/inquiry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          travelers: form.travelers,
+          dates: form.dates,
+          destinations: form.destinations,
+          interests: form.interests,
+          budget: form.budget,
+          duration: form.duration,
+          message,
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok || !data.ok) {
+        const msg =
+          (data && data.error) ||
+          (res.status === 429
+            ? "Too many attempts. Please wait a few minutes and try again."
+            : "We couldn't submit your request. Please try again or email us at info@unzipafrica.com.");
+        toast.error(msg);
+        setSubmitting(false);
+        return;
+      }
+
+      // Push into local store so admin sees it instantly.
+      store.addQuote({
+        id: data.inquiry?.id || generateId("quote"),
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+        destination: form.destinations.join(", "),
+        duration: form.duration,
+        interests: form.interests,
+        budget: form.budget,
+        travellers: form.travelers,
+        startDate: form.dates,
+        notes: message,
+        status: "new",
+        createdAt: new Date().toISOString(),
+      });
+
+      setSubmitting(false);
+      toast.success("Your request has reached us. A specialist will reply within 24 hours.");
+      setForm({
+        name: "",
+        email: "",
+        phone: "",
+        travelers: "2",
+        dates: "",
+        destinations: [],
+        budget: "$50,000 – $100,000",
+        duration: "7–10 days",
+        interests: [],
+        notes: "",
+      });
+      setTimeout(() => navigate("home"), 2000);
+    } catch (err) {
+      console.error("[quote] submission failed:", err);
+      toast.error(
+        "Network error — please check your connection and try again, or email us at info@unzipafrica.com.",
+      );
+      setSubmitting(false);
+    }
   };
 
   const toggleArray = (key: "destinations" | "interests", value: string) => {

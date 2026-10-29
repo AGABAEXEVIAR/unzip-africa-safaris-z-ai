@@ -64,35 +64,74 @@ export function ContactPage() {
       return;
     }
     setSubmitting(true);
-    const inquiry = {
-      id: generateId("inquiry"),
-      name: form.name,
-      email: form.email,
-      phone: form.phone,
-      travelers: form.travelers,
-      dates: form.dates,
-      destinations: form.destinations,
-      budget: form.budget,
-      message: form.message,
-      status: "new" as const,
-      createdAt: new Date().toISOString(),
-    };
-    store.addFormInquiry(inquiry as any);
-    // Also POST directly to the API for reliability
-    fetch("/api/crud?type=form-inquiries", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...inquiry, interests: form.interests, duration: form.duration }),
-    }).catch(() => {});
-    await new Promise((r) => setTimeout(r, 800));
-    setSubmitting(false);
-    // Instant scroll to top (not smooth) + stop Lenis if running
-    if (lenis?.stop) lenis.stop();
-    window.scrollTo(0, 0);
-    document.body.style.overflow = "hidden";
-    setShowSuccess(true);
-    setForm({ destinations: [], duration: "", interests: [], budget: "", name: "", email: "", phone: "", travelers: "2", dates: "", message: "" });
-    setStep(1);
+
+    // Call the new public inquiry endpoint — no admin auth required.
+    // Server validates, saves to DB, and triggers Resend emails
+    // (business notification + customer acknowledgment) server-side.
+    try {
+      const res = await fetch("/api/public/inquiry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          travelers: form.travelers,
+          dates: form.dates,
+          destinations: form.destinations,
+          interests: form.interests,
+          budget: form.budget,
+          duration: form.duration,
+          message: form.message || `Inquiry from ${form.name} about ${form.destinations.join(", ")}`,
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok || !data.ok) {
+        const msg =
+          (data && data.error) ||
+          (res.status === 429
+            ? "Too many attempts. Please wait a few minutes and try again."
+            : "We couldn't submit your inquiry. Please try again or email us at info@unzipafrica.com.");
+        toast.error(msg);
+        setSubmitting(false);
+        return;
+      }
+
+      // Also push into the local store so admin dashboard shows it
+      // immediately (the auto-sync will pick it up from DB within 30s).
+      const inquiry = {
+        id: data.inquiry?.id || generateId("inquiry"),
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+        travelers: form.travelers,
+        dates: form.dates,
+        destinations: form.destinations,
+        budget: form.budget,
+        message: form.message,
+        status: "new" as const,
+        createdAt: new Date().toISOString(),
+      };
+      store.addFormInquiry(inquiry as any);
+
+      // Small artificial delay for nicer UX (the spinner feels deliberate
+      // rather than flickering on fast networks).
+      await new Promise((r) => setTimeout(r, 400));
+      setSubmitting(false);
+      if (lenis?.stop) lenis.stop();
+      window.scrollTo(0, 0);
+      document.body.style.overflow = "hidden";
+      setShowSuccess(true);
+      setForm({ destinations: [], duration: "", interests: [], budget: "", name: "", email: "", phone: "", travelers: "2", dates: "", message: "" });
+      setStep(1);
+    } catch (err) {
+      console.error("[contact] submission failed:", err);
+      toast.error(
+        "Network error — please check your connection and try again, or email us at info@unzipafrica.com.",
+      );
+      setSubmitting(false);
+    }
   };
 
   return (
