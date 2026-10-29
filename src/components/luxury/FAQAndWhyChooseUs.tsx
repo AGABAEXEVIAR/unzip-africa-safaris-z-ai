@@ -65,7 +65,7 @@ export function FAQSection() {
                 {t("faq.subtitle")}
               </p>
               <a
-                href="mailto:private@unzipafrica.com"
+                href="mailto:info@unzipafrica.com"
                 className="link-underline text-charcoal/70"
               >
                 {t("faq.askSpecialist")}

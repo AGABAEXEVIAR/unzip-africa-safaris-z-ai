@@ -31,7 +31,7 @@ export function TermsPage() {
             <div className="space-y-6 text-sm md:text-base text-charcoal/80 leading-relaxed">
               <div>
                 <h2 className="font-display text-xl text-charcoal mb-3" style={{ fontFamily: "var(--font-cormorant), serif" }}>1. Acceptance of Terms</h2>
-                <p>By accessing and using the Unzip Africa Safaris website (lightseagreen-deer-995252.hostingersite.com) and our services, you agree to be bound by these Terms of Service. If you do not agree with any part of these terms, please do not use our website or services.</p>
+                <p>By accessing and using the Unzip Africa Safaris website (unzipafrica.com) and our services, you agree to be bound by these Terms of Service. If you do not agree with any part of these terms, please do not use our website or services.</p>
               </div>
 
               <div>

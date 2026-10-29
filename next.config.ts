@@ -12,6 +12,7 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "images.unsplash.com" },
       { protocol: "https", hostname: "sfile.chatglm.cn" },
       { protocol: "https", hostname: "z-cdn.chatglm.cn" },
+      { protocol: "https", hostname: "res.cloudinary.com" },
     ],
   },
 };

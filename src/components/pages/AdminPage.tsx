@@ -231,7 +231,7 @@ type SettingsState = {
 const DEFAULT_SETTINGS: SettingsState = {
   companyName: "Unzip Africa Safaris",
   tagline: "Curated African journeys",
-  email: "hello@unzipafrica.com",
+  email: "info@unzipafrica.com",
   phone: "+255 754 000 000",
   logoUrl: "",
   facebook: "",
