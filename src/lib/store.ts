@@ -387,6 +387,17 @@ function getSnapshot(): State {
   return state;
 }
 
+/**
+ * Public accessor for the current store state — used by code that
+ * needs the latest snapshot outside the React render cycle (e.g. the
+ * custom router's navigateToBlogPost() needs to look up the current
+ * blog post to compute its slug). Returns the live `state` reference
+ * at call time, so callers always see the latest data.
+ */
+export function getState(): State {
+  return state;
+}
+
 function getServerSnapshot(): State {
   return SERVER_SNAPSHOT;
 }

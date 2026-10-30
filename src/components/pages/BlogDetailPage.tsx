@@ -8,16 +8,22 @@ import { Reveal } from "@/components/luxury/Reveal";
 import { useRouter } from "@/lib/router";
 import { useLang } from "@/lib/language";
 import { useBlogPosts } from "@/lib/store";
+import { findPostBySlug } from "@/lib/slug";
 
 const sharp = { borderRadius: 0 } as const;
 
 export function BlogDetailPage() {
   const all = useBlogPosts();
-  const { selectedBlogPostId, navigateToBlogPost, navigate } = useRouter();
+  const { selectedBlogPostId, blogSlug, navigateToBlogPost, navigate } = useRouter();
   const { t, formatDate } = useLang();
   const heroRef = useRef<HTMLDivElement>(null);
 
-  const post = all.find((p) => p.id === selectedBlogPostId);
+  // Resolve the post to display. Two URL formats are supported:
+  //   1. NEW /blog/{slug} — look up by slug (preferred)
+  //   2. OLD /blog-detail?id={id} — look up by id (backward compat)
+  const post =
+    (blogSlug ? findPostBySlug(all, blogSlug) : undefined) ??
+    (selectedBlogPostId ? all.find((p) => p.id === selectedBlogPostId) : undefined);
 
   const { scrollYProgress } = useScroll({
     target: heroRef,
