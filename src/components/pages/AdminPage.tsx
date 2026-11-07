@@ -4683,6 +4683,21 @@ function formToBlog(f: BlogFormState, id: string): BlogPost {
   };
 }
 
+// Strip markdown syntax (headings, emphasis, list markers, links, images)
+// and collapse whitespace so we can show a one-line preview of the body in
+// the blog list table. Returns "" when the body is empty / whitespace-only.
+const MARKDOWN_STRIP_RE = /[#*_`>~\-\[\]!]/g;
+function bodyPreview(body: string | undefined, max = 140): string {
+  if (!body) return "";
+  const cleaned = body
+    .replace(/\[(.*?)\]\(.*?\)/g, "$1") // [text](url) -> text
+    .replace(MARKDOWN_STRIP_RE, "")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (cleaned.length <= max) return cleaned;
+  return cleaned.slice(0, max).trimEnd() + "…";
+}
+
 function BlogSection() {
   const posts = useBlogPosts();
   const [editing, setEditing] = useState<BlogPost | "new" | null>(null);
@@ -4804,6 +4819,16 @@ function BlogSection() {
                           <p className="text-xs text-charcoal/55 truncate max-w-[260px]">
                             {p.excerpt}
                           </p>
+                          {bodyPreview(p.body) ? (
+                            <p className="text-[11px] text-charcoal/45 truncate max-w-[340px] mt-0.5">
+                              <span className="text-charcoal/30">Body:</span>{" "}
+                              {bodyPreview(p.body)}
+                            </p>
+                          ) : (
+                            <p className="text-[11px] text-red-600/80 mt-0.5 font-medium">
+                              Body empty — click Edit to add the article content
+                            </p>
+                          )}
                         </div>
                       </div>
                     </td>
