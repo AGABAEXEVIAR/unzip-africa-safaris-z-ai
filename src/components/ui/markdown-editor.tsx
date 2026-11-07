@@ -74,38 +74,94 @@ export type MarkdownEditorProps = Omit<MDXEditorProps, "ref"> & {
 
 export const MarkdownEditor = forwardRef<MDXEditorMethods, MarkdownEditorProps>(
   function MarkdownEditor(
-    { hideToolbar = false, compact = false, className, markdown, ...props },
+    { hideToolbar = false, compact = false, className, markdown, onChange, ...props },
     externalRef
   ) {
-    // Internal ref so we can drive the editor imperatively. MDXEditor
-    // only reads the `markdown` prop ONCE on initial mount — changing it
-    // later does NOT update the editor content (documented behavior).
-    // That breaks the blog editor: when the admin opens an existing post
-    // to edit, the body should appear in the editor, but if the editor
-    // mounts before the markdown is settled (common inside a Radix Dialog
-    // portal whose content mounts via animation), the body stays empty.
+    // Internal ref so we can drive the editor imperatively. MDXEditor only
+    // reads the `markdown` prop ONCE — it is passed as `initialMarkdown` to
+    // the core plugin at mount (see MDXEditor.js line 156:
+    //   `initialMarkdown: props.markdown`
+    // ). Changing the prop later does NOT reload the editor.
     //
-    // Fix: keep our own ref and, in an effect, imperatively call
-    // setMarkdown() whenever the `markdown` prop changes to a value that
-    // differs from what the editor currently holds. The getMarkdown()
-    // guard means we never call setMarkdown for content the editor
-    // already has — so user typing (which flows back through onChange →
-    // markdown prop) does NOT reset the cursor or fight the user.
+    // This breaks the blog editor: when the admin opens an existing post to
+    // edit, the body should appear in the editor, but inside a Radix Dialog
+    // portal (whose content mounts via animation), the editor can mount
+    // before Lexical is ready, so the initial value is missed and the body
+    // stays empty.
+    //
+    // Two-pronged fix below:
+    //   (A) Suppress onChange events fired during initial-markdown
+    //       normalization (the 2nd arg `initialMarkdownNormalize === true`).
+    //       Without this, the editor's normalization pass can fire
+    //       onChange("") during mount and CLEAR the parent's form.body
+    //       before the real content is shown — a feedback loop that makes
+    //       the body disappear even when it's correctly stored.
+    //   (B) Imperatively push the markdown prop into the editor via
+    //       setMarkdown(), with retries (backoff) to handle the editor not
+    //       being ready immediately. The getMarkdown() guard means we only
+    //       call setMarkdown when the editor's content actually differs from
+    //       the prop — so user typing (which echoes back via onChange →
+    //       markdown prop) does NOT trigger a redundant setMarkdown that
+    //       would reset the cursor.
     const internalRef = useRef<MDXEditorMethods>(null);
 
+    // Last markdown value we successfully synced INTO the editor (via mount
+    // or setMarkdown). Used to skip redundant setMarkdown calls when the
+    // prop changes only because of the user's own typing echoing back.
+    const lastSyncedRef = useRef<string | null>(null);
+
+    // (B) Imperative sync with retry.
     useEffect(() => {
       const editor = internalRef.current;
-      if (!editor || markdown === undefined || markdown === null) return;
-      let current: string;
-      try {
-        current = editor.getMarkdown();
-      } catch {
-        return;
-      }
-      if (current !== markdown) {
-        editor.setMarkdown(markdown);
-      }
+      if (!editor) return;
+      if (markdown === undefined || markdown === null) return;
+      const target = String(markdown);
+      // Already synced this exact value — skip (user typing echoing back).
+      if (lastSyncedRef.current === target) return;
+
+      let attempts = 0;
+      let cancelled = false;
+      let timer: ReturnType<typeof setTimeout> | undefined;
+
+      const trySync = () => {
+        if (cancelled) return;
+        attempts++;
+        try {
+          const current = editor.getMarkdown();
+          if (current !== target) {
+            editor.setMarkdown(target);
+          }
+          lastSyncedRef.current = target;
+        } catch {
+          // Editor / Lexical not ready yet (common right after mount inside
+          // a Dialog portal). Retry with backoff — ~10 attempts over ~3s.
+          if (attempts < 10) {
+            timer = setTimeout(trySync, 60 * attempts);
+          }
+        }
+      };
+      trySync();
+
+      return () => {
+        cancelled = true;
+        if (timer) clearTimeout(timer);
+      };
     }, [markdown]);
+
+    // (A) Suppress onChange events fired during initial-markdown
+    // normalization. MDXEditor's onChange signature is
+    //   (markdown: string, initialMarkdownNormalize: boolean) => void
+    // where the 2nd arg is true when the event is just the editor
+    // normalizing its initial markdown (NOT a user edit). Forwarding those
+    // to the parent can overwrite form.body with a normalized/empty value
+    // before the real content is shown.
+    const handleChange = useMemo(() => {
+      if (!onChange) return undefined;
+      return (md: string, isInitNormalize: boolean) => {
+        if (isInitNormalize) return;
+        onChange(md);
+      };
+    }, [onChange]);
 
     // Plugin set: every plugin we want enabled. Memoized so re-renders don't
     // rebuild the plugin array (which would reset the editor state).
@@ -161,6 +217,7 @@ export const MarkdownEditor = forwardRef<MDXEditorMethods, MarkdownEditorProps>(
         }}
         plugins={plugins}
         markdown={markdown}
+        onChange={handleChange}
         contentEditableClassName={`prose-editor ${compact ? "compact" : ""} ${
           className ?? ""
         }`}

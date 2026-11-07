@@ -5082,6 +5082,7 @@ function BlogFormDialog({
             <div className="md:col-span-2">
               <Field label="Body *" hint="Full Markdown editor — use the toolbar to bold, italicize, add headings, lists, links, quotes, code blocks, or thematic breaks.">
                 <MarkdownEditor
+                  key={post?.id ?? "new-post"}
                   markdown={form.body}
                   onChange={(md) => update("body", md)}
                   placeholder="The first paragraph of your article…"
