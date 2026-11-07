@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
-import { query as dbQuery, execute } from "@/lib/db-sql";
+import { query as dbQuery, execute, ensureSchema } from "@/lib/db-sql";
 import { ENTITIES, getEntityDef, tick, toSqlValue, fromSqlRow } from "@/lib/entities";
 
 // =====================================================================
@@ -41,7 +41,12 @@ export async function GET(request: NextRequest) {
   const def = getEntityDef(type);
 
   try {
-    const rows = await dbQuery(`SELECT * FROM ${tick(def.table)} ORDER BY ${tick("createdAt")} DESC`);
+    // Self-heal the DB schema on the first request after a new build
+    // starts (adds any missing columns idempotently). Cheap no-op once
+    // the module-level flag is set.
+    await ensureSchema();
+    const orderCol = def.orderColumn ?? "createdAt";
+    const rows = await dbQuery(`SELECT * FROM ${tick(def.table)} ORDER BY ${tick(orderCol)} DESC`);
     const out = rows.map((row) => fromSqlRow(row, def));
     return NextResponse.json(out);
   } catch (error) {
@@ -72,6 +77,11 @@ export async function POST(request: NextRequest) {
   const def = getEntityDef(type);
 
   try {
+    // Ensure the schema has every column this entity def expects BEFORE
+    // we build the INSERT (which lists def.columns explicitly). Without
+    // this, saving a scheduled trip would fail with "Unknown column
+    // accommodationIds" until a manual migration is run.
+    await ensureSchema();
     const body = (await request.json()) as Record<string, unknown>;
     // Caller's id (if any) — otherwise generate a cuid-like id.
     // mysql2 doesn't have a cuid generator, so use a 24-char random string
@@ -82,8 +92,24 @@ export async function POST(request: NextRequest) {
 
     // Build column-list and value-list for INSERT.
     // Always include `id`. Skip undefined body fields (let DB apply defaults).
+    // Conditionally add `updatedAt = NOW()` only if the entity has an updatedAt
+    // column (controlled by `def.autoOnUpdate` listing "updatedAt").
+    // The Testimonial table, for example, has NO updatedAt column — adding it
+    // would cause "Unknown column 'updatedAt'" and silently fail the INSERT.
     const cols: string[] = ["id"];
     const vals: unknown[] = [id];
+
+    if (def.autoOnUpdate?.includes("updatedAt")) {
+      cols.push("updatedAt");
+      vals.push(new Date());
+    }
+
+    // For entities with a NOT-NULL `date` column and no DEFAULT (e.g. Testimonial),
+    // default to NOW() if the body doesn't include it.
+    if (def.columns.includes("date") && body.date === undefined) {
+      cols.push("date");
+      vals.push(new Date());
+    }
 
     for (const col of def.columns) {
       if (body[col] === undefined) continue;

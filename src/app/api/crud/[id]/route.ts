@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
-import { query as dbQuery, execute } from "@/lib/db-sql";
+import { query as dbQuery, execute, ensureSchema } from "@/lib/db-sql";
 import { ENTITIES, getEntityDef, tick, toSqlValue, fromSqlRow } from "@/lib/entities";
 
 // =====================================================================
@@ -48,6 +48,11 @@ export async function PUT(
   const def = getEntityDef(type);
 
   try {
+    // Ensure the schema has every column this entity def expects BEFORE
+    // building the UPDATE (which lists def.columns explicitly). Without
+    // this, updating a scheduled trip would fail with "Unknown column
+    // accommodationIds" until a manual migration is run.
+    await ensureSchema();
     const body = (await request.json()) as Record<string, unknown>;
 
     // Build dynamic UPDATE statement. Only update fields that are present
