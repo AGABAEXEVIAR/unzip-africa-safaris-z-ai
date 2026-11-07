@@ -138,15 +138,32 @@ export function BlogDetailPage() {
           {/* Body — rendered as Markdown so headings, lists, links, bold,
               italic, blockquotes, code blocks, and images all render
               correctly. Falls back gracefully to paragraphs if the post
-              body is plain text (legacy posts). */}
+              body is plain text (legacy posts).
+
+              Rendered WITHOUT the Reveal scroll-animation wrapper: the
+              article body is the primary content and must be visible the
+              instant it's in the DOM. Reveal starts at opacity:0 and only
+              becomes visible when its IntersectionObserver fires — a
+              fragile dependency that can leave the body invisible if the
+              observer doesn't trigger (e.g. the element is tall and the
+              threshold isn't met). The excerpt above keeps Reveal because
+              it's short and always near the top of the viewport. */}
           {post.body && post.body.trim().length > 0 ? (
-            <Reveal variant="up" delay={0.05}>
-              <div className="markdown-body text-base md:text-lg">
-                <ReactMarkdown>{post.body}</ReactMarkdown>
-              </div>
-            </Reveal>
+            <div className="markdown-body text-base md:text-lg">
+              <ReactMarkdown>{post.body}</ReactMarkdown>
+            </div>
           ) : (
-            <p className="text-charcoal/60 italic">{t("blog.emptyBody")}</p>
+            <div className="my-8 p-6 border border-dashed border-charcoal/25 bg-cream/60 text-center">
+              <p className="text-charcoal/80 font-medium">
+                This post has no body content saved yet.
+              </p>
+              <p className="text-sm text-charcoal/55 mt-2">
+                Open it in the admin Blog tab, add the article text to the
+                Body (Markdown) field, and click Save. If you already added
+                it and saved, the body field is still empty in the
+                database — re-open the post, paste the body, and Save again.
+              </p>
+            </div>
           )}
 
           {/* Tags */}
