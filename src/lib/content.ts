@@ -88,6 +88,11 @@ export type ScheduledTrip = {
   groupSize: string;
   spotsLeft: number;
   accommodationLevel: string;
+  // Accommodations selected for this trip (via the admin dashboard
+  // Scheduled Trips tab). Optional for backward compat with existing
+  // rows that predate this field — the detail page falls back to a
+  // related tour's accommodations when this is empty.
+  accommodationIds?: string[];
   stops?: { day: string; title: string; description: string; image: string }[];
   mapEmbed?: string;
 };

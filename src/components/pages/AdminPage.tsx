@@ -181,6 +181,7 @@ type ScheduledTripFormState = {
   groupSize: string;
   spotsLeft: number | "";
   accommodationLevel: string;
+  accommodationIds: string[];
   startDate: string;
   endDate: string;
   durationDays: number | "";
@@ -2237,6 +2238,7 @@ function emptyTripForm(): ScheduledTripFormState {
     groupSize: "",
     spotsLeft: "",
     accommodationLevel: ACCOMMODATION_LEVELS[0],
+    accommodationIds: [],
     startDate: "",
     endDate: "",
     durationDays: "",
@@ -2260,6 +2262,7 @@ function tripToForm(t: ScheduledTrip): ScheduledTripFormState {
     groupSize: t.groupSize,
     spotsLeft: t.spotsLeft,
     accommodationLevel: t.accommodationLevel,
+    accommodationIds: [...(t.accommodationIds ?? [])],
     startDate: t.startDate,
     endDate: t.endDate,
     durationDays: t.durationDays,
@@ -2290,6 +2293,7 @@ function formToTrip(
         ? form.spotsLeft
         : Number(form.spotsLeft) || 0,
     accommodationLevel: form.accommodationLevel,
+    accommodationIds: form.accommodationIds,
     startDate: form.startDate,
     endDate: form.endDate,
     durationDays:
@@ -2494,10 +2498,20 @@ function ScheduledTripFormModal({
   );
   const [tab, setTab] = useState("basic");
 
+  const accommodations = useAccommodations();
+
   const update = <K extends keyof ScheduledTripFormState>(
     key: K,
     value: ScheduledTripFormState[K]
   ) => setForm((f) => ({ ...f, [key]: value }));
+
+  const toggleAccommodation = (id: string) =>
+    setForm((f) => ({
+      ...f,
+      accommodationIds: f.accommodationIds.includes(id)
+        ? f.accommodationIds.filter((x) => x !== id)
+        : [...f.accommodationIds, id],
+    }));
 
   const addStop = () =>
     setForm((f) => ({
@@ -2578,6 +2592,7 @@ function ScheduledTripFormModal({
               { id: "schedule", label: "Schedule" },
               { id: "itinerary", label: "Itinerary" },
               { id: "inclusions", label: "Included/Excluded" },
+              { id: "accommodations", label: "Accommodations" },
               { id: "images", label: "Images" },
               { id: "map", label: "Map" },
             ].map((t) => (
@@ -2848,6 +2863,70 @@ function ScheduledTripFormModal({
                       />
                     </div>
                   ))}
+                </div>
+              )}
+            </TabsContent>
+            <TabsContent value="accommodations" className="mt-0">
+              <p className="text-sm text-muted-foreground mb-4">
+                Select the accommodations featured on this scheduled trip.
+                These appear in the &ldquo;Where You&rsquo;ll Stay&rdquo;
+                section of the trip&rsquo;s public page. Leave empty to fall
+                back to accommodations from a related tour.
+              </p>
+              {accommodations.length === 0 ? (
+                <p className="text-sm text-muted-foreground">
+                  No accommodations available. Add accommodations first
+                  from the Accommodations tab.
+                </p>
+              ) : (
+                <div className="grid md:grid-cols-2 gap-3">
+                  {accommodations.map((a) => {
+                    const checked = form.accommodationIds.includes(a.id);
+                    return (
+                      <button
+                        key={a.id}
+                        type="button"
+                        onClick={() => toggleAccommodation(a.id)}
+                        className={`flex items-center gap-3 p-3 border text-left transition-colors ${
+                          checked
+                            ? "border-gold bg-gold/5"
+                            : "border-charcoal/10 hover:bg-cream"
+                        }`}
+                        style={sharp}
+                      >
+                        <div
+                          className="w-12 h-12 overflow-hidden bg-charcoal/5 flex-shrink-0"
+                          style={sharp}
+                        >
+                          {a.image && (
+                            <Img
+                              src={a.image}
+                              alt={a.name}
+                              className="w-full h-full object-cover"
+                            />
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-charcoal truncate">
+                            {a.name}
+                          </p>
+                          <p className="text-xs text-muted-foreground truncate">
+                            {a.location}
+                          </p>
+                        </div>
+                        <div
+                          className={`w-5 h-5 border flex items-center justify-center flex-shrink-0 ${
+                            checked
+                              ? "bg-gold border-gold"
+                              : "border-charcoal/30"
+                          }`}
+                          style={sharp}
+                        >
+                          {checked && <Check className="w-3 h-3 text-cream" />}
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
               )}
             </TabsContent>

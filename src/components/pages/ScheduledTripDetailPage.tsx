@@ -63,13 +63,19 @@ export function ScheduledTripDetailPage() {
     );
   }
 
-  // Look up a tour with the same destination to surface related accommodations
+  // Accommodations shown on this trip's public page. Prefer the
+  // accommodations the admin explicitly selected for THIS trip; if none
+  // were selected (older trips predate the field), fall back to the
+  // accommodations of a related tour with the same destination.
   const relatedTour = tours.find((t) => t.destination === trip.destination);
-  const stays = relatedTour
-    ? (relatedTour.accommodationIds || [])
-        .map((id) => accommodations.find((a) => a.id === id))
-        .filter((a): a is NonNullable<typeof a> => Boolean(a))
-    : [];
+  const stays = (trip.accommodationIds && trip.accommodationIds.length > 0
+    ? trip.accommodationIds
+    : relatedTour
+      ? (relatedTour.accommodationIds || [])
+      : []
+  )
+    .map((id) => accommodations.find((a) => a.id === id))
+    .filter((a): a is NonNullable<typeof a> => Boolean(a));
 
   // Gallery: prefer galleryImages; otherwise fallback to [image, ...stops images]
   const gallery =
