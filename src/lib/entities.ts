@@ -69,9 +69,9 @@ export const ENTITIES: Record<string, EntityDef> = {
       "name", "destination", "startDate", "endDate", "durationDays",
       "priceFrom", "priceOriginal", "image", "galleryImages", "description",
       "highlights", "inclusions", "exclusions", "groupSize",
-      "spotsLeft", "accommodationLevel",
+      "spotsLeft", "accommodationLevel", "accommodationIds",
     ],
-    jsonColumns: ["galleryImages", "highlights", "inclusions", "exclusions"],
+    jsonColumns: ["galleryImages", "highlights", "inclusions", "exclusions", "accommodationIds"],
     inlineChildren: [
       { field: "stops", column: "stops" },
       { field: "mapEmbed", column: "mapEmbed" },

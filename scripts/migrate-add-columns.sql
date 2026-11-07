@@ -27,6 +27,13 @@ ALTER TABLE `ScheduledTrip`
 ALTER TABLE `ScheduledTrip`
   ADD COLUMN IF NOT EXISTS `mapEmbed` TEXT NULL;
 
+-- Persist the accommodations an admin selects for a scheduled trip (the
+-- "Accommodations" tab in the Scheduled Trips admin form). Stored as a JSON
+-- array of Accommodation ids. NULL for legacy rows that predate this column;
+-- the public detail page falls back to a related tour's accommodations.
+ALTER TABLE `ScheduledTrip`
+  ADD COLUMN IF NOT EXISTS `accommodationIds` JSON NULL;
+
 ALTER TABLE `Destination`
   ADD COLUMN IF NOT EXISTS `gameParks` JSON NULL;
 
