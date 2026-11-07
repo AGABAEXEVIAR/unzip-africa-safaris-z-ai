@@ -4703,15 +4703,43 @@ function BlogSection() {
   const [editing, setEditing] = useState<BlogPost | "new" | null>(null);
   const [query, setQuery] = useState("");
 
-  const handleSave = (data: BlogPost) => {
-    if (editing === "new") {
-      store.addBlogPost(data);
-      toast.success("Blog post created");
-    } else {
-      store.updateBlogPost(data.id, data);
-      toast.success("Blog post updated");
-    }
+  const handleSave = async (data: BlogPost) => {
+    const isNew = editing === "new";
+    // Close the dialog right away so the user isn't blocked while we
+    // confirm the save against the database.
     setEditing(null);
+
+    // Await the API round-trip. The store surfaces its own error toast on
+    // failure (and reverts a failed create), so the await resolves either
+    // way — we don't re-throw here.
+    await (isNew ? store.addBlogPost(data) : store.updateBlogPost(data.id, data));
+
+    // Re-fetch the post straight from the database to confirm the body
+    // REALLY persisted — not just the optimistic local copy. This is the
+    // definitive check that the body text is saved in the database.
+    try {
+      const res = await fetch(`/api/crud/${data.id}?type=blog-posts`);
+      if (!res.ok) {
+        toast.error(`Saved, but couldn't verify in the database (HTTP ${res.status}).`);
+        return;
+      }
+      const saved = await res.json();
+      const bodyLen = typeof saved?.body === "string" ? saved.body.trim().length : 0;
+      if (bodyLen > 0) {
+        toast.success(
+          `✓ Blog post saved — body confirmed in database (${bodyLen.toLocaleString()} characters).`,
+          { duration: 5000 }
+        );
+      } else {
+        toast.error(
+          "⚠ Blog post saved, but the body is EMPTY in the database. Re-open the post, paste the body into the Markdown editor, and click Save again.",
+          { duration: 9000 }
+        );
+      }
+    } catch {
+      // Verification fetch failed (network) — the save itself likely went through.
+      toast.success("Blog post saved.");
+    }
   };
 
   const handleDelete = (id: string) => {

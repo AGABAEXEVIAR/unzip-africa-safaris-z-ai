@@ -244,11 +244,13 @@ function normalizeDatesForApi(record: unknown): unknown {
 // On failure, surfaces an error toast so the admin knows the save didn't go
 // through — instead of silently swallowing the failure (which previously
 // caused the "Save Changes button doesn't publish anything" bug).
-function apiCreate(type: string, record: unknown, revertKey: keyof State, recordId: string) {
+function apiCreate(type: string, record: unknown, revertKey: keyof State, recordId: string): Promise<void> {
   // Track this ID as a pending create so syncFromDatabase doesn't remove it
   pendingCreates.add(recordId);
   const payload = normalizeDatesForApi(record);
-  fetch(`/api/crud?type=${type}`, {
+  // Return the promise so callers (e.g. the blog editor) can await the
+  // round-trip and verify the record actually persisted to the DB.
+  return fetch(`/api/crud?type=${type}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
@@ -310,9 +312,11 @@ function apiCreate(type: string, record: unknown, revertKey: keyof State, record
 
 // Persist an update to the database.
 // Surfaces errors via toast so the admin knows the PUT failed.
-function apiUpdate(type: string, id: string, patch: unknown) {
+function apiUpdate(type: string, id: string, patch: unknown): Promise<void> {
   const payload = normalizeDatesForApi(patch);
-  fetch(`/api/crud/${id}?type=${type}`, {
+  // Return the promise so callers (e.g. the blog editor) can await the
+  // round-trip and verify the patch actually persisted to the DB.
+  return fetch(`/api/crud/${id}?type=${type}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
@@ -577,15 +581,15 @@ export const store = {
     state = { ...state, blogPosts: posts };
     emit();
   },
-  addBlogPost(post: BlogPost) {
+  addBlogPost(post: BlogPost): Promise<void> {
     state = { ...state, blogPosts: [post, ...state.blogPosts] };
     emit();
-    apiCreate("blog-posts", post, "blogPosts", post.id);
+    return apiCreate("blog-posts", post, "blogPosts", post.id);
   },
-  updateBlogPost(id: string, patch: Partial<BlogPost>) {
+  updateBlogPost(id: string, patch: Partial<BlogPost>): Promise<void> {
     state = { ...state, blogPosts: state.blogPosts.map((p) => (p.id === id ? { ...p, ...patch } : p)) };
     emit();
-    apiUpdate("blog-posts", id, patch);
+    return apiUpdate("blog-posts", id, patch);
   },
   deleteBlogPost(id: string) {
     state = { ...state, blogPosts: state.blogPosts.filter((p) => p.id !== id) };
