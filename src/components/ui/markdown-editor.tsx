@@ -49,7 +49,7 @@ import {
   editorRootElementRef$,
 } from "@mdxeditor/editor";
 import "@mdxeditor/editor/style.css";
-import { forwardRef, useMemo } from "react";
+import { forwardRef, useEffect, useMemo, useRef } from "react";
 
 /**
  * Tiny plugin that publishes `null` to `editorRootElementRef$` so the
@@ -74,9 +74,39 @@ export type MarkdownEditorProps = Omit<MDXEditorProps, "ref"> & {
 
 export const MarkdownEditor = forwardRef<MDXEditorMethods, MarkdownEditorProps>(
   function MarkdownEditor(
-    { hideToolbar = false, compact = false, className, ...props },
-    ref
+    { hideToolbar = false, compact = false, className, markdown, ...props },
+    externalRef
   ) {
+    // Internal ref so we can drive the editor imperatively. MDXEditor
+    // only reads the `markdown` prop ONCE on initial mount — changing it
+    // later does NOT update the editor content (documented behavior).
+    // That breaks the blog editor: when the admin opens an existing post
+    // to edit, the body should appear in the editor, but if the editor
+    // mounts before the markdown is settled (common inside a Radix Dialog
+    // portal whose content mounts via animation), the body stays empty.
+    //
+    // Fix: keep our own ref and, in an effect, imperatively call
+    // setMarkdown() whenever the `markdown` prop changes to a value that
+    // differs from what the editor currently holds. The getMarkdown()
+    // guard means we never call setMarkdown for content the editor
+    // already has — so user typing (which flows back through onChange →
+    // markdown prop) does NOT reset the cursor or fight the user.
+    const internalRef = useRef<MDXEditorMethods>(null);
+
+    useEffect(() => {
+      const editor = internalRef.current;
+      if (!editor || markdown === undefined || markdown === null) return;
+      let current: string;
+      try {
+        current = editor.getMarkdown();
+      } catch {
+        return;
+      }
+      if (current !== markdown) {
+        editor.setMarkdown(markdown);
+      }
+    }, [markdown]);
+
     // Plugin set: every plugin we want enabled. Memoized so re-renders don't
     // rebuild the plugin array (which would reset the editor state).
     const plugins = useMemo(() => {
@@ -118,8 +148,19 @@ export const MarkdownEditor = forwardRef<MDXEditorMethods, MarkdownEditorProps>(
 
     return (
       <MDXEditor
-        ref={ref}
+        ref={(instance) => {
+          // Forward the instance to both our internal ref and any
+          // externally-provided ref (so callers can still call
+          // getMarkdown/setMarkdown from outside if they need to).
+          internalRef.current = instance;
+          if (typeof externalRef === "function") {
+            externalRef(instance);
+          } else if (externalRef) {
+            externalRef.current = instance;
+          }
+        }}
         plugins={plugins}
+        markdown={markdown}
         contentEditableClassName={`prose-editor ${compact ? "compact" : ""} ${
           className ?? ""
         }`}
