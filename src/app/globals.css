@@ -734,6 +734,28 @@
   background: var(--charcoal);
 }
 
+/* ============ Dialog scroll-lock (modal background must not scroll) ============
+   When any Radix Dialog is open, lock the document so the page behind the
+   modal can't be scrolled with the mouse wheel — only the modal's own
+   .modal-scroll body scrolls.
+
+   Why this is needed: Radix's react-remove-scroll locks <body>, but this
+   admin layout uses min-h-screen, so when content is taller than the
+   viewport the actual scroll happens on <html> (the documentElement), not
+   <body>. A body-only lock is a no-op for html-level scrolling, so wheel
+   events over the modal still scrolled the background page. Locking <html>
+   via the :has() selector — which react-remove-scroll doesn't do — closes
+   that gap. The selector keys off the data-slot/data-state attributes Radix
+   already puts on the dialog content, so it works for every admin modal
+   (tours, accommodations, scheduled trips, parks, blog, etc.) with no
+   per-modal wiring. The modal's .modal-scroll container keeps
+   overflow-y: auto, so the wheel over the modal still scrolls the modal
+   content (it's the only scrollable region left). */
+html:has([data-slot="dialog-content"][data-state="open"]),
+html:has([data-slot="dialog-content"][data-state="open"]) body {
+  overflow: hidden !important;
+}
+
 /* ============ Mobile cursor reset ============ */
 @media (pointer: coarse) {
   body { cursor: auto; }
