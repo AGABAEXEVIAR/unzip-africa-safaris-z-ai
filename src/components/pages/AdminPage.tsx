@@ -79,7 +79,7 @@ import ReactMarkdown from "react-markdown";
  * Constants & helpers
  * ============================================================ */
 const sharp = { borderRadius: 0 } as const;
-const modalScrollStyle = { overflowY: "auto", flex: "1 1 0%", minHeight: 0 } as const;
+const modalScrollStyle = { overflowY: "auto", flex: "1 1 0%", minHeight: 0, overscrollBehavior: "contain" } as const;
 const tabsWrapperStyle = {
   display: "flex",
   flexDirection: "column",
@@ -144,7 +144,6 @@ type TourFormState = {
   duration: string;
   durationDays: number | "";
   durationNights: number | "";
-  price: string;
   highlights: string;
   activities: string;
   image: string;
@@ -1135,7 +1134,6 @@ function emptyTourForm(): TourFormState {
     duration: "",
     durationDays: "",
     durationNights: "",
-    price: "",
     highlights: "",
     activities: "",
     image: "",
@@ -1160,7 +1158,6 @@ function tourToForm(t: TourPackage): TourFormState {
     duration: t.duration,
     durationDays: t.durationDays,
     durationNights: t.durationNights,
-    price: t.price,
     highlights: joinLines(t.highlights),
     activities: joinLines(t.activities),
     image: t.image,
@@ -1191,7 +1188,7 @@ function formToTour(form: TourFormState, id: string): TourPackage {
       typeof form.durationNights === "number"
         ? form.durationNights
         : Number(form.durationNights) || 0,
-    price: form.price,
+    price: "",
     priceFrom: 0,
     priceOriginal: undefined,
     highlights: splitLines(form.highlights),
@@ -1548,13 +1545,6 @@ function TourFormModal({
                     />
                   </Field>
                 </div>
-                <Field label="Price (label)">
-                  <TextInput
-                    value={form.price}
-                    onChange={(e) => update("price", e.target.value)}
-                    placeholder="From $78,500 per person"
-                  />
-                </Field>
                 <Field label="Minimum Age">
                   <TextInput
                     type="number"

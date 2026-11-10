@@ -32,11 +32,11 @@ async function verifyAuth(request: NextRequest): Promise<boolean> {
 }
 
 async function runMigration() {
-  // priceFrom and tripType/accommodationLevel are NOT NULL in the schema,
-  // so we set them to 0 / empty string rather than NULL. priceOriginal is
-  // nullable, so we set it to NULL.
+  // price, priceFrom, tripType and accommodationLevel are NOT NULL in the
+  // schema, so we set them to empty string / 0 rather than NULL. priceOriginal
+  // is nullable, so we set it to NULL.
   const result = await execute(
-    "UPDATE `TourPackage` SET `priceFrom` = 0, `priceOriginal` = NULL, `tripType` = '', `accommodationLevel` = ''",
+    "UPDATE `TourPackage` SET `price` = '', `priceFrom` = 0, `priceOriginal` = NULL, `tripType` = '', `accommodationLevel` = ''",
     []
   );
   return result;
@@ -56,7 +56,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       success: true,
       message:
-        "Cleared priceFrom (→0), priceOriginal (→NULL), tripType (→''), accommodationLevel (→'') from all tours.",
+        "Cleared price (→''), priceFrom (→0), priceOriginal (→NULL), tripType (→''), accommodationLevel (→'') from all tours.",
       affectedRows: result.affectedRows,
     });
   } catch (error) {

@@ -42,12 +42,12 @@ async function ensureTourMigration(): Promise<void> {
   tourMigrationDone = true;
   try {
     const result = await execute(
-      "UPDATE `TourPackage` SET `priceFrom` = 0, `priceOriginal` = NULL, `tripType` = '', `accommodationLevel` = '' WHERE `priceFrom` <> 0 OR `priceOriginal` IS NOT NULL OR `tripType` <> '' OR `accommodationLevel` <> ''",
+      "UPDATE `TourPackage` SET `price` = '', `priceFrom` = 0, `priceOriginal` = NULL, `tripType` = '', `accommodationLevel` = '' WHERE `price` <> '' OR `priceFrom` <> 0 OR `priceOriginal` IS NOT NULL OR `tripType` <> '' OR `accommodationLevel` <> ''",
       []
     );
     if (result.affectedRows > 0) {
       console.log(
-        `[tour-migration] Cleared price/tripType/accommodationLevel from ${result.affectedRows} tours`
+        `[tour-migration] Cleared price/priceFrom/tripType/accommodationLevel from ${result.affectedRows} tours`
       );
     }
   } catch (err) {
