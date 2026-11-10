@@ -139,7 +139,11 @@ export async function POST(request: NextRequest) {
   const customerEmail = String(body.customerEmail || "").trim();
   const customerPhone = String(body.customerPhone || "").trim();
   const numTravellers = Math.max(1, Math.floor(toNum(body.numTravellers, 0)));
-  const notes = body.notes ? String(body.notes).trim() : null;
+  const accommodationLevel = body.accommodationLevel ? String(body.accommodationLevel).trim() : null;
+  const rawNotes = body.notes ? String(body.notes).trim() : null;
+  const notes = accommodationLevel
+    ? `[Accommodation level: ${accommodationLevel}]${rawNotes ? " " + rawNotes : ""}`
+    : rawNotes;
   const tourId = body.tourId ? String(body.tourId).trim() : null;
 
   if (!customerName || customerName.length < 2) {

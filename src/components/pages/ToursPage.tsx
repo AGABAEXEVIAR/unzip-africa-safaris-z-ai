@@ -24,17 +24,7 @@ export function ToursPage() {
   // Build filter option lists from current data
   const destinationsList = useMemo(() => Array.from(new Set(tourPackages.map((t) => t.destination))), [tourPackages]);
   const activitiesList = useMemo(() => Array.from(new Set(tourPackages.flatMap((t) => t.activities))), [tourPackages]);
-  const tripTypesList = useMemo(() => Array.from(new Set(tourPackages.map((t) => t.tripType))), [tourPackages]);
-  const accommodationLevelsList = useMemo(() => Array.from(new Set(tourPackages.map((t) => t.accommodationLevel))), [tourPackages]);
   const nationalParksList = useMemo(() => Array.from(new Set(tourPackages.map((t) => t.nationalPark))), [tourPackages]);
-
-  const priceBounds = useMemo(() => {
-    if (tourPackages.length === 0) return { min: 0, max: 100000 };
-    return {
-      min: Math.min(...tourPackages.map((t) => t.priceFrom)),
-      max: Math.max(...tourPackages.map((t) => t.priceFrom)),
-    };
-  }, [tourPackages]);
 
   const durationBounds = useMemo(() => {
     if (tourPackages.length === 0) return { min: 0, max: 30 };
@@ -44,8 +34,6 @@ export function ToursPage() {
     };
   }, [tourPackages]);
 
-  const PRICE_MIN = priceBounds.min;
-  const PRICE_MAX = priceBounds.max;
   const DURATION_MIN = durationBounds.min;
   const DURATION_MAX = durationBounds.max;
 
@@ -53,25 +41,19 @@ export function ToursPage() {
   const [filters, setFilters] = useState<FilterState>(() => ({
     destinations: [],
     activities: [],
-    tripTypes: [],
-    accommodationLevels: [],
     nationalParks: [],
-    priceMax: PRICE_MAX,
     durationMax: DURATION_MAX,
   }));
-  const [sortBy, setSortBy] = useState<"recommended" | "price-low" | "price-high" | "duration">("recommended");
+  const [sortBy, setSortBy] = useState<"recommended" | "duration">("recommended");
 
   const localInitial: FilterState = useMemo(
     () => ({
       destinations: [],
       activities: [],
-      tripTypes: [],
-      accommodationLevels: [],
       nationalParks: [],
-      priceMax: PRICE_MAX,
       durationMax: DURATION_MAX,
     }),
-    [PRICE_MAX, DURATION_MAX]
+    [DURATION_MAX]
   );
 
   const { scrollYProgress } = useScroll({
@@ -86,23 +68,18 @@ export function ToursPage() {
     let result = tourPackages.filter((t) => {
       if (filters.destinations.length > 0 && !filters.destinations.includes(t.destination)) return false;
       if (filters.activities.length > 0 && !filters.activities.some((a) => t.activities.includes(a))) return false;
-      if (filters.tripTypes.length > 0 && !filters.tripTypes.includes(t.tripType)) return false;
-      if (filters.accommodationLevels.length > 0 && !filters.accommodationLevels.includes(t.accommodationLevel)) return false;
       if (filters.nationalParks.length > 0 && !filters.nationalParks.includes(t.nationalPark)) return false;
-      if (t.priceFrom > filters.priceMax) return false;
       if (t.durationDays > filters.durationMax) return false;
       return true;
     });
 
-    if (sortBy === "price-low") result = [...result].sort((a, b) => a.priceFrom - b.priceFrom);
-    if (sortBy === "price-high") result = [...result].sort((a, b) => b.priceFrom - a.priceFrom);
     if (sortBy === "duration") result = [...result].sort((a, b) => b.durationDays - a.durationDays);
     if (sortBy === "recommended") result = [...result].sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
 
     return result;
   }, [tourPackages, filters, sortBy]);
 
-  const toggleArrayFilter = (key: keyof Pick<FilterState, "destinations" | "activities" | "tripTypes" | "accommodationLevels" | "nationalParks">, value: string) => {
+  const toggleArrayFilter = (key: keyof Pick<FilterState, "destinations" | "activities" | "nationalParks">, value: string) => {
     setFilters((f) => ({
       ...f,
       [key]: f[key].includes(value) ? f[key].filter((x) => x !== value) : [...f[key], value],
@@ -114,10 +91,7 @@ export function ToursPage() {
   const activeFilterCount =
     filters.destinations.length +
     filters.activities.length +
-    filters.tripTypes.length +
-    filters.accommodationLevels.length +
     filters.nationalParks.length +
-    (filters.priceMax !== PRICE_MAX ? 1 : 0) +
     (filters.durationMax !== DURATION_MAX ? 1 : 0);
 
   // Upcoming scheduled trips (sorted by start date)
@@ -175,11 +149,7 @@ export function ToursPage() {
             toggleArrayFilter={toggleArrayFilter}
             destinationsList={destinationsList}
             activitiesList={activitiesList}
-            tripTypesList={tripTypesList}
-            accommodationLevelsList={accommodationLevelsList}
             nationalParksList={nationalParksList}
-            priceMin={PRICE_MIN}
-            priceMax={PRICE_MAX}
             durationMin={DURATION_MIN}
             durationMax={DURATION_MAX}
           />
@@ -196,11 +166,7 @@ export function ToursPage() {
                   activeCount={activeFilterCount}
                   destinationsList={destinationsList}
                   activitiesList={activitiesList}
-                  tripTypesList={tripTypesList}
-                  accommodationLevelsList={accommodationLevelsList}
                   nationalParksList={nationalParksList}
-                  priceMin={PRICE_MIN}
-                  priceMax={PRICE_MAX}
                   durationMin={DURATION_MIN}
                   durationMax={DURATION_MAX}
                 />
@@ -226,8 +192,6 @@ export function ToursPage() {
                     style={{ borderRadius: 0 }}
                   >
                     <option value="recommended">{t("common.recommended")}</option>
-                    <option value="price-low">{t("common.priceLow")}</option>
-                    <option value="price-high">{t("common.priceHigh")}</option>
                     <option value="duration">{t("common.duration")}</option>
                   </select>
                 </div>
@@ -341,10 +305,7 @@ export function ToursPage() {
 type FilterState = {
   destinations: string[];
   activities: string[];
-  tripTypes: string[];
-  accommodationLevels: string[];
   nationalParks: string[];
-  priceMax: number;
   durationMax: number;
 };
 
@@ -357,26 +318,18 @@ function FilterSidebar({
   activeCount,
   destinationsList,
   activitiesList,
-  tripTypesList,
-  accommodationLevelsList,
   nationalParksList,
-  priceMin,
-  priceMax,
   durationMin,
   durationMax,
 }: {
   filters: FilterState;
   setFilters: React.Dispatch<React.SetStateAction<FilterState>>;
-  toggleArrayFilter: (key: keyof Pick<FilterState, "destinations" | "activities" | "tripTypes" | "accommodationLevels" | "nationalParks">, value: string) => void;
+  toggleArrayFilter: (key: keyof Pick<FilterState, "destinations" | "activities" | "nationalParks">, value: string) => void;
   clearFilters: () => void;
   activeCount: number;
   destinationsList: string[];
   activitiesList: string[];
-  tripTypesList: string[];
-  accommodationLevelsList: string[];
   nationalParksList: string[];
-  priceMin: number;
-  priceMax: number;
   durationMin: number;
   durationMax: number;
 }) {
@@ -397,24 +350,6 @@ function FilterSidebar({
           {destinationsList.map((d) => (
             <FilterCheckbox key={d} label={d} checked={filters.destinations.includes(d)} onChange={() => toggleArrayFilter("destinations", d)} />
           ))}
-        </FilterSection>
-
-        <FilterSection title={t("common.pricePerPerson")}>
-          <div className="px-1">
-            <input
-              type="range"
-              min={priceMin}
-              max={priceMax}
-              step={1000}
-              value={filters.priceMax}
-              onChange={(e) => setFilters({ ...filters, priceMax: Number(e.target.value) })}
-              className="w-full accent-forest"
-            />
-            <div className="flex justify-between text-xs text-charcoal/60 mt-2">
-              <span>${priceMin.toLocaleString()}</span>
-              <span className="font-medium text-charcoal">${filters.priceMax.toLocaleString()}</span>
-            </div>
-          </div>
         </FilterSection>
 
         <FilterSection title={t("common.durationLabel")}>
@@ -438,18 +373,6 @@ function FilterSidebar({
         <FilterSection title={t("common.activities")}>
           {activitiesList.map((a) => (
             <FilterCheckbox key={a} label={a} checked={filters.activities.includes(a)} onChange={() => toggleArrayFilter("activities", a)} />
-          ))}
-        </FilterSection>
-
-        <FilterSection title={t("common.tripTypes")}>
-          {tripTypesList.map((tp) => (
-            <FilterCheckbox key={tp} label={tp} checked={filters.tripTypes.includes(tp)} onChange={() => toggleArrayFilter("tripTypes", tp)} />
-          ))}
-        </FilterSection>
-
-        <FilterSection title={t("common.accommodationLevel")}>
-          {accommodationLevelsList.map((l) => (
-            <FilterCheckbox key={l} label={l} checked={filters.accommodationLevels.includes(l)} onChange={() => toggleArrayFilter("accommodationLevels", l)} />
           ))}
         </FilterSection>
 
@@ -506,11 +429,7 @@ function MobileFilterToggle({
   toggleArrayFilter,
   destinationsList,
   activitiesList,
-  tripTypesList,
-  accommodationLevelsList,
   nationalParksList,
-  priceMin,
-  priceMax,
   durationMin,
   durationMax,
 }: {
@@ -518,14 +437,10 @@ function MobileFilterToggle({
   setFilters: React.Dispatch<React.SetStateAction<FilterState>>;
   activeCount: number;
   clearFilters: () => void;
-  toggleArrayFilter: (key: keyof Pick<FilterState, "destinations" | "activities" | "tripTypes" | "accommodationLevels" | "nationalParks">, value: string) => void;
+  toggleArrayFilter: (key: keyof Pick<FilterState, "destinations" | "activities" | "nationalParks">, value: string) => void;
   destinationsList: string[];
   activitiesList: string[];
-  tripTypesList: string[];
-  accommodationLevelsList: string[];
   nationalParksList: string[];
-  priceMin: number;
-  priceMax: number;
   durationMin: number;
   durationMax: number;
 }) {
@@ -573,11 +488,7 @@ function MobileFilterToggle({
               activeCount={activeCount}
               destinationsList={destinationsList}
               activitiesList={activitiesList}
-              tripTypesList={tripTypesList}
-              accommodationLevelsList={accommodationLevelsList}
               nationalParksList={nationalParksList}
-              priceMin={priceMin}
-              priceMax={priceMax}
               durationMin={durationMin}
               durationMax={durationMax}
             />
@@ -600,11 +511,6 @@ function TourCard({ tour, onViewDetails, onBookNow }: { tour: TourPackage; onVie
         {tour.featured && (
           <div className="absolute top-3 left-3 bg-gold text-charcoal px-3 py-1 text-[0.6rem] font-medium tracking-[0.15em] uppercase" style={sharp}>
             {t("common.featured")}
-          </div>
-        )}
-        {tour.priceOriginal && (
-          <div className="absolute top-3 right-3 bg-forest text-cream px-3 py-1 text-[0.6rem] font-medium tracking-[0.15em] uppercase" style={sharp}>
-            {Math.round((1 - tour.priceFrom / tour.priceOriginal) * 100)}% {t("common.off")}
           </div>
         )}
       </div>
@@ -642,18 +548,12 @@ function TourCard({ tour, onViewDetails, onBookNow }: { tour: TourPackage; onVie
           ))}
         </div>
 
-        {/* Price + CTA */}
+        {/* CTA — price on request */}
         <div className="mt-auto pt-4 border-t border-border">
-          <div className="flex items-end justify-between mb-3">
-            <div>
-              {tour.priceOriginal && (
-                <p className="text-xs text-charcoal/40 line-through">${tour.priceOriginal.toLocaleString()}</p>
-              )}
-              <p className="font-display text-2xl md:text-3xl text-forest tracking-tight" style={{ fontFamily: "var(--font-cormorant), serif" }}>
-                ${tour.priceFrom.toLocaleString()}
-              </p>
-              <p className="text-[0.65rem] text-charcoal/50 tracking-wide">{t("common.perPerson")}</p>
-            </div>
+          <div className="mb-3">
+            <p className="font-display text-xl md:text-2xl text-forest tracking-tight" style={{ fontFamily: "var(--font-cormorant), serif" }}>
+              {t("common.priceOnRequest")}
+            </p>
           </div>
           <div className="flex gap-2">
             <button

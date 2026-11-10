@@ -38,6 +38,7 @@ export function BookingModal(props: BookingModalProps) {
     email: "",
     phone: "",
     travellers: 2,
+    accommodationLevel: "Mid-range",
     notes: "",
   });
   const [confirmed, setConfirmed] = useState<Booking | null>(null);
@@ -46,7 +47,7 @@ export function BookingModal(props: BookingModalProps) {
   useEffect(() => {
     if (!open) {
       const t = setTimeout(() => {
-        setForm({ name: "", email: "", phone: "", travellers: 2, notes: "" });
+        setForm({ name: "", email: "", phone: "", travellers: 2, accommodationLevel: "Mid-range", notes: "" });
         setConfirmed(null);
       }, 250);
       return () => clearTimeout(t);
@@ -82,13 +83,14 @@ export function BookingModal(props: BookingModalProps) {
     };
   }, [open]);
 
-  const pricePerPerson = trip.priceFrom;
+  const pricePerPerson = tripType === "tour" ? 0 : trip.priceFrom;
   const totalPrice = useMemo(
     () => pricePerPerson * form.travellers,
     [pricePerPerson, form.travellers]
   );
 
   // Trip info derived for the dark card
+  const priceOnRequestLabel = t("common.priceOnRequest");
   const tripInfo = (() => {
     if (tripType === "tour") {
       const t = trip as TourPackage;
@@ -96,7 +98,7 @@ export function BookingModal(props: BookingModalProps) {
         name: t.name,
         destination: t.destination,
         duration: `${t.durationDays} Days · ${t.durationNights} Nights`,
-        price: `$${t.priceFrom.toLocaleString()}`,
+        price: priceOnRequestLabel,
         dates: t.subtitle,
         image: t.image,
         startDate: undefined,
@@ -173,6 +175,7 @@ export function BookingModal(props: BookingModalProps) {
             pricePerPerson,
             numTravellers: form.travellers,
             totalPrice,
+            accommodationLevel: form.accommodationLevel,
             customerName: form.name,
             customerEmail: form.email,
             customerPhone: form.phone,
@@ -312,14 +315,25 @@ export function BookingModal(props: BookingModalProps) {
                 </div>
 
                 <div className="mt-auto pt-6 border-t border-cream/15">
-                  <p className="font-eyebrow text-cream/50 mb-2">{t("booking.pricePerPerson")}</p>
-                  <p
-                    className="font-display text-4xl text-gold-soft mb-1"
-                    style={{ fontFamily: "var(--font-cormorant), serif" }}
-                  >
-                    {tripInfo.price}
-                  </p>
-                  <p className="text-xs text-cream/55">{t("booking.excludesAirfare")}</p>
+                  {tripType === "scheduled-trip" ? (
+                    <>
+                      <p className="font-eyebrow text-cream/50 mb-2">{t("booking.pricePerPerson")}</p>
+                      <p
+                        className="font-display text-4xl text-gold-soft mb-1"
+                        style={{ fontFamily: "var(--font-cormorant), serif" }}
+                      >
+                        {tripInfo.price}
+                      </p>
+                      <p className="text-xs text-cream/55">{t("booking.excludesAirfare")}</p>
+                    </>
+                  ) : (
+                    <p
+                      className="font-display text-3xl text-gold-soft mb-1"
+                      style={{ fontFamily: "var(--font-cormorant), serif" }}
+                    >
+                      {tripInfo.price}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
@@ -418,22 +432,36 @@ export function BookingModal(props: BookingModalProps) {
                     />
                   </Field>
 
-                  {/* Live price calculation */}
-                  <div className="border-t border-border pt-4 mt-2">
-                    <div className="flex justify-between text-sm text-charcoal/70 mb-2">
-                      <span>${pricePerPerson.toLocaleString()} × {form.travellers} {t("booking.travellersUnit")}</span>
-                      <span>${totalPrice.toLocaleString()}</span>
-                    </div>
-                    <div className="flex justify-between items-end">
-                      <span className="font-eyebrow text-charcoal/50">{t("booking.total")}</span>
-                      <span
-                        className="font-display text-3xl text-forest"
-                        style={{ fontFamily: "var(--font-cormorant), serif" }}
+                  {/* Accommodation level select (tours) or live price calc (scheduled trips) */}
+                  {tripType === "tour" ? (
+                    <Field label={t("common.accommodationLevel")}>
+                      <select
+                        value={form.accommodationLevel}
+                        onChange={(e) => setForm({ ...form, accommodationLevel: e.target.value })}
+                        className="w-full bg-transparent border-b border-border py-2 text-sm text-charcoal focus:outline-none focus:border-forest transition-colors"
                       >
-                        ${totalPrice.toLocaleString()}
-                      </span>
+                        <option value="Mid-range">Mid-range</option>
+                        <option value="Luxury">Luxury</option>
+                        <option value="Ultra-luxury">Ultra-luxury</option>
+                      </select>
+                    </Field>
+                  ) : (
+                    <div className="border-t border-border pt-4 mt-2">
+                      <div className="flex justify-between text-sm text-charcoal/70 mb-2">
+                        <span>${pricePerPerson.toLocaleString()} × {form.travellers} {t("booking.travellersUnit")}</span>
+                        <span>${totalPrice.toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between items-end">
+                        <span className="font-eyebrow text-charcoal/50">{t("booking.total")}</span>
+                        <span
+                          className="font-display text-3xl text-forest"
+                          style={{ fontFamily: "var(--font-cormorant), serif" }}
+                        >
+                          ${totalPrice.toLocaleString()}
+                        </span>
+                      </div>
                     </div>
-                  </div>
+                  )}
 
                   <button
                     type="submit"

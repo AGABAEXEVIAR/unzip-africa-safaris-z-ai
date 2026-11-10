@@ -72,11 +72,6 @@ export function TourDetailPage() {
   // Other tours for "Continue Exploring"
   const others = tours.filter((t) => t.id !== tour.id).slice(0, 3);
 
-  const hasDiscount = !!tour.priceOriginal && tour.priceOriginal > tour.priceFrom;
-  const discountPercent = hasDiscount
-    ? Math.round(((tour.priceOriginal! - tour.priceFrom) / tour.priceOriginal!) * 100)
-    : 0;
-
   return (
     <div className="page-enter">
       {/* ====================== 1. HERO ====================== */}
@@ -127,35 +122,18 @@ export function TourDetailPage() {
                     <Users className="w-4 h-4 text-gold-soft" />
                     {t("tourDetail.privatePartyMinAge", { age: tour.minAge })}
                   </span>
-                  {hasDiscount && (
-                    <span
-                      className="px-3 py-1 bg-gold text-charcoal font-eyebrow text-[0.55rem]"
-                      style={sharp}
-                    >
-                      {discountPercent}% Off
-                    </span>
-                  )}
                 </div>
               </Reveal>
 
-              {/* Price display */}
+              {/* Price — on request */}
               <Reveal variant="up" delay={0.3}>
                 <div className="mb-10">
-                  <p className="font-eyebrow text-cream/50 mb-2">{t("common.startingFrom")}</p>
-                  <div className="flex items-baseline gap-3">
-                    <span
-                      className="font-display text-4xl md:text-5xl text-gold-soft"
-                      style={{ fontFamily: "var(--font-cormorant), serif" }}
-                    >
-                      ${tour.priceFrom.toLocaleString()}
-                    </span>
-                    {hasDiscount && (
-                      <span className="text-cream/40 line-through text-lg">
-                        ${tour.priceOriginal!.toLocaleString()}
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-xs text-cream/60 mt-1">{t("common.perPerson")}</p>
+                  <p
+                    className="font-display text-3xl md:text-4xl text-gold-soft"
+                    style={{ fontFamily: "var(--font-cormorant), serif" }}
+                  >
+                    {t("common.priceOnRequest")}
+                  </p>
                 </div>
               </Reveal>
 
@@ -221,21 +199,12 @@ export function TourDetailPage() {
                 </div>
 
                 <div className="mt-6 pt-6 border-t border-cream/15">
-                  <p className="font-eyebrow text-cream/50 mb-1">{t("common.startingFrom")}</p>
-                  <div className="flex items-baseline gap-3">
-                    <span
-                      className="font-display text-3xl text-gold-soft"
-                      style={{ fontFamily: "var(--font-cormorant), serif" }}
-                    >
-                      ${tour.priceFrom.toLocaleString()}
-                    </span>
-                    {hasDiscount && (
-                      <span className="text-cream/40 line-through text-sm">
-                        ${tour.priceOriginal!.toLocaleString()}
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-xs text-cream/60 mt-1">{t("common.perPerson")}</p>
+                  <p
+                    className="font-display text-2xl text-gold-soft mb-1"
+                    style={{ fontFamily: "var(--font-cormorant), serif" }}
+                  >
+                    {t("common.priceOnRequest")}
+                  </p>
 
                   <button
                     onClick={() => setBookingOpen(true)}
@@ -588,7 +557,7 @@ export function TourDetailPage() {
                     </h3>
                     <div className="flex items-center justify-between pt-3 border-t border-cream/10">
                       <span className="text-xs text-cream/60">
-                        {t("common.fromPrice", { price: otherTour.priceFrom.toLocaleString() })}
+                        {t("common.priceOnRequest")}
                       </span>
                       <ArrowRight className="w-4 h-4 text-gold-soft group-hover:translate-x-1 transition-transform" />
                     </div>

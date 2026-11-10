@@ -190,14 +190,6 @@ function FeaturedCard({ tour, onExplore }: { tour: TourPackage; onExplore: () =>
             {t("common.featured")}
           </div>
         )}
-        {tour.priceOriginal && (
-          <div
-            className="absolute top-3 right-3 bg-forest text-cream px-3 py-1 text-[0.6rem] font-medium tracking-[0.15em] uppercase"
-            style={sharp}
-          >
-            {Math.round((1 - tour.priceFrom / tour.priceOriginal) * 100)}% {t("common.off")}
-          </div>
-        )}
       </div>
 
       {/* Content */}
@@ -220,22 +212,16 @@ function FeaturedCard({ tour, onExplore }: { tour: TourPackage; onExplore: () =>
           ))}
         </ul>
 
-        {/* Price + CTA */}
+        {/* CTA — price on request */}
         <div className="mt-auto pt-4 border-t border-border">
           <div className="flex items-end justify-between mb-3">
             <div>
-              {tour.priceOriginal && (
-                <p className="text-xs text-charcoal/40 line-through">
-                  ${tour.priceOriginal.toLocaleString()}
-                </p>
-              )}
               <p
-                className="font-display text-2xl md:text-3xl text-forest tracking-tight"
+                className="font-display text-xl md:text-2xl text-forest tracking-tight"
                 style={{ fontFamily: "var(--font-cormorant), serif" }}
               >
-                ${tour.priceFrom.toLocaleString()}
+                {t("common.priceOnRequest")}
               </p>
-              <p className="text-[0.65rem] text-charcoal/50 tracking-wide">{t("common.perPerson")}</p>
             </div>
             <div className="text-right">
               <p className="font-eyebrow text-charcoal/40">{t("common.durationLabel")}</p>
