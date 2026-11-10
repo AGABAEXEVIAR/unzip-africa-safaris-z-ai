@@ -201,9 +201,11 @@ function FeaturedCard({ tour, onExplore }: { tour: TourPackage; onExplore: () =>
         >
           {tour.name}
         </h3>
-        <p className="text-sm text-charcoal/70 leading-relaxed mb-5 line-clamp-3">
-          {tour.highlights.join(" · ")}.
-        </p>
+        {tour.overview && (
+          <p className="text-sm text-charcoal/70 leading-relaxed mb-5 line-clamp-3">
+            {tour.overview}
+          </p>
+        )}
 
         {/* CTA */}
         <div className="mt-auto pt-4 border-t border-border">

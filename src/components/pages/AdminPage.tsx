@@ -1503,12 +1503,12 @@ function TourFormModal({
                     placeholder="Tanzania & Kenya · September–October"
                   />
                 </Field>
-                <Field label="Overview (shown on featured cards)">
+                <Field label="Overview (shown on the tour page & tour cards)">
                   <TextArea
                     value={form.overview}
                     onChange={(e) => update("overview", e.target.value)}
-                    placeholder="A short paragraph shown beneath the tour title on the homepage featured cards."
-                    rows={3}
+                    placeholder="The overview paragraph shown below the hero on the tour page, and beneath the title on tour cards."
+                    rows={4}
                   />
                 </Field>
                 <Field label="Destination">

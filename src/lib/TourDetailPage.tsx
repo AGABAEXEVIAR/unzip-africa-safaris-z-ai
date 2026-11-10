@@ -198,7 +198,7 @@ export function TourDetailPage() {
             </ScrollReveal>
             <Reveal variant="up" delay={0.2}>
               <p className="text-charcoal/75 leading-relaxed text-base md:text-lg max-w-2xl">
-                {tour.highlights.join(" · ")}.
+                {tour.overview}
               </p>
             </Reveal>
           </div>

@@ -323,6 +323,7 @@ export const tourPackages: TourPackage[] = [
       "Walking safari with a Hadzabe bushman",
       "Private dinner on a kopje at sunset",
     ],
+    overview: "Private mobile camp that moves with the herd · Hot air balloon flight over the Mara River · Walking safari with a Hadzabe bushman · Private dinner on a kopje at sunset",
     image:
       "https://images.unsplash.com/photo-1542202229-7d93c33f5d07?auto=format&fit=crop&w=1600&q=80",
     destination: "Tanzania",
@@ -401,6 +402,7 @@ export const tourPackages: TourPackage[] = [
       "Private audience with a conservation researcher",
       "Golden monkey trek in the bamboo zone",
     ],
+    overview: "Two gorilla treks in Bwindi & Volcanoes NP · Chimpanzee habituation in Kibale Forest · Private audience with a conservation researcher · Golden monkey trek in the bamboo zone",
     image:
       "https://res.cloudinary.com/emz7hwx1/image/upload/v1792005671/Uganda.jpg",
     destination: "Uganda",
@@ -478,6 +480,7 @@ export const tourPackages: TourPackage[] = [
       "Three nights on the Skeleton Coast",
       "Sossusvlei dunes at first light",
     ],
+    overview: "Mokoro safaris through papyrus channels · Charter flight over the Okavango at flood · Three nights on the Skeleton Coast · Sossusvlei dunes at first light",
     image:
       "https://images.unsplash.com/photo-1505761671935-60b3a7427bad?auto=format&fit=crop&w=1600&q=80",
     destination: "Botswana",
@@ -563,6 +566,7 @@ export const tourPackages: TourPackage[] = [
       "Stay at Bisate Lodge — geodesic forest pods",
       "Visit the Dian Fossey Fund research station",
     ],
+    overview: "Two gorilla treks in Volcanoes National Park · Golden monkey trek in the bamboo zone · Stay at Bisate Lodge — geodesic forest pods · Visit the Dian Fossey Fund research station",
     image:
       "https://sfile.chatglm.cn/images-ppt/f2522b36c1bf.jpg",
     destination: "Rwanda",
@@ -610,6 +614,7 @@ export const tourPackages: TourPackage[] = [
       "Walking safari with Maasai trackers",
       "Hot air balloon flight at dawn",
     ],
+    overview: "Private conservancy with off-road access · Night drives for nocturnal predators · Walking safari with Maasai trackers · Hot air balloon flight at dawn",
     image:
       "https://res.cloudinary.com/emz7hwx1/image/upload/v1792005667/Kenya.jpg",
     destination: "Kenya",
@@ -657,6 +662,7 @@ export const tourPackages: TourPackage[] = [
       "Skeleton Coast shipwrecks and seal colonies",
       "Stargazing at &Beyond Sossusvlei observatory",
     ],
+    overview: "Climb Big Daddy dune at dawn · Photograph Dead Vlei's petrified trees · Skeleton Coast shipwrecks and seal colonies · Stargazing at &Beyond Sossusvlei observatory",
     image:
       "https://sfile.chatglm.cn/images-ppt/84ed8813798e.jpg",
     destination: "Namibia",
@@ -710,6 +716,7 @@ export const tourPackages: TourPackage[] = [
       "Junior ranger program",
       "Visit to a Maasai village school",
     ],
+    overview: "Age-appropriate activities for children 8+ · Family suites at each lodge · Junior ranger program · Visit to a Maasai village school",
     image:
       "https://sfile.chatglm.cn/images-ppt/741df1b5a3da.jpg",
     destination: "Tanzania",
@@ -764,6 +771,7 @@ export const tourPackages: TourPackage[] = [
       "Visit to Ngamba Island chimpanzee sanctuary",
       "Boat cruise on the Kazinga Channel",
     ],
+    overview: "Full day with chimp habituation team in Kibale · Forest walk in Bigodi Wetland Sanctuary · Visit to Ngamba Island chimpanzee sanctuary · Boat cruise on the Kazinga Channel",
     image:
       "https://sfile.chatglm.cn/images-ppt/ac9862af7e88.jpg",
     destination: "Uganda",
@@ -817,6 +825,7 @@ export const tourPackages: TourPackage[] = [
       "Game drives on Chief's Island",
       "Sunset boat cruise on the Chobe River",
     ],
+    overview: "Three luxury camps by light aircraft · Mokoro (dugout canoe) safaris in the delta · Game drives on Chief's Island · Sunset boat cruise on the Chobe River",
     image:
       "https://images.unsplash.com/photo-1580060839134-75a5edca2e99?auto=format&fit=crop&w=1600&q=80",
     destination: "Botswana",
@@ -876,6 +885,7 @@ export const tourPackages: TourPackage[] = [
       "Visit the King's Palace Museum",
       "Canopy walk in Nyungwe Forest",
     ],
+    overview: "Gorilla trek in Volcanoes National Park · Coffee experience at a cooperative · Visit the King's Palace Museum · Canopy walk in Nyungwe Forest",
     image:
       "https://images.unsplash.com/photo-1568084680786-a84f91d1153c?auto=format&fit=crop&w=1600&q=80",
     destination: "Rwanda",
@@ -935,6 +945,7 @@ export const tourPackages: TourPackage[] = [
       " Kakamega Forest's rare forest species",
       "Expert ornithologist guide throughout",
     ],
+    overview: "Over 400 bird species in 11 days · Lake Nakuru's flamingo spectacle ·  Kakamega Forest's rare forest species · Expert ornithologist guide throughout",
     image:
       "https://images.unsplash.com/photo-1444723121867-7a241cacace9?auto=format&fit=crop&w=1600&q=80",
     destination: "Kenya",
@@ -982,6 +993,7 @@ export const tourPackages: TourPackage[] = [
       "Nile River cruise to the base of the falls",
       "Chimp trek in Budongo Forest",
     ],
+    overview: "Gorilla trek in Bwindi Impenetrable Forest · Game drives in Murchison Falls NP · Nile River cruise to the base of the falls · Chimp trek in Budongo Forest",
     image:
       "https://res.cloudinary.com/emz7hwx1/image/upload/v1792005671/Uganda.jpg",
     destination: "Uganda",
@@ -1042,6 +1054,7 @@ export const tourPackages: TourPackage[] = [
       "Five nights on Zanzibar's beaches",
       "Stone Town cultural tour",
     ],
+    overview: "Serengeti safari with private vehicle · Ngorongoro Crater descent · Five nights on Zanzibar's beaches · Stone Town cultural tour",
     image:
       "https://res.cloudinary.com/emz7hwx1/image/upload/v1792005676/Tanzania.jpg",
     destination: "Tanzania",

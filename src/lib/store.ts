@@ -126,7 +126,13 @@ function saveToStorage() {
 const stored = loadFromStorage();
 if (stored) {
   state = {
-    tours: stored.tours ?? [...seedTours],
+    tours: (stored.tours ?? [...seedTours]).map((t) => {
+      if (t.overview === undefined) {
+        const seedTour = seedTours.find((s) => s.id === t.id);
+        if (seedTour?.overview) return { ...t, overview: seedTour.overview };
+      }
+      return t;
+    }),
     accommodations: stored.accommodations ?? [...seedAccommodations],
     scheduledTrips: stored.scheduledTrips ?? [...seedScheduledTrips],
     testimonials: stored.testimonials ?? [...seedTestimonials],
