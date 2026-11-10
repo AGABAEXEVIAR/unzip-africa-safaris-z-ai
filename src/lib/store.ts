@@ -127,9 +127,13 @@ const stored = loadFromStorage();
 if (stored) {
   state = {
     tours: (stored.tours ?? [...seedTours]).map((t) => {
-      if (t.overview === undefined) {
-        const seedTour = seedTours.find((s) => s.id === t.id);
-        if (seedTour?.overview) return { ...t, overview: seedTour.overview };
+      const seedTour = seedTours.find((s) => s.id === t.id);
+      if (!seedTour?.overview) return t;
+      // Migrate: replace overview if missing or still holding the old
+      // default (highlights joined) from the previous deploy.
+      const oldDefault = t.highlights ? t.highlights.join(" · ") : "";
+      if (t.overview === undefined || t.overview === oldDefault) {
+        return { ...t, overview: seedTour.overview };
       }
       return t;
     }),

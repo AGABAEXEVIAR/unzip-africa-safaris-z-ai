@@ -194,11 +194,11 @@ export function TourDetailPage() {
               baseOpacity={0.15}
               blurStrength={5}
             >
-              {t("tourDetail.overviewHeading", { destination: tour.destination })}
+              {tour.overview}
             </ScrollReveal>
             <Reveal variant="up" delay={0.2}>
               <p className="text-charcoal/75 leading-relaxed text-base md:text-lg max-w-2xl">
-                {tour.overview}
+                {tour.highlights.join(" · ")}.
               </p>
             </Reveal>
           </div>
