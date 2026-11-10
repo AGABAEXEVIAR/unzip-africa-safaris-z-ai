@@ -181,6 +181,7 @@ export function TourDetailPage() {
                   />
                   <FactRow label={t("common.destination")} value={tour.destination} />
                   <FactRow label={t("tourDetail.nationalPark")} value={tour.nationalPark} />
+                  <FactRow label={t("common.minAge")} value={`${tour.minAge}+`} />
                 </div>
 
                 <div className="mt-6 pt-6 border-t border-cream/15">
