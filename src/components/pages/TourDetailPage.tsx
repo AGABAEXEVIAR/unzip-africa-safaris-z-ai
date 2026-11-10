@@ -125,18 +125,6 @@ export function TourDetailPage() {
                 </div>
               </Reveal>
 
-              {/* Price — on request */}
-              <Reveal variant="up" delay={0.3}>
-                <div className="mb-10">
-                  <p
-                    className="font-display text-3xl md:text-4xl text-gold-soft"
-                    style={{ fontFamily: "var(--font-cormorant), serif" }}
-                  >
-                    {t("common.priceOnRequest")}
-                  </p>
-                </div>
-              </Reveal>
-
               <Reveal variant="up" delay={0.4}>
                 <button onClick={() => setBookingOpen(true)} className="btn-luxury btn-luxury-gold">
                   {t("common.bookNow")}
@@ -199,13 +187,6 @@ export function TourDetailPage() {
                 </div>
 
                 <div className="mt-6 pt-6 border-t border-cream/15">
-                  <p
-                    className="font-display text-2xl text-gold-soft mb-1"
-                    style={{ fontFamily: "var(--font-cormorant), serif" }}
-                  >
-                    {t("common.priceOnRequest")}
-                  </p>
-
                   <button
                     onClick={() => setBookingOpen(true)}
                     className="btn-luxury btn-luxury-gold w-full mt-5"
@@ -555,10 +536,7 @@ export function TourDetailPage() {
                     >
                       {otherTour.name}
                     </h3>
-                    <div className="flex items-center justify-between pt-3 border-t border-cream/10">
-                      <span className="text-xs text-cream/60">
-                        {t("common.priceOnRequest")}
-                      </span>
+                    <div className="flex items-center justify-end pt-3 border-t border-cream/10">
                       <ArrowRight className="w-4 h-4 text-gold-soft group-hover:translate-x-1 transition-transform" />
                     </div>
                   </div>

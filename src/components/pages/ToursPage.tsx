@@ -548,13 +548,8 @@ function TourCard({ tour, onViewDetails, onBookNow }: { tour: TourPackage; onVie
           ))}
         </div>
 
-        {/* CTA — price on request */}
+        {/* CTA */}
         <div className="mt-auto pt-4 border-t border-border">
-          <div className="mb-3">
-            <p className="font-display text-xl md:text-2xl text-forest tracking-tight" style={{ fontFamily: "var(--font-cormorant), serif" }}>
-              {t("common.priceOnRequest")}
-            </p>
-          </div>
           <div className="flex gap-2">
             <button
               onClick={onViewDetails}

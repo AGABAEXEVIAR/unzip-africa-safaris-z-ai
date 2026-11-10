@@ -212,17 +212,9 @@ function FeaturedCard({ tour, onExplore }: { tour: TourPackage; onExplore: () =>
           ))}
         </ul>
 
-        {/* CTA — price on request */}
+        {/* CTA */}
         <div className="mt-auto pt-4 border-t border-border">
-          <div className="flex items-end justify-between mb-3">
-            <div>
-              <p
-                className="font-display text-xl md:text-2xl text-forest tracking-tight"
-                style={{ fontFamily: "var(--font-cormorant), serif" }}
-              >
-                {t("common.priceOnRequest")}
-              </p>
-            </div>
+          <div className="flex items-end justify-end mb-3">
             <div className="text-right">
               <p className="font-eyebrow text-charcoal/40">{t("common.durationLabel")}</p>
               <p className="text-sm text-charcoal/75">{tour.durationDays} {t("common.daysLower")}</p>
