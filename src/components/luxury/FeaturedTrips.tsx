@@ -201,21 +201,9 @@ function FeaturedCard({ tour, onExplore }: { tour: TourPackage; onExplore: () =>
         >
           {tour.name}
         </h3>
-        {tour.overview && (
-          <p className="text-sm text-charcoal/70 leading-relaxed mb-4 line-clamp-3">
-            {tour.overview}
-          </p>
-        )}
-
-        {/* Highlights */}
-        <ul className="space-y-1.5 mb-5">
-          {tour.highlights.slice(0, 3).map((h) => (
-            <li key={h} className="flex items-start gap-2 text-sm text-charcoal/75">
-              <span className="text-gold mt-1 leading-none">—</span>
-              <span>{h}</span>
-            </li>
-          ))}
-        </ul>
+        <p className="text-sm text-charcoal/70 leading-relaxed mb-5 line-clamp-3">
+          {tour.highlights.join(" · ")}.
+        </p>
 
         {/* CTA */}
         <div className="mt-auto pt-4 border-t border-border">

@@ -524,6 +524,9 @@ function TourCard({ tour, onViewDetails, onBookNow }: { tour: TourPackage; onVie
         >
           {tour.name}
         </h3>
+        <p className="text-sm text-charcoal/70 leading-relaxed mb-4 line-clamp-2">
+          {tour.highlights.join(" · ")}.
+        </p>
 
         {/* Metadata */}
         <div className="space-y-1.5 mb-4 text-xs text-charcoal/60">
