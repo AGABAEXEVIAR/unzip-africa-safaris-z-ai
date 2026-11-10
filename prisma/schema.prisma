@@ -31,6 +31,7 @@ model TourPackage {
   id                 String   @id @default(cuid())
   name               String
   subtitle           String
+  overview           String?  @db.Text
   duration           String
   durationDays       Int
   durationNights     Int

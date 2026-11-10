@@ -1,7 +1,7 @@
 // =====================================================================
-// One-time migration: populate the `overview` column for the three
-// featured tours. The overview is a short paragraph shown beneath the
-// tour title on the homepage featured-cards carousel.
+// One-time migration: populate the `overview` column for all tours with
+// the heading text shown after the hero on the tour page and beneath the
+// title on tour cards.
 //
 // GET  /api/admin/migrate-tour-overviews   (admin cookie auth)
 // POST /api/admin/migrate-tour-overviews   (admin cookie auth)
@@ -31,21 +31,19 @@ async function verifyAuth(request: NextRequest): Promise<boolean> {
 }
 
 const OVERVIEWS: Array<{ id: string; overview: string }> = [
-  {
-    id: "migration",
-    overview:
-      "Witness two million wildebeest thundering across the endless golden plains of the Serengeti and Maasai Mara — nature's greatest spectacle, unfolding across two countries in a primal tide of life.",
-  },
-  {
-    id: "apes",
-    overview:
-      "Trek through mist-shrouded primaeval forest to sit among mountain gorillas and chimpanzees — a quiet, profound encounter with our closest living relatives in the ancient forests of Uganda and Rwanda.",
-  },
-  {
-    id: "maasai-mara-classic",
-    overview:
-      "Track the Mara's legendary prides of lion, leopard, and cheetah across short-grass plains teeming with wildlife — the definitive big-cat safari in Kenya's most iconic reserve.",
-  },
+  { id: "migration", overview: "A private journey through Tanzania, composed entirely around you." },
+  { id: "apes", overview: "A private journey through Uganda, composed entirely around you." },
+  { id: "delta", overview: "A private journey through Botswana, composed entirely around you." },
+  { id: "gorilla-classic", overview: "A private journey through Rwanda, composed entirely around you." },
+  { id: "maasai-mara-classic", overview: "A private journey through Kenya, composed entirely around you." },
+  { id: "namib-duchesert", overview: "A private journey through Namibia, composed entirely around you." },
+  { id: "family-tanzania", overview: "A private journey through Tanzania, composed entirely around you." },
+  { id: "chimp-uganda", overview: "A private journey through Uganda, composed entirely around you." },
+  { id: "botswana-fly-in", overview: "A private journey through Botswana, composed entirely around you." },
+  { id: "rwanda-cultural", overview: "A private journey through Rwanda, composed entirely around you." },
+  { id: "kenya-birding", overview: "A private journey through Kenya, composed entirely around you." },
+  { id: "uganda-gorilla-murchison", overview: "A private journey through Uganda, composed entirely around you." },
+  { id: "tanzania-zanzibar", overview: "A private journey through Tanzania, composed entirely around you." },
 ];
 
 async function runMigration() {
@@ -73,7 +71,7 @@ export async function GET(request: NextRequest) {
     const results = await runMigration();
     return NextResponse.json({
       success: true,
-      message: "Populated overview for the three featured tours.",
+      message: "Populated overview for all 13 tours.",
       results,
     });
   } catch (err) {

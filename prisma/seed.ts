@@ -66,6 +66,7 @@ async function main() {
         id: t.id,
         name: t.name,
         subtitle: t.subtitle,
+        overview: t.overview,
         duration: t.duration,
         durationDays: t.durationDays,
         durationNights: t.durationNights,

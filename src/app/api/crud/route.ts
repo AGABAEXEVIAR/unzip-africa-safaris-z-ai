@@ -51,18 +51,50 @@ async function ensureTourMigration(): Promise<void> {
       );
     }
 
-    // Populate overview for the three featured tours if empty (self-healing).
-    // Only fills NULL/'' values so admin-edited overviews are preserved.
-    const featuredOverviews: Array<{ id: string; overview: string }> = [
-      { id: "migration", overview: "Witness two million wildebeest thundering across the endless golden plains of the Serengeti and Maasai Mara — nature's greatest spectacle, unfolding across two countries in a primal tide of life." },
-      { id: "apes", overview: "Trek through mist-shrouded primaeval forest to sit among mountain gorillas and chimpanzees — a quiet, profound encounter with our closest living relatives in the ancient forests of Uganda and Rwanda." },
-      { id: "maasai-mara-classic", overview: "Track the Mara's legendary prides of lion, leopard, and cheetah across short-grass plains teeming with wildlife — the definitive big-cat safari in Kenya's most iconic reserve." },
+    // Populate overview for every tour with the heading text shown after
+    // the hero on the tour page and beneath the title on tour cards.
+    // Self-healing: fills empty/NULL overviews and replaces the old
+    // long-paragraph defaults from the previous migration. Admin-edited
+    // overviews that differ from both are preserved.
+    const tourOverviews: Array<{ id: string; overview: string }> = [
+      { id: "migration", overview: "A private journey through Tanzania, composed entirely around you." },
+      { id: "apes", overview: "A private journey through Uganda, composed entirely around you." },
+      { id: "delta", overview: "A private journey through Botswana, composed entirely around you." },
+      { id: "gorilla-classic", overview: "A private journey through Rwanda, composed entirely around you." },
+      { id: "maasai-mara-classic", overview: "A private journey through Kenya, composed entirely around you." },
+      { id: "namib-duchesert", overview: "A private journey through Namibia, composed entirely around you." },
+      { id: "family-tanzania", overview: "A private journey through Tanzania, composed entirely around you." },
+      { id: "chimp-uganda", overview: "A private journey through Uganda, composed entirely around you." },
+      { id: "botswana-fly-in", overview: "A private journey through Botswana, composed entirely around you." },
+      { id: "rwanda-cultural", overview: "A private journey through Rwanda, composed entirely around you." },
+      { id: "kenya-birding", overview: "A private journey through Kenya, composed entirely around you." },
+      { id: "uganda-gorilla-murchison", overview: "A private journey through Uganda, composed entirely around you." },
+      { id: "tanzania-zanzibar", overview: "A private journey through Tanzania, composed entirely around you." },
     ];
-    for (const { id, overview } of featuredOverviews) {
-      await execute(
-        "UPDATE `TourPackage` SET `overview` = ? WHERE `id` = ? AND (`overview` IS NULL OR `overview` = '')",
-        [overview, id]
-      );
+    const staleOverviews = new Set([
+      "Witness two million wildebeest thundering across the endless golden plains of the Serengeti and Maasai Mara — nature's greatest spectacle, unfolding across two countries in a primal tide of life.",
+      "Trek through mist-shrouded primaeval forest to sit among mountain gorillas and chimpanzees — a quiet, profound encounter with our closest living relatives in the ancient forests of Uganda and Rwanda.",
+      "Track the Mara's legendary prides of lion, leopard, and cheetah across short-grass plains teeming with wildlife — the definitive big-cat safari in Kenya's most iconic reserve.",
+    ]);
+    const ovRows = await dbQuery("SELECT `id`, `overview` FROM `TourPackage`");
+    const currentOverview = new Map<string, string>();
+    for (const r of ovRows as Array<{ id: string; overview?: string | null }>) {
+      currentOverview.set(r.id, r.overview ?? "");
+    }
+    let overviewUpdated = 0;
+    for (const { id, overview } of tourOverviews) {
+      const current = currentOverview.get(id);
+      if (current === undefined) continue;
+      if (!current || staleOverviews.has(current)) {
+        await execute(
+          "UPDATE `TourPackage` SET `overview` = ? WHERE `id` = ?",
+          [overview, id]
+        );
+        overviewUpdated++;
+      }
+    }
+    if (overviewUpdated > 0) {
+      console.log(`[tour-migration] Populated overview for ${overviewUpdated} tours`);
     }
   } catch (err) {
     console.error("[tour-migration] failed:", err instanceof Error ? err.message : String(err));
