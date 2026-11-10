@@ -27,6 +27,10 @@ export function ScheduledTripsPage() {
     () => Array.from(new Set(scheduledTrips.map((t) => t.accommodationLevel))),
     [scheduledTrips]
   );
+  const activitiesList = useMemo(
+    () => Array.from(new Set(scheduledTrips.flatMap((t) => t.activities ?? []))),
+    [scheduledTrips]
+  );
 
   const priceBounds = useMemo(() => {
     if (scheduledTrips.length === 0) return { min: 0, max: 100000 };
@@ -53,6 +57,7 @@ export function ScheduledTripsPage() {
     () => ({
       destinations: [],
       tripTypes: [],
+      activities: [],
       priceMax: PRICE_MAX,
       durationMax: DURATION_MAX,
     }),
@@ -63,6 +68,7 @@ export function ScheduledTripsPage() {
   const [filters, setFilters] = useState<FilterState>(() => ({
     destinations: [],
     tripTypes: [],
+    activities: [],
     priceMax: PRICE_MAX,
     durationMax: DURATION_MAX,
   }));
@@ -84,6 +90,8 @@ export function ScheduledTripsPage() {
         return false;
       if (filters.tripTypes.length > 0 && !filters.tripTypes.includes(t.accommodationLevel))
         return false;
+      if (filters.activities.length > 0 && !filters.activities.some((a) => (t.activities ?? []).includes(a)))
+        return false;
       if (t.priceFrom > filters.priceMax) return false;
       if (t.durationDays > filters.durationMax) return false;
       return true;
@@ -103,7 +111,7 @@ export function ScheduledTripsPage() {
   }, [scheduledTrips, filters, sortBy]);
 
   const toggleArrayFilter = (
-    key: keyof Pick<FilterState, "destinations" | "tripTypes">,
+    key: keyof Pick<FilterState, "destinations" | "tripTypes" | "activities">,
     value: string
   ) => {
     setFilters((f) => ({
@@ -117,6 +125,7 @@ export function ScheduledTripsPage() {
   const activeFilterCount =
     filters.destinations.length +
     filters.tripTypes.length +
+    filters.activities.length +
     (filters.priceMax !== PRICE_MAX ? 1 : 0) +
     (filters.durationMax !== DURATION_MAX ? 1 : 0);
 
@@ -174,6 +183,7 @@ export function ScheduledTripsPage() {
             toggleArrayFilter={toggleArrayFilter}
             destinationsList={destinationsList}
             tripTypesList={tripTypesList}
+            activitiesList={activitiesList}
             priceMin={PRICE_MIN}
             priceMax={PRICE_MAX}
             durationMin={DURATION_MIN}
@@ -192,6 +202,7 @@ export function ScheduledTripsPage() {
                   activeCount={activeFilterCount}
                   destinationsList={destinationsList}
                   tripTypesList={tripTypesList}
+                  activitiesList={activitiesList}
                   priceMin={PRICE_MIN}
                   priceMax={PRICE_MAX}
                   durationMin={DURATION_MIN}
@@ -346,6 +357,7 @@ export function ScheduledTripsPage() {
 type FilterState = {
   destinations: string[];
   tripTypes: string[];
+  activities: string[];
   priceMax: number;
   durationMax: number;
 };
@@ -359,6 +371,7 @@ function FilterSidebar({
   activeCount,
   destinationsList,
   tripTypesList,
+  activitiesList,
   priceMin,
   priceMax,
   durationMin,
@@ -366,11 +379,12 @@ function FilterSidebar({
 }: {
   filters: FilterState;
   setFilters: React.Dispatch<React.SetStateAction<FilterState>>;
-  toggleArrayFilter: (key: keyof Pick<FilterState, "destinations" | "tripTypes">, value: string) => void;
+  toggleArrayFilter: (key: keyof Pick<FilterState, "destinations" | "tripTypes" | "activities">, value: string) => void;
   clearFilters: () => void;
   activeCount: number;
   destinationsList: string[];
   tripTypesList: string[];
+  activitiesList: string[];
   priceMin: number;
   priceMax: number;
   durationMin: number;
@@ -453,6 +467,17 @@ function FilterSidebar({
             />
           ))}
         </FilterSection>
+
+        <FilterSection title={t("common.activities")}>
+          {activitiesList.map((a) => (
+            <FilterCheckbox
+              key={a}
+              label={a}
+              checked={filters.activities.includes(a)}
+              onChange={() => toggleArrayFilter("activities", a)}
+            />
+          ))}
+        </FilterSection>
       </div>
     </div>
   );
@@ -530,6 +555,7 @@ function MobileFilterToggle({
   toggleArrayFilter,
   destinationsList,
   tripTypesList,
+  activitiesList,
   priceMin,
   priceMax,
   durationMin,
@@ -539,9 +565,10 @@ function MobileFilterToggle({
   setFilters: React.Dispatch<React.SetStateAction<FilterState>>;
   activeCount: number;
   clearFilters: () => void;
-  toggleArrayFilter: (key: keyof Pick<FilterState, "destinations" | "tripTypes">, value: string) => void;
+  toggleArrayFilter: (key: keyof Pick<FilterState, "destinations" | "tripTypes" | "activities">, value: string) => void;
   destinationsList: string[];
   tripTypesList: string[];
+  activitiesList: string[];
   priceMin: number;
   priceMax: number;
   durationMin: number;
@@ -623,6 +650,7 @@ function MobileFilterToggle({
               activeCount={activeCount}
               destinationsList={destinationsList}
               tripTypesList={tripTypesList}
+              activitiesList={activitiesList}
               priceMin={priceMin}
               priceMax={priceMax}
               durationMin={durationMin}

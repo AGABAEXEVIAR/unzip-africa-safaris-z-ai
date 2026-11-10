@@ -173,6 +173,7 @@ type ScheduledTripFormState = {
   destination: string;
   description: string;
   highlights: string;
+  activities: string;
   groupSize: string;
   spotsLeft: number | "";
   accommodationLevel: string;
@@ -2144,6 +2145,7 @@ function emptyTripForm(): ScheduledTripFormState {
     destination: "",
     description: "",
     highlights: "",
+    activities: "",
     groupSize: "",
     spotsLeft: "",
     accommodationLevel: ACCOMMODATION_LEVELS[0],
@@ -2168,6 +2170,7 @@ function tripToForm(t: ScheduledTrip): ScheduledTripFormState {
     destination: t.destination,
     description: t.description,
     highlights: joinLines(t.highlights),
+    activities: joinLines(t.activities ?? []),
     groupSize: t.groupSize,
     spotsLeft: t.spotsLeft,
     accommodationLevel: t.accommodationLevel,
@@ -2196,6 +2199,7 @@ function formToTrip(
     destination: form.destination,
     description: form.description,
     highlights: splitLines(form.highlights),
+    activities: splitLines(form.activities),
     groupSize: form.groupSize,
     spotsLeft:
       typeof form.spotsLeft === "number"
@@ -2538,6 +2542,16 @@ function ScheduledTripFormModal({
                       rows={4}
                       value={form.description}
                       onChange={(e) => update("description", e.target.value)}
+                    />
+                  </Field>
+                </div>
+                <div className="md:col-span-2">
+                  <Field label="Activities" hint="One per line (optional)">
+                    <TextArea
+                      rows={3}
+                      value={form.activities}
+                      onChange={(e) => update("activities", e.target.value)}
+                      placeholder={"Game drives\nWalking safari\nBird watching"}
                     />
                   </Field>
                 </div>

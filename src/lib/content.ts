@@ -83,6 +83,7 @@ export type ScheduledTrip = {
   galleryImages?: string[];
   description: string;
   highlights: string[];
+  activities?: string[];
   inclusions: string[];
   exclusions: string[];
   groupSize: string;

@@ -99,6 +99,7 @@ model ScheduledTrip {
   galleryImages     Json?
   description       String   @db.Text
   highlights        Json
+  activities        Json?
   inclusions        Json
   exclusions        Json
   groupSize         String

@@ -68,10 +68,10 @@ export const ENTITIES: Record<string, EntityDef> = {
     columns: [
       "name", "destination", "startDate", "endDate", "durationDays",
       "priceFrom", "priceOriginal", "image", "galleryImages", "description",
-      "highlights", "inclusions", "exclusions", "groupSize",
+      "highlights", "activities", "inclusions", "exclusions", "groupSize",
       "spotsLeft", "accommodationLevel", "accommodationIds",
     ],
-    jsonColumns: ["galleryImages", "highlights", "inclusions", "exclusions", "accommodationIds"],
+    jsonColumns: ["galleryImages", "highlights", "activities", "inclusions", "exclusions", "accommodationIds"],
     inlineChildren: [
       { field: "stops", column: "stops" },
       { field: "mapEmbed", column: "mapEmbed" },

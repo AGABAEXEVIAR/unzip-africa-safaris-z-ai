@@ -99,6 +99,7 @@ const SCHEMA_COLUMNS: Array<{ table: string; column: string; def: string }> = [
   { table: "ScheduledTrip", column: "stops", def: "JSON NULL" },
   { table: "ScheduledTrip", column: "mapEmbed", def: "TEXT NULL" },
   { table: "ScheduledTrip", column: "accommodationIds", def: "JSON NULL" },
+  { table: "ScheduledTrip", column: "activities", def: "JSON NULL" },
   { table: "Destination", column: "gameParks", def: "JSON NULL" },
   { table: "Accommodation", column: "pricePerNight", def: "VARCHAR(191) NULL" },
   { table: "Settings", column: "contentOverrides", def: "JSON NULL" },
