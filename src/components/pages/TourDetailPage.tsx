@@ -7,7 +7,6 @@ import {
   ArrowRight,
   Calendar,
   Clock,
-  Users,
   Check,
   X,
 } from "lucide-react";
@@ -117,10 +116,6 @@ export function TourDetailPage() {
                   <span className="flex items-center gap-2">
                     <Clock className="w-4 h-4 text-gold-soft" />
                     {t("tourDetail.daysNights", { days: tour.durationDays, nights: tour.durationNights })}
-                  </span>
-                  <span className="flex items-center gap-2">
-                    <Users className="w-4 h-4 text-gold-soft" />
-                    {t("tourDetail.privatePartyMinAge", { age: tour.minAge })}
                   </span>
                 </div>
               </Reveal>
