@@ -81,40 +81,49 @@ function DialogContent({
       const dialog = target.closest("[role='dialog']");
       if (!dialog) return; // cursor outside the dialog — body lock handles it
 
-      // Walk up from the target toward the dialog looking for the nearest
-      // scrollable element (overflow-y auto/scroll with real overflow).
+      // Always prevent the browser's default wheel scroll. The admin layout
+      // uses a <main overflow-y-auto> as its page scroll container, so the
+      // browser would scroll that background container instead of the modal.
+      // We scroll the modal's own content area manually instead.
+      e.preventDefault();
+
+      // Pick the element to scroll:
+      //  1) the nearest scrollable ancestor of the cursor target (e.g. a
+      //     textarea inside the form), or
+      //  2) the dialog's main .modal-scroll content area as a fallback.
+      let scrollTarget: HTMLElement | null = null;
       let el: Element | null = target;
       while (el && el !== dialog) {
         const style = window.getComputedStyle(el);
-        const oy = style.overflowY;
         if (
-          (oy === "auto" || oy === "scroll") &&
+          (style.overflowY === "auto" || style.overflowY === "scroll") &&
           el.scrollHeight > el.clientHeight
         ) {
-          const htmlEl = el as HTMLElement;
-          const delta = e.deltaY;
-          const atTop = htmlEl.scrollTop <= 0 && delta < 0;
-          const atBottom =
-            htmlEl.scrollHeight - htmlEl.scrollTop - htmlEl.clientHeight <= 1 &&
-            delta > 0;
-          // At a boundary — stop the wheel from chaining to the body.
-          // Mid-scroll — let the browser scroll this area normally.
-          if (atTop || atBottom) e.preventDefault();
-          return;
+          scrollTarget = el as HTMLElement;
+          break;
         }
         el = el.parentElement;
       }
-      // Cursor is over a non-scrollable part of the dialog (header, tabs,
-      // footer). Prevent the body from scrolling.
-      e.preventDefault();
+      if (!scrollTarget) {
+        scrollTarget = dialog.querySelector(".modal-scroll") as HTMLElement | null;
+      }
+      if (scrollTarget) {
+        let delta = e.deltaY;
+        if (e.deltaMode === 1) delta *= 16; // line mode → ~16px/line
+        else if (e.deltaMode === 2) delta *= scrollTarget.clientHeight; // page mode
+        scrollTarget.scrollTop += delta;
+      }
     };
 
-    document.addEventListener("wheel", handleWheel, { passive: false });
+    // capture:true so we intercept the wheel event before Radix's own scroll
+    // management or any other listener can process/stop it. passive:false is
+    // required for preventDefault() to actually block the default scroll.
+    document.addEventListener("wheel", handleWheel, { passive: false, capture: true });
     return () => {
       document.body.style.overflow = prevBodyOverflow;
       document.body.style.paddingRight = prevBodyPaddingRight;
       document.documentElement.style.overflow = prevHtmlOverflow;
-      document.removeEventListener("wheel", handleWheel);
+      document.removeEventListener("wheel", handleWheel, true);
     };
   }, []);
 
