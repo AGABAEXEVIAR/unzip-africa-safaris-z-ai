@@ -368,6 +368,14 @@
   color: var(--charcoal);
 }
 
+/* Booking modal confirm button — gold text default, white on hover */
+.btn-luxury-gold.booking-confirm {
+  color: var(--gold);
+}
+.btn-luxury-gold.booking-confirm:hover {
+  color: #ffffff;
+}
+
 /* ============ Hero Eyebrow — Bordered Label with Vigorous Wavy Pulse Rings ============ */
 .hero-eyebrow-label {
   position: relative;

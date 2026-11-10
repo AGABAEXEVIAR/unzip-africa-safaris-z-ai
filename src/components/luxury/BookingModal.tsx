@@ -14,7 +14,6 @@ import {
   Phone,
   User,
   CheckCircle2,
-  Receipt,
 } from "lucide-react";
 import { store, generateId, type Booking } from "@/lib/store";
 import type { TourPackage, ScheduledTrip } from "@/lib/content";
@@ -303,7 +302,6 @@ export function BookingModal(props: BookingModalProps) {
                   <Row icon={<MapPin className="w-4 h-4" />} label={t("common.destination")} value={tripInfo.destination} />
                   <Row icon={<Clock className="w-4 h-4" />} label={t("tourDetail.duration")} value={tripInfo.duration} />
                   <Row icon={<Calendar className="w-4 h-4" />} label={t("booking.dates")} value={tripInfo.dates} />
-                  <Row icon={<Users className="w-4 h-4" />} label={t("tourDetail.groupSize")} value={tripType === "scheduled-trip" ? (trip as ScheduledTrip).groupSize : t("common.privateParty")} />
                   {tripInfo.spotsLeft !== undefined && (
                     <Row
                       icon={<Users className="w-4 h-4" />}
@@ -311,30 +309,20 @@ export function BookingModal(props: BookingModalProps) {
                       value={`${tripInfo.spotsLeft}`}
                     />
                   )}
-                  <Row icon={<Receipt className="w-4 h-4" />} label={t("common.accommodation")} value={tripInfo.level} />
                 </div>
 
-                <div className="mt-auto pt-6 border-t border-cream/15">
-                  {tripType === "scheduled-trip" ? (
-                    <>
-                      <p className="font-eyebrow text-cream/50 mb-2">{t("booking.pricePerPerson")}</p>
-                      <p
-                        className="font-display text-4xl text-gold-soft mb-1"
-                        style={{ fontFamily: "var(--font-cormorant), serif" }}
-                      >
-                        {tripInfo.price}
-                      </p>
-                      <p className="text-xs text-cream/55">{t("booking.excludesAirfare")}</p>
-                    </>
-                  ) : (
+                {tripType === "scheduled-trip" && (
+                  <div className="mt-auto pt-6 border-t border-cream/15">
+                    <p className="font-eyebrow text-cream/50 mb-2">{t("booking.pricePerPerson")}</p>
                     <p
-                      className="font-display text-3xl text-gold-soft mb-1"
+                      className="font-display text-4xl text-gold-soft mb-1"
                       style={{ fontFamily: "var(--font-cormorant), serif" }}
                     >
                       {tripInfo.price}
                     </p>
-                  )}
-                </div>
+                    <p className="text-xs text-cream/55">{t("booking.excludesAirfare")}</p>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -466,7 +454,7 @@ export function BookingModal(props: BookingModalProps) {
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="btn-luxury btn-luxury-gold w-full mt-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                    className="btn-luxury btn-luxury-gold booking-confirm w-full mt-2 disabled:opacity-60 disabled:cursor-not-allowed"
                   >
                     {submitting ? "Submitting…" : t("booking.confirm")}
                   </button>
