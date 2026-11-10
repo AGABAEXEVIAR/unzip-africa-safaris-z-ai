@@ -50,6 +50,20 @@ async function ensureTourMigration(): Promise<void> {
         `[tour-migration] Cleared price/priceFrom/tripType/accommodationLevel from ${result.affectedRows} tours`
       );
     }
+
+    // Populate overview for the three featured tours if empty (self-healing).
+    // Only fills NULL/'' values so admin-edited overviews are preserved.
+    const featuredOverviews: Array<{ id: string; overview: string }> = [
+      { id: "migration", overview: "Witness two million wildebeest thundering across the endless golden plains of the Serengeti and Maasai Mara — nature's greatest spectacle, unfolding across two countries in a primal tide of life." },
+      { id: "apes", overview: "Trek through mist-shrouded primaeval forest to sit among mountain gorillas and chimpanzees — a quiet, profound encounter with our closest living relatives in the ancient forests of Uganda and Rwanda." },
+      { id: "maasai-mara-classic", overview: "Track the Mara's legendary prides of lion, leopard, and cheetah across short-grass plains teeming with wildlife — the definitive big-cat safari in Kenya's most iconic reserve." },
+    ];
+    for (const { id, overview } of featuredOverviews) {
+      await execute(
+        "UPDATE `TourPackage` SET `overview` = ? WHERE `id` = ? AND (`overview` IS NULL OR `overview` = '')",
+        [overview, id]
+      );
+    }
   } catch (err) {
     console.error("[tour-migration] failed:", err instanceof Error ? err.message : String(err));
     tourMigrationDone = false; // retry on next request
