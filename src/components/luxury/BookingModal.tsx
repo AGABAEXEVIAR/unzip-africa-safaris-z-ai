@@ -104,7 +104,7 @@ export function BookingModal(props: BookingModalProps) {
         startDate: undefined,
         endDate: undefined,
         spotsLeft: undefined,
-        level: t.accommodationLevel,
+        level: form.accommodationLevel,
       };
     }
     const t = trip as ScheduledTrip;

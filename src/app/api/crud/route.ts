@@ -28,6 +28,35 @@ async function verifyAuth(request: NextRequest): Promise<boolean> {
 }
 
 // =====================================================================
+// One-time data migration: clear price/tripType/accommodationLevel from
+// all existing tours. These fields are no longer shown in the admin form
+// or on the public site — the accommodation level is chosen by the
+// customer in the booking form, and prices are quoted manually.
+// Runs at most once per server process (module-level flag), same pattern
+// as ensureSchema(). Idempotent — the WHERE clause only touches rows that
+// still have non-default values.
+// =====================================================================
+let tourMigrationDone = false;
+async function ensureTourMigration(): Promise<void> {
+  if (tourMigrationDone) return;
+  tourMigrationDone = true;
+  try {
+    const result = await execute(
+      "UPDATE `TourPackage` SET `priceFrom` = 0, `priceOriginal` = NULL, `tripType` = '', `accommodationLevel` = '' WHERE `priceFrom` <> 0 OR `priceOriginal` IS NOT NULL OR `tripType` <> '' OR `accommodationLevel` <> ''",
+      []
+    );
+    if (result.affectedRows > 0) {
+      console.log(
+        `[tour-migration] Cleared price/tripType/accommodationLevel from ${result.affectedRows} tours`
+      );
+    }
+  } catch (err) {
+    console.error("[tour-migration] failed:", err instanceof Error ? err.message : String(err));
+    tourMigrationDone = false; // retry on next request
+  }
+}
+
+// =====================================================================
 // GET — fetch all records of a given type (public, no auth)
 // =====================================================================
 export async function GET(request: NextRequest) {
@@ -45,6 +74,9 @@ export async function GET(request: NextRequest) {
     // starts (adds any missing columns idempotently). Cheap no-op once
     // the module-level flag is set.
     await ensureSchema();
+    if (type === "tours") {
+      await ensureTourMigration();
+    }
     const orderCol = def.orderColumn ?? "createdAt";
     const rows = await dbQuery(`SELECT * FROM ${tick(def.table)} ORDER BY ${tick(orderCol)} DESC`);
     const out = rows.map((row) => fromSqlRow(row, def));

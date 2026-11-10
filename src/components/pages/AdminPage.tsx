@@ -145,15 +145,11 @@ type TourFormState = {
   durationDays: number | "";
   durationNights: number | "";
   price: string;
-  priceFrom: number | "";
-  priceOriginal: number | "";
   highlights: string;
   activities: string;
   image: string;
   galleryImages: string;
   days: DayItem[];
-  tripType: string;
-  accommodationLevel: string;
   featured: boolean;
   minAge: number | "";
   accommodationIds: string[];
@@ -1140,15 +1136,11 @@ function emptyTourForm(): TourFormState {
     durationDays: "",
     durationNights: "",
     price: "",
-    priceFrom: "",
-    priceOriginal: "",
     highlights: "",
     activities: "",
     image: "",
     galleryImages: "",
     days: [],
-    tripType: TRIP_TYPES[0],
-    accommodationLevel: ACCOMMODATION_LEVELS[0],
     featured: false,
     minAge: "",
     accommodationIds: [],
@@ -1169,15 +1161,11 @@ function tourToForm(t: TourPackage): TourFormState {
     durationDays: t.durationDays,
     durationNights: t.durationNights,
     price: t.price,
-    priceFrom: t.priceFrom,
-    priceOriginal: numOrEmpty(t.priceOriginal),
     highlights: joinLines(t.highlights),
     activities: joinLines(t.activities),
     image: t.image,
     galleryImages: joinLines(t.galleryImages),
     days: t.days.map((d) => ({ ...d })),
-    tripType: t.tripType,
-    accommodationLevel: t.accommodationLevel,
     featured: t.featured ?? false,
     minAge: t.minAge,
     accommodationIds: [...t.accommodationIds],
@@ -1204,19 +1192,15 @@ function formToTour(form: TourFormState, id: string): TourPackage {
         ? form.durationNights
         : Number(form.durationNights) || 0,
     price: form.price,
-    priceFrom:
-      typeof form.priceFrom === "number"
-        ? form.priceFrom
-        : Number(form.priceFrom) || 0,
-    priceOriginal:
-      form.priceOriginal === "" ? undefined : Number(form.priceOriginal),
+    priceFrom: 0,
+    priceOriginal: undefined,
     highlights: splitLines(form.highlights),
     image: form.image,
     galleryImages: splitLines(form.galleryImages),
     days: form.days,
     activities: splitLines(form.activities),
-    tripType: form.tripType,
-    accommodationLevel: form.accommodationLevel,
+    tripType: "",
+    accommodationLevel: "",
     featured: form.featured,
     minAge: typeof form.minAge === "number" ? form.minAge : Number(form.minAge) || 0,
     accommodationIds: form.accommodationIds,
@@ -1289,12 +1273,12 @@ function ToursSection() {
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-cream border-b border-charcoal/10">
-                {["Tour", "Destination", "Duration", "Price", "Actions"].map(
+                {["Tour", "Destination", "Duration", "Actions"].map(
                   (h, i) => (
                     <th
                       key={h}
                       className={`px-4 py-3 font-medium uppercase tracking-wider text-[11px] text-muted-foreground ${
-                        i === 4 ? "text-right" : "text-left"
+                        i === 3 ? "text-right" : "text-left"
                       }`}
                     >
                       {h}
@@ -1342,21 +1326,6 @@ function ToursSection() {
                     {t.destination}
                   </td>
                   <td className="px-4 py-3 text-charcoal/70">{t.duration}</td>
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-2">
-                      <span className="text-charcoal">
-                        ${t.priceFrom.toLocaleString()}
-                      </span>
-                      {t.priceOriginal && (
-                        <span
-                          className="text-[10px] px-1.5 py-0.5 bg-red-100 text-red-800"
-                          style={sharp}
-                        >
-                          -${(t.priceOriginal - t.priceFrom).toLocaleString()}
-                        </span>
-                      )}
-                    </div>
-                  </td>
                   <td className="px-4 py-3 text-right">
                     <div className="inline-flex gap-1">
                       <IconBtn
@@ -1585,56 +1554,6 @@ function TourFormModal({
                     onChange={(e) => update("price", e.target.value)}
                     placeholder="From $78,500 per person"
                   />
-                </Field>
-                <div className="grid grid-cols-2 gap-3">
-                  <Field label="Price From ($)" hint="Per-person numeric">
-                    <TextInput
-                      type="number"
-                      value={form.priceFrom}
-                      onChange={(e) =>
-                        update(
-                          "priceFrom",
-                          e.target.value === "" ? "" : Number(e.target.value)
-                        )
-                      }
-                    />
-                  </Field>
-                  <Field label="Original Price" hint="For discount badge">
-                    <TextInput
-                      type="number"
-                      value={form.priceOriginal}
-                      onChange={(e) =>
-                        update(
-                          "priceOriginal",
-                          e.target.value === "" ? "" : Number(e.target.value)
-                        )
-                      }
-                    />
-                  </Field>
-                </div>
-                <Field label="Trip Type">
-                  <Select
-                    value={form.tripType}
-                    onChange={(e) => update("tripType", e.target.value)}
-                  >
-                    {TRIP_TYPES.map((t) => (
-                      <option key={t} value={t}>
-                        {t}
-                      </option>
-                    ))}
-                  </Select>
-                </Field>
-                <Field label="Accommodation Level">
-                  <Select
-                    value={form.accommodationLevel}
-                    onChange={(e) => update("accommodationLevel", e.target.value)}
-                  >
-                    {ACCOMMODATION_LEVELS.map((t) => (
-                      <option key={t} value={t}>
-                        {t}
-                      </option>
-                    ))}
-                  </Select>
                 </Field>
                 <Field label="Minimum Age">
                   <TextInput
