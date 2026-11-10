@@ -139,6 +139,7 @@ type TourPackageAdmin = TourPackage & {
 type TourFormState = {
   name: string;
   subtitle: string;
+  overview: string;
   destination: string;
   nationalPark: string;
   duration: string;
@@ -1130,6 +1131,7 @@ function emptyTourForm(): TourFormState {
   return {
     name: "",
     subtitle: "",
+    overview: "",
     destination: "",
     nationalPark: "",
     duration: "",
@@ -1154,6 +1156,7 @@ function tourToForm(t: TourPackage): TourFormState {
   return {
     name: t.name,
     subtitle: t.subtitle,
+    overview: t.overview ?? "",
     destination: t.destination,
     nationalPark: t.nationalPark,
     duration: t.duration,
@@ -1178,6 +1181,7 @@ function formToTour(form: TourFormState, id: string): TourPackage {
     id,
     name: form.name.trim(),
     subtitle: form.subtitle,
+    overview: form.overview,
     destination: form.destination,
     nationalPark: form.nationalPark,
     duration: form.duration,
@@ -1497,6 +1501,14 @@ function TourFormModal({
                     value={form.subtitle}
                     onChange={(e) => update("subtitle", e.target.value)}
                     placeholder="Tanzania & Kenya · September–October"
+                  />
+                </Field>
+                <Field label="Overview (shown on featured cards)">
+                  <TextArea
+                    value={form.overview}
+                    onChange={(e) => update("overview", e.target.value)}
+                    placeholder="A short paragraph shown beneath the tour title on the homepage featured cards."
+                    rows={3}
                   />
                 </Field>
                 <Field label="Destination">

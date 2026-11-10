@@ -37,6 +37,7 @@ export type TourPackage = {
   id: string;
   name: string;
   subtitle: string;
+  overview?: string;
   duration: string;
   durationDays: number;
   durationNights: number;

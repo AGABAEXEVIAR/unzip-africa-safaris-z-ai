@@ -201,6 +201,11 @@ function FeaturedCard({ tour, onExplore }: { tour: TourPackage; onExplore: () =>
         >
           {tour.name}
         </h3>
+        {tour.overview && (
+          <p className="text-sm text-charcoal/70 leading-relaxed mb-4 line-clamp-3">
+            {tour.overview}
+          </p>
+        )}
 
         {/* Highlights */}
         <ul className="space-y-1.5 mb-5">

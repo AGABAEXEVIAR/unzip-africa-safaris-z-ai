@@ -34,7 +34,7 @@ export const ENTITIES: Record<string, EntityDef> = {
   tours: {
     table: "TourPackage",
     columns: [
-      "name", "subtitle", "duration", "durationDays", "durationNights",
+      "name", "subtitle", "overview", "duration", "durationDays", "durationNights",
       "price", "priceFrom", "priceOriginal", "highlights", "image",
       "galleryImages", "destination", "activities", "tripType",
       "accommodationLevel", "nationalPark", "featured", "minAge",
