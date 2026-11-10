@@ -301,7 +301,9 @@ export function BookingModal(props: BookingModalProps) {
                 <div className="space-y-3 text-sm mb-6">
                   <Row icon={<MapPin className="w-4 h-4" />} label={t("common.destination")} value={tripInfo.destination} />
                   <Row icon={<Clock className="w-4 h-4" />} label={t("tourDetail.duration")} value={tripInfo.duration} />
-                  <Row icon={<Calendar className="w-4 h-4" />} label={t("booking.dates")} value={tripInfo.dates} />
+                  {tripType === "scheduled-trip" && (
+                    <Row icon={<Calendar className="w-4 h-4" />} label={t("booking.dates")} value={tripInfo.dates} />
+                  )}
                   {tripInfo.spotsLeft !== undefined && (
                     <Row
                       icon={<Users className="w-4 h-4" />}

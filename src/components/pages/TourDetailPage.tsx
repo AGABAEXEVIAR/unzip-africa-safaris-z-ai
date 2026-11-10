@@ -181,9 +181,6 @@ export function TourDetailPage() {
                   />
                   <FactRow label={t("common.destination")} value={tour.destination} />
                   <FactRow label={t("tourDetail.nationalPark")} value={tour.nationalPark} />
-                  <FactRow label={t("tourDetail.tripType")} value={tour.tripType} />
-                  <FactRow label={t("common.accommodation")} value={tour.accommodationLevel} />
-                  <FactRow label={t("tourDetail.groupSize")} value={t("tourDetail.privatePartyMinAge", { age: tour.minAge })} />
                 </div>
 
                 <div className="mt-6 pt-6 border-t border-cream/15">
