@@ -54,22 +54,67 @@ function DialogContent({
 }: React.ComponentProps<typeof DialogPrimitive.Content> & {
   showCloseButton?: boolean
 }) {
-  // Lock body scroll while the dialog is open so the mouse wheel scrolls
-  // the modal's own overflow-y:auto content area instead of the page behind
-  // it. Compensates for the scrollbar width to prevent horizontal layout
-  // shift on pages that had a scrollbar.
+  // Trap mouse-wheel scrolling inside the modal so the background page
+  // doesn't scroll when the cursor is over the dialog. Two layers:
+  //  1) Lock overflow on <html> AND <body> (some browsers scroll <html>).
+  //  2) A non-passive "wheel" listener on document that, when the cursor is
+  //     inside a [role=dialog], lets the dialog's own scroll area scroll but
+  //     calls preventDefault() at the scroll boundary — or when the cursor
+  //     is over a non-scrollable part (header/tabs) — so the wheel never
+  //     chains through to the body. passive:false is required for
+  //     preventDefault() to work on wheel events.
   React.useEffect(() => {
     const scrollbarWidth =
       window.innerWidth - document.documentElement.clientWidth;
-    const prevOverflow = document.body.style.overflow;
-    const prevPaddingRight = document.body.style.paddingRight;
+    const prevBodyOverflow = document.body.style.overflow;
+    const prevBodyPaddingRight = document.body.style.paddingRight;
+    const prevHtmlOverflow = document.documentElement.style.overflow;
     if (scrollbarWidth > 0) {
       document.body.style.paddingRight = `${scrollbarWidth}px`;
     }
     document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+
+    const handleWheel = (e: WheelEvent) => {
+      const target = e.target instanceof Element ? e.target : null;
+      if (!target) return;
+      const dialog = target.closest("[role='dialog']");
+      if (!dialog) return; // cursor outside the dialog — body lock handles it
+
+      // Walk up from the target toward the dialog looking for the nearest
+      // scrollable element (overflow-y auto/scroll with real overflow).
+      let el: Element | null = target;
+      while (el && el !== dialog) {
+        const style = window.getComputedStyle(el);
+        const oy = style.overflowY;
+        if (
+          (oy === "auto" || oy === "scroll") &&
+          el.scrollHeight > el.clientHeight
+        ) {
+          const htmlEl = el as HTMLElement;
+          const delta = e.deltaY;
+          const atTop = htmlEl.scrollTop <= 0 && delta < 0;
+          const atBottom =
+            htmlEl.scrollHeight - htmlEl.scrollTop - htmlEl.clientHeight <= 1 &&
+            delta > 0;
+          // At a boundary — stop the wheel from chaining to the body.
+          // Mid-scroll — let the browser scroll this area normally.
+          if (atTop || atBottom) e.preventDefault();
+          return;
+        }
+        el = el.parentElement;
+      }
+      // Cursor is over a non-scrollable part of the dialog (header, tabs,
+      // footer). Prevent the body from scrolling.
+      e.preventDefault();
+    };
+
+    document.addEventListener("wheel", handleWheel, { passive: false });
     return () => {
-      document.body.style.overflow = prevOverflow;
-      document.body.style.paddingRight = prevPaddingRight;
+      document.body.style.overflow = prevBodyOverflow;
+      document.body.style.paddingRight = prevBodyPaddingRight;
+      document.documentElement.style.overflow = prevHtmlOverflow;
+      document.removeEventListener("wheel", handleWheel);
     };
   }, []);
 
