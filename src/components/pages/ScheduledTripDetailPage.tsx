@@ -3,7 +3,6 @@
 import { useState, useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import {
-  ArrowLeft,
   ArrowRight,
   Calendar,
   Clock,
@@ -107,14 +106,6 @@ export function ScheduledTripDetailPage() {
           {/* Left — copy */}
           <div className="flex items-center px-6 md:px-12 lg:px-16 py-16 lg:py-0">
             <div className="max-w-xl w-full">
-              <button
-                onClick={() => navigate("tours")}
-                className="flex items-center gap-2 text-cream/60 hover:text-cream transition-colors mb-10"
-              >
-                <ArrowLeft className="w-4 h-4" />
-                <span className="font-eyebrow">{t("tourDetail.allJourneys")}</span>
-              </button>
-
               <Reveal variant="up">
                 <p className="font-eyebrow text-gold-soft mb-4">{t("tourDetail.scheduledDeparture")}</p>
               </Reveal>

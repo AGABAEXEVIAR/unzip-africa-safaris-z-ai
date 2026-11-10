@@ -2,7 +2,6 @@
 
 import { useRouter } from "@/lib/router";
 import { Reveal } from "@/components/luxury/Reveal";
-import { ArrowLeft } from "lucide-react";
 
 const sharp = { borderRadius: 0 } as const;
 
@@ -23,10 +22,6 @@ export function TermsPage() {
 
       <section className="py-16 md:py-24 px-6 md:px-10">
         <div className="mx-auto max-w-3xl space-y-8">
-          <button onClick={() => navigate("home")} className="flex items-center gap-2 text-sm text-charcoal/60 hover:text-gold transition-colors mb-8">
-            <ArrowLeft className="w-4 h-4" /> Back to Home
-          </button>
-
           <Reveal variant="up">
             <div className="space-y-6 text-sm md:text-base text-charcoal/80 leading-relaxed">
               <div>

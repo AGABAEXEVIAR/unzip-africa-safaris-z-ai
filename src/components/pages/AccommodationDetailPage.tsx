@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowLeft, Check, MapPin } from "lucide-react";
+import { Check, MapPin } from "lucide-react";
 import { Reveal } from "@/components/luxury/Reveal";
 import ScrollReveal from "@/components/luxury/ScrollReveal";
 import { useRouter } from "@/lib/router";
@@ -64,15 +64,7 @@ export function AccommodationDetailPage() {
           <div className="absolute inset-0 bg-charcoal/55" />
         </motion.div>
 
-        <div className="relative h-full flex flex-col justify-between px-6 md:px-10 py-10 md:py-12">
-          <button
-            onClick={() => navigate("accommodation")}
-            className="flex items-center gap-2 text-cream/80 hover:text-cream transition-colors self-start"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span className="font-eyebrow text-cream/80">{t("accommodationDetail.allProperties")}</span>
-          </button>
-
+        <div className="relative h-full flex flex-col justify-end px-6 md:px-10 py-10 md:py-12">
           <div className="max-w-3xl">
             <motion.p
               initial={{ opacity: 0, y: 20 }}

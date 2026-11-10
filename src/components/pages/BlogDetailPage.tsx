@@ -70,15 +70,7 @@ export function BlogDetailPage() {
           <div className="absolute inset-0 bg-gradient-to-t from-charcoal/85 via-charcoal/35 to-charcoal/40" />
         </motion.div>
 
-        <div className="relative h-full flex flex-col justify-between px-6 md:px-10 py-10 md:py-12">
-          <button
-            onClick={() => navigate("blog")}
-            className="flex items-center gap-2 text-cream/80 hover:text-cream transition-colors self-start"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span className="font-eyebrow text-cream/80">{t("blog.backToBlog")}</span>
-          </button>
-
+        <div className="relative h-full flex flex-col justify-end px-6 md:px-10 py-10 md:py-12">
           <div className="max-w-4xl">
             <motion.p
               initial={{ opacity: 0, y: 20 }}
