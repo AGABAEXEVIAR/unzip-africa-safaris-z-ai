@@ -1,0 +1,85 @@
+name: Deploy to Hostinger
+
+# Every push to main builds the site on GitHub's servers (no Hostinger build
+# limits) and deploys the finished standalone output to a fresh version
+# directory with an atomic symlink swap — the same clean method as the
+# one-time deploy. No in-place overwrites, no tarball mess.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}   # allows manual re-runs from the Actions tab
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Prepare build env (matches verified sandbox build)
+        run: printf 'NEXT_PUBLIC_SITE_URL=https://unzipafrica.com\n' > .env
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build (standalone output)
+        run: npm run build
+        env:
+          NEXT_PUBLIC_SITE_URL: https://unzipafrica.com
+
+      - name: Package standalone build
+        run: |
+          cd .next/standalone
+          tar czf /tmp/nodejs-build.tar.gz .
+          ls -lh /tmp/nodejs-build.tar.gz
+
+      - name: Upload + activate on Hostinger
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_KEY:  ${{ secrets.SSH_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          PORT="${SSH_PORT:-22}"
+
+          scp -i ~/.ssh/deploy_key -P "$PORT" -o StrictHostKeyChecking=no \
+            /tmp/nodejs-build.tar.gz "$SSH_USER@$SSH_HOST:/tmp/nodejs-build.tar.gz"
+
+          ssh -i ~/.ssh/deploy_key -p "$PORT" -o StrictHostKeyChecking=no \
+            "$SSH_USER@$SSH_HOST" bash -s << 'REMOTEOF'
+            set -euo pipefail
+            HBUILDS="$HOME/domains/unzipafrica.com/hbuilds"
+            ENV_FILE="$HBUILDS/config/.env"
+            NEW_UUID=$(uuidgen 2>/dev/null || cat /proc/sys/kernel/random/uuid)
+            NEW_VERSION_DIR="$HBUILDS/versions/$NEW_UUID"
+
+            mkdir -p "$NEW_VERSION_DIR/nodejs/tmp"
+            tar xzf /tmp/nodejs-build.tar.gz -C "$NEW_VERSION_DIR/nodejs/"
+            [ -f "$NEW_VERSION_DIR/nodejs/server.js" ] || { echo "ABORT: server.js missing"; exit 1; }
+            cp "$ENV_FILE" "$NEW_VERSION_DIR/nodejs/.env"
+
+            ln -sfn "versions/$NEW_UUID" "$HBUILDS/current.new"
+            mv -Tf "$HBUILDS/current.new" "$HBUILDS/current"
+            touch "$NEW_VERSION_DIR/nodejs/tmp/restart.txt"
+            rm -f /tmp/nodejs-build.tar.gz
+
+            echo "Deployed version : $NEW_UUID"
+            echo "BUILD_ID         : $(cat "$NEW_VERSION_DIR/nodejs/.next/BUILD_ID")"
+            echo "Previous version preserved for rollback"
+          REMOTEOF
+
+          sleep 15
+          CODE=$(curl -s -o /dev/null -w "%{http_code}" -m 30 "https://unzipafrica.com/" || echo "000")
+          echo "Homepage after deploy: HTTP $CODE"
+          if [ "$CODE" != "200" ]; then
+            echo "::warning::Homepage returned HTTP $CODE — check the site manually"
+          fi
