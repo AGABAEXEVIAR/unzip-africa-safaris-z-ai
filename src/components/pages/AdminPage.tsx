@@ -2805,8 +2805,8 @@ function ScheduledTripFormModal({
               <p className="text-sm text-muted-foreground mb-4">
                 Select the accommodations featured on this scheduled trip.
                 These appear in the &ldquo;Where You&rsquo;ll Stay&rdquo;
-                section of the trip&rsquo;s public page. Leave empty to fall
-                back to accommodations from a related tour.
+                section of the trip&rsquo;s public page. Leave empty to
+                hide the section entirely on this trip&rsquo;s page.
               </p>
               {accommodations.length === 0 ? (
                 <p className="text-sm text-muted-foreground">

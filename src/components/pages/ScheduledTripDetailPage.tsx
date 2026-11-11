@@ -17,14 +17,13 @@ import { BookingModal } from "@/components/luxury/BookingModal";
 import { useRouter } from "@/lib/router";
 import { useLang } from "@/lib/language";
 import { buildMapEmbedUrl } from "@/lib/mapUtils";
-import { useScheduledTrips, useTours, useAccommodations } from "@/lib/store";
+import { useScheduledTrips, useAccommodations } from "@/lib/store";
 import type { ScheduledTrip } from "@/lib/content";
 
 const sharp = { borderRadius: 0 } as const;
 
 export function ScheduledTripDetailPage() {
   const trips = useScheduledTrips();
-  const tours = useTours();
   const accommodations = useAccommodations();
   const {
     selectedScheduledTripId,
@@ -62,17 +61,11 @@ export function ScheduledTripDetailPage() {
     );
   }
 
-  // Accommodations shown on this trip's public page. Prefer the
-  // accommodations the admin explicitly selected for THIS trip; if none
-  // were selected (older trips predate the field), fall back to the
-  // accommodations of a related tour with the same destination.
-  const relatedTour = tours.find((t) => t.destination === trip.destination);
-  const stays = (trip.accommodationIds && trip.accommodationIds.length > 0
-    ? trip.accommodationIds
-    : relatedTour
-      ? (relatedTour.accommodationIds || [])
-      : []
-  )
+  // Accommodations shown on this trip's public page — only those the
+  // admin explicitly selected for THIS trip via the Scheduled Trips tab.
+  // If none were selected, stays is empty and the "Where You'll Stay"
+  // section is hidden entirely (no fallback to related tours).
+  const stays = (trip.accommodationIds || [])
     .map((id) => accommodations.find((a) => a.id === id))
     .filter((a): a is NonNullable<typeof a> => Boolean(a));
 
